@@ -2,7 +2,7 @@
 #include "MainPanel.h"
 #include "ofApp.h" 
 
-ofApp* mMainApp;
+ofApp* mMainAppPtr;
 
 //-------------------------------------------------
 
@@ -13,7 +13,7 @@ void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
     _w = width;
     _h = height;
     
-    mMainApp = dynamic_cast<ofApp*>(appPtr);
+    mMainAppPtr = dynamic_cast<ofApp*>(appPtr);
     
     setBackgroundColor(ofColor::darkRed);
     
@@ -26,7 +26,7 @@ void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
     component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    guiCompHeight = component->getHeight();
+    guiCompHeight = component->getHeight();//--
     components.push_back(component);
     
     component = new ofxDatGuiButton("LOAD");
@@ -119,11 +119,27 @@ void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     components.push_back(component);
     
-    component = new ofxDatGuiTextInput("BPM", "#bpm#");
-    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight*1);
+    component = new ofxDatGuiToggle("SNAP TO BPM", false);
+    component->setPosition(_x + guiCompWidth *4, _y + guiCompHeight*1);
+    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->setWidth(guiCompWidth, 0.9);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    components.push_back(component);
+    
+    component = new ofxDatGuiTextInput("BPM", "120");
+    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight*2);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setWidth(guiCompWidth, 0.35);
     component->onTextInputEvent(this, &MainPanel::onTextInputEvent);
+    components.push_back(component);
+    
+    //---------
+    component = new ofxDatGuiSlider("VOLUME", 0.0, 1.0, 1.0);
+    component->setPosition(_x + guiCompWidth * 5, _y + guiCompHeight*0);
+    component->setWidth(guiCompWidth, 0.4);
+    component->onSliderEvent(this, &MainPanel::onSliderEvent);
+    
+    
     components.push_back(component);
     
     
@@ -176,14 +192,45 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
 {
     cout << "MainPanel-onButtonEvent: " << e.target->getLabel() << "::" << e.enabled << endl;
     
+    
     if(e.target->getLabel()=="OPEN FILE"){
         
         openOpenFileDialog();
     
+    }else if(e.target->getLabel()=="FRAME BASED"){
+        
+        mMainAppPtr->timePanel.timeline.setFrameBased(e.enabled);
+        
+    }else if(e.target->getLabel()=="LOOP ON-OFF"){
+        
+        if(e.enabled)
+            mMainAppPtr->timePanel.timeline.setLoopType(OF_LOOP_NORMAL);
+        else
+            mMainAppPtr->timePanel.timeline.setLoopType(OF_LOOP_NONE);
+        
     }else if(e.target->getLabel()=="PLAY / STOP"){
         
-        mMainApp->startStopPlaying();
+        mMainAppPtr->startStopPlaying();
+        
+    }else if(e.target->getLabel()=="SET IN"){
+        
+        mMainAppPtr->timePanel.timeline.setInPointAtPlayhead();
+        
+    }else if(e.target->getLabel()=="SET OUT"){
+        
+        mMainAppPtr->timePanel.timeline.setOutPointAtPlayhead();
+        
+    }else if(e.target->getLabel()== "SHOW BPM GRID"){
+        
+        mMainAppPtr->timePanel.timeline.setShowBPMGrid(e.enabled);
+    
+    }else if(e.target->getLabel()== "SNAP TO BPM"){
+        
+        mMainAppPtr->timePanel.timeline.enableSnapToBPM(e.enabled);
+    
     }
+    
+    
     
   
 }
@@ -224,7 +271,7 @@ void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
         
         if (fileExtension == "WAV" || fileExtension == "MP3") {
             ofLogVerbose("if"+fileExtension);
-            mMainApp->openAudioFile(openFileResult.getPath());
+            mMainAppPtr->openAudioFile(openFileResult.getPath());
         }else{
             ofLogVerbose("File extension not compatible");
         }
@@ -233,10 +280,27 @@ void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
     
     
 }
+//--------------------------------------------------------------
 
-void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e)
-{
-    cout << "onButtonEvent: " << e.text << endl;
+void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
+    //cout << "onButtonEvent: " << e.text << endl;
+    if (e.target->getLabel()=="BPM"){
+        cout << "onTextInput: " << e.text << endl;
+        mMainAppPtr->timePanel.timeline.setNewBPM( std::stof (e.text) );
+        cout<< mMainAppPtr->timePanel.timeline.getBPM() << endl;
+    }
+    
+}
+//--------------------------------------------------------------
+
+void MainPanel::onSliderEvent(ofxDatGuiSliderEvent e){
+    //cout << "onSliderEvent: " << e.value << "::" << e.scale << endl;
+    if (e.target->getLabel()=="VOLUME"){
+    
+        if (mMainAppPtr->timePanel.audioTrack != NULL)
+            mMainAppPtr->timePanel.audioTrack->setVolume(e.value);
+    
+    }
 }
 
 

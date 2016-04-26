@@ -6,7 +6,7 @@
 void ofApp::setup(){
 	
     //Gral---------------------------
-    ofBackground(0);
+    ofSetBackgroundColor(100);
     ofEnableSmoothing();
     ofEnableAlphaBlending();
     
@@ -40,6 +40,7 @@ void ofApp::update(){
 //
     
     mainPanel.update();
+    timePanel.update();
     
 }
 

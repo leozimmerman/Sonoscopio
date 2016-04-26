@@ -19,14 +19,13 @@ class MainPanel : public Panel{
         vector<ofxDatGuiComponent*> components;
         void onButtonEvent(ofxDatGuiButtonEvent e);
         void onTextInputEvent(ofxDatGuiTextInputEvent e);
+        void onSliderEvent(ofxDatGuiSliderEvent e);
     
         void setFileInfoString(string str){fileInfoStr = str;}
     
         void openOpenFileDialog();
         void processOpenFileSelection(ofFileDialogResult openFileResult);
     
-    
-  
     
     private:
         string fileInfoStr;
