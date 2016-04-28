@@ -26,6 +26,10 @@ public:
     void draw();
     void exit(){};
     
+    void keyPressed(int key);
+    
+    void setupGUI();
+    
     void openAudioFile(string filename);
     string getFileInfo();
     
@@ -33,12 +37,10 @@ public:
     
     void addTrack(string name, trackType type);
     void removeTrack(string name);
-    void collapseAllTracks();
-    void expandFocusedTrack();
+    void toggleShowTracks();
+    void adjustTracksHeight();
     void toggleEnableDisableFocusedTrack();
-        
-    
-    
+
     
     vector<ofxDatGuiComponent*> components;
     void onButtonEvent(ofxDatGuiButtonEvent e);
@@ -47,7 +49,6 @@ public:
     
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;
-    ofxTLPage* page;
     
 private:
     

@@ -43,11 +43,191 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration());
     
     audioTrack = timeline.getAudioTrack("Audio");
-    page = timeline.getPage(timeline.getCurrentPageName());
+    timeline.setPageName("Page-Audio");
+    timeline.addPage("Page-Tracks");
+    addTrack("default", CURVES);
+    timeline.setCurrentPage("Page-Audio");
+    timeline.setShowPageTabs(false); //->modify if more pages are needed
     
-    ///-------------------------------------------
+    //-------------------------------------------
+    
+    setupGUI();
+
+    
+}
+//-------------------------------------------------
+void TimelinePanel::update(){
+    
+    //check for height changes
+    int th = timeline.getPage("Page-Audio")->getDrawRect().height + 66;
+    if(th != _h + guiCompHeight){
+        _h = th + guiCompHeight;
+        for(int i=0; i<components.size(); i++){
+            int gui_y = _y + th;
+            components[i]->setPosition(components[i]->getX(), gui_y);
+        }
+    }
+    
+    //update gui components
+    for(int i=0; i<components.size(); i++) components[i]->update();
+
+
+}
+//-------------------------------------------------
+void TimelinePanel::draw(){
+    
+    ofPushStyle();
+    ofSetColor(getBackgroundColor());
+    ofDrawRectangle(_x, _y, _w, _h);
+    ofPopStyle();
+    
+    
+    
+    
+    //draw gui------------------
+    for(int i=0; i<components.size(); i++) components[i]->draw();
+    
+    //draw timeline------------
+    timeline.draw();
+    
+    //draw audio waveform in background----------
+    //adjust with zoom
+    if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
+        audioTrack->recomputePreview();
+    }
+    //draw waveforms
+    for(int i=0; i<audioTrack->getPreviews().size(); i++){
+        audioTrack->getPreviews()[i].draw();
+    }
+    
+  
+
+}
+//--------------------------------------------------------------
+void TimelinePanel::keyPressed(int key){
+    
+    
+    ofxTLTrack* ftrack = timeline.getFocusedTrack();
+    
+    switch (key) {
+        case 'e':
+            if(ftrack != NULL && timeline.getCurrentPageName()=="Page-Tracks"){
+                timeline.getPage("Page-Tracks")->expandFocusedTrack();
+            }
+            break;
+        case 'd':
+            if(ftrack != NULL && timeline.getCurrentPageName()=="Page-Tracks"){
+                ftrack->isEnabled() ? ftrack->disable() : ftrack->enable();
+            }
+            break;
+        case 'a':
+            adjustTracksHeight();
+            break;
+            
+            
+        default:
+            break;
+    }
+}
+//--------------------------------------------------------------
+
+
+#pragma mark - Timeline funces
+//--------------------------------------------------------------
+void TimelinePanel::openAudioFile(string filename){
+
+    timeline.stop();
+    timeline.setCurrentTimeSeconds(0.0);
+    audioTrack->loadSoundfile(filename);
+    timeline.setDurationInSeconds(audioTrack->getDuration());
+    
+}
+//--------------------------------------------------------------
+void TimelinePanel::startStopPlaying(){
+    if(timeline.getIsPlaying()){
+        timeline.stop();
+    }else{
+        timeline.play();
+    }
+    
+}
+
+//--------------------------------------------------------------
+void TimelinePanel::addTrack(string name, trackType type){
+    
+    timeline.setCurrentPage("Page-Tracks");
+    
+    switch (type) {
+        case CURVES:
+            timeline.addCurves(name, ofRange(0, 1));
+            break;
+        case BANGS:
+            timeline.addBangs(name);
+            break;
+        case FLAGS:
+            timeline.addFlags(name);
+            break;
+        case SWITCHES:
+            timeline.addSwitches(name);
+            
+        default:
+            break;
+    }
+    
+    adjustTracksHeight();
+    
+    
+}
+//--------------------------------------------------------------
+void TimelinePanel::removeTrack(string name){
+    
+    timeline.removeTrack(name);
+    adjustTracksHeight();
+}
+
+//--------------------------------------------------------------
+
+void TimelinePanel::toggleShowTracks(){
+    
+    
+    if(timeline.getCurrentPageName() == "Page-Audio"){
+
+        timeline.setCurrentPage("Page-Tracks");
+        timeline.setFootersHidden(TRUE);
+        adjustTracksHeight();
+        
+    }else if (timeline.getCurrentPageName() == "Page-Tracks") {
+    
+        timeline.setCurrentPage("Page-Audio");
+        timeline.setFootersHidden(false);
+    
+    }
+    
+}
+//--------------------------------------------------------------
+void TimelinePanel::adjustTracksHeight(){
+    
+    if (timeline.getCurrentPageName() == "Page-Tracks"){
+        
+        int audioH = timeline.getPage("Page-Audio")->getComputedHeight();
+        int tracksNum = timeline.getPage("Page-Tracks")->getTracksNum();
+        float margin  = timeline.getDrawRect().height -  timeline.getPage("Page-Audio")->getDrawRect().height -66;
+        timeline.setHeight(audioH + 66 - 17.68*tracksNum);
+        
+    }
+    
+}
+//--------------------------------------------------------------
+void TimelinePanel::toggleEnableDisableFocusedTrack(){
+
+}
+//--------------------------------------------------------------
+#pragma mark - Utils
+//--------------------------------------------------------------
+void TimelinePanel::setupGUI(){
+    
     ofxDatGuiComponent* component;
-    guiCompWidth = _w / 8;
+    guiCompWidth = _w / 7;
     
     
     int gui_y = _y + timeline.getHeight();
@@ -88,7 +268,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     components.push_back(component);
     
     gui_x += guiCompWidth;
-    component = new ofxDatGuiButton("COLLAPSE ALL");
+    component = new ofxDatGuiButton("SHOW TRACKS");
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
@@ -96,72 +276,17 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     components.push_back(component);
     
     gui_x += guiCompWidth;
-    component = new ofxDatGuiButton("EXPAND FOCUSED");
+    component = new ofxDatGuiButton("ADJUST TRACKS");
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     components.push_back(component);
     
-    gui_x += guiCompWidth;
-    component = new ofxDatGuiButton("ENABLE/DISABLE");
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 1.0);
-    component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    components.push_back(component);
-
     
-}
-//-------------------------------------------------
-void TimelinePanel::update(){
-    
-    if(timeline.getHeight() != _h + guiCompHeight){
-        _h = timeline.getHeight() + guiCompHeight;
-        for(int i=0; i<components.size(); i++){
-            int gui_y = _y + timeline.getHeight();
-            components[i]->setPosition(components[i]->getX(), gui_y);
-        }
-    }
-     
-    for(int i=0; i<components.size(); i++) components[i]->update();
-
-}
-//-------------------------------------------------
-void TimelinePanel::draw(){
-    
-    ofPushStyle();
-    ofSetColor(getBackgroundColor());
-    ofDrawRectangle(_x, _y, _w, _h);
-    ofPopStyle();
-    
-    timeline.draw();
-    
-    for(int i=0; i<components.size(); i++) components[i]->draw();
-
-}
-
-#pragma mark - Timeline funces
-//--------------------------------------------------------------
-void TimelinePanel::openAudioFile(string filename){
-
-    timeline.stop();
-    timeline.setCurrentTimeSeconds(0.0);
-    audioTrack->loadSoundfile(filename);
-    timeline.setDurationInSeconds(audioTrack->getDuration());
     
 }
 //--------------------------------------------------------------
-void TimelinePanel::startStopPlaying(){
-    if(timeline.getIsPlaying()){
-        timeline.stop();
-    }else{
-        timeline.play();
-    }
-    
-}
-//--------------------------------------------------------------
-
 string TimelinePanel::getFileInfo(){
     
     string s;
@@ -175,72 +300,14 @@ string TimelinePanel::getFileInfo(){
     return s;
     
 }
-//--------------------------------------------------------------
-void TimelinePanel::addTrack(string name, trackType type){
-    
-    timeline.setCurrentPage(0);
-    
-    switch (type) {
-        case CURVES:
-            timeline.addCurves(name, ofRange(0, 1));
-            break;
-        case BANGS:
-            timeline.addBangs(name);
-            break;
-        case FLAGS:
-            timeline.addFlags(name);
-            break;
-        case SWITCHES:
-            timeline.addSwitches(name);
-            
-        default:
-            break;
-    }
-    
-    
-}
-//--------------------------------------------------------------
-void TimelinePanel::removeTrack(string name){
-    
-    timeline.removeTrack(name);
-    
-}
-//--------------------------------------------------------------
-void TimelinePanel::collapseAllTracks(){
-    
-    int h = timeline.getHeight();
-    
-    
-    page->setFocusedTrack(audioTrack);
-    page->collapseAllTracks(TRUE); //exclude focused from collapsing
-    page->expandFocusedTrack();
-    //timeline.setHeight(h);
 
-}
-//--------------------------------------------------------------
-void TimelinePanel::expandFocusedTrack(){
-    
-    //page->evenlyDistributeTrackHeights();
-    
-    //page->setFocusedTrack(audioTrack);
-    //page->expandFocusedTrack();
-    
-//    ofxTLPage* p = timeline.getPage("Page One");
-//    
-//    if(p->getFocusedTrack() != NULL)
-//        cout<<"FOCUSED TRACK: "<< p->getFocusedTrack()->getName() << endl;
-//    else
-//        cout<<"NULL"<<endl;
-//    
-    
-}
 //--------------------------------------------------------------
 #pragma mark - gui listeners
 //--------------------------------------------------------------
 
 void TimelinePanel::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-    cout << "onButtonEvent: " << e.target->getLabel() << "::" << e.enabled << endl;
+    ofLogVerbose() << "onButtonEvent: " << e.target->getLabel() << "::" << e.enabled ;
     
     string label = e.target->getLabel();
     if(label ==  "ADD"){
@@ -251,13 +318,13 @@ void TimelinePanel::onButtonEvent(ofxDatGuiButtonEvent e)
     
         removeTrack(currentTrackName);
     
-    }else if (label == "COLLAPSE ALL"){
+    }else if (label == "SHOW TRACKS"){
         
-        collapseAllTracks();
+        toggleShowTracks();
         
-    }else if (label == "EXPAND FOCUSED"){
+    }else if (label == "ADJUST TRACKS"){
         
-        expandFocusedTrack();
+        adjustTracksHeight();
         
     }
     
@@ -265,7 +332,7 @@ void TimelinePanel::onButtonEvent(ofxDatGuiButtonEvent e)
 //--------------------------------------------------------------
 void TimelinePanel::onDropdownEvent(ofxDatGuiDropdownEvent e)
 {
-    cout << "onDropdownEvent: " << e.child << endl;
+    ofLogVerbose() << "onDropdownEvent: " << e.child ;
     
     switch (e.child) {
             
@@ -289,7 +356,7 @@ void TimelinePanel::onDropdownEvent(ofxDatGuiDropdownEvent e)
 //--------------------------------------------------------------
 void TimelinePanel::onTextInputEvent(ofxDatGuiTextInputEvent e)
 {
-    cout << "onButtonEvent: " << e.text << endl;
+    ofLogVerbose() << "onButtonEvent: " << e.text;
     currentTrackName = e.text;
 }
 

@@ -60,6 +60,12 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
+    timePanel.keyPressed(key);
+    /*
+    'e' expands focused track
+    'd' enables/disables focused track
+    'a' adjust tracks height shorcut
+    */
     
     switch (key) {
 
