@@ -30,6 +30,8 @@ public:
     
     void setupGUI();
     
+    void resizeHeight(int tl_h);
+    
     void openAudioFile(string filename);
     string getFileInfo();
     
@@ -49,6 +51,9 @@ public:
     
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;
+    
+    ofEvent<int> heightResized;
+    
     
 private:
     

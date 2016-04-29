@@ -59,13 +59,9 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
 void TimelinePanel::update(){
     
     //check for height changes
-    int th = timeline.getPage("Page-Audio")->getDrawRect().height + 66;
-    if(th != _h + guiCompHeight){
-        _h = th + guiCompHeight;
-        for(int i=0; i<components.size(); i++){
-            int gui_y = _y + th;
-            components[i]->setPosition(components[i]->getX(), gui_y);
-        }
+    int tl_h = timeline.getPage("Page-Audio")->getDrawRect().height + 66;
+    if(tl_h != _h - guiCompHeight){
+        resizeHeight(tl_h);
     }
     
     //update gui components
@@ -76,9 +72,10 @@ void TimelinePanel::update(){
 //-------------------------------------------------
 void TimelinePanel::draw(){
     
+    //background
     ofPushStyle();
-    ofSetColor(getBackgroundColor());
-    ofDrawRectangle(_x, _y, _w, _h);
+        ofSetColor(getBackgroundColor());
+        ofDrawRectangle(_x, _y, _w, _h);
     ofPopStyle();
     
     
@@ -186,7 +183,6 @@ void TimelinePanel::removeTrack(string name){
 }
 
 //--------------------------------------------------------------
-
 void TimelinePanel::toggleShowTracks(){
     
     
@@ -300,7 +296,18 @@ string TimelinePanel::getFileInfo(){
     return s;
     
 }
-
+//--------------------------------------------------------------
+void TimelinePanel::resizeHeight(int tl_h){
+    
+    _h = tl_h + guiCompHeight;
+    
+    for(int i=0; i<components.size(); i++){
+        int gui_y = _y + tl_h;
+        components[i]->setPosition(components[i]->getX(), gui_y);
+    }
+    
+    ofNotifyEvent(heightResized, _h, this);
+}
 //--------------------------------------------------------------
 #pragma mark - gui listeners
 //--------------------------------------------------------------

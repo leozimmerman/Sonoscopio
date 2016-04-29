@@ -1,7 +1,7 @@
 
-
 #include "ofApp.h"
 
+#pragma mark - Core funcs
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
@@ -16,42 +16,33 @@ void ofApp::setup(){
     
     mainPanel.setup(0,0, ofGetWidth(), 100, ofGetAppPtr());
     timePanel.setup(0,100, ofGetWidth(), 500, ofGetAppPtr());
+    metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr());
     
     
     mainPanel.setFileInfoString(timePanel.getFileInfo());
 
-
+    ofAddListener(timePanel.heightResized, this, &ofApp::onTimelinePanelResize);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
 
-//    vector<float> buffer = track->getCurrentBufferForChannel(512, 1);
-//    
-//    int bufferSize = buffer.size();
-//    waveform.clear();
-//    for(size_t i = 0; i < buffer.size(); i++) {
-//        float sample = buffer[i];
-//        float x = ofMap(i, 0, buffer.size(), 0, ofGetWidth());
-//        float y = ofMap(sample, -1, 1, 0, ofGetHeight());
-//        waveform.addVertex(x, y);
-//    }
-//
+///    vector<float> buffer = track->getCurrentBufferForChannel(512, 1);
     
     mainPanel.update();
     timePanel.update();
+    metersPanel.update();
     
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-   
-    //waveform.draw();
     
     mainPanel.draw();
     timePanel.draw();
+    metersPanel.draw();
 
     
 }
@@ -73,6 +64,7 @@ void ofApp::keyPressed(int key){
     
     
 }
+#pragma mark - Other funcs
 //--------------------------------------------------------------
 void ofApp::openAudioFile(string filename){
 
@@ -87,8 +79,22 @@ void ofApp::startStopPlaying(){
 
     timePanel.startStopPlaying();
 }
+//--------------------------------------------------------------
+void ofApp::onTimelinePanelResize(int &h){
 
-
+    //cout << "ofAPP:" << h << endl;
+    
+    //new metersPanel vars
+    int new_y = mainPanel.getHeight() + h;
+    int new_h = ofGetHeight() - new_y;
+    
+    metersPanel.adjustPosAndHeight(new_y, new_h);
+    
+    
+}
+//--------------------------------------------------------------
+///**************************************************************
+#pragma mark - OF core other tools
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 }

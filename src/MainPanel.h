@@ -16,6 +16,8 @@ class MainPanel : public Panel{
         void draw();
         void exit();
     
+        void setupGUI();
+    
         vector<ofxDatGuiComponent*> components;
         void onButtonEvent(ofxDatGuiButtonEvent e);
         void onTextInputEvent(ofxDatGuiTextInputEvent e);
@@ -30,7 +32,7 @@ class MainPanel : public Panel{
     private:
         string fileInfoStr;
         string fileName;
-        ofTrueTypeFont	verdana14;
+        ofTrueTypeFont	verdana;
         int guiCompHeight, guiCompWidth;
 
 };

@@ -12,6 +12,7 @@
 
 #include "MainPanel.h"
 #include "TimelinePanel.h"
+#include "MetersPanel.h"
 
 class ofApp : public ofBaseApp{
 
@@ -34,9 +35,9 @@ class ofApp : public ofBaseApp{
     
     void openAudioFile(string filename);
   
-    
+    void onTimelinePanelResize(int & h);
 	
-    ofPolyline waveform;///
+    ofPolyline waveform;
     
 	ofxTimeline timeline;
     ofxTLAudioTrack* track;
@@ -44,6 +45,7 @@ class ofApp : public ofBaseApp{
     //panels-----------
     MainPanel mainPanel;
     TimelinePanel timePanel;
+    MetersPanel metersPanel;
     
 
     
