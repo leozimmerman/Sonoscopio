@@ -30,8 +30,9 @@ class ofxAAMeter{
     
     ofxDatGuiSlider * smoothSlider;
     ofxDatGuiButton* onOffToggle;
-    void onSliderEvent(ofxDatGuiSliderEvent e);
-    void onButtonEvent(ofxDatGuiButtonEvent e);
+    
+    virtual void onSliderEvent(ofxDatGuiSliderEvent e);
+    virtual void onButtonEvent(ofxDatGuiButtonEvent e);
     
     protected:
     
@@ -45,10 +46,11 @@ class ofxAAMeter{
     ofColor _backgroundColor;
     
     
-     float _value;
     ofTrueTypeFont	verdana;
     
     private:
+    
+     float _value;
     
    
     

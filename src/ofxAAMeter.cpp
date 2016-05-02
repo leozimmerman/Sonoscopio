@@ -16,10 +16,9 @@ ofxAAMeter::ofxAAMeter(int x, int y, int w, int h){
     verdana.setLineHeight(18.0f);
     verdana.setLetterSpacing(1.037);
     
-    _name = "Centroid";
+    _name = "meter";
     
-    
-    smoothSlider = new ofxDatGuiSlider("slider", 0.0, 1.0, 0.5);
+    smoothSlider = new ofxDatGuiSlider("smooth", 0.0, 1.0, 0.5);
     smoothSlider->onSliderEvent(this, &ofxAAMeter::onSliderEvent);
     
     
@@ -30,7 +29,6 @@ ofxAAMeter::ofxAAMeter(int x, int y, int w, int h){
     onOffToggle->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
 
-   
    
     
 }
@@ -90,7 +88,7 @@ void ofxAAMeter::draw(){
     smoothSlider->setWidth(_w * 1.3, 0.0);
     smoothSlider->setHeight(line_h * 0.75);
     smoothSlider->setPosition(_x, _y + line_h*2.75);
-    onOffToggle->setLabelMargin(0.0);
+    smoothSlider->setLabelMargin(0.0);
     smoothSlider->drawElemental();
     
   
@@ -117,7 +115,7 @@ void ofxAAMeter::setHeight(float h){
 }
 //------------------------------------------------
 void ofxAAMeter::onSliderEvent(ofxDatGuiSliderEvent e){
-    cout << _name << "- smooth: "<<e.value << endl;
+    cout << _name <<"::slider: " <<e.value << endl;
 }
 //------------------------------------------------
 

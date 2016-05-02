@@ -43,6 +43,8 @@
 		9D7BB9637658A8E9D507C66C /* ofxTLColors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF90B9976FECCFE157607AF4 /* ofxTLColors.cpp */; };
 		9E8EC2BF8BCA13DA057FA929 /* ofxTLSwitches.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D23395AC4260312D47BB958 /* ofxTLSwitches.cpp */; };
 		B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */; };
+		B35C553A1CD7A6DC0070293F /* ofxAAOnsetMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */; };
+		B35C553D1CD7B0920070293F /* ofxAAMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C553B1CD7B0920070293F /* ofxAAMetersPanel.cpp */; };
 		B396090F1CCA681100FEEB42 /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608E81CCA681100FEEB42 /* ofxOscBundle.cpp */; };
 		B39609101CCA681100FEEB42 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608EA1CCA681100FEEB42 /* ofxOscMessage.cpp */; };
 		B39609111CCA681100FEEB42 /* ofxOscParameterSync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608EC1CCA681100FEEB42 /* ofxOscParameterSync.cpp */; };
@@ -223,6 +225,10 @@
 		B21E7E5F548EEA92F368040B /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimelinePanel.cpp; sourceTree = "<group>"; };
 		B34F35651CCABAEC00244E46 /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelinePanel.h; sourceTree = "<group>"; };
+		B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAOnsetMeter.cpp; sourceTree = "<group>"; };
+		B35C55391CD7A6DC0070293F /* ofxAAOnsetMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAOnsetMeter.h; sourceTree = "<group>"; };
+		B35C553B1CD7B0920070293F /* ofxAAMetersPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAMetersPanel.cpp; sourceTree = "<group>"; };
+		B35C553C1CD7B0920070293F /* ofxAAMetersPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAMetersPanel.h; sourceTree = "<group>"; };
 		B39608E61CCA681100FEEB42 /* ofxOsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxOsc.h; sourceTree = "<group>"; };
 		B39608E71CCA681100FEEB42 /* ofxOscArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxOscArg.h; sourceTree = "<group>"; };
 		B39608E81CCA681100FEEB42 /* ofxOscBundle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOscBundle.cpp; sourceTree = "<group>"; };
@@ -1248,6 +1254,10 @@
 				B34F35651CCABAEC00244E46 /* TimelinePanel.h */,
 				B3CBB1D41CD3A8DB00E6BB34 /* MetersPanel.cpp */,
 				B3CBB1D51CD3A8DB00E6BB34 /* MetersPanel.h */,
+				B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */,
+				B35C553B1CD7B0920070293F /* ofxAAMetersPanel.cpp */,
+				B35C553C1CD7B0920070293F /* ofxAAMetersPanel.h */,
+				B35C55391CD7A6DC0070293F /* ofxAAOnsetMeter.h */,
 				B3CBB1DF1CD3ED0000E6BB34 /* ofxAABinMeter.cpp */,
 				B3CBB1E01CD3ED0000E6BB34 /* ofxAABinMeter.h */,
 				B3CBB1D81CD3B79500E6BB34 /* ofxAAMeter.cpp */,
@@ -1421,6 +1431,7 @@
 				B3BAA90667D4B61631BA5962 /* ofxTLKeyframes.cpp in Sources */,
 				E48C9224ADC0EB481A762E22 /* ofxTLLFO.cpp in Sources */,
 				C7D250488914920C32F18F34 /* ofxTLPage.cpp in Sources */,
+				B35C553A1CD7A6DC0070293F /* ofxAAOnsetMeter.cpp in Sources */,
 				BCFDFC3681CF3552BCDB819E /* ofxTLPageTabs.cpp in Sources */,
 				9E8EC2BF8BCA13DA057FA929 /* ofxTLSwitches.cpp in Sources */,
 				3A02CDF226D01EBB6533D47F /* ofxTLTicker.cpp in Sources */,
@@ -1431,6 +1442,7 @@
 				3B32D3B612022D0C5B272BDD /* ofxTLVideoTrack.cpp in Sources */,
 				ED77DA7C8D99D9B1C9C240C8 /* ofxTLZoomer.cpp in Sources */,
 				D5F416A7F5798651D8370D5E /* kiss_fft.c in Sources */,
+				B35C553D1CD7B0920070293F /* ofxAAMetersPanel.cpp in Sources */,
 				782C2B355CB6EBC83BDB95E0 /* kiss_fftr.c in Sources */,
 				DE69BD6CB5972050A485EC9C /* ofOpenALSoundPlayer_TimelineAdditions.cpp in Sources */,
 				168C43F69AF6A8042EA0B13F /* easing_terms_of_use.html in Sources */,

@@ -5,8 +5,12 @@
 #include "ofxDatGui.h"
 
 #include "Panel.h"
-#include "ofxAAMeter.h"
-#include "ofxAABinMeter.h"
+
+//#include "ofxAAMeter.h"
+//#include "ofxAABinMeter.h"
+//#include "ofxAAOnsetMeter.h"
+
+#include "ofxAAMetersPanel.h"
 
 class MetersPanel : public Panel{
     
@@ -25,10 +29,10 @@ public:
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
     
-    
-    ofxAAMeter * meter ;
-    ofxAABinMeter * binMeter;
-    
+    ofxAAMetersPanel mPanel;
+//    ofxAAMeter * meter ;
+//    ofxAABinMeter * binMeter;
+//    ofxAAOnsetMeter * onsetMeter;
     
 private:
     
