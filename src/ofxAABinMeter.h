@@ -9,16 +9,19 @@ class ofxAABinMeter : public ofxAAMeter{
 
     public:
     
-    ofxAABinMeter(int x, int y, int w, int h) : ofxAAMeter(x,y,w,h){};
+    ofxAABinMeter(string name, int x, int y, int w, int h) : ofxAAMeter(name, x,y,w,h){
+        _meterOrient = HORIZONTAL;
+    };
     
-    virtual void update();
+    //virtual void update();
     virtual void draw();
     
-    void setNumBins(int bins){_nBins = bins;}
+    virtual void drawMeter();
+    
+    void setBinsNum(int bins){_nBins = bins;}
     void setValues(vector<float>& vals){_values = vals;}
     
     protected:
-    
     vector<float> _values;
     int _nBins;
 };

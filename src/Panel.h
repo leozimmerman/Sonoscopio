@@ -6,7 +6,7 @@ class Panel{
     
     public:
     
-        virtual void setup(int x, int y, int width, int height, ofBaseApp* appPtr) =0;
+        virtual void setup(int x, int y, int width, int height, ofBaseApp* appPtr){};
         virtual void update() =0;
         virtual void draw() =0;
         virtual void exit() =0;

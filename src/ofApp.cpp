@@ -12,23 +12,32 @@ void ofApp::setup(){
     
     ofSetLogLevel(OF_LOG_VERBOSE);
     
+    //AudioAnalyzer-------------------
+    audioAnalyzer.setup(512, 44100);
+    
     //Panels setup------------------
     
     mainPanel.setup(0,0, ofGetWidth(), 100, ofGetAppPtr());
     timePanel.setup(0,100, ofGetWidth(), 500, ofGetAppPtr());
-    metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr());
-    
+    metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr(), &audioAnalyzer);
     
     mainPanel.setFileInfoString(timePanel.getFileInfo());
-
     ofAddListener(timePanel.heightResized, this, &ofApp::onTimelinePanelResize);
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
-
-///    vector<float> buffer = track->getCurrentBufferForChannel(512, 1);
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+    
+    
+    vector<float> buffer = timePanel.audioTrack->getCurrentBuffer();
+//    vector<float> buffer = timePanel.audioTrack->getCurrentBufferForChannel(512, 1);
+    
+    audioAnalyzer.analyze(&buffer[0], 512);
+    
     
     mainPanel.update();
     timePanel.update();
@@ -46,8 +55,10 @@ void ofApp::draw(){
 
     
 }
-
-
+//--------------------------------------------------------------
+void ofApp::exit(){
+    audioAnalyzer.exit();
+}
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 

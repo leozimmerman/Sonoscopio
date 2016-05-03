@@ -44,7 +44,7 @@
 		9E8EC2BF8BCA13DA057FA929 /* ofxTLSwitches.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D23395AC4260312D47BB958 /* ofxTLSwitches.cpp */; };
 		B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */; };
 		B35C553A1CD7A6DC0070293F /* ofxAAOnsetMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */; };
-		B35C553D1CD7B0920070293F /* ofxAAMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C553B1CD7B0920070293F /* ofxAAMetersPanel.cpp */; };
+		B35C553D1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */; };
 		B396090F1CCA681100FEEB42 /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608E81CCA681100FEEB42 /* ofxOscBundle.cpp */; };
 		B39609101CCA681100FEEB42 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608EA1CCA681100FEEB42 /* ofxOscMessage.cpp */; };
 		B39609111CCA681100FEEB42 /* ofxOscParameterSync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608EC1CCA681100FEEB42 /* ofxOscParameterSync.cpp */; };
@@ -227,8 +227,8 @@
 		B34F35651CCABAEC00244E46 /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelinePanel.h; sourceTree = "<group>"; };
 		B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAOnsetMeter.cpp; sourceTree = "<group>"; };
 		B35C55391CD7A6DC0070293F /* ofxAAOnsetMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAOnsetMeter.h; sourceTree = "<group>"; };
-		B35C553B1CD7B0920070293F /* ofxAAMetersPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAMetersPanel.cpp; sourceTree = "<group>"; };
-		B35C553C1CD7B0920070293F /* ofxAAMetersPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAMetersPanel.h; sourceTree = "<group>"; };
+		B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAChannelMetersPanel.cpp; sourceTree = "<group>"; };
+		B35C553C1CD7B0920070293F /* ofxAAChannelMetersPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAChannelMetersPanel.h; sourceTree = "<group>"; };
 		B39608E61CCA681100FEEB42 /* ofxOsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxOsc.h; sourceTree = "<group>"; };
 		B39608E71CCA681100FEEB42 /* ofxOscArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxOscArg.h; sourceTree = "<group>"; };
 		B39608E81CCA681100FEEB42 /* ofxOscBundle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOscBundle.cpp; sourceTree = "<group>"; };
@@ -1254,9 +1254,9 @@
 				B34F35651CCABAEC00244E46 /* TimelinePanel.h */,
 				B3CBB1D41CD3A8DB00E6BB34 /* MetersPanel.cpp */,
 				B3CBB1D51CD3A8DB00E6BB34 /* MetersPanel.h */,
+				B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */,
+				B35C553C1CD7B0920070293F /* ofxAAChannelMetersPanel.h */,
 				B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */,
-				B35C553B1CD7B0920070293F /* ofxAAMetersPanel.cpp */,
-				B35C553C1CD7B0920070293F /* ofxAAMetersPanel.h */,
 				B35C55391CD7A6DC0070293F /* ofxAAOnsetMeter.h */,
 				B3CBB1DF1CD3ED0000E6BB34 /* ofxAABinMeter.cpp */,
 				B3CBB1E01CD3ED0000E6BB34 /* ofxAABinMeter.h */,
@@ -1442,7 +1442,7 @@
 				3B32D3B612022D0C5B272BDD /* ofxTLVideoTrack.cpp in Sources */,
 				ED77DA7C8D99D9B1C9C240C8 /* ofxTLZoomer.cpp in Sources */,
 				D5F416A7F5798651D8370D5E /* kiss_fft.c in Sources */,
-				B35C553D1CD7B0920070293F /* ofxAAMetersPanel.cpp in Sources */,
+				B35C553D1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp in Sources */,
 				782C2B355CB6EBC83BDB95E0 /* kiss_fftr.c in Sources */,
 				DE69BD6CB5972050A485EC9C /* ofOpenALSoundPlayer_TimelineAdditions.cpp in Sources */,
 				168C43F69AF6A8042EA0B13F /* easing_terms_of_use.html in Sources */,

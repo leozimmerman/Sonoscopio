@@ -15,6 +15,10 @@ public:
     virtual void update();
     virtual void draw();
     
+    virtual void drawMeter();
+    
+    virtual void setPosAndSize(int x, int y, int w, int h);
+    
     void setValue(bool val){_onsetValue = val;}
     void setAlpha(float alpha){_alpha = alpha;}
     void setTreshold(float tres){_treshold = tres;}
@@ -22,6 +26,8 @@ public:
     bool getValue(){return _onsetValue;}
     float getAlpha(){return _alpha;}
     float getTreshold(){return _treshold;}
+    
+    void onSliderEvent(ofxDatGuiSliderEvent e);
     
 protected:
     

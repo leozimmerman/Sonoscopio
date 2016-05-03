@@ -4,19 +4,17 @@
 #include "ofMain.h"
 #include "ofxDatGui.h"
 
+#include"ofxAudioAnalyzer.h"
+
 #include "Panel.h"
 
-//#include "ofxAAMeter.h"
-//#include "ofxAABinMeter.h"
-//#include "ofxAAOnsetMeter.h"
-
-#include "ofxAAMetersPanel.h"
+#include "ofxAAChannelMetersPanel.h"
 
 class MetersPanel : public Panel{
     
 public:
     
-    void setup(int x, int y, int width, int height, ofBaseApp* appPtr);
+    void setup(int x, int y, int width, int height, ofBaseApp* appPtr, ofxAudioAnalyzer* aaPtr);
     void update();
     void draw();
     void exit(){};
@@ -29,10 +27,10 @@ public:
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
     
-    ofxAAMetersPanel mPanel;
-//    ofxAAMeter * meter ;
-//    ofxAABinMeter * binMeter;
-//    ofxAAOnsetMeter * onsetMeter;
+    ofxAAChannelMetersPanel chPanel;
+    
+    ofxAudioAnalyzer* audioAnalyzerPtr;
+
     
 private:
     

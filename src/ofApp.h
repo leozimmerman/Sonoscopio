@@ -20,6 +20,7 @@ class ofApp : public ofBaseApp{
 	void setup();
 	void update();
 	void draw();
+    void exit();
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -37,16 +38,16 @@ class ofApp : public ofBaseApp{
   
     void onTimelinePanelResize(int & h);
 	
-    ofPolyline waveform;
-    
-	ofxTimeline timeline;
-    ofxTLAudioTrack* track;
+    //ofPolyline waveform;
+	//ofxTimeline timeline;
+    //ofxTLAudioTrack* track;
     
     //panels-----------
     MainPanel mainPanel;
     TimelinePanel timePanel;
     MetersPanel metersPanel;
     
+    ofxAudioAnalyzer audioAnalyzer;
 
     
 };
