@@ -30,6 +30,8 @@ public:
     ofxAAChannelMetersPanel chPanel;
     
     ofxAudioAnalyzer* audioAnalyzerPtr;
+    
+   
 
     
 private:

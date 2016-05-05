@@ -37,10 +37,7 @@ class ofApp : public ofBaseApp{
     void openAudioFile(string filename);
   
     void onTimelinePanelResize(int & h);
-	
-    //ofPolyline waveform;
-	//ofxTimeline timeline;
-    //ofxTLAudioTrack* track;
+
     
     //panels-----------
     MainPanel mainPanel;

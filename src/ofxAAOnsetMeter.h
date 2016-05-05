@@ -4,13 +4,14 @@
 #include "ofMain.h"
 
 #include "ofxAAMeter.h"
+#include "ofxAudioAnalyzer.h"
+
 
 class ofxAAOnsetMeter : public ofxAAMeter{
     
 public:
     
-    //ofxAAOnsetMeter(int x, int y, int w, int h) : ofxAAMeter(x,y,w,h);
-    ofxAAOnsetMeter(int x, int y, int w, int h);
+    ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzer* analyzerPtr);
     
     virtual void update();
     virtual void draw();
@@ -30,6 +31,8 @@ public:
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
 protected:
+    
+    ofxAudioAnalyzer* audioAnalyzer;
     
     bool _onsetValue;
     float _alpha;

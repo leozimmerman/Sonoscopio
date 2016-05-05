@@ -306,7 +306,7 @@ void TimelinePanel::resizeHeight(int tl_h){
         components[i]->setPosition(components[i]->getX(), gui_y);
     }
     
-    ofNotifyEvent(heightResized, _h, this);
+    ofNotifyEvent(heightResizedEvent, _h, this);
 }
 //--------------------------------------------------------------
 #pragma mark - gui listeners

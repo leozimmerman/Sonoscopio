@@ -33,39 +33,40 @@ public:
     int getHeight(){return _h;}
     ofColor getBackgroundColor(){return _bckgColor;}
     
+    void onMeterStateChanged(bool & b);
+    
     
 protected:
-    ofxAudioAnalyzer* audioAnalyzerPtr;///**
+    
+    ofxAudioAnalyzer* audioAnalyzer;///**
 
     int _x, _y;
     int _w, _h;
     ofColor _bckgColor;
-    
-    
-    
     
     int VMetersNum, HMetersNum ;
     int HMetersWidthTotal, VMetersWidthTotal;
     int HMeterWidth, HMeterHeight;
     int VMeterWidth, VMeterHeight;
     
-    ofxAAMeter * power;
-    ofxAAMeter * pitchFreq;
-    ofxAAMeter * pitchConf;
-    ofxAAMeter * salience;
-    ofxAAMeter * hfc;
-    ofxAAMeter * centroid;
-    ofxAAMeter * specComp;
-    ofxAAMeter * inharm;
+    ofxAAMeter * mPower;
+    ofxAAMeter * mPitchFreq;
+    ofxAAMeter * mPitchConf;
+    ofxAAMeter * mSalience;
+    ofxAAMeter * mHfc;
+    ofxAAMeter * mCentroid;
+    ofxAAMeter * mSpecComp;
+    ofxAAMeter * mInharm;
     
-    ofxAAOnsetMeter * onsets;
+    ofxAAOnsetMeter * mOnsets;
     
-    ofxAABinMeter * spectrum;
-    ofxAABinMeter * melBands;
-    ofxAABinMeter * mfcc;//dct
-    ofxAABinMeter * hpcp;
+    ofxAABinMeter * mSpectrum;
+    ofxAABinMeter * mMelBands;
+    ofxAABinMeter * mMfcc;//dct
+    ofxAABinMeter * mHpcp;
     
     vector<ofxAAMeter*> meters;
+    
     
     
 

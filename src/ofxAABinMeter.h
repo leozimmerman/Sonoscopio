@@ -5,11 +5,12 @@
 
 #include "ofxAAMeter.h"
 
+
 class ofxAABinMeter : public ofxAAMeter{
 
     public:
     
-    ofxAABinMeter(string name, int x, int y, int w, int h) : ofxAAMeter(name, x,y,w,h){
+    ofxAABinMeter(string name, int x, int y, int w, int h) : ofxAAMeter(name, x, y, w, h){
         _meterOrient = HORIZONTAL;
     };
     

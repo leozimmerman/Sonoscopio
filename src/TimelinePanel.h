@@ -52,7 +52,7 @@ public:
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;
     
-    ofEvent<int> heightResized;
+    ofEvent<int> heightResizedEvent;
     
     
 private:

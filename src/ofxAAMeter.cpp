@@ -1,5 +1,6 @@
 
 #include "ofxAAMeter.h"
+//------------------------------------------------
 
 ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     
@@ -17,14 +18,14 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     _minValue = 0.0;
     _maxValue = 1.0;
     
-    smoothAmnt = 0.0;
+    _smoothAmnt = 0.0;
     
     verdana.load("verdana.ttf", 10, true, true);
     verdana.setLineHeight(18.0f);
     verdana.setLetterSpacing(1.037);
     line_h = verdana.getLineHeight();
     
-    smoothSlider = new ofxDatGuiSlider("smooth", 0.0, 1.0,smoothAmnt);
+    smoothSlider = new ofxDatGuiSlider("smooth", 0.0, 1.0, _smoothAmnt);
     smoothSlider->onSliderEvent(this, &ofxAAMeter::onSliderEvent);
     smoothSlider->setWidth(_w * 1.3, 0.0);
     smoothSlider->setHeight(line_h);
@@ -47,7 +48,7 @@ void ofxAAMeter::update(){
     //update gui components
     smoothSlider->update();
     onOffToggle->update();
-    
+
 
 }
 //------------------------------------------------
@@ -121,13 +122,9 @@ void ofxAAMeter::setPosAndSize(int x, int y, int w, int h){
 }
 //------------------------------------------------
 void ofxAAMeter::setValue(float val){
-
-    float lastVal = _value;
-    float newVal = val;
-    
-    _value = smooth(newVal, lastVal, smoothAmnt);
-
-}//------------------------------------------------
+    _value = val;
+}
+//------------------------------------------------
 void ofxAAMeter::setYandHeight(int y, int h){
     setPosAndSize(_x, y, _w, h);
 }
@@ -139,19 +136,14 @@ void ofxAAMeter::setHeight(float h){
 //------------------------------------------------
 void ofxAAMeter::onSliderEvent(ofxDatGuiSliderEvent e){
     cout << _name <<"::slider: " <<e.value << endl;
-    smoothAmnt = e.value;
+    _smoothAmnt = e.value;
 }
 //------------------------------------------------
-
 void ofxAAMeter::onButtonEvent(ofxDatGuiButtonEvent e){
-   cout << _name << "- on-off: "<<e.enabled << endl;
+    cout << _name << "-meter-on-off: "<<e.enabled << endl;
+    ofNotifyEvent(stateChangedEvent, e.enabled, this);
 }
-//------------------------------------------------
-float ofxAAMeter::smooth(float newValue,  float lastValue, float amnt){
-    
-    float result = lastValue * amnt + (1-amnt) * newValue;
-    return result;
-}
+
 
 
 

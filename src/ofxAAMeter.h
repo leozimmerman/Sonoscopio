@@ -4,13 +4,14 @@
 #include "ofMain.h"
 #include "ofxDatGui.h"
 
+
 enum meterOrientation{
     VERTICAL,
     HORIZONTAL
 };
 
 class ofxAAMeter{
-    public:
+public:
     
     ofxAAMeter(string name, int x, int y, int w, int h);
     //virtual ~ofxAAMeter();
@@ -21,8 +22,6 @@ class ofxAAMeter{
 
     virtual void drawLabel();
     virtual void drawMeter();
-    
-    float smooth(float newValue,  float lastValue, float amnt);//inline?
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
@@ -35,6 +34,7 @@ class ofxAAMeter{
     float getMinValue(){return _minValue;}
     float getMaxValue(){return _maxValue;}
     meterOrientation getMeterOrient(){return _meterOrient;}
+    float getSmoothAmnt(){return _smoothAmnt;}
 
     void setName(string name){_name = name;}
     void setMainColor(ofColor col){_mainColor = col;}
@@ -45,6 +45,8 @@ class ofxAAMeter{
     void setHeight(float h);
     void setMinValue(float val){_minValue = val;}
     void setMaxValue(float val){_maxValue = val;}
+    
+ 
 
     ofRectangle getDrawRect(){return _drawRect;}
     
@@ -53,6 +55,8 @@ class ofxAAMeter{
     
     virtual void onSliderEvent(ofxDatGuiSliderEvent e);
     virtual void onButtonEvent(ofxDatGuiButtonEvent e);
+    
+    ofEvent<bool> stateChangedEvent;
     
     protected:
     
@@ -72,12 +76,13 @@ class ofxAAMeter{
     
     meterOrientation _meterOrient;
     
-    float smoothAmnt;
     
-    private:
+    
+private:
     
     float _value;
-    
+    float _smoothAmnt;
+
     
    
     

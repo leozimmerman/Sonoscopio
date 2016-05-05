@@ -9,45 +9,45 @@ void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudi
     _h = height;
     
     setBackgroundColor(ofColor::darkorange);
-    audioAnalyzerPtr = aaPtr;
+    audioAnalyzer = aaPtr;
     
-    
- 
-    
-    //ADD-METERS-------------------------------------------
     setupMeters();
-
     
+    //ofAddListener(timePanel.heightResizedEvent, this, &ofxAAChannelMetersPanel::onMeterStateChanged);
+    for(int i=0; i<meters.size(); i++){
+        ofAddListener(meters[i]->stateChangedEvent, this, &ofxAAChannelMetersPanel::onMeterStateChanged);
+    }
+    
+
 }
 //------------------------------------------------
 void ofxAAChannelMetersPanel::update(){
+    
+    //update gui components of all meters-------
     
     for(int i=0; i<meters.size(); i++){
         meters[i]->update();
     }
     
-  
-    //------------------------
-    power->setValue(audioAnalyzerPtr->getPower());
+    //set meters values from audioAnalyzer-------
     
-    pitchFreq->setValue(audioAnalyzerPtr->getPitchFreq());
-    pitchConf->setValue(audioAnalyzerPtr->getPitchConf());
-    salience->setValue(audioAnalyzerPtr->getSalience());
+    mPower->setValue(audioAnalyzer->getPower(mPower->getSmoothAmnt()));
     
-    hfc->setValue(audioAnalyzerPtr->getHfcNorm());
-    centroid->setValue(audioAnalyzerPtr->getCentroidNorm());
-    specComp->setValue(audioAnalyzerPtr->getSpectralComplexNorm());
-    inharm->setValue(audioAnalyzerPtr->getInharmonicity());
-    
-    onsets->setValue(audioAnalyzerPtr->getIsOnset());
-    
-    
-    
-    //spectrum->setNumBins(audioAnalyzerPtr->getSpectrumBinsNum());
-    spectrum->setValues(audioAnalyzerPtr->getSpectrumRef());
-    melBands->setValues(audioAnalyzerPtr->getMelBandsRef());
-    mfcc->setValues(audioAnalyzerPtr->getDctRef());
-    hpcp->setValues(audioAnalyzerPtr->getHpcpRef());
+    mPitchFreq->setValue(audioAnalyzer->getPitchFreq(mPitchFreq->getSmoothAmnt()));
+    mPitchConf->setValue(audioAnalyzer->getPitchConfidence(mPitchConf->getSmoothAmnt()));
+    mSalience->setValue(audioAnalyzer->getMelodySalience(mSalience->getSmoothAmnt()));
+
+    mHfc->setValue(audioAnalyzer->getHfcNormalized(mHfc->getSmoothAmnt()));
+    mCentroid->setValue(audioAnalyzer->getCentroidNormalized(mCentroid->getSmoothAmnt()));
+    mSpecComp->setValue(audioAnalyzer->getSpectralComplexNormalized(mSpecComp->getSmoothAmnt()));
+    mInharm->setValue(audioAnalyzer->getInharmonicity(mInharm->getSmoothAmnt()));
+
+    mOnsets->setValue(audioAnalyzer->getIsOnset());
+
+    mSpectrum->setValues(audioAnalyzer->getSpectrumRef());
+    mMelBands->setValues(audioAnalyzer->getMelBandsRef());
+    mMfcc->setValues(audioAnalyzer->getDctRef());
+    mHpcp->setValues(audioAnalyzer->getHpcpRef());
     
 }
 //------------------------------------------------
@@ -58,9 +58,6 @@ void ofxAAChannelMetersPanel::draw(){
         ofSetColor(getBackgroundColor());
         ofDrawRectangle(_x, _y, _w, _h);
     ofPopStyle();
-    
-    
-    
     
     for(int i=0; i<meters.size(); i++){
         meters[i]->draw();
@@ -88,8 +85,6 @@ void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){
             
     }
     
-    //power->setPosAndSize(_x+30, _y, 50, _h);
-    
     
 }
 //------------------------------------------------
@@ -110,71 +105,78 @@ void ofxAAChannelMetersPanel::setupMeters(){
     //-------------------------------------------
     //Vertical Meters
     int x_pos = 0;
-    power = new ofxAAMeter("POWER", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(power);
+    mPower = new ofxAAMeter("POWER", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    meters.push_back(mPower);
     
     x_pos += VMeterWidth;
-    pitchFreq = new ofxAAMeter("PITCH FREQ", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    pitchFreq->setMinValue(130.0);//hz
-    pitchFreq->setMaxValue(2093.0);//hz
-    meters.push_back(pitchFreq);
+    mPitchFreq = new ofxAAMeter("PITCH FREQ", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mPitchFreq->setMinValue(130.0);//hz
+    mPitchFreq->setMaxValue(2093.0);//hz
+    meters.push_back(mPitchFreq);
     
     x_pos += VMeterWidth;
-    pitchConf = new ofxAAMeter("PITCH CONF", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(pitchConf);
+    mPitchConf = new ofxAAMeter("PITCH CONF", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    meters.push_back(mPitchConf);
     
     x_pos += VMeterWidth;
-    salience = new ofxAAMeter("PITCH SALIENCE", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(salience);
+    mSalience = new ofxAAMeter("PITCH SALIENCE", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    meters.push_back(mSalience);
     
     x_pos += VMeterWidth;
-    hfc = new ofxAAMeter("HFC", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(hfc);
+    mHfc = new ofxAAMeter("HFC", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    meters.push_back(mHfc);
     
     x_pos += VMeterWidth;
-    centroid = new ofxAAMeter("CENTROID", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(centroid);
+    mCentroid = new ofxAAMeter("CENTROID", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    meters.push_back(mCentroid);
     
     x_pos += VMeterWidth;
-    specComp = new ofxAAMeter("SPEC COMP", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(specComp);
+    mSpecComp = new ofxAAMeter("SPEC COMP", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    meters.push_back(mSpecComp);
     
     x_pos += VMeterWidth;
-    inharm = new ofxAAMeter("INHARM", _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(inharm);
+    mInharm = new ofxAAMeter("INHARM", _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    meters.push_back(mInharm);
     
     x_pos += VMeterWidth;
-    onsets = new ofxAAOnsetMeter(_x + x_pos, _y, VMeterWidth, VMeterHeight);
-    meters.push_back(onsets);
+    mOnsets = new ofxAAOnsetMeter(_x + x_pos, _y, VMeterWidth, VMeterHeight, audioAnalyzer);
+    meters.push_back(mOnsets);
     
     //Horizontal Meters
     x_pos = VMetersWidthTotal;
     int y_pos = 0;
-    spectrum = new ofxAABinMeter("SPECTRUM", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    spectrum->setBinsNum(audioAnalyzerPtr->getSpectrumBinsNum());
-    spectrum->setMinValue(log10(0.001));
-    spectrum->setMaxValue(log10(1.0));
-    meters.push_back(spectrum);
+    mSpectrum = new ofxAABinMeter("SPECTRUM", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mSpectrum->setBinsNum(audioAnalyzer->getSpectrumBinsNum());
+    mSpectrum->setMinValue(log10(0.001));
+    mSpectrum->setMaxValue(log10(1.0));
+    meters.push_back(mSpectrum);
     
     y_pos += HMeterHeight;
-    melBands = new ofxAABinMeter("MEL BANDS", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    melBands->setBinsNum(audioAnalyzerPtr->getMelBandsBinsNum());
-    melBands->setMinValue(log10(0.001));
-    melBands->setMaxValue(log10(1.0));
-    meters.push_back(melBands);
+    mMelBands = new ofxAABinMeter("MEL BANDS", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mMelBands->setBinsNum(audioAnalyzer->getMelBandsBinsNum());
+    mMelBands->setMinValue(log10(0.001));
+    mMelBands->setMaxValue(log10(1.0));
+    meters.push_back(mMelBands);
     
     y_pos += HMeterHeight;
-    mfcc = new ofxAABinMeter("MFCC", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    mfcc->setBinsNum(audioAnalyzerPtr->getMfccBinsNum());
-    mfcc->setMinValue(0.0);
-    mfcc->setMaxValue(300.0);
-    meters.push_back(mfcc);
+    mMfcc = new ofxAABinMeter("MFCC", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mMfcc->setBinsNum(audioAnalyzer->getMfccBinsNum());
+    mMfcc->setMinValue(0.0);
+    mMfcc->setMaxValue(300.0);
+    meters.push_back(mMfcc);
     
     y_pos += HMeterHeight;
-    hpcp = new ofxAABinMeter("HPCP", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    hpcp->setBinsNum(audioAnalyzerPtr->getHpcpBinsNum());
-    meters.push_back(hpcp);
+    mHpcp = new ofxAABinMeter("HPCP", _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mHpcp->setBinsNum(audioAnalyzer->getHpcpBinsNum());
+    meters.push_back(mHpcp);
     
- 
+}
 
+//--------------------------------------------------------------
+void ofxAAChannelMetersPanel::onMeterStateChanged(bool & b){
+    
+    cout << "panel listener--------"<<b << endl;
+
+    
+    
 }

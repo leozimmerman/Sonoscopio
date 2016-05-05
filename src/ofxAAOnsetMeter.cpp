@@ -2,17 +2,19 @@
 #include "ofxAAOnsetMeter.h"
 
 //------------------------------------
-ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h) : ofxAAMeter("ONSETS", x, y, w, h){
+ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzer* analyzerPtr) : ofxAAMeter("ONSETS", x, y, w, h){
 
+    audioAnalyzer = analyzerPtr;
+    
     _alpha = 0.1;
-    alphaSlider = new ofxDatGuiSlider("alpha", 0.0, 1.0, _alpha);
-    alphaSlider->onSliderEvent(this, &ofxAAMeter::onSliderEvent);
+    alphaSlider = new ofxDatGuiSlider("ALPHA", 0.0, 1.0, _alpha);
+    alphaSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     alphaSlider->setWidth(_w * 1.3, 0.0);
     alphaSlider->setHeight(line_h);
     alphaSlider->setLabelMargin(0.0);
     
     _treshold = 0.2;
-    tresholdSlider = new ofxDatGuiSlider("treshold", 0.0, 1.0, _treshold);
+    tresholdSlider = new ofxDatGuiSlider("TRESHOLD", 0.0, 1.0, _treshold);
     tresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     tresholdSlider->setWidth(_w * 1.3, 0.0);
     tresholdSlider->setHeight(line_h);
@@ -73,11 +75,11 @@ void ofxAAOnsetMeter::setPosAndSize(int x, int y, int w, int h){
 }
 //------------------------------------------------
 void ofxAAOnsetMeter::onSliderEvent(ofxDatGuiSliderEvent e){
-    //cout << _name <<e.target->getLabel()<<"::onsetXXX: " <<e.value << endl;
-    
-    if(e.target->getLabel() == "alpha"){
+    if(e.target->getLabel() == "ALPHA"){
         _alpha = e.value;
-    }else if(e.target->getLabel() == "treshold"){
+        audioAnalyzer->setOnsetAlpha(_alpha);
+    }else if(e.target->getLabel() == "TRESHOLD"){
         _treshold = e.value;
+        audioAnalyzer->setOnsetTreshold(_treshold);
     }
 }

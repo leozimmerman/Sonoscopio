@@ -4,6 +4,8 @@
 #pragma mark - Core funcs
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    ///HAY UN BACK EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
 	
     //Gral---------------------------
     ofSetBackgroundColor(100);
@@ -22,7 +24,7 @@ void ofApp::setup(){
     metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr(), &audioAnalyzer);
     
     mainPanel.setFileInfoString(timePanel.getFileInfo());
-    ofAddListener(timePanel.heightResized, this, &ofApp::onTimelinePanelResize);
+    ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
     
     
 }
