@@ -1,7 +1,10 @@
 
 #include "ofxAAMeter.h"
-//------------------------------------------------
 
+// the static event, or any static variable, must be initialized outside of the class definition.
+ofEvent<OnOffEventData> ofxAAMeter::onOffEventGlobal = ofEvent<OnOffEventData>();
+
+//------------------------------------------------
 ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     
     _name = name;
@@ -41,6 +44,7 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     onOffToggle->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
     _meterOrient = VERTICAL;
+    
 
 }
 //------------------------------------------------
@@ -140,8 +144,10 @@ void ofxAAMeter::onSliderEvent(ofxDatGuiSliderEvent e){
 }
 //------------------------------------------------
 void ofxAAMeter::onButtonEvent(ofxDatGuiButtonEvent e){
-    cout << _name << "-meter-on-off: "<<e.enabled << endl;
-    ofNotifyEvent(stateChangedEvent, e.enabled, this);
+    OnOffEventData data;
+    data.name = _name;
+    data.state = e.enabled;
+    ofNotifyEvent(onOffEventGlobal, data);
 }
 
 

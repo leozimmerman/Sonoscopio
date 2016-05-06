@@ -6,6 +6,7 @@
 #include "ofxAAMeter.h"
 #include "ofxAABinMeter.h"
 #include "ofxAAOnsetMeter.h"
+#include "ofxAAMetersNames.h"
 
 #include"ofxAudioAnalyzer.h"
 
@@ -33,7 +34,7 @@ public:
     int getHeight(){return _h;}
     ofColor getBackgroundColor(){return _bckgColor;}
     
-    void onMeterStateChanged(bool & b);
+    void onMeterStateChanged(OnOffEventData & data);
     
     
 protected:

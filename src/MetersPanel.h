@@ -14,7 +14,7 @@ class MetersPanel : public Panel{
     
 public:
     
-    void setup(int x, int y, int width, int height, ofBaseApp* appPtr, ofxAudioAnalyzer* aaPtr);
+    void setup(int x, int y, int width, int height, ofBaseApp* appPtr, vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs);
     void update();
     void draw();
     void exit(){};
@@ -27,9 +27,10 @@ public:
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
     
-    ofxAAChannelMetersPanel chPanel;
+    //ofxAAChannelMetersPanel chPanel;
+    vector <ofxAAChannelMetersPanel*> channelPanels;
     
-    ofxAudioAnalyzer* audioAnalyzerPtr;
+    vector<ofxAudioAnalyzer*> channelAnalyzers;
     
    
 
@@ -37,5 +38,7 @@ public:
 private:
     
     int guiCompHeight, guiCompWidth;
+    int panelsNum;
+    
     
 };

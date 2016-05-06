@@ -1,6 +1,8 @@
 
 #include "ofApp.h"
 
+ //ofxAudioAnalyzer audioAnalyzer(44100, 512);
+
 #pragma mark - Core funcs
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -15,13 +17,14 @@ void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     
     //AudioAnalyzer-------------------
-    audioAnalyzer.setup(512, 44100);
+    //audioAnalyzer.setup(512, 44100);
+    mainAnalyzer.setup(44100, 512, 1);///channels!
     
     //Panels setup------------------
     
     mainPanel.setup(0,0, ofGetWidth(), 100, ofGetAppPtr());
     timePanel.setup(0,100, ofGetWidth(), 500, ofGetAppPtr());
-    metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr(), &audioAnalyzer);
+    metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
     
     mainPanel.setFileInfoString(timePanel.getFileInfo());
     ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
@@ -36,9 +39,31 @@ void ofApp::update(){
     
     
     vector<float> buffer = timePanel.audioTrack->getCurrentBuffer();
-//    vector<float> buffer = timePanel.audioTrack->getCurrentBufferForChannel(512, 1);
+    //vector<float> buffer1 = timePanel.audioTrack->getCurrentBufferForChannel(512, 1);
+    //vector<float> buffer2 = timePanel.audioTrack->getCurrentBufferForChannel(512, 2);
     
-    audioAnalyzer.analyze(&buffer[0], 512);
+//    ofSoundBuffer testBuffer1, testBuffer2;
+//    
+//    testBuffer1.setNumChannels(1);
+//    testBuffer1.setSampleRate(44100);
+//    testBuffer1.copyFrom(buffer1, 1, 44100);
+//    
+//    testBuffer2.setNumChannels(2);
+//    testBuffer2.setSampleRate(44100);
+//    testBuffer2.copyFrom(buffer2, 1, 44100);
+    
+
+    
+    //---------------------------
+    ofSoundBuffer soundBuffer;
+
+    soundBuffer.copyFrom(buffer, 1, 44100);///channels!
+    //buffer.setChannel(testBuffer1, 1);
+    //buffer.setChannel(testBuffer2, 2);
+    //cout<<buffer.getNumChannels()<<endl;
+    mainAnalyzer.analyze(soundBuffer);
+    
+    //--------------------------
     
     
     mainPanel.update();
@@ -59,7 +84,7 @@ void ofApp::draw(){
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
-    audioAnalyzer.exit();
+    mainAnalyzer.exit();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){

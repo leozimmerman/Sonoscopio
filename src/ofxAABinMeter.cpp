@@ -47,5 +47,7 @@ void ofxAABinMeter::drawMeter(){
     
     
     ofPopMatrix();
+    
+    onOffToggle->draw();
 
 }

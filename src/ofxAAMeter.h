@@ -10,6 +10,13 @@ enum meterOrientation{
     HORIZONTAL
 };
 
+class OnOffEventData{
+public:
+    string name;
+    bool state;
+};
+
+
 class ofxAAMeter{
 public:
     
@@ -56,7 +63,8 @@ public:
     virtual void onSliderEvent(ofxDatGuiSliderEvent e);
     virtual void onButtonEvent(ofxDatGuiButtonEvent e);
     
-    ofEvent<bool> stateChangedEvent;
+    static ofEvent<OnOffEventData> onOffEventGlobal;//this is a shared event for all the instances of this class, so any instance of this class will broadcast to the same event,
+    
     
     protected:
     
@@ -76,7 +84,7 @@ public:
     
     meterOrientation _meterOrient;
     
-    
+   
     
 private:
     

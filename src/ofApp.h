@@ -7,7 +7,9 @@
 #include "ofxTimeline.h"
 #include "ofxTLAudioTrack.h"
 
-#include "ofxAudioAnalyzer.h"
+//#include "ofxAudioAnalyzer.h"
+#include "ofxAAMain.h"
+
 #include "ofxOsc.h"
 
 #include "MainPanel.h"
@@ -44,7 +46,8 @@ class ofApp : public ofBaseApp{
     TimelinePanel timePanel;
     MetersPanel metersPanel;
     
-    ofxAudioAnalyzer audioAnalyzer;
+   // ofxAudioAnalyzer audioAnalyzer(44100, 512);
+    ofxAAMain mainAnalyzer;
 
     
 };
