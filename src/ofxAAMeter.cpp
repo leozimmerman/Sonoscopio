@@ -28,24 +28,33 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     verdana.setLetterSpacing(1.037);
     line_h = verdana.getLineHeight();
     
-    smoothSlider = new ofxDatGuiSlider("smooth", 0.0, 1.0, _smoothAmnt);
-    smoothSlider->onSliderEvent(this, &ofxAAMeter::onSliderEvent);
-    smoothSlider->setWidth(_w * 1.3, 0.0);
-    smoothSlider->setHeight(line_h);
-    smoothSlider->setLabelMargin(0.0);
-    smoothSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    
-    onOffToggle = new ofxDatGuiToggle("on", TRUE);
+    onOffToggle = new ofxDatGuiToggle(MTR_ON_OFF, TRUE);
     onOffToggle->onButtonEvent(this, &ofxAAMeter::onButtonEvent);
     onOffToggle->setStripeVisible(false);
     onOffToggle->setWidth(_w, 0.1);
     onOffToggle->setHeight(line_h);
     onOffToggle->setLabelMargin(0.0);
     onOffToggle->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    onOffToggle->setPosition(_x, _y + line_h*1.75);
+    
+    smoothSlider = new ofxDatGuiSlider(MTR_SMOOTHING, 0.0, 1.0, _smoothAmnt);
+    smoothSlider->onSliderEvent(this, &ofxAAMeter::onSliderEvent);
+    smoothSlider->setWidth(_w * 1.3, 0.0);
+    smoothSlider->setHeight(line_h);
+    smoothSlider->setLabelMargin(0.0);
+    smoothSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    smoothSlider->setPosition(_x, _y + line_h*2.75);
     
     _meterOrient = VERTICAL;
     
 
+}
+//------------------------------------------------
+ofxAAMeter::~ofxAAMeter(){
+    
+    delete smoothSlider;
+    delete onOffToggle;
+    
 }
 //------------------------------------------------
 void ofxAAMeter::update(){

@@ -61,6 +61,31 @@ void ofxAAChannelMetersPanel::draw(){
 
 }
 //------------------------------------------------
+void ofxAAChannelMetersPanel::exit(){
+    
+    
+    delete mPower;
+    delete mPitchFreq;
+    delete mPitchConf;
+    delete mSalience;
+    delete mHfc;
+    delete mCentroid;
+    delete mSpecComp;
+    delete mInharm;
+    
+    delete mOnsets;
+    
+    delete mSpectrum;
+    delete mMelBands;
+    delete mMfcc;//dct
+    delete mHpcp;
+    
+    meters.clear();
+    
+    ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
+}
+
+//------------------------------------------------
 void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){
     
     _y = y;

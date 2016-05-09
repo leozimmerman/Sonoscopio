@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ofxDatGui.h"
-
+#include "ofxAAMetersNames.h"
 
 enum meterOrientation{
     VERTICAL,
@@ -21,7 +21,7 @@ class ofxAAMeter{
 public:
     
     ofxAAMeter(string name, int x, int y, int w, int h);
-    //virtual ~ofxAAMeter();
+    virtual ~ofxAAMeter();
 
     //void setup();
     virtual void update();

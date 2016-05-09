@@ -13,3 +13,5 @@
 #define MTR_NAME_MFCC "MFCC"
 #define MTR_NAME_HPCP "HPCP"
 #define MTR_NAME_ONSETS "ONSETS"
+#define MTR_SMOOTHING "SMOOTH"
+#define MTR_ON_OFF "ON"

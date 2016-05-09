@@ -37,7 +37,12 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
     
-    timeline.addAudioTrack("Audio","audio_files/rock.mp3");
+    ///timeline.addAudioTrack("Audio","audio_files/rock.mp3");//stereo
+    ///timeline.addAudioTrack("Audio","audio_files/flauta.wav");//mono
+    timeline.addAudioTrack("Audio","audio_files/mix-stereo.wav");//mono
+    ///timeline.addAudioTrack("Audio","audio_files/4chan.wav");//mono
+    
+    
     //this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
     timeline.setTimecontrolTrack("Audio");
     timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration());
@@ -93,9 +98,12 @@ void TimelinePanel::draw(){
         audioTrack->recomputePreview();
     }
     //draw waveforms
+    ofPushStyle();
+    ofSetColor(ofColor::white);
     for(int i=0; i<audioTrack->getPreviews().size(); i++){
         audioTrack->getPreviews()[i].draw();
     }
+    ofPopStyle();
     
   
 
@@ -137,6 +145,7 @@ void TimelinePanel::openAudioFile(string filename){
     timeline.setCurrentTimeSeconds(0.0);
     audioTrack->loadSoundfile(filename);
     timeline.setDurationInSeconds(audioTrack->getDuration());
+    
     
 }
 //--------------------------------------------------------------

@@ -19,8 +19,6 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
     
     setBackgroundColor(ofColor::darkGreen);
     
-    ///chPanel.setup(_x, _y, _w, _h, channelAnalyzers[0]);
-    
     panelsNum = channelAnalyzers.size();
     
     int panelHeight = _h / panelsNum;
@@ -28,10 +26,8 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
     for (int i=0; i<panelsNum; i++){
         
         int y_pos = _y + panelHeight*i;
-        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel;
-        p->setup(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
+        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
         channelPanels.push_back(p);
-        
     }
     
    
@@ -70,6 +66,39 @@ void MetersPanel::draw(){
 
 }
 //----------------------------------------------
+void MetersPanel::exit(){
+    for (ofxAAChannelMetersPanel* p : channelPanels){
+        p->exit();
+    }
+    channelPanels.clear();
+
+}
+//----------------------------------------------
+void MetersPanel::reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs){
+    
+    
+    for (ofxAAChannelMetersPanel* p : channelPanels){
+        p->exit();
+    }
+    channelPanels.clear();
+    
+    //--------------------------
+    
+    channelAnalyzers = chanAnalyzerPtrs;
+    panelsNum = channelAnalyzers.size();
+    
+    int panelHeight = _h / panelsNum;
+    
+    for (int i=0; i<panelsNum; i++){
+        
+        int y_pos = _y + panelHeight*i;
+        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
+        channelPanels.push_back(p);
+        
+    }
+
+}
+//----------------------------------------------
 void MetersPanel::adjustPosAndHeight(int y, int h){
     
     _y = y;
@@ -77,7 +106,7 @@ void MetersPanel::adjustPosAndHeight(int y, int h){
     
     //chPanel.adjustPosAndHeight(_y, _h);
     
-     int panelHeight = _h / panelsNum;
+    int panelHeight = _h / panelsNum;
     
     for(int i=0; i<channelPanels.size(); i++){
         int y_pos = _y + panelHeight*i;

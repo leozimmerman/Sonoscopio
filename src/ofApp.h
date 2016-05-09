@@ -16,6 +16,8 @@
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
+#define BUFFER_SIZE 512
+
 class ofApp : public ofBaseApp{
 
   public:
@@ -37,8 +39,9 @@ class ofApp : public ofBaseApp{
     void startStopPlaying();
     
     void openAudioFile(string filename);
-  
     void onTimelinePanelResize(int & h);
+    
+    void setOscSender(string host, int port);
 
     
     //panels-----------
@@ -48,7 +51,21 @@ class ofApp : public ofBaseApp{
     
    // ofxAudioAnalyzer audioAnalyzer(44100, 512);
     ofxAAMain mainAnalyzer;
+    
+    ofSoundBuffer soundBuffer;
+    
+    ofxOscSender oscSender;
 
+private:
+    int _channels;
+    int _samplerate;
+    
+    
+    mutex audioMutex;
+    
+    string _oscHost;
+    int _oscPort;
+    
     
 };
 

@@ -16,52 +16,58 @@ void ofApp::setup(){
     
     ofSetLogLevel(OF_LOG_VERBOSE);
     
-    //AudioAnalyzer-------------------
-    //audioAnalyzer.setup(512, 44100);
-    mainAnalyzer.setup(44100, 512, 1);///channels!
+  
+    
     
     //Panels setup------------------
     
     mainPanel.setup(0,0, ofGetWidth(), 100, ofGetAppPtr());
     timePanel.setup(0,100, ofGetWidth(), 500, ofGetAppPtr());
-    metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
+   
     
     mainPanel.setFileInfoString(timePanel.getFileInfo());
     ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
     
+    //----
+    _channels = timePanel.audioTrack->getNumChannels();
+    _samplerate = timePanel.audioTrack->getSampleRate();
+    
+    //AudioAnalyzer-------------------
+    mainAnalyzer.setup(_samplerate, BUFFER_SIZE, _channels);///channels!
+    metersPanel.setup(0, 600, ofGetWidth(), ofGetHeight()-600, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
+    
+    
+    _oscHost = "localhost";
+    _oscPort = 12345;
+    setOscSender(_oscHost, _oscPort);
     
 }
-
+ofPolyline waveform;
 //--------------------------------------------------------------
 void ofApp::update(){
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
+    // "lastBuffer" is shared between update() and audioOut(), which are called
+    // on two different threads. This lock makes sure we don't use lastBuffer
+    // from both threads simultaneously (see the corresponding lock in audioOut())
+    unique_lock<mutex> lock(audioMutex);
     
-    vector<float> buffer = timePanel.audioTrack->getCurrentBuffer();
-    //vector<float> buffer1 = timePanel.audioTrack->getCurrentBufferForChannel(512, 1);
-    //vector<float> buffer2 = timePanel.audioTrack->getCurrentBufferForChannel(512, 2);
+    ofSoundUpdate();
+//    vector<float> buffer1 = timePanel.audioTrack->getCurrentBufferForChannel(512, 0);
+//    vector<float> buffer2 = timePanel.audioTrack->getCurrentBufferForChannel(512, 1);
     
-//    ofSoundBuffer testBuffer1, testBuffer2;
-//    
-//    testBuffer1.setNumChannels(1);
-//    testBuffer1.setSampleRate(44100);
-//    testBuffer1.copyFrom(buffer1, 1, 44100);
-//    
-//    testBuffer2.setNumChannels(2);
-//    testBuffer2.setSampleRate(44100);
-//    testBuffer2.copyFrom(buffer2, 1, 44100);
     
+   soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(BUFFER_SIZE);
 
+//    cout<<"SB info--"<<endl;
+//    cout<<"SB samplerate: "<<soundBuffer.getSampleRate()<<endl;
+//    cout<<"SB buffersize: "<<soundBuffer.getNumFrames()<<endl;
+//    cout<<"SB channels: "<<soundBuffer.getNumChannels()<<endl;
     
-    //---------------------------
-    ofSoundBuffer soundBuffer;
-
-    soundBuffer.copyFrom(buffer, 1, 44100);///channels!
-    //buffer.setChannel(testBuffer1, 1);
-    //buffer.setChannel(testBuffer2, 2);
-    //cout<<buffer.getNumChannels()<<endl;
-    mainAnalyzer.analyze(soundBuffer);
+    if(timePanel.timeline.getIsPlaying()){
+        mainAnalyzer.analyze(soundBuffer);
+    }
     
     //--------------------------
     
@@ -69,6 +75,21 @@ void ofApp::update(){
     mainPanel.update();
     timePanel.update();
     metersPanel.update();
+    
+    
+    //--------------------------
+    
+    waveform.clear();
+    
+    int ch=0; //channel to visualize
+    
+    for(size_t i = 0; i < soundBuffer.getNumFrames(); i++) {
+        float sample = soundBuffer.getSample(i, ch);
+        float x = ofMap(i, 0, soundBuffer.getNumFrames(), 0, ofGetWidth());
+        float y = ofMap(sample, -1, 1, 0, ofGetHeight());
+        waveform.addVertex(x, y);
+    }
+
     
 }
 
@@ -79,12 +100,16 @@ void ofApp::draw(){
     mainPanel.draw();
     timePanel.draw();
     metersPanel.draw();
+    
+    ofSetColor(255,0,0);
+    waveform.draw();
 
     
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
     mainAnalyzer.exit();
+    metersPanel.exit();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -100,15 +125,36 @@ void ofApp::keyPressed(int key){
 
     }
     
+    if(key == 'a' || key == 'A'){
+        ofxOscMessage m;
+        m.setAddress("/test");
+        m.addIntArg(1);
+        m.addFloatArg(3.5f);
+        m.addStringArg("hello");
+        m.addFloatArg(ofGetElapsedTimef());
+        oscSender.sendMessage(m, false);
+    }
+    
     
 }
 #pragma mark - Other funcs
 //--------------------------------------------------------------
 void ofApp::openAudioFile(string filename){
-
+    
+    ///THREADED????
     
     timePanel.openAudioFile(filename);
     mainPanel.setFileInfoString(timePanel.getFileInfo());
+    
+    _channels = timePanel.audioTrack->getNumChannels();
+    _samplerate = timePanel.audioTrack->getSampleRate();
+    
+    
+    mainAnalyzer.reset(_samplerate, BUFFER_SIZE, _channels);
+    ofLogVerbose()<<"mainAnalyzer RESETED";
+    metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
+    ofLogVerbose()<<"metesPanel RESETD";
+    
 
 }
 
@@ -129,6 +175,10 @@ void ofApp::onTimelinePanelResize(int &h){
     metersPanel.adjustPosAndHeight(new_y, new_h);
     
     
+}
+//--------------------------------------------------------------
+void ofApp::setOscSender(string host, int port){
+    oscSender.setup(host, port);
 }
 //--------------------------------------------------------------
 ///**************************************************************

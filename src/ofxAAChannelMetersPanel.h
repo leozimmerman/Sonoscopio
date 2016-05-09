@@ -15,10 +15,16 @@
 class ofxAAChannelMetersPanel{
 public:
     
+    ofxAAChannelMetersPanel(int x, int y, int width, int height, ofxAudioAnalyzer * aaPtr){
+        setup(x, y, width, height, aaPtr);
+    }
+    ~ofxAAChannelMetersPanel(){
+        cout<<"ofxAAChannelMetersPanel DESTROYER"<<endl;
+    };
     virtual void setup(int x, int y, int width, int height, ofxAudioAnalyzer * aaPtr);
     virtual void update();
     virtual void draw();
-    virtual void exit(){};
+    virtual void exit();
     
     void setupMeters();
     

@@ -17,8 +17,10 @@ public:
     void setup(int x, int y, int width, int height, ofBaseApp* appPtr, vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs);
     void update();
     void draw();
-    void exit(){};
+    void exit();
     
+    
+    void reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs);
     void adjustPosAndHeight(int y, int h);
     
     vector<ofxDatGuiComponent*> components;
