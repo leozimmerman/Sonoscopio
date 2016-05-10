@@ -8,6 +8,7 @@
 #include "ofxTLAudioTrack.h"
 
 //#include "ofxAudioAnalyzer.h"
+#include "ofxTimeMeasurements.h"
 #include "ofxAAMain.h"
 
 #include "ofxOsc.h"
@@ -16,12 +17,19 @@
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
+
+
 #define BUFFER_SIZE 512
+
+#define MAIN_PANEL_HEIGHT 0.15
+#define TIME_PANEL_HEIGHT 0.65
+#define METER_PANEL_HEIGHT 0.2
 
 class ofApp : public ofBaseApp{
 
   public:
-	void setup();
+	
+    void setup();
 	void update();
 	void draw();
     void exit();
@@ -42,6 +50,12 @@ class ofApp : public ofBaseApp{
     void onTimelinePanelResize(int & h);
     
     void setOscSender(string host, int port);
+    void setOscSenderHost(string host);
+    void setOscSenderPort(int port);
+    void sendOscData();
+    
+    void saveSettings();
+    void loadSettings();
 
     
     //panels-----------
@@ -49,22 +63,28 @@ class ofApp : public ofBaseApp{
     TimelinePanel timePanel;
     MetersPanel metersPanel;
     
-   // ofxAudioAnalyzer audioAnalyzer(44100, 512);
     ofxAAMain mainAnalyzer;
     
     ofSoundBuffer soundBuffer;
     
     ofxOscSender oscSender;
+    
+   
+
+    
+   
 
 private:
     int _channels;
     int _samplerate;
     
-    
-    mutex audioMutex;
+    ofMutex audioMutex;
     
     string _oscHost;
     int _oscPort;
+    
+     ofPolyline waveform;///delete
+    
     
     
 };

@@ -9,11 +9,14 @@
 
 #include "ofxDatGui.h"
 
+#define PAGE_AUDIO_NAME "PageAudio"
+#define PAGE_TRACKS_NAME "PageTracks"
+
+#define TIMELINE_SETTINGS_DIR "timeline_settings"
 
 enum trackType {
     CURVES,
     BANGS,
-    FLAGS,
     SWITCHES
 };
 
@@ -27,6 +30,9 @@ public:
     void exit(){};
     
     void keyPressed(int key);
+    
+    void loadSettings();
+    void saveSettings();
     
     void setupGUI();
     
@@ -42,7 +48,10 @@ public:
     void toggleShowTracks();
     void adjustTracksHeight();
     void toggleEnableDisableFocusedTrack();
+    
+    std::map<string, float> getTracksValues();
 
+    void bangFired(ofxTLBangEventArgs& args);
     
     vector<ofxDatGuiComponent*> components;
     void onButtonEvent(ofxDatGuiButtonEvent e);
@@ -60,6 +69,9 @@ private:
     int guiCompWidth, guiCompHeight;
     string currentTrackName;
     trackType currentTrackType;
+    
+    bool _isThereBang = false;
+    ofxTLTrack* _bangedTrack;
     
     
     

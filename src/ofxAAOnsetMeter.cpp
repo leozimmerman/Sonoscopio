@@ -12,6 +12,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzer* a
     alphaSlider->setWidth(_w * 1.3, 0.0);
     alphaSlider->setHeight(line_h);
     alphaSlider->setLabelMargin(0.0);
+    alphaSlider->setPosition(_x, _y + line_h * 3);
     
     _treshold = 0.2;
     tresholdSlider = new ofxDatGuiSlider("TRESHOLD", 0.0, 1.0, _treshold);
@@ -19,6 +20,9 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzer* a
     tresholdSlider->setWidth(_w * 1.3, 0.0);
     tresholdSlider->setHeight(line_h);
     tresholdSlider->setLabelMargin(0.0);
+    tresholdSlider->setPosition(_x, _y + line_h * 4);
+    
+    
     
 }
 

@@ -27,11 +27,12 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
         
         int y_pos = _y + panelHeight*i;
         ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
+        ///p->loadFromFile(METERS_SETTINGS_FILE);
         channelPanels.push_back(p);
     }
-    
    
-
+    
+    _workingDir = METERS_SETTINGS_DIR;
     
 }
 
@@ -99,12 +100,28 @@ void MetersPanel::reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs){
 
 }
 //----------------------------------------------
+void MetersPanel::loadSettings(){
+    
+    //string fileName = workingDir+"/"+"metersSettings.xml";
+    
+    for(int i=0; i<channelPanels.size(); i++){
+        string filename = _workingDir + "/settings" + ofToString(i) + ".xml";
+        channelPanels[i]->loadFromFile(filename);
+    }
+}
+//----------------------------------------------
+void MetersPanel::saveSettings(){
+    
+    for(int i=0; i<channelPanels.size(); i++){
+        string filename = _workingDir + "/settings" + ofToString(i) + ".xml";
+        channelPanels[i]->saveToFile(filename);
+    }
+}
+//----------------------------------------------
 void MetersPanel::adjustPosAndHeight(int y, int h){
     
     _y = y;
     _h = h;
-    
-    //chPanel.adjustPosAndHeight(_y, _h);
     
     int panelHeight = _h / panelsNum;
     
@@ -115,3 +132,32 @@ void MetersPanel::adjustPosAndHeight(int y, int h){
     
 }
 //----------------------------------------------
+std::map<string, float> MetersPanel::getMetersValues(){
+    
+    std::map<string, float> values;
+
+    for (int i=0; i<channelPanels.size(); i++){
+       
+        for(ofxAAMeter* m : channelPanels[i]->meters){
+           
+            if( m->getName()==MTR_NAME_MFCC || m->getName()==MTR_NAME_SPECTRUM ||
+               m->getName()==MTR_NAME_HPCP || m->getName()==MTR_NAME_MEL_BANDS){
+                
+                ///send vector<floats>????
+                
+            }else if (m->getName()==MTR_NAME_ONSETS){
+                string key = "ch" + ofToString(i)+":" + m->getName();
+                ofxAAOnsetMeter* om = dynamic_cast<ofxAAOnsetMeter*>(m);
+                values[key] = om->getValue();
+            }else{
+                string key = "ch" + ofToString(i)+":" + m->getName();
+                values[key]= m->getValue();
+            }
+            
+       }
+        
+    }
+
+    
+    return values;
+}

@@ -79,6 +79,7 @@
 		B3CBB1DA1CD3B79500E6BB34 /* ofxAAMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CBB1D81CD3B79500E6BB34 /* ofxAAMeter.cpp */; };
 		B3CBB1E11CD3ED0000E6BB34 /* ofxAABinMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CBB1DF1CD3ED0000E6BB34 /* ofxAABinMeter.cpp */; };
 		B3CD38CF1CC54E0C0077D559 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3CD38CE1CC54E0C0077D559 /* OpenAL.framework */; };
+		B3CE1E4D1CE27D79000FF38D /* ofxTimeMeasurements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3CE1E471CE27D79000FF38D /* ofxTimeMeasurements.cpp */; };
 		BCFDFC3681CF3552BCDB819E /* ofxTLPageTabs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 740ABFC3DD8B605BB9C55D80 /* ofxTLPageTabs.cpp */; };
 		C3BC382653A57CE71D4513F1 /* ofxTLFlags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB375BBFEB77C75D4A4C3040 /* ofxTLFlags.cpp */; };
 		C7D250488914920C32F18F34 /* ofxTLPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 16BEC8B1201859A26E3FFBC0 /* ofxTLPage.cpp */; };
@@ -401,6 +402,11 @@
 		B3CBB1DF1CD3ED0000E6BB34 /* ofxAABinMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAABinMeter.cpp; sourceTree = "<group>"; };
 		B3CBB1E01CD3ED0000E6BB34 /* ofxAABinMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAABinMeter.h; sourceTree = "<group>"; };
 		B3CD38CE1CC54E0C0077D559 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		B3CE1E471CE27D79000FF38D /* ofxTimeMeasurements.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimeMeasurements.cpp; sourceTree = "<group>"; };
+		B3CE1E481CE27D79000FF38D /* ofxTimeMeasurements.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTimeMeasurements.h; sourceTree = "<group>"; };
+		B3CE1E491CE27D79000FF38D /* ofxTimeMeasurementsMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTimeMeasurementsMacros.h; sourceTree = "<group>"; };
+		B3CE1E4A1CE27D79000FF38D /* ofxTimeMeasurementsScoped.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTimeMeasurementsScoped.h; sourceTree = "<group>"; };
+		B3CE1E4C1CE27D79000FF38D /* tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
 		B4EBE6922DE4DCB97639B65F /* ofxMSATimer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxMSATimer.cpp; path = ../../../addons/ofxMSATimer/src/ofxMSATimer.cpp; sourceTree = SOURCE_ROOT; };
 		B788152C3FE538E700D063C7 /* ofxEasingCubic.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingCubic.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingCubic.h; sourceTree = SOURCE_ROOT; };
 		B86C4BCF6618E3505813C304 /* kiss_fftr.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 30; name = kiss_fftr.c; path = ../../../addons/ofxTimeline/libs/kiss/src/kiss_fftr.c; sourceTree = SOURCE_ROOT; };
@@ -1148,6 +1154,36 @@
 			path = themes;
 			sourceTree = "<group>";
 		};
+		B3CE1E451CE27D79000FF38D /* ofxTimeMeasurements */ = {
+			isa = PBXGroup;
+			children = (
+				B3CE1E461CE27D79000FF38D /* src */,
+				B3CE1E4B1CE27D79000FF38D /* lib */,
+			);
+			name = ofxTimeMeasurements;
+			sourceTree = "<group>";
+		};
+		B3CE1E461CE27D79000FF38D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B3CE1E471CE27D79000FF38D /* ofxTimeMeasurements.cpp */,
+				B3CE1E481CE27D79000FF38D /* ofxTimeMeasurements.h */,
+				B3CE1E491CE27D79000FF38D /* ofxTimeMeasurementsMacros.h */,
+				B3CE1E4A1CE27D79000FF38D /* ofxTimeMeasurementsScoped.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxTimeMeasurements/src;
+			sourceTree = "<group>";
+		};
+		B3CE1E4B1CE27D79000FF38D /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				B3CE1E4C1CE27D79000FF38D /* tree.h */,
+			);
+			name = lib;
+			path = ../../../addons/ofxTimeMeasurements/lib;
+			sourceTree = "<group>";
+		};
 		B59DDD3C0EB9FFC71F28869B /* Easings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1194,6 +1230,7 @@
 				B3B3E90F1CC926EA007A2FA6 /* ofxAudioAnalyzer */,
 				B3B3E98C1CC927AE007A2FA6 /* ofxDatGui */,
 				B39608E41CCA681100FEEB42 /* ofxOsc */,
+				B3CE1E451CE27D79000FF38D /* ofxTimeMeasurements */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -1470,6 +1507,7 @@
 				85A41526FDFA1A8CDAEE81F7 /* ofxEasingQuart.cpp in Sources */,
 				7E769097DE6561633305B24C /* ofxEasingQuint.cpp in Sources */,
 				FE278F5F783581237AE8ECB2 /* ofxEasingSine.cpp in Sources */,
+				B3CE1E4D1CE27D79000FF38D /* ofxTimeMeasurements.cpp in Sources */,
 				B39609141CCA681100FEEB42 /* IpEndpointName.cpp in Sources */,
 				B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */,
 				B3B3E9741CC926EA007A2FA6 /* ofxAudioAnalyzer.cpp in Sources */,

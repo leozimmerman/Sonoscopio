@@ -22,6 +22,8 @@ class ofxAABinMeter : public ofxAAMeter{
     void setBinsNum(int bins){_nBins = bins;}
     void setValues(vector<float>& vals){_values = vals;}
     
+    vector<float>& getValues(){return _values;}
+    
     protected:
     vector<float> _values;
     int _nBins;

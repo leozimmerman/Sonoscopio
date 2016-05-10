@@ -8,9 +8,11 @@
 #include "ofxAAOnsetMeter.h"
 #include "ofxAAMetersNames.h"
 
-#include"ofxAudioAnalyzer.h"
+#include "ofxAudioAnalyzer.h"
+#include "ofxXmlSettings.h"
 
-
+#define PITCH_MIN_VALUE_FOR_METER 130.0 //hz
+#define PITCH_MAX_VALUE_FOR_METER 2093.0 //hz
 
 class ofxAAChannelMetersPanel{
 public:
@@ -18,9 +20,7 @@ public:
     ofxAAChannelMetersPanel(int x, int y, int width, int height, ofxAudioAnalyzer * aaPtr){
         setup(x, y, width, height, aaPtr);
     }
-    ~ofxAAChannelMetersPanel(){
-        cout<<"ofxAAChannelMetersPanel DESTROYER"<<endl;
-    };
+    ~ofxAAChannelMetersPanel(){}
     virtual void setup(int x, int y, int width, int height, ofxAudioAnalyzer * aaPtr);
     virtual void update();
     virtual void draw();
@@ -42,6 +42,10 @@ public:
     
     void onMeterStateChanged(OnOffEventData & data);
     
+    vector<ofxAAMeter*> meters;
+    
+    void loadFromFile(string filename);
+    void saveToFile(string filename);
     
 protected:
     
@@ -72,10 +76,7 @@ protected:
     ofxAABinMeter * mMfcc;//dct
     ofxAABinMeter * mHpcp;
     
-    vector<ofxAAMeter*> meters;
-    
-    
-    
+   // ofxXmlSettings xml;
 
     
     

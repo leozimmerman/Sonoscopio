@@ -22,8 +22,14 @@ public:
     virtual void setPosAndSize(int x, int y, int w, int h);
     
     void setValue(bool val){_onsetValue = val;}
-    void setAlpha(float alpha){_alpha = alpha;}
-    void setTreshold(float tres){_treshold = tres;}
+    void setAlpha(float alpha){
+        _alpha = alpha;
+        alphaSlider->setValue(alpha);
+    }
+    void setTreshold(float tres){
+        _treshold = tres;
+        tresholdSlider->setValue(tres);
+    }
     
     bool getValue(){return _onsetValue;}
     float getAlpha(){return _alpha;}

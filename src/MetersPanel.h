@@ -2,13 +2,15 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxDatGui.h"
-
+//#include "ofxDatGui.h"
+#include "ofxXmlSettings.h"
 #include"ofxAudioAnalyzer.h"
 
 #include "Panel.h"
-
 #include "ofxAAChannelMetersPanel.h"
+
+
+#define METERS_SETTINGS_DIR "meters_settings"
 
 class MetersPanel : public Panel{
     
@@ -19,28 +21,32 @@ public:
     void draw();
     void exit();
     
+    void saveSettings();
+    void loadSettings();
     
     void reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs);
     void adjustPosAndHeight(int y, int h);
     
-    vector<ofxDatGuiComponent*> components;
-    void onButtonEvent(ofxDatGuiButtonEvent e);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    void onSliderEvent(ofxDatGuiSliderEvent e);
+    std::map<string, float> getMetersValues();
     
+    //void onButtonEvent(ofxDatGuiButtonEvent e);
+    //void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    //void onSliderEvent(ofxDatGuiSliderEvent e);
     
-    //ofxAAChannelMetersPanel chPanel;
-    vector <ofxAAChannelMetersPanel*> channelPanels;
-    
-    vector<ofxAudioAnalyzer*> channelAnalyzers;
-    
-   
 
-    
 private:
     
-    int guiCompHeight, guiCompWidth;
+    //vector<ofxDatGuiComponent*> components;
+    //int guiCompHeight, guiCompWidth;
+    
+    vector<ofxAudioAnalyzer*> channelAnalyzers;
+    vector <ofxAAChannelMetersPanel*> channelPanels;
+    
+    
     int panelsNum;
+    
+    ofxXmlSettings XML;
+    string _workingDir;
     
     
 };

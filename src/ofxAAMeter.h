@@ -42,6 +42,7 @@ public:
     float getMaxValue(){return _maxValue;}
     meterOrientation getMeterOrient(){return _meterOrient;}
     float getSmoothAmnt(){return _smoothAmnt;}
+    bool getEnabled(){return onOffToggle->getEnabled();}
 
     void setName(string name){_name = name;}
     void setMainColor(ofColor col){_mainColor = col;}
@@ -52,6 +53,8 @@ public:
     void setHeight(float h);
     void setMinValue(float val){_minValue = val;}
     void setMaxValue(float val){_maxValue = val;}
+    void setSmoothAmnt(float val);
+    void setEnabled(bool state);
     
  
 
@@ -74,7 +77,7 @@ public:
     int _w, _h;
     
     ofRectangle _drawRect;
-    string _name;
+    
 
     ofColor _mainColor;
     ofColor _backgroundColor;
@@ -87,7 +90,7 @@ public:
    
     
 private:
-    
+    string _name;
     float _value;
     float _smoothAmnt;
 

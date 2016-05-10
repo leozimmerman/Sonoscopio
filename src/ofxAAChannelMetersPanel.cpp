@@ -45,6 +45,11 @@ void ofxAAChannelMetersPanel::update(){
     mMfcc->setValues(audioAnalyzer->getDctRef());
     mHpcp->setValues(audioAnalyzer->getHpcpRef());
     
+    //set values to std::for osc sending
+ 
+    
+    
+    
 }
 //------------------------------------------------
 void ofxAAChannelMetersPanel::draw(){
@@ -86,29 +91,6 @@ void ofxAAChannelMetersPanel::exit(){
 }
 
 //------------------------------------------------
-void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){
-    
-    _y = y;
-    _h = h;
-    
-    HMeterHeight = _h / HMetersNum;
-    
-    int y_pos = 0;
-    
-    for(int i=0; i<meters.size(); i++){
-        
-        if(meters[i]->getMeterOrient()==VERTICAL){
-            meters[i]->setYandHeight(_y, _h);
-        }else{
-            meters[i]->setYandHeight(_y + y_pos, HMeterHeight);
-            y_pos += HMeterHeight;
-        }
-            
-    }
-    
-    
-}
-//------------------------------------------------
 void ofxAAChannelMetersPanel::setupMeters(){
     
     VMetersNum = 9; //onsets included
@@ -131,8 +113,8 @@ void ofxAAChannelMetersPanel::setupMeters(){
     
     x_pos += VMeterWidth;
     mPitchFreq = new ofxAAMeter(MTR_NAME_PITCH_FREQ, _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    mPitchFreq->setMinValue(130.0);//hz
-    mPitchFreq->setMaxValue(2093.0);//hz
+    mPitchFreq->setMinValue(PITCH_MIN_VALUE_FOR_METER);//hz
+    mPitchFreq->setMaxValue(PITCH_MAX_VALUE_FOR_METER);//hz
     meters.push_back(mPitchFreq);
     
     x_pos += VMeterWidth;
@@ -168,22 +150,22 @@ void ofxAAChannelMetersPanel::setupMeters(){
     int y_pos = 0;
     mSpectrum = new ofxAABinMeter(MTR_NAME_SPECTRUM, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
     mSpectrum->setBinsNum(audioAnalyzer->getSpectrumBinsNum());
-    mSpectrum->setMinValue(log10(0.001));
-    mSpectrum->setMaxValue(log10(1.0));
+    mSpectrum->setMinValue(DB_MIN);
+    mSpectrum->setMaxValue(DB_MAX);
     meters.push_back(mSpectrum);
     
     y_pos += HMeterHeight;
     mMelBands = new ofxAABinMeter(MTR_NAME_MEL_BANDS, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
     mMelBands->setBinsNum(audioAnalyzer->getMelBandsBinsNum());
-    mMelBands->setMinValue(log10(0.001));
-    mMelBands->setMaxValue(log10(1.0));
+    mMelBands->setMinValue(DB_MIN);
+    mMelBands->setMaxValue(DB_MAX);
     meters.push_back(mMelBands);
     
     y_pos += HMeterHeight;
     mMfcc = new ofxAABinMeter(MTR_NAME_MFCC, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
     mMfcc->setBinsNum(audioAnalyzer->getMfccBinsNum());
     mMfcc->setMinValue(0.0);
-    mMfcc->setMaxValue(300.0);
+    mMfcc->setMaxValue(MFCC_MAX_ESTIMATED_VALUE);
     meters.push_back(mMfcc);
     
     y_pos += HMeterHeight;
@@ -192,6 +174,30 @@ void ofxAAChannelMetersPanel::setupMeters(){
     meters.push_back(mHpcp);
     
 }
+
+//------------------------------------------------
+void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){
+    
+    _y = y;
+    _h = h;
+    
+    HMeterHeight = _h / HMetersNum;
+    
+    int y_pos = 0;
+    
+    for(int i=0; i<meters.size(); i++){
+        
+        if(meters[i]->getMeterOrient()==VERTICAL){
+            meters[i]->setYandHeight(_y, _h);
+        }else{
+            meters[i]->setYandHeight(_y + y_pos, HMeterHeight);
+            y_pos += HMeterHeight;
+        }
+    }
+    
+    
+}
+
 
 //--------------------------------------------------------------
 void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
@@ -220,5 +226,173 @@ void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
     }else if(data.name == MTR_NAME_HPCP){
         audioAnalyzer->setActiveHpcp(data.state);
     }
+    
+}
+//--------------------------------------------------------------
+void ofxAAChannelMetersPanel::loadFromFile(string filename){
+    
+    ofxXmlSettings xml;
+    
+    if( xml.loadFile(filename) ){
+        ofLogVerbose()<<"ofxAAChannelMetersPanel: "<< filename <<" loaded.";
+    }else{
+        ofLogError()<< "ofxAAChannelMetersPanel: unable to load " << filename ;
+        return;
+    }
+    //int numDragTags = XML.getNumTags("PANEL");
+    //cout<<""<<xml.getValue("PANEL:POWER:SMOOTH", 0.0)<<endl;
+    
+    
+    mPower->setSmoothAmnt(xml.getValue("PANEL:POWER:SMOOTH", 0.0));
+    bool state = xml.getValue("PANEL:POWER:STATE", 0) > 0;
+    mPower->setEnabled(state);
+    audioAnalyzer->setActivePower(state);
+    
+    mPitchFreq->setSmoothAmnt(xml.getValue("PANEL:PITCHFREQ:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:PITCHFREQ:STATE", 0) > 0;
+    mPitchFreq->setEnabled(state);
+    audioAnalyzer->setActivePitch(state);
+    
+    mPitchConf->setSmoothAmnt(xml.getValue("PANEL:PITCHCONF:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:PITCHCONF:STATE", 0) > 0;
+    mPitchConf->setEnabled(state);
+    audioAnalyzer->setActivePitch(state);
+    
+    mSalience->setSmoothAmnt(xml.getValue("PANEL:SALIENCE:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:SALIENCE:STATE", 0) > 0;
+    mSalience->setEnabled(state);
+    audioAnalyzer->setActiveMelodySalience(state);
+    
+    mHfc->setSmoothAmnt(xml.getValue("PANEL:HFC:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:HFC:STATE", 0) > 0;
+    mHfc->setEnabled(state);
+    audioAnalyzer->setActiveHfc(state);
+    
+    mCentroid->setSmoothAmnt(xml.getValue("PANEL:CENTROID:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:CENTROID:STATE", 0) > 0;
+    mCentroid->setEnabled(state);
+    audioAnalyzer->setActiveCentroid(state);
+    
+    mSpecComp->setSmoothAmnt(xml.getValue("PANEL:SPECCOMP:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:SPECCOMP:STATE", 0) > 0;
+    mSpecComp->setEnabled(state);
+    audioAnalyzer->setActiveSpectralComplex(state);
+    
+    mInharm->setSmoothAmnt(xml.getValue("PANEL:INHARM:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:INHARM:STATE", 0) > 0;
+    mInharm->setEnabled(state);
+    audioAnalyzer->setActiveInharmonicity(state);
+    
+    mOnsets->setAlpha(xml.getValue("PANEL:ONSETS:ALPHA", 0.0));
+    mOnsets->setTreshold(xml.getValue("PANEL:ONSETS:TRESHOLD", 0.0));
+    
+    
+   
+}
+//--------------------------------------------------------------
+void ofxAAChannelMetersPanel::saveToFile(string filename){
+
+//    ofxXmlSettings xml;
+//   
+//
+//    if( xml.loadFile(filename) ){
+//        ofLogVerbose() <<"ofxAAChannelMetersPanel:"<< filename <<" loaded for saving!";
+//   
+//        
+//        xml.setValue("PANEL:POWER:SMOOTH", mPower->getSmoothAmnt());
+//        xml.setValue("PANEL:POWER:STATE", mPower->getEnabled());
+//        
+//        xml.setValue("PANEL:PITCHFREQ:SMOOTH", mPitchFreq->getSmoothAmnt());
+//        xml.setValue("PANEL:PITCHFREQ:STATE", mPitchFreq->getEnabled());
+//        
+//        xml.setValue("PANEL:PITCHCONF:SMOOTH", mPitchConf->getSmoothAmnt());
+//        xml.setValue("PANEL:PITCHCONF:STATE", mPitchConf->getEnabled());
+//        
+//        xml.setValue("PANEL:SALIENCE:SMOOTH", mSalience->getSmoothAmnt());
+//        xml.setValue("PANEL:SALIENCE:STATE", mSalience->getEnabled());
+//        
+//        xml.setValue("PANEL:HFC:SMOOTH", mHfc->getSmoothAmnt());
+//        xml.setValue("PANEL:HFC:STATE", mHfc->getEnabled());
+//        
+//        xml.setValue("PANEL:CENTROID:SMOOTH", mCentroid->getSmoothAmnt());
+//        xml.setValue("PANEL:CENTROID:STATE", mCentroid->getEnabled());
+//        
+//        xml.setValue("PANEL:SPECCOMP:SMOOTH", mSpecComp->getSmoothAmnt());
+//        xml.setValue("PANEL:SPECCOMP:STATE", mSpecComp->getEnabled());
+//        
+//        xml.setValue("PANEL:INHARM:SMOOTH", mInharm->getSmoothAmnt());
+//        xml.setValue("PANEL:INHARM:STATE", mInharm->getEnabled());
+//        
+//        xml.setValue("PANEL:ONSETS:ALPHA", mOnsets->getAlpha());
+//        xml.setValue("PANEL:ONSETS:TRESHOLD", mOnsets->getTreshold());
+//        
+//        xml.saveFile();
+//        
+//    }else{
+//        ofLogVerbose() << "ofxAAChannelMetersPanel: " << filename << "does not exists, going to create it.";
+//        
+//       
+//       
+//    }
+    
+    ofxXmlSettings savedSettings;
+    savedSettings.addTag("PANEL");
+    savedSettings.pushTag("PANEL");
+    
+    savedSettings.addTag("POWER");
+    savedSettings.pushTag("POWER");
+    savedSettings.addValue("SMOOTH", mPower->getSmoothAmnt());
+    savedSettings.addValue("STATE", mPower->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("PITCHFREQ");
+    savedSettings.pushTag("PITCHFREQ");
+    savedSettings.addValue("SMOOTH",  mPitchFreq->getSmoothAmnt());
+    savedSettings.addValue("STATE", mPitchFreq->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("PITCHCONF");
+    savedSettings.pushTag("PITCHCONF");
+    savedSettings.addValue("SMOOTH", mPitchConf->getSmoothAmnt());
+    savedSettings.addValue("STATE", mPitchConf->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("SALIENCE");
+    savedSettings.pushTag("SALIENCE");
+    savedSettings.addValue("SMOOTH", mSalience->getSmoothAmnt());
+    savedSettings.addValue("STATE", mSalience->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("HFC");
+    savedSettings.pushTag("HFC");
+    savedSettings.addValue("SMOOTH", mHfc->getSmoothAmnt());
+    savedSettings.addValue("STATE", mHfc->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("CENTROID");
+    savedSettings.pushTag("CENTROID");
+    savedSettings.addValue("SMOOTH", mCentroid->getSmoothAmnt());
+    savedSettings.addValue("STATE", mCentroid->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("SPECCOMP");
+    savedSettings.pushTag("SPECCOMP");
+    savedSettings.addValue("SMOOTH", mSpecComp->getSmoothAmnt());
+    savedSettings.addValue("STATE", mSpecComp->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("INHARM");
+    savedSettings.pushTag("INHARM");
+    savedSettings.addValue("SMOOTH", mInharm->getSmoothAmnt());
+    savedSettings.addValue("STATE", mInharm->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("ONSETS");
+    savedSettings.pushTag("ONSETS");
+    savedSettings.addValue("ALPHA", mOnsets->getAlpha());
+    savedSettings.addValue("TRESHOLD",mOnsets->getTreshold());
+    savedSettings.popTag();
+    
+    savedSettings.saveFile(filename);
     
 }

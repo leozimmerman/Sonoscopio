@@ -8,6 +8,7 @@ ofEvent<OnOffEventData> ofxAAMeter::onOffEventGlobal = ofEvent<OnOffEventData>()
 ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     
     _name = name;
+    
     _x = x;
     _y = y;
     _w = w;
@@ -146,6 +147,16 @@ void ofxAAMeter::setHeight(float h){
     _h = h;
     _drawRect.setHeight(h);
 }
+//------------------------------------------------
+void ofxAAMeter::setSmoothAmnt(float val){
+    _smoothAmnt = val;
+    smoothSlider->setValue(val);
+}
+//------------------------------------------------
+void ofxAAMeter::setEnabled(bool state){
+    onOffToggle->setEnabled(state);
+}
+
 //------------------------------------------------
 void ofxAAMeter::onSliderEvent(ofxDatGuiSliderEvent e){
     cout << _name <<"::slider: " <<e.value << endl;

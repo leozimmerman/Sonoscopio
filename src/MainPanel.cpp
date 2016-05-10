@@ -29,7 +29,7 @@ void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
     
     fileInfoStr = "non file loaded";
   
-    
+
  
     
     
@@ -193,14 +193,14 @@ void MainPanel::setupGUI(){
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     components.push_back(component);
     
-    component = new ofxDatGuiTextInput("HOST", "#osc host#");
+    component = new ofxDatGuiTextInput("HOST", "localhost");
     component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*1);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setWidth(guiCompWidth, 0.35);
     component->onTextInputEvent(this, &MainPanel::onTextInputEvent);
     components.push_back(component);
     
-    component = new ofxDatGuiTextInput("PORT", "#osc port#");
+    component = new ofxDatGuiTextInput("PORT", "12345");
     component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*2);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setWidth(guiCompWidth, 0.35);
@@ -249,6 +249,10 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
         
         openOpenFileDialog();
     
+    }else if(e.target->getLabel()=="LOAD"){
+        mMainAppPtr->loadSettings();
+    }else if(e.target->getLabel()=="SAVE"){
+        mMainAppPtr->saveSettings();
     }else if(e.target->getLabel()=="FRAME BASED"){
         
         mMainAppPtr->timePanel.timeline.setFrameBased(e.enabled);
@@ -292,10 +296,13 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
 
 void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
     //cout << "onButtonEvent: " << e.text << endl;
+    cout << "onTextInput: " << e.text << endl;
     if (e.target->getLabel()=="BPM"){
-        cout << "onTextInput: " << e.text << endl;
         mMainAppPtr->timePanel.timeline.setNewBPM( std::stof (e.text) );
-        cout<< mMainAppPtr->timePanel.timeline.getBPM() << endl;
+    }else if (e.target->getLabel()=="HOST"){
+        mMainAppPtr->setOscSenderHost(e.text);
+    }else if (e.target->getLabel()=="PORT"){
+        mMainAppPtr->setOscSenderPort( std::stoi(e.text) );
     }
     
 }

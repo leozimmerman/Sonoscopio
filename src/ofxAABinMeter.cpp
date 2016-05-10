@@ -19,12 +19,10 @@ void ofxAABinMeter::draw(){
     ofNoFill();
     ofSetColor(_mainColor);
     ofDrawRectangle(_drawRect);
-    
-    
-    //valueMeter-------------------------
+
+    //valueMeter
     drawMeter();
     drawLabel();
-    
     
     ofPopStyle();
 
