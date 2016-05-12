@@ -20,7 +20,10 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     
     tMainApp = dynamic_cast<ofApp*>(appPtr);
     
-    setBackgroundColor(ofColor::darkBlue);
+    setBackgroundColor(ofColor(50));
+    bordCol = ofColor::grey;
+    bordWidth = 1;
+    waveformCol.set(160);
     
     currentTrackType = CURVES;
     currentTrackName = "";
@@ -31,8 +34,8 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setup();
     timeline.setAutosave(TRUE);
     timeline.setOffset(ofVec2f(_x, _y));
-    timeline.setWidth(_w);
-    timeline.setHeight(_h);
+   
+    
     timeline.setLoopType(OF_LOOP_NONE);
     
     timeline.setBPM(120.f);
@@ -40,10 +43,10 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     
     
     
-    ///timeline.addAudioTrack("Audio","audio_files/rock.mp3");//stereo
-    ///timeline.addAudioTrack("Audio","audio_files/flauta.wav");//mono
-    timeline.addAudioTrack("Audio","audio_files/mix-stereo.wav");//mono
-    ///timeline.addAudioTrack("Audio","audio_files/4chan.wav");//mono
+    //timeline.addAudioTrack("Audio","audio_files/rock.mp3");//stereo
+    timeline.addAudioTrack("Audio","audio_files/flauta.wav");//mono
+    //timeline.addAudioTrack("Audio","audio_files/mix-stereo.wav");//mono
+    //timeline.addAudioTrack("Audio","audio_files/4chan.wav");//mono
     
     
     //this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
@@ -57,12 +60,17 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setCurrentPage(PAGE_AUDIO_NAME);
     timeline.setShowPageTabs(false); //->modify if more pages are needed
     
+    timeline.setWidth(_w);
+    timeline.setHeight(_h);
+    
+    
     //-------------------------------------------
     
     ofAddListener(timeline.events().bangFired, this, &TimelinePanel::bangFired);
     
     setupGUI();
-
+    
+    
     
 }
 //-------------------------------------------------
@@ -82,31 +90,38 @@ void TimelinePanel::update(){
 //-------------------------------------------------
 void TimelinePanel::draw(){
     
-    //background
-    ofPushStyle();
-        ofSetColor(getBackgroundColor());
-        ofDrawRectangle(_x, _y, _w, _h);
-    ofPopStyle();
+    drawBackground();
+
     
     //draw gui------------------
+    TS_START("gui");
     for(int i=0; i<components.size(); i++){
         components[i]->draw();
     }
+    TS_STOP("gui");
     //draw timeline------------
+    TS_START("timeline");
     timeline.draw();
+    TS_STOP("timeline");
     
     //draw audio waveform in background----------
     //adjust with zoom
+    TS_START("recompute");
     if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
         audioTrack->recomputePreview();
     }
+    TS_STOP("recompute");
+    
+    
     //draw waveforms
+    TS_START("waveforms");
     ofPushStyle();
-    ofSetColor(ofColor::white);
+    ofSetColor(waveformCol);
     for(int i=0; i<audioTrack->getPreviews().size(); i++){
         audioTrack->getPreviews()[i].draw();
     }
     ofPopStyle();
+    TS_STOP("waveforms");
     
   
 
@@ -140,12 +155,12 @@ void TimelinePanel::keyPressed(int key){
 //--------------------------------------------------------------
 #pragma mark - Settings funcs
 //--------------------------------------------------------------
-void TimelinePanel::loadSettings(){
-    timeline.loadTracksFromFolder(TIMELINE_SETTINGS_DIR);
+void TimelinePanel::loadSettings(string rootDir){
+    timeline.loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR);
 }
 //--------------------------------------------------------------
-void TimelinePanel::saveSettings(){
-    timeline.saveTracksToFolder(TIMELINE_SETTINGS_DIR);
+void TimelinePanel::saveSettings(string rootDir){
+    timeline.saveTracksToFolder(rootDir + TIMELINE_SETTINGS_DIR);
 }
 //--------------------------------------------------------------
 #pragma mark - Timeline funcs
@@ -259,7 +274,10 @@ void TimelinePanel::setupGUI(){
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setWidth(guiCompWidth * 2, 0.35);//width x2
     component->onTextInputEvent(this, &TimelinePanel::onTextInputEvent);
-    guiCompHeight = component->getHeight();//--
+    guiCompHeight = component->getHeight();///--guiCompHeight
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
     components.push_back(component);
     
     
@@ -270,6 +288,11 @@ void TimelinePanel::setupGUI(){
     dropdown->setWidth(guiCompWidth, 0.9);
     //dropdown->expand();
     dropdown->onDropdownEvent(this, &TimelinePanel::onDropdownEvent);
+    component = dropdown;
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    component->setStripeColor(bordCol);
     components.push_back(dropdown);
     
     gui_x += guiCompWidth;
@@ -278,6 +301,9 @@ void TimelinePanel::setupGUI(){
     component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
     components.push_back(component);
     
     gui_x += guiCompWidth;
@@ -286,6 +312,9 @@ void TimelinePanel::setupGUI(){
     component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
     components.push_back(component);
     
     gui_x += guiCompWidth;
@@ -294,6 +323,9 @@ void TimelinePanel::setupGUI(){
     component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
     components.push_back(component);
     
     gui_x += guiCompWidth;
@@ -302,6 +334,9 @@ void TimelinePanel::setupGUI(){
     component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
     components.push_back(component);
     
     

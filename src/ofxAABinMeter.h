@@ -10,9 +10,7 @@ class ofxAABinMeter : public ofxAAMeter{
 
     public:
     
-    ofxAABinMeter(string name, int x, int y, int w, int h) : ofxAAMeter(name, x, y, w, h){
-        _meterOrient = HORIZONTAL;
-    };
+    ofxAABinMeter(string name, int x, int y, int w, int h);
     
     //virtual void update();
     virtual void draw();
@@ -21,6 +19,8 @@ class ofxAABinMeter : public ofxAAMeter{
     
     void setBinsNum(int bins){_nBins = bins;}
     void setValues(vector<float>& vals){_values = vals;}
+    
+    void setPosAndSize(int x, int y, int w, int h);
     
     vector<float>& getValues(){return _values;}
     

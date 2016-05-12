@@ -8,8 +8,10 @@ void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudi
     _w = width;
     _h = height;
     
-    setBackgroundColor(ofColor::darkorange);
+    setBackgroundColor(ofColor::teal);
     audioAnalyzer = aaPtr;
+    
+    _mainColor = ofColor::white;
     
     setupMeters();
     
@@ -40,10 +42,10 @@ void ofxAAChannelMetersPanel::update(){
 
     mOnsets->setValue(audioAnalyzer->getIsOnset());
 
-    mSpectrum->setValues(audioAnalyzer->getSpectrumRef());
-    mMelBands->setValues(audioAnalyzer->getMelBandsRef());
-    mMfcc->setValues(audioAnalyzer->getDctRef());
-    mHpcp->setValues(audioAnalyzer->getHpcpRef());
+    mSpectrum->setValues(audioAnalyzer->getSpectrumRef(mSpectrum->getSmoothAmnt()));
+    mMelBands->setValues(audioAnalyzer->getMelBandsRef(mMelBands->getSmoothAmnt()));
+    mMfcc->setValues(audioAnalyzer->getDctRef(mMfcc->getSmoothAmnt()));
+    mHpcp->setValues(audioAnalyzer->getHpcpRef(mHpcp->getSmoothAmnt()));
     
     //set values to std::for osc sending
  
@@ -55,10 +57,10 @@ void ofxAAChannelMetersPanel::update(){
 void ofxAAChannelMetersPanel::draw(){
     
     //background
-    ofPushStyle();
-        ofSetColor(getBackgroundColor());
-        ofDrawRectangle(_x, _y, _w, _h);
-    ofPopStyle();
+//    ofPushStyle();
+//        ofSetColor(getBackgroundColor());
+//        ofDrawRectangle(_x, _y, _w, _h);
+//    ofPopStyle();
     
     for(int i=0; i<meters.size(); i++){
         meters[i]->draw();
@@ -96,7 +98,7 @@ void ofxAAChannelMetersPanel::setupMeters(){
     VMetersNum = 9; //onsets included
     HMetersNum = 4;
     
-    VMetersWidthTotal = _w * 0.75;
+    VMetersWidthTotal = _w * VERT_METERS_WIDTH;
     HMetersWidthTotal = _w - VMetersWidthTotal;
     
     VMeterWidth = VMetersWidthTotal / VMetersNum;
@@ -173,8 +175,17 @@ void ofxAAChannelMetersPanel::setupMeters(){
     mHpcp->setBinsNum(audioAnalyzer->getHpcpBinsNum());
     meters.push_back(mHpcp);
     
+    
+    
 }
 
+//------------------------------------------------
+void ofxAAChannelMetersPanel::setMainColor(ofColor col){
+    _mainColor = col;
+    for (auto m : meters){
+        m->setMainColor(_mainColor);
+    }
+}
 //------------------------------------------------
 void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){
     
@@ -229,7 +240,7 @@ void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
     
 }
 //--------------------------------------------------------------
-void ofxAAChannelMetersPanel::loadFromFile(string filename){
+void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     
     ofxXmlSettings xml;
     
@@ -286,54 +297,31 @@ void ofxAAChannelMetersPanel::loadFromFile(string filename){
     mOnsets->setAlpha(xml.getValue("PANEL:ONSETS:ALPHA", 0.0));
     mOnsets->setTreshold(xml.getValue("PANEL:ONSETS:TRESHOLD", 0.0));
     
+    mSpectrum->setSmoothAmnt(xml.getValue("PANEL:SPECTRUM:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:SPECTRUM:STATE", 0) > 0;
+    mSpectrum->setEnabled(state);
+    //spectrm cant be turned off
     
-   
+    mMelBands->setSmoothAmnt(xml.getValue("PANEL:MELBANDS:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:MELBANDS:STATE", 0) > 0;
+    mMelBands->setEnabled(state);
+    audioAnalyzer->setActiveMelbandsAndMfcc(state);//linked to mfcc
+    
+    mMfcc->setSmoothAmnt(xml.getValue("PANEL:MFCC:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:MFCC:STATE", 0) > 0;
+    mMfcc->setEnabled(state);
+    audioAnalyzer->setActiveMelbandsAndMfcc(state);//linked to melbands
+    
+    mHpcp->setSmoothAmnt(xml.getValue("PANEL:HPCP:SMOOTH", 0.0));
+    state = xml.getValue("PANEL:HPCP:STATE", 0) > 0;
+    mHpcp->setEnabled(state);
+    audioAnalyzer->setActiveHpcp(state);
+    
 }
 //--------------------------------------------------------------
-void ofxAAChannelMetersPanel::saveToFile(string filename){
+void ofxAAChannelMetersPanel::saveSettingsToFile(string filename){
 
-//    ofxXmlSettings xml;
-//   
-//
-//    if( xml.loadFile(filename) ){
-//        ofLogVerbose() <<"ofxAAChannelMetersPanel:"<< filename <<" loaded for saving!";
-//   
-//        
-//        xml.setValue("PANEL:POWER:SMOOTH", mPower->getSmoothAmnt());
-//        xml.setValue("PANEL:POWER:STATE", mPower->getEnabled());
-//        
-//        xml.setValue("PANEL:PITCHFREQ:SMOOTH", mPitchFreq->getSmoothAmnt());
-//        xml.setValue("PANEL:PITCHFREQ:STATE", mPitchFreq->getEnabled());
-//        
-//        xml.setValue("PANEL:PITCHCONF:SMOOTH", mPitchConf->getSmoothAmnt());
-//        xml.setValue("PANEL:PITCHCONF:STATE", mPitchConf->getEnabled());
-//        
-//        xml.setValue("PANEL:SALIENCE:SMOOTH", mSalience->getSmoothAmnt());
-//        xml.setValue("PANEL:SALIENCE:STATE", mSalience->getEnabled());
-//        
-//        xml.setValue("PANEL:HFC:SMOOTH", mHfc->getSmoothAmnt());
-//        xml.setValue("PANEL:HFC:STATE", mHfc->getEnabled());
-//        
-//        xml.setValue("PANEL:CENTROID:SMOOTH", mCentroid->getSmoothAmnt());
-//        xml.setValue("PANEL:CENTROID:STATE", mCentroid->getEnabled());
-//        
-//        xml.setValue("PANEL:SPECCOMP:SMOOTH", mSpecComp->getSmoothAmnt());
-//        xml.setValue("PANEL:SPECCOMP:STATE", mSpecComp->getEnabled());
-//        
-//        xml.setValue("PANEL:INHARM:SMOOTH", mInharm->getSmoothAmnt());
-//        xml.setValue("PANEL:INHARM:STATE", mInharm->getEnabled());
-//        
-//        xml.setValue("PANEL:ONSETS:ALPHA", mOnsets->getAlpha());
-//        xml.setValue("PANEL:ONSETS:TRESHOLD", mOnsets->getTreshold());
-//        
-//        xml.saveFile();
-//        
-//    }else{
-//        ofLogVerbose() << "ofxAAChannelMetersPanel: " << filename << "does not exists, going to create it.";
-//        
-//       
-//       
-//    }
+
     
     ofxXmlSettings savedSettings;
     savedSettings.addTag("PANEL");
@@ -392,6 +380,34 @@ void ofxAAChannelMetersPanel::saveToFile(string filename){
     savedSettings.addValue("ALPHA", mOnsets->getAlpha());
     savedSettings.addValue("TRESHOLD",mOnsets->getTreshold());
     savedSettings.popTag();
+    
+    savedSettings.addTag("SPECTRUM");
+    savedSettings.pushTag("SPECTRUM");
+    savedSettings.addValue("SMOOTH", mSpectrum->getSmoothAmnt());
+    savedSettings.addValue("STATE", mSpectrum->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("MELBANDS");
+    savedSettings.pushTag("MELBANDS");
+    savedSettings.addValue("SMOOTH", mMelBands->getSmoothAmnt());
+    savedSettings.addValue("STATE", mMelBands->getEnabled());
+    savedSettings.popTag();
+    
+    savedSettings.addTag("MFCC");
+    savedSettings.pushTag("MFCC");
+    savedSettings.addValue("SMOOTH", mMfcc->getSmoothAmnt());
+    savedSettings.addValue("STATE", mMfcc->getEnabled());
+    savedSettings.popTag();
+    
+    
+    savedSettings.addTag("HPCP");
+    savedSettings.pushTag("HPCP");
+    savedSettings.addValue("SMOOTH", mHpcp->getSmoothAmnt());
+    savedSettings.addValue("STATE", mHpcp->getEnabled());
+    savedSettings.popTag();
+    
+    
+    
     
     savedSettings.saveFile(filename);
     

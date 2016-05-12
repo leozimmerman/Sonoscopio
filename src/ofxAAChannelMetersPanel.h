@@ -13,6 +13,7 @@
 
 #define PITCH_MIN_VALUE_FOR_METER 130.0 //hz
 #define PITCH_MAX_VALUE_FOR_METER 2093.0 //hz
+#define VERT_METERS_WIDTH 0.7
 
 class ofxAAChannelMetersPanel{
 public:
@@ -34,6 +35,7 @@ public:
     void setWidth(int w){_w = w ;}
     void setHeight(int h){_h = h;}
     void setBackgroundColor(ofColor col){_bckgColor = col;}
+    void setMainColor(ofColor col);
     
     ofVec2f getPosition(){return ofVec2f(_x, _y);}
     int getWidth(){return _w;}
@@ -44,16 +46,17 @@ public:
     
     vector<ofxAAMeter*> meters;
     
-    void loadFromFile(string filename);
-    void saveToFile(string filename);
+    void loadSettingsFromFile(string filename);
+    void saveSettingsToFile(string filename);
     
 protected:
     
-    ofxAudioAnalyzer* audioAnalyzer;///**
+    ofxAudioAnalyzer* audioAnalyzer;
 
     int _x, _y;
     int _w, _h;
     ofColor _bckgColor;
+    ofColor _mainColor;
     
     int VMetersNum, HMetersNum ;
     int HMetersWidthTotal, VMetersWidthTotal;

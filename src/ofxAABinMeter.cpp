@@ -1,11 +1,19 @@
 
 #include "ofxAABinMeter.h"
 
-//ofxAABinMeter::ofxAABinMeter() :  ofxAAMeter(int x, int y, int w, int h){
-//    
-//
-//    
-//}
+ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h) :  ofxAAMeter(name, x,  y,  w,  h){
+    
+    _meterOrient = HORIZONTAL;
+   
+    onOffToggle->setWidth( _w*0.2, 0.15);
+    onOffToggle->setHeight(line_h*0.75);
+    onOffToggle->setPosition(_x + _w - _w*0.15, _y+2);
+    
+    smoothSlider->setWidth( _w*0.2, 0.0);
+    smoothSlider->setHeight(line_h*0.75);
+    smoothSlider->setPosition(_x + _w - _w*0.2, _y+2 + line_h*0.75);
+    
+}
 
 //void ofxAABinMeter::update(){
 //
@@ -23,6 +31,9 @@ void ofxAABinMeter::draw(){
     //valueMeter
     drawMeter();
     drawLabel();
+    
+    onOffToggle->draw();
+    smoothSlider->drawElemental();
     
     ofPopStyle();
 
@@ -43,9 +54,22 @@ void ofxAABinMeter::drawMeter(){
         ofDrawRectangle(i*bin_w, _h, bin_w, bin_h);
     }
     
-    
     ofPopMatrix();
     
-    onOffToggle->draw();
+    
+
+}
+//-------------------------------------------------------
+void ofxAABinMeter::setPosAndSize(int x, int y, int w, int h){
+    
+    _x = x;
+    _y = y;
+    _w = w;
+    _h = h;
+    
+    _drawRect.set(x, y, w, h);
+    
+    onOffToggle->setPosition(_x + _w - _w*0.2, _y+2);
+    smoothSlider->setPosition(_x + _w - _w*0.2, _y+2 + line_h*0.75);
 
 }

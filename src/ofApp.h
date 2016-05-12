@@ -22,8 +22,13 @@
 #define BUFFER_SIZE 512
 
 #define MAIN_PANEL_HEIGHT 0.15
-#define TIME_PANEL_HEIGHT 0.65
-#define METER_PANEL_HEIGHT 0.2
+#define TIME_PANEL_HEIGHT 0.4
+#define METER_PANEL_HEIGHT 0.45
+
+enum analysisMode{
+    MONO,
+    SPLIT
+};
 
 class ofApp : public ofBaseApp{
 
@@ -49,15 +54,20 @@ class ofApp : public ofBaseApp{
     void openAudioFile(string filename);
     void onTimelinePanelResize(int & h);
     
+    void setAnalysisMode(analysisMode mode);
+    void setupAnalysisEngine();
+    
     void setOscSender(string host, int port);
     void setOscSenderHost(string host);
     void setOscSenderPort(int port);
     void sendOscData();
+    void setIsSendingOsc(bool b){_bSendOsc = b;}
     
     void saveSettings();
     void loadSettings();
-
     
+    void openProject(string projectDir);
+
     //panels-----------
     MainPanel mainPanel;
     TimelinePanel timePanel;
@@ -66,24 +76,27 @@ class ofApp : public ofBaseApp{
     ofxAAMain mainAnalyzer;
     
     ofSoundBuffer soundBuffer;
-    
+
     ofxOscSender oscSender;
     
-   
-
-    
-   
 
 private:
+    
     int _channels;
     int _samplerate;
     
     ofMutex audioMutex;
     
+    bool _bSendOsc;
     string _oscHost;
     int _oscPort;
     
+    analysisMode _currentAnalysisMode;
+    string _projectDir;
+    
+    //---
      ofPolyline waveform;///delete
+    
     
     
     

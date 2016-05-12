@@ -31,8 +31,8 @@ public:
     
     void keyPressed(int key);
     
-    void loadSettings();
-    void saveSettings();
+    void loadSettings(string rootDir="");
+    void saveSettings(string rootDir="");
     
     void setupGUI();
     
@@ -73,7 +73,10 @@ private:
     bool _isThereBang = false;
     ofxTLTrack* _bangedTrack;
     
+    ofColor bordCol;
+    int bordWidth;
     
+    ofColor waveformCol;
     
 };
 

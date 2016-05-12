@@ -29,6 +29,7 @@ public:
 
     virtual void drawLabel();
     virtual void drawMeter();
+    virtual void drawValueDisplay();
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}

@@ -10,7 +10,14 @@ class Panel{
         virtual void update() =0;
         virtual void draw() =0;
         virtual void exit() =0;
-        
+    
+        void drawBackground(){
+            ofPushStyle();
+            ofSetColor(getBackgroundColor());
+            ofDrawRectangle(_x, _y, _w, _h);
+            ofPopStyle();
+        }
+    
         void setPosition(ofVec2f pos){_x = pos.x; _y = pos.y;}
         void setWidth(int w){_w = w ;}
         void setHeight(int h){_h = h;}

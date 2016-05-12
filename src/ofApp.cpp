@@ -10,7 +10,7 @@ void ofApp::setup(){
     ///HAY UN BACK EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
 	
     //Gral---------------------------
-    ofSetBackgroundColor(100);
+    ofSetBackgroundColor(ofColor::black);
     ofEnableSmoothing();
     ofEnableAlphaBlending();
     ofSetFrameRate(60);
@@ -27,9 +27,11 @@ void ofApp::setup(){
     //use lower values to get steadier readings
     TIME_SAMPLE_DISABLE_AVERAGE();	//disable averaging
     TIME_SAMPLE_SET_REMOVE_EXPIRED_THREADS(true); //inactive threads will be dropped from the table
-    ///TIME_SAMPLE_DISABLE();
+    TIME_SAMPLE_DISABLE();
     
     //Panels setup------------------
+    _currentAnalysisMode = SPLIT;
+    
     int mainH = MAIN_PANEL_HEIGHT * ofGetHeight();
     int timeH = TIME_PANEL_HEIGHT * ofGetHeight();
     int meterH = METER_PANEL_HEIGHT * ofGetHeight();
@@ -52,8 +54,12 @@ void ofApp::setup(){
     _oscHost = "localhost";
     _oscPort = 12345;
     setOscSender(_oscHost, _oscPort);
+    _bSendOsc = TRUE;
     
-
+    //-------------------------------
+    _projectDir = "";
+    
+   
     
     //ofExit();
 }
@@ -68,28 +74,36 @@ void ofApp::update(){
     
     audioMutex.lock();
     
-    soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(BUFFER_SIZE);
-
-    if(timePanel.timeline.getIsPlaying()){
-        mainAnalyzer.analyze(soundBuffer);
+    TS_START("GET-AUDIO-BUFFERS");
+    if(_currentAnalysisMode==SPLIT){
+        soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(BUFFER_SIZE);//multichannel soundbuffer
+    }else if(_currentAnalysisMode==MONO){
+        soundBuffer = timePanel.audioTrack->getCurrentSoundBufferMono(BUFFER_SIZE);//mono soundbuffer
     }
+    TS_STOP("GET-AUDIO-BUFFERS");
+    
+    TS_START("AUDIO-ANALYSIS");
+    if(timePanel.timeline.getIsPlaying()){
+      mainAnalyzer.analyze(soundBuffer);
+    }
+    TS_STOP("AUDIO-ANALYSIS");
     
     audioMutex.unlock();
     
     //update panels-------------------
+    TS_START("PANELS-UPDATE");
     mainPanel.update();
     timePanel.update();
     metersPanel.update();
-    
+    TS_STOP("PANELS-UPDATE");
     
     //send OSC-----------------------
-    TS_START("sendOsc");
-    sendOscData();
-    TS_STOP("sendOsc");
+    TS_START("SEND-OSC");
+    if(_bSendOsc) sendOscData();
+    TS_STOP("SEND-OSC");
     //--------------------------
     
 //    waveform.clear();
-//    
 //    int ch=0; //channel to visualize
 //    
 //    for(size_t i = 0; i < soundBuffer.getNumFrames(); i++) {
@@ -105,22 +119,26 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    TS_START("mainPanel-Draw");
-    mainPanel.draw();
-    TS_STOP("mainPanel-Draw");
     
-    TS_START("metersPanel-Draw");
+    
+    TS_START("METERS-PANEL");
     metersPanel.draw();
-    TS_STOP("metersPanel-Draw");
+    TS_STOP("METERS-PANEL");
 
-    TS_START("timePanel-Draw");
+    TS_START("TIMELINE-PANEL");
     timePanel.draw();
-    TS_STOP("timePanel-Draw");
+    TS_STOP("TIMELINE-PANEL");
     
-    //ofSetColor(255,0,0);
+    TS_START("MAIN-PANEL");
+    mainPanel.draw();
+    TS_STOP("MAIN-PANEL");
     
-    //waveform.draw();
-
+    
+    
+//    ofPushStyle();
+//    ofSetColor(255,0,0);
+//    waveform.draw();
+//    ofPopStyle();
     
 }
 //--------------------------------------------------------------
@@ -137,15 +155,21 @@ void ofApp::keyPressed(int key){
     'd' enables/disables focused track
     'a' adjust tracks height shorcut
     */
-    
+    /*
+     'm': time measurement on/off
+     */
     switch (key) {
-
+        case 'm':
+            if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
+            else TIME_SAMPLE_ENABLE();
+            break;
     }
     
    
     
     if(key == 'a' || key == 'A'){
-        sendOscData();
+        //sendOscData();
+        //openProject();
     }
     
     
@@ -162,14 +186,37 @@ void ofApp::openAudioFile(string filename){
     _channels = timePanel.audioTrack->getNumChannels();
     _samplerate = timePanel.audioTrack->getSampleRate();
     
-    
-    mainAnalyzer.reset(_samplerate, BUFFER_SIZE, _channels);
-    metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
-    
+    setupAnalysisEngine();
 
     audioMutex.unlock();
 }
 
+//--------------------------------------------------------------
+void ofApp::setupAnalysisEngine(){
+    
+    if(_currentAnalysisMode == SPLIT){
+        
+        mainAnalyzer.reset(_samplerate, BUFFER_SIZE, _channels);
+        metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
+        
+    }else if(_currentAnalysisMode == MONO){
+        
+        mainAnalyzer.reset(_samplerate, BUFFER_SIZE, 1);
+        metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
+        
+    }
+    
+}
+//--------------------------------------------------------------
+void ofApp::setAnalysisMode(analysisMode mode){
+    
+    audioMutex.lock();
+    
+    _currentAnalysisMode = mode;
+    setupAnalysisEngine();
+    
+    audioMutex.unlock();
+}
 //--------------------------------------------------------------
 void ofApp::startStopPlaying(){
 
@@ -177,14 +224,13 @@ void ofApp::startStopPlaying(){
 }
 //--------------------------------------------------------------
 void ofApp::onTimelinePanelResize(int &h){
-
-    //cout << "ofAPP:" << h << endl;
     
-    //new metersPanel vars
     int new_y = mainPanel.getHeight() + h;
     int new_h = ofGetHeight() - new_y;
     
     metersPanel.adjustPosAndHeight(new_y, new_h);
+    
+    
     
     
 }
@@ -244,20 +290,37 @@ void ofApp::sendOscData(){
 //--------------------------------------------------------------
 #pragma mark - Settings funcs
 //--------------------------------------------------------------
-void ofApp::saveSettings(){
+void ofApp::openProject(string projectDir ){
+   
+    cout<<"OPEN PROJECT in DIR: "<<projectDir<<endl;
     
+    //string _projectDir = "projects/testOne/";
+    _projectDir = projectDir + "/";
+    
+    string audioFileName = _projectDir + "audiofile.wav";
+    
+    openAudioFile(audioFileName);
+    
+    mainPanel.loadSettings(_projectDir);
+    timePanel.loadSettings(_projectDir);
+    metersPanel.loadSettings(_projectDir);
+}
+//--------------------------------------------------------------
+void ofApp::saveSettings(){
+    mainPanel.saveSettings();
     timePanel.saveSettings();
     metersPanel.saveSettings();
     ofLogVerbose()<< "ofApp: Settings SAVED";
 }
 //--------------------------------------------------------------
 void ofApp::loadSettings(){
-
+    mainPanel.loadSettings();
     timePanel.loadSettings();
     metersPanel.loadSettings();
     ofLogVerbose() << "ofApp: Settings LOADED";
 }
-
+//--------------------------------------------------------------
+#pragma mark - Other funcs
 
 
 ///**************************************************************

@@ -2,8 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
-//#include "ofxDatGui.h"
-#include "ofxXmlSettings.h"
+
 #include"ofxAudioAnalyzer.h"
 
 #include "Panel.h"
@@ -21,32 +20,25 @@ public:
     void draw();
     void exit();
     
-    void saveSettings();
-    void loadSettings();
+    void saveSettings(string rootDir="");
+    void loadSettings(string rootDir="");
     
     void reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs);
     void adjustPosAndHeight(int y, int h);
     
     std::map<string, float> getMetersValues();
     
-    //void onButtonEvent(ofxDatGuiButtonEvent e);
-    //void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    //void onSliderEvent(ofxDatGuiSliderEvent e);
-    
 
 private:
-    
-    //vector<ofxDatGuiComponent*> components;
-    //int guiCompHeight, guiCompWidth;
     
     vector<ofxAudioAnalyzer*> channelAnalyzers;
     vector <ofxAAChannelMetersPanel*> channelPanels;
     
+    ofColor panelColor1, panelColor2;
     
     int panelsNum;
     
-    ofxXmlSettings XML;
-    string _workingDir;
+    string _panelDir;
     
     
 };

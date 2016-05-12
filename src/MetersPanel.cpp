@@ -18,6 +18,8 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
     channelAnalyzers = chanAnalyzerPtrs;
     
     setBackgroundColor(ofColor::darkGreen);
+    panelColor1 = ofColor::darkSeaGreen;
+    panelColor2 = ofColor::darkSalmon;
     
     panelsNum = channelAnalyzers.size();
     
@@ -27,12 +29,15 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
         
         int y_pos = _y + panelHeight*i;
         ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
-        ///p->loadFromFile(METERS_SETTINGS_FILE);
+       
+        if(i%2) p->setMainColor(panelColor2);
+        else p->setMainColor(panelColor1);
+        
+        
         channelPanels.push_back(p);
     }
    
-    
-    _workingDir = METERS_SETTINGS_DIR;
+    _panelDir = METERS_SETTINGS_DIR;
     
 }
 
@@ -51,14 +56,7 @@ void MetersPanel::update(){
 //----------------------------------------------
 void MetersPanel::draw(){
     
-    //background
-    ofPushStyle();
-        ofSetColor(getBackgroundColor());
-        ofDrawRectangle(_x, _y, _w, _h);
-    ofPopStyle();
-    
-    //panels
-    //chPanel.draw();
+
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->draw();
     }
@@ -77,44 +75,43 @@ void MetersPanel::exit(){
 //----------------------------------------------
 void MetersPanel::reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs){
     
-    
     for (ofxAAChannelMetersPanel* p : channelPanels){
         p->exit();
     }
     channelPanels.clear();
-    
     //--------------------------
-    
     channelAnalyzers = chanAnalyzerPtrs;
     panelsNum = channelAnalyzers.size();
     
     int panelHeight = _h / panelsNum;
     
     for (int i=0; i<panelsNum; i++){
-        
         int y_pos = _y + panelHeight*i;
         ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
-        channelPanels.push_back(p);
         
+        if(i%2) p->setMainColor(panelColor2);
+        else p->setMainColor(panelColor1);
+        
+        channelPanels.push_back(p);
     }
 
 }
 //----------------------------------------------
-void MetersPanel::loadSettings(){
+void MetersPanel::loadSettings(string rootDir){
     
     //string fileName = workingDir+"/"+"metersSettings.xml";
     
     for(int i=0; i<channelPanels.size(); i++){
-        string filename = _workingDir + "/settings" + ofToString(i) + ".xml";
-        channelPanels[i]->loadFromFile(filename);
+        string filename = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
+        channelPanels[i]->loadSettingsFromFile(filename);
     }
 }
 //----------------------------------------------
-void MetersPanel::saveSettings(){
+void MetersPanel::saveSettings(string rootDir){
     
     for(int i=0; i<channelPanels.size(); i++){
-        string filename = _workingDir + "/settings" + ofToString(i) + ".xml";
-        channelPanels[i]->saveToFile(filename);
+        string filename = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
+        channelPanels[i]->saveSettingsToFile(filename);
     }
 }
 //----------------------------------------------
