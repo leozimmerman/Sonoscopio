@@ -4,14 +4,16 @@
 ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h) :  ofxAAMeter(name, x,  y,  w,  h){
     
     _meterOrient = HORIZONTAL;
-   
-    onOffToggle->setWidth( _w*0.2, 0.15);
-    onOffToggle->setHeight(line_h*0.75);
-    onOffToggle->setPosition(_x + _w - _w*0.15, _y+2);
     
     smoothSlider->setWidth( _w*0.2, 0.0);
     smoothSlider->setHeight(line_h*0.75);
-    smoothSlider->setPosition(_x + _w - _w*0.2, _y+2 + line_h*0.75);
+    smoothSlider->setPosition(_x + _w - _w*0.2, _y+2);
+    
+    onOffToggle->setWidth( _w*0.125, 0.3);
+    onOffToggle->setHeight(line_h*0.75);
+    onOffToggle->setPosition(_x + _w - _w*0.15, _y+2 + line_h);
+    
+    
     
 }
 
@@ -32,7 +34,13 @@ void ofxAABinMeter::draw(){
     drawMeter();
     drawLabel();
     
-    onOffToggle->draw();
+    //spectrum cant be turned off
+     //mfcc cant work if melBands is turn off
+    if(getName() != MTR_NAME_SPECTRUM &&
+       getName() != MTR_NAME_MFCC){
+        onOffToggle->draw();
+    }
+    
     smoothSlider->drawElemental();
     
     ofPopStyle();
@@ -69,7 +77,18 @@ void ofxAABinMeter::setPosAndSize(int x, int y, int w, int h){
     
     _drawRect.set(x, y, w, h);
     
-    onOffToggle->setPosition(_x + _w - _w*0.2, _y+2);
-    smoothSlider->setPosition(_x + _w - _w*0.2, _y+2 + line_h*0.75);
+    
+    smoothSlider->setPosition(_x + _w - _w*0.2, _y+2);
+    
+    if(getName() != MTR_NAME_SPECTRUM &&
+       getName() != MTR_NAME_MFCC){
+    
+        onOffToggle->setPosition(_x + _w - _w*0.2, _y+2 + line_h*0.75);
+    
+    }else{
+        onOffToggle->setPosition(_x + _w *10 , _y + _h *10);//out of screen
+    }
+    
+    
 
 }

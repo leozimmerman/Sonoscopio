@@ -32,8 +32,8 @@ void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
 
     //fonts for text display
     ofTrueTypeFont::setGlobalDpi(72);
-    verdana.load("verdana.ttf", 14, true, true);
-    verdana.setLineHeight(18.0f);
+    verdana.load("fonts/verdana.ttf", 12, true, true);
+    verdana.setLineHeight(14.0f);
     verdana.setLetterSpacing(1.037);
     
     fileInfoStr = "non file loaded";
@@ -67,7 +67,9 @@ void MainPanel::drawFileInfo(){
     
     ofPushStyle();
     
-    string infoStr = "FILE INFO:" "\nfile name: "+ fileName +"\n" + fileInfoStr;
+    string infoStr = "INFO:" "\nfile name: "+ fileName +
+                        "\n" + fileInfoStr +
+                        "\nproj: "+ mMainAppPtr->getProjectDir();
     
     //draw boundbox
     
@@ -271,7 +273,7 @@ void MainPanel::setupGUI(){
     }
     
     component = new ofxDatGuiDropdown("OPEN PROJECT", options);
-    component->onDropdownEvent(this, &MainPanel::onDropdownEvent);
+    component->onDropdownEvent(this, &MainPanel::onProjectDropdownEvent);
     component->setPosition(_x, _y+ guiCompHeight*1.5);
     component->setWidth(guiCompWidth, 0.9);
     component->setHeight(guiCompHeight/2);
@@ -288,7 +290,7 @@ void MainPanel::setupGUI(){
     component = new ofxDatGuiButton("PLAY / STOP");
     component->setPosition(_x + guiCompWidth, _y + guiCompHeight*0);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
+    component->setHeight(guiCompHeight/2);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setBorder(bordCol, bordWidth);
@@ -298,7 +300,7 @@ void MainPanel::setupGUI(){
     
     gVolume = new ofxDatGuiSlider("VOLUME", 0.0, 1.0, 1.0);
     component = gVolume;
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight*1);
+    component->setPosition(_x + guiCompWidth, _y + guiCompHeight*0.5);
     component->setWidth(guiCompWidth, 0.4);
     component->setHeight(guiCompHeight/2);
     component->onSliderEvent(this, &MainPanel::onSliderEvent);
@@ -309,7 +311,7 @@ void MainPanel::setupGUI(){
     
     gSplit = new ofxDatGuiToggle("CHANNELS SPLIT", TRUE);
     component = gSplit;
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight*1.5);
+    component->setPosition(_x + guiCompWidth, _y + guiCompHeight*1.0);
     component->setWidth(guiCompWidth, 0.9);
     component->setHeight(guiCompHeight/2);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
@@ -317,6 +319,20 @@ void MainPanel::setupGUI(){
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
+    components.push_back(component);
+    
+    vector<string> buff_sizes = {"256", "512", "1024", "2048"};
+    component = new ofxDatGuiDropdown("BUFFER SIZE", buff_sizes);
+    component->onDropdownEvent(this, &MainPanel::onBufferSizeDropdownEvent);
+    component->setPosition(_x + guiCompWidth, _y+ guiCompHeight*1.5);
+    component->setWidth(guiCompWidth, 0.9);
+    component->setHeight(guiCompHeight/2);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    
     components.push_back(component);
     
     //---------
@@ -546,28 +562,42 @@ void MainPanel::onSliderEvent(ofxDatGuiSliderEvent e){
 }
 
 //--------------------------------------------------------------
-void MainPanel::onDropdownEvent(ofxDatGuiDropdownEvent e)
+void MainPanel::onProjectDropdownEvent(ofxDatGuiDropdownEvent e)
 {
-    //ofLogVerbose() << "onDropdownEvent: " << e.child ;
+   // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
     
     string projectDir = projects_dir.getPath(e.child);
     mMainAppPtr->openProject(projectDir);
     
-//    switch (e.child) {
-//            
-//        case 0:
-//            currentTrackType = CURVES;
-//            break;
-//        case 1:
-//            currentTrackType = BANGS;
-//            break;
-//        case 2:
-//            currentTrackType = SWITCHES;
-//            break;
-//            
-//        default:
-//            break;
-//    }
+
+}
+//--------------------------------------------------------------
+void MainPanel::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e)
+{
+    // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
+    
+    switch (e.child) {
+            
+        case 0:
+            mMainAppPtr->setBufferSize(256);
+            break;
+        case 1:
+            mMainAppPtr->setBufferSize(512);
+            break;
+        case 2:
+            mMainAppPtr->setBufferSize(1024);
+            break;
+        case 3:
+            mMainAppPtr->setBufferSize(2048);
+            break;
+            
+        default:
+            break;
+    }
+        
+    
+    
+    
 }
 
 

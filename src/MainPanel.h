@@ -28,7 +28,8 @@ class MainPanel : public Panel{
         void onButtonEvent(ofxDatGuiButtonEvent e);
         void onTextInputEvent(ofxDatGuiTextInputEvent e);
         void onSliderEvent(ofxDatGuiSliderEvent e);
-        void onDropdownEvent(ofxDatGuiDropdownEvent e);
+        void onProjectDropdownEvent(ofxDatGuiDropdownEvent e);
+        void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     
         void loadSettings(string rootDir="");
         void saveSettings(string rootDir="");

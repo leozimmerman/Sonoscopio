@@ -19,7 +19,7 @@
 
 
 
-#define BUFFER_SIZE 512
+//#define BUFFER_SIZE 512
 
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.4
@@ -55,13 +55,16 @@ class ofApp : public ofBaseApp{
     void onTimelinePanelResize(int & h);
     
     void setAnalysisMode(analysisMode mode);
-    void setupAnalysisEngine();
+    void resetAnalysisEngine();
+    void setBufferSize(int bs);
     
     void setOscSender(string host, int port);
     void setOscSenderHost(string host);
     void setOscSenderPort(int port);
     void sendOscData();
     void setIsSendingOsc(bool b){_bSendOsc = b;}
+    
+    string getProjectDir(){return _projectDir;}
     
     void saveSettings();
     void loadSettings();
@@ -97,7 +100,7 @@ private:
     //---
      ofPolyline waveform;///delete
     
-    
+    int  _bufferSize;
     
     
 };

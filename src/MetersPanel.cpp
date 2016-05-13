@@ -55,13 +55,10 @@ void MetersPanel::update(){
 
 //----------------------------------------------
 void MetersPanel::draw(){
-    
 
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->draw();
     }
-    
-
 
 }
 //----------------------------------------------
@@ -88,7 +85,6 @@ void MetersPanel::reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs){
     for (int i=0; i<panelsNum; i++){
         int y_pos = _y + panelHeight*i;
         ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
-        
         if(i%2) p->setMainColor(panelColor2);
         else p->setMainColor(panelColor1);
         
@@ -140,7 +136,8 @@ std::map<string, float> MetersPanel::getMetersValues(){
             if( m->getName()==MTR_NAME_MFCC || m->getName()==MTR_NAME_SPECTRUM ||
                m->getName()==MTR_NAME_HPCP || m->getName()==MTR_NAME_MEL_BANDS){
                 
-                ///send vector<floats>????
+                ///send vector<floats> ??? send binMeters values to OSC?
+                
                 
             }else if (m->getName()==MTR_NAME_ONSETS){
                 string key = "ch" + ofToString(i)+":" + m->getName();

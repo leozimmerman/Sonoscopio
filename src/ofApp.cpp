@@ -1,14 +1,23 @@
 
 #include "ofApp.h"
 
- //ofxAudioAnalyzer audioAnalyzer(44100, 512);
+//??? Add closeProject?
+
+
+//FIXME: ofxAudioAnalyzer files name
+//TODO: Comment ofxAudioAnalyzer
+//TODO: Change github repo
+
+//FIXME: HAY UN BUG EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
+//FIXME: draw performance - FPS
+
+//TODO: Add ofxAudioAnalyzer constants configuration in pop-up window
+
 
 #pragma mark - Core funcs
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ///HAY UN BACK EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
-	
     //Gral---------------------------
     ofSetBackgroundColor(ofColor::black);
     ofEnableSmoothing();
@@ -31,6 +40,7 @@ void ofApp::setup(){
     
     //Panels setup------------------
     _currentAnalysisMode = SPLIT;
+    _bufferSize = 512;
     
     int mainH = MAIN_PANEL_HEIGHT * ofGetHeight();
     int timeH = TIME_PANEL_HEIGHT * ofGetHeight();
@@ -47,7 +57,7 @@ void ofApp::setup(){
     _samplerate = timePanel.audioTrack->getSampleRate();
     
     //AudioAnalyzer-------------------
-    mainAnalyzer.setup(_samplerate, BUFFER_SIZE, _channels);
+    mainAnalyzer.setup(_samplerate, _bufferSize, _channels);
     metersPanel.setup(0, mainH + timeH, ofGetWidth(), meterH, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
     
     //OSC sender-----------------------
@@ -76,11 +86,12 @@ void ofApp::update(){
     
     TS_START("GET-AUDIO-BUFFERS");
     if(_currentAnalysisMode==SPLIT){
-        soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(BUFFER_SIZE);//multichannel soundbuffer
+        soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(_bufferSize);//multichannel soundbuffer
     }else if(_currentAnalysisMode==MONO){
-        soundBuffer = timePanel.audioTrack->getCurrentSoundBufferMono(BUFFER_SIZE);//mono soundbuffer
+        soundBuffer = timePanel.audioTrack->getCurrentSoundBufferMono(_bufferSize);//mono soundbuffer
     }
     TS_STOP("GET-AUDIO-BUFFERS");
+    
     
     TS_START("AUDIO-ANALYSIS");
     if(timePanel.timeline.getIsPlaying()){
@@ -174,9 +185,10 @@ void ofApp::keyPressed(int key){
     
     
 }
-#pragma mark - TimePanel funcs
+#pragma mark - Audio Engine funcs
 //--------------------------------------------------------------
 void ofApp::openAudioFile(string filename){
+    
     
     audioMutex.lock();
     
@@ -186,22 +198,23 @@ void ofApp::openAudioFile(string filename){
     _channels = timePanel.audioTrack->getNumChannels();
     _samplerate = timePanel.audioTrack->getSampleRate();
     
-    setupAnalysisEngine();
+    resetAnalysisEngine();
 
     audioMutex.unlock();
+    
 }
 
 //--------------------------------------------------------------
-void ofApp::setupAnalysisEngine(){
+void ofApp::resetAnalysisEngine(){
     
     if(_currentAnalysisMode == SPLIT){
         
-        mainAnalyzer.reset(_samplerate, BUFFER_SIZE, _channels);
+        mainAnalyzer.reset(_samplerate, _bufferSize, _channels);
         metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
         
     }else if(_currentAnalysisMode == MONO){
         
-        mainAnalyzer.reset(_samplerate, BUFFER_SIZE, 1);
+        mainAnalyzer.reset(_samplerate, _bufferSize, 1);
         metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
         
     }
@@ -213,10 +226,23 @@ void ofApp::setAnalysisMode(analysisMode mode){
     audioMutex.lock();
     
     _currentAnalysisMode = mode;
-    setupAnalysisEngine();
+    resetAnalysisEngine();
     
     audioMutex.unlock();
 }
+//--------------------------------------------------------------
+void ofApp::setBufferSize(int bs){
+    
+    audioMutex.lock();
+    
+    _bufferSize = bs;
+    resetAnalysisEngine();
+    
+    audioMutex.unlock();
+    
+}
+//--------------------------------------------------------------
+#pragma mark - TimePanel funcs
 //--------------------------------------------------------------
 void ofApp::startStopPlaying(){
 
@@ -229,9 +255,6 @@ void ofApp::onTimelinePanelResize(int &h){
     int new_h = ofGetHeight() - new_y;
     
     metersPanel.adjustPosAndHeight(new_y, new_h);
-    
-    
-    
     
 }
 //--------------------------------------------------------------
@@ -251,7 +274,7 @@ void ofApp::setOscSenderPort(int port){
 //--------------------------------------------------------------
 void ofApp::sendOscData(){
     
-    ///BUNDLES??
+    //???ADD OSC BUNDLES?
     
     //send Meters values...
     std::map<string, float> metersValues = metersPanel.getMetersValues();
@@ -285,6 +308,8 @@ void ofApp::sendOscData(){
         
     }
     
+    //TODO: Send Vector Algorithm values
+    
 
 }
 //--------------------------------------------------------------
@@ -292,12 +317,52 @@ void ofApp::sendOscData(){
 //--------------------------------------------------------------
 void ofApp::openProject(string projectDir ){
    
-    cout<<"OPEN PROJECT in DIR: "<<projectDir<<endl;
+    ofLogVerbose()<<"ofApp Opening project in :"<<projectDir<<endl;
     
-    //string _projectDir = "projects/testOne/";
     _projectDir = projectDir + "/";
     
-    string audioFileName = _projectDir + "audiofile.wav";
+    //Check if project is correct----------------------------------
+    
+    ofDirectory dir(_projectDir);
+    
+    //check settings folders
+   
+    if(!dir.doesDirectoryExist(_projectDir + "main_settings")){
+        ofLogError()<< "ofApp openProject: No main_settings folder found in the project directory.";
+        return;
+    }else if(!dir.doesDirectoryExist(_projectDir + "meters_settings")){
+        ofLogError()<< "ofApp openProject: No meters_settings folder found in the project directory.";
+        return;
+    }else if(!dir.doesDirectoryExist(_projectDir + "timeline_settings")){
+        ofLogError()<< "ofApp openProject: No timeline_settings folder found in the project directory.";
+        return;
+    }
+    
+    //check audiofile:
+    dir.allowExt("wav");
+    dir.allowExt("mp3");
+    //populate the directoryr
+    dir.listDir();
+    
+    //check there is at least and only one file
+    if(dir.size() == 0){
+        ofLogError()<< "ofApp openProject: No audio file found in the project directory. Only wav and mp3 extensions.";
+        return;
+    }else if(dir.size()>1){
+        ofLogError()<< "ofApp openProject: More than one audio file found in project directory. Must be only one.";
+        return;
+    }
+    
+    //check name
+    string audioFileName;
+    
+    if(dir.getPath(0) == _projectDir+"audiofile.wav" || dir.getPath(0) == _projectDir+"audiofile.mp3"){
+        audioFileName = dir.getPath(0);//set audiofile name
+    }else{
+        ofLogError()<< "ofApp openProject: Audio file name is incorrect. Must be named audiofile.wav or audiofile.mp3";
+        return;
+    }
+    //-------------------------------------------------------
     
     openAudioFile(audioFileName);
     
@@ -307,17 +372,27 @@ void ofApp::openProject(string projectDir ){
 }
 //--------------------------------------------------------------
 void ofApp::saveSettings(){
-    mainPanel.saveSettings();
-    timePanel.saveSettings();
-    metersPanel.saveSettings();
-    ofLogVerbose()<< "ofApp: Settings SAVED";
+    
+    mainPanel.saveSettings(_projectDir);
+    timePanel.saveSettings(_projectDir);
+    metersPanel.saveSettings(_projectDir);
+    
+    if(_projectDir=="")
+        ofLogVerbose() << "ofApp: Settings SAVED to data/";
+    else
+        ofLogVerbose() << "ofApp: Settings SAVED to: "<<_projectDir;
 }
 //--------------------------------------------------------------
 void ofApp::loadSettings(){
-    mainPanel.loadSettings();
-    timePanel.loadSettings();
-    metersPanel.loadSettings();
-    ofLogVerbose() << "ofApp: Settings LOADED";
+    
+    mainPanel.loadSettings(_projectDir);
+    timePanel.loadSettings(_projectDir);
+    metersPanel.loadSettings(_projectDir);
+    
+    if(_projectDir=="")
+        ofLogVerbose() << "ofApp: Settings LOADED from data/";
+    else
+        ofLogVerbose() << "ofApp: Settings LOADED from: "<<_projectDir;
 }
 //--------------------------------------------------------------
 #pragma mark - Other funcs

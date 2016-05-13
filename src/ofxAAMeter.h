@@ -83,7 +83,7 @@ public:
     ofColor _mainColor;
     ofColor _backgroundColor;
     
-    ofTrueTypeFont	verdana;
+    ofTrueTypeFont*	verdana;
     float line_h;
     
     meterOrientation _meterOrient;
