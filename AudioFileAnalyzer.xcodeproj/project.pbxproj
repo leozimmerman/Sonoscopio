@@ -59,8 +59,8 @@
 		B396091A1CCA681100FEEB42 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B396090D1CCA681100FEEB42 /* OscTypes.cpp */; };
 		B396091E1CCA6D6D00FEEB42 /* Panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B396091C1CCA6D6D00FEEB42 /* Panel.cpp */; };
 		B39609211CCA6FD800FEEB42 /* MainPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B396091F1CCA6FD800FEEB42 /* MainPanel.cpp */; };
-		B3AE246F1CDD191C00DABBA6 /* ofxAAMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AE246D1CDD191C00DABBA6 /* ofxAAMain.cpp */; };
-		B3B3E9741CC926EA007A2FA6 /* ofxAudioAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzer.cpp */; };
+		B3AE246F1CDD191C00DABBA6 /* ofxAudioAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3AE246D1CDD191C00DABBA6 /* ofxAudioAnalyzer.cpp */; };
+		B3B3E9741CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp */; };
 		B3B3E9811CC92729007A2FA6 /* libavresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B3E9771CC92729007A2FA6 /* libavresample.a */; };
 		B3B3E9821CC92729007A2FA6 /* libessentia.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B3E9781CC92729007A2FA6 /* libessentia.a */; };
 		B3B3E9831CC92729007A2FA6 /* libfftw3f.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3B3E9791CC92729007A2FA6 /* libfftw3f.a */; };
@@ -268,10 +268,10 @@
 		B396091F1CCA6FD800FEEB42 /* MainPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainPanel.cpp; sourceTree = "<group>"; };
 		B39609201CCA6FD800FEEB42 /* MainPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainPanel.h; sourceTree = "<group>"; };
 		B3AE246C1CDD155B00DABBA6 /* ofxAAMetersNames.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAAMetersNames.h; sourceTree = "<group>"; };
-		B3AE246D1CDD191C00DABBA6 /* ofxAAMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAMain.cpp; sourceTree = "<group>"; };
-		B3AE246E1CDD191C00DABBA6 /* ofxAAMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAMain.h; sourceTree = "<group>"; };
-		B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioAnalyzer.cpp; sourceTree = "<group>"; };
-		B3B3E9121CC926EA007A2FA6 /* ofxAudioAnalyzer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAudioAnalyzer.h; sourceTree = "<group>"; };
+		B3AE246D1CDD191C00DABBA6 /* ofxAudioAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioAnalyzer.cpp; sourceTree = "<group>"; };
+		B3AE246E1CDD191C00DABBA6 /* ofxAudioAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAudioAnalyzer.h; sourceTree = "<group>"; };
+		B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioAnalyzerUnit.cpp; sourceTree = "<group>"; };
+		B3B3E9121CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAudioAnalyzerUnit.h; sourceTree = "<group>"; };
 		B3B3E9171CC926EA007A2FA6 /* algorithm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = algorithm.h; sourceTree = "<group>"; };
 		B3B3E9181CC926EA007A2FA6 /* algorithmfactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = algorithmfactory.h; sourceTree = "<group>"; };
 		B3B3E9191CC926EA007A2FA6 /* algorithmfactory_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = algorithmfactory_impl.h; sourceTree = "<group>"; };
@@ -887,11 +887,11 @@
 		B3B3E9101CC926EA007A2FA6 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzer.cpp */,
-				B3B3E9121CC926EA007A2FA6 /* ofxAudioAnalyzer.h */,
+				B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp */,
+				B3B3E9121CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.h */,
 				B3C2A11F1CDA3FE700B3428D /* ofxAudioAnalyzerAlgorithms.h */,
-				B3AE246D1CDD191C00DABBA6 /* ofxAAMain.cpp */,
-				B3AE246E1CDD191C00DABBA6 /* ofxAAMain.h */,
+				B3AE246D1CDD191C00DABBA6 /* ofxAudioAnalyzer.cpp */,
+				B3AE246E1CDD191C00DABBA6 /* ofxAudioAnalyzer.h */,
 			);
 			name = src;
 			path = ../../../addons/ofxAudioAnalyzer/src;
@@ -1448,7 +1448,7 @@
 				B39609211CCA6FD800FEEB42 /* MainPanel.cpp in Sources */,
 				FD525B9BC71CF001CAC34C5A /* ofxRemoveCocoaMenu.mm in Sources */,
 				7AC6376B15BCF4D368EC068F /* ofxTimeline.cpp in Sources */,
-				B3AE246F1CDD191C00DABBA6 /* ofxAAMain.cpp in Sources */,
+				B3AE246F1CDD191C00DABBA6 /* ofxAudioAnalyzer.cpp in Sources */,
 				B39609101CCA681100FEEB42 /* ofxOscMessage.cpp in Sources */,
 				B396090F1CCA681100FEEB42 /* ofxOscBundle.cpp in Sources */,
 				14ED851279C06F2BCF0BF279 /* ofxTLAudioTrack.cpp in Sources */,
@@ -1510,7 +1510,7 @@
 				B3CE1E4D1CE27D79000FF38D /* ofxTimeMeasurements.cpp in Sources */,
 				B39609141CCA681100FEEB42 /* IpEndpointName.cpp in Sources */,
 				B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */,
-				B3B3E9741CC926EA007A2FA6 /* ofxAudioAnalyzer.cpp in Sources */,
+				B3B3E9741CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp in Sources */,
 				B39609121CCA681100FEEB42 /* ofxOscReceiver.cpp in Sources */,
 				32FC7731C1EF7B87E491C93D /* ofxTween.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,

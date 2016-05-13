@@ -1,3 +1,11 @@
+#Settings files
+ofxTimeMeasurements.settings
+audio_files/
+main_settings/
+meters_settings/
+projects/
+timeline_settings/
+
 
 ##OF builds
 #builds
