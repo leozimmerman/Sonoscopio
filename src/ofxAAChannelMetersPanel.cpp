@@ -1,7 +1,7 @@
 
 #include "ofxAAChannelMetersPanel.h"
 
-void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudioAnalyzer * aaPtr){
+void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr){
     
     _x = x;
     _y = y;

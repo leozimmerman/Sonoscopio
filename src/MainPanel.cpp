@@ -69,6 +69,7 @@ void MainPanel::drawFileInfo(){
     
     string infoStr = "INFO:" "\nfile name: "+ fileName +
                         "\n" + fileInfoStr +
+                        "\nbuffer size: " + ofToString(mMainAppPtr->getBufferSize()) +
                         "\nproj: "+ mMainAppPtr->getProjectDir();
     
     //draw boundbox

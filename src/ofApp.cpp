@@ -3,15 +3,16 @@
 
 //??? Add closeProject?
 
+//TODO: Comment addon funcs
+//TODO: Add ofxAudioAnalyzer constants configuration (setters & getters)
 
-//FIXME: ofxAudioAnalyzer files name
-//TODO: Comment ofxAudioAnalyzer
 //TODO: Change github repo
+//TODO: add gitignore
 
 //FIXME: HAY UN BUG EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
 //FIXME: draw performance - FPS
 
-//TODO: Add ofxAudioAnalyzer constants configuration in pop-up window
+
 
 
 #pragma mark - Core funcs
@@ -69,9 +70,6 @@ void ofApp::setup(){
     //-------------------------------
     _projectDir = "";
     
-   
-    
-    //ofExit();
 }
 
 //--------------------------------------------------------------

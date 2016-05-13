@@ -7,9 +7,9 @@
 #include "ofxTimeline.h"
 #include "ofxTLAudioTrack.h"
 
-//#include "ofxAudioAnalyzer.h"
+
 #include "ofxTimeMeasurements.h"
-#include "ofxAAMain.h"
+#include "ofxAudioAnalyzer.h"
 
 #include "ofxOsc.h"
 
@@ -64,6 +64,7 @@ class ofApp : public ofBaseApp{
     void sendOscData();
     void setIsSendingOsc(bool b){_bSendOsc = b;}
     
+    int getBufferSize(){return _bufferSize;}
     string getProjectDir(){return _projectDir;}
     
     void saveSettings();
@@ -76,7 +77,7 @@ class ofApp : public ofBaseApp{
     TimelinePanel timePanel;
     MetersPanel metersPanel;
     
-    ofxAAMain mainAnalyzer;
+    ofxAudioAnalyzer mainAnalyzer;
     
     ofSoundBuffer soundBuffer;
 

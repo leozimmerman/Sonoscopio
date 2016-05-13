@@ -7,7 +7,7 @@ ofApp* meMainAppPtr;
 
 #pragma mark - Core Funcs
 
-void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs){
+void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     
     _x = x;
     _y = y;
@@ -44,7 +44,7 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
 //----------------------------------------------
 
 void MetersPanel::update(){
-    //set meters values from ofxAudioAnalyzer
+    //set meters values from ofxAudioAnalyzerUnit
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->update();
     }
@@ -70,7 +70,7 @@ void MetersPanel::exit(){
 
 }
 //----------------------------------------------
-void MetersPanel::reset(vector<ofxAudioAnalyzer*>& chanAnalyzerPtrs){
+void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     
     for (ofxAAChannelMetersPanel* p : channelPanels){
         p->exit();

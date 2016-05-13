@@ -8,7 +8,7 @@
 #include "ofxAAOnsetMeter.h"
 #include "ofxAAMetersNames.h"
 
-#include "ofxAudioAnalyzer.h"
+#include "ofxAudioAnalyzerUnit.h"
 #include "ofxXmlSettings.h"
 
 #define PITCH_MIN_VALUE_FOR_METER 130.0 //hz
@@ -18,11 +18,11 @@
 class ofxAAChannelMetersPanel{
 public:
     
-    ofxAAChannelMetersPanel(int x, int y, int width, int height, ofxAudioAnalyzer * aaPtr){
+    ofxAAChannelMetersPanel(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr){
         setup(x, y, width, height, aaPtr);
     }
     ~ofxAAChannelMetersPanel(){}
-    virtual void setup(int x, int y, int width, int height, ofxAudioAnalyzer * aaPtr);
+    virtual void setup(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr);
     virtual void update();
     virtual void draw();
     virtual void exit();
@@ -51,7 +51,7 @@ public:
     
 protected:
     
-    ofxAudioAnalyzer* audioAnalyzer;
+    ofxAudioAnalyzerUnit* audioAnalyzer;
 
     int _x, _y;
     int _w, _h;

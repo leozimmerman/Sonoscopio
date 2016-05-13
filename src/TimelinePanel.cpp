@@ -23,7 +23,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     setBackgroundColor(ofColor(50));
     bordCol = ofColor::grey;
     bordWidth = 1;
-    waveformCol.set(160);
+    waveformCol.set(120);
     
     currentTrackType = CURVES;
     currentTrackName = "";
@@ -40,8 +40,6 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
-    
-    
     
     //timeline.addAudioTrack("Audio","audio_files/rock.mp3");//stereo
     timeline.addAudioTrack("Audio","audio_files/flauta.wav");//mono
@@ -91,7 +89,16 @@ void TimelinePanel::update(){
 void TimelinePanel::draw(){
     
     drawBackground();
-
+    
+    //draw waveforms
+    TS_START("waveforms");
+    ofPushStyle();
+    ofSetColor(waveformCol);
+    for(int i=0; i<audioTrack->getPreviews().size(); i++){
+        audioTrack->getPreviews()[i].draw();
+    }
+    ofPopStyle();
+    TS_STOP("waveforms");
     
     //draw gui------------------
     TS_START("gui");
@@ -113,15 +120,7 @@ void TimelinePanel::draw(){
     TS_STOP("recompute");
     
     
-    //draw waveforms
-    TS_START("waveforms");
-    ofPushStyle();
-    ofSetColor(waveformCol);
-    for(int i=0; i<audioTrack->getPreviews().size(); i++){
-        audioTrack->getPreviews()[i].draw();
-    }
-    ofPopStyle();
-    TS_STOP("waveforms");
+   
     
   
 
@@ -350,8 +349,7 @@ string TimelinePanel::getFileInfo(){
     s =
     "duration: " + ofToString(audioTrack->getDuration(), 2) + "sec."
     "\nsample rate: " + ofToString(audioTrack->getSampleRate()) +
-    "\nchannels: " + ofToString(audioTrack->getNumChannels()) +
-    "\nbuffer size: " + ofToString(audioTrack->getBufferSize());
+    "\nchannels: " + ofToString(audioTrack->getNumChannels());
     
     return s;
     

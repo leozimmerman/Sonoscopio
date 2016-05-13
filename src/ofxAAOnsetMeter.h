@@ -5,14 +5,14 @@
 
 #include "ofxAAMeter.h"
 #include "ofxAAMetersNames.h"
-#include "ofxAudioAnalyzer.h"
+#include "ofxAudioAnalyzerUnit.h"
 
 
 class ofxAAOnsetMeter : public ofxAAMeter{
     
 public:
     
-    ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzer* analyzerPtr);
+    ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUnit* analyzerPtr);
     
     virtual void update();
     virtual void draw();
@@ -39,7 +39,7 @@ public:
     
 protected:
     
-    ofxAudioAnalyzer* audioAnalyzer;
+    ofxAudioAnalyzerUnit* audioAnalyzer;
     
     bool _onsetValue;
     float _alpha;
