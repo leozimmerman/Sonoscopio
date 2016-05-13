@@ -1,13 +1,10 @@
 
 #include "ofApp.h"
 
-//??? Add closeProject?
-
 //TODO: Comment addon funcs
 //TODO: Add ofxAudioAnalyzer constants configuration (setters & getters)
 
 //TODO: Change github repo
-//TODO: add gitignore
 
 //FIXME: HAY UN BUG EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
 //FIXME: draw performance - FPS
@@ -368,6 +365,8 @@ void ofApp::openProject(string projectDir ){
     timePanel.loadSettings(_projectDir);
     metersPanel.loadSettings(_projectDir);
 }
+//--------------------------------------------------------------
+//??? Add closeProject?
 //--------------------------------------------------------------
 void ofApp::saveSettings(){
     
