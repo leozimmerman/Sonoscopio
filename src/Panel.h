@@ -37,4 +37,6 @@ class Panel{
         int _w, _h;
         ofColor _bckgColor;
     
+    
+    
 };

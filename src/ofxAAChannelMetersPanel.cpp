@@ -1,6 +1,9 @@
 
 #include "ofxAAChannelMetersPanel.h"
 
+//------------------------------------------------
+#pragma mark - Core funcs
+//------------------------------------------------
 void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr){
     
     _x = x;
@@ -12,6 +15,8 @@ void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudi
     audioAnalyzer = aaPtr;
     
     _mainColor = ofColor::white;
+    
+    _bDrawFullDisplay = TRUE;
     
     setupMeters();
     
@@ -48,22 +53,13 @@ void ofxAAChannelMetersPanel::update(){
     mHpcp->setValues(audioAnalyzer->getHpcpRef(mHpcp->getSmoothAmnt()));
     
     //set values to std::for osc sending
- 
-    
-    
     
 }
 //------------------------------------------------
 void ofxAAChannelMetersPanel::draw(){
     
-    //background
-//    ofPushStyle();
-//        ofSetColor(getBackgroundColor());
-//        ofDrawRectangle(_x, _y, _w, _h);
-//    ofPopStyle();
-    
     for(int i=0; i<meters.size(); i++){
-        meters[i]->draw();
+           meters[i]->draw();
     }
 
 }
@@ -92,6 +88,8 @@ void ofxAAChannelMetersPanel::exit(){
     ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
 }
 
+//------------------------------------------------
+#pragma mark - Gral funcs
 //------------------------------------------------
 void ofxAAChannelMetersPanel::setupMeters(){
     
@@ -187,6 +185,13 @@ void ofxAAChannelMetersPanel::setMainColor(ofColor col){
     }
 }
 //------------------------------------------------
+void ofxAAChannelMetersPanel::setFullDisplay(bool b){
+    _bDrawFullDisplay = b;
+    for (auto m : meters){
+        m->setFullDisplay(_bDrawFullDisplay);
+    }
+}
+//------------------------------------------------
 void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){
     
     _y = y;
@@ -239,6 +244,8 @@ void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
     }
     
 }
+//--------------------------------------------------------------
+#pragma mark - Settings funcs
 //--------------------------------------------------------------
 void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     

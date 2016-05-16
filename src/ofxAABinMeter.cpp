@@ -13,15 +13,11 @@ ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h) :  ofxAAMe
     onOffToggle->setHeight(line_h*0.75);
     onOffToggle->setPosition(_x + _w - _w*0.15, _y+2 + line_h);
     
-    
-    
 }
 
-//void ofxAABinMeter::update(){
-//
-//}
 //-------------------------------------------------------
 void ofxAABinMeter::draw(){
+
     
     ofPushStyle();
     
@@ -34,20 +30,26 @@ void ofxAABinMeter::draw(){
     drawMeter();
     drawLabel();
     
-    //spectrum cant be turned off
-     //mfcc cant work if melBands is turn off
-    if(getName() != MTR_NAME_SPECTRUM &&
-       getName() != MTR_NAME_MFCC){
-        onOffToggle->draw();
+    ofPopStyle();
+    
+    if(_bDrawFullDisplay){
+        //spectrum cant be turned off
+         //mfcc cant work if melBands is turn off
+        if(getName() != MTR_NAME_SPECTRUM &&
+           getName() != MTR_NAME_MFCC){
+            onOffToggle->draw();
+        }
+        
+        smoothSlider->drawElemental();
     }
     
-    smoothSlider->drawElemental();
-    
-    ofPopStyle();
 
 }
 //-------------------------------------------------------
 void ofxAABinMeter::drawMeter(){
+    
+    if(getEnabled()==false) return;
+    //-----------------------------
     
     ofFill();
     

@@ -5,8 +5,9 @@
 
 ofApp* meMainAppPtr;
 
+//----------------------------------------------
 #pragma mark - Core Funcs
-
+//----------------------------------------------
 void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     
     _x = x;
@@ -19,7 +20,7 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
     
     setBackgroundColor(ofColor::darkGreen);
     panelColor1 = ofColor::darkSeaGreen;
-    panelColor2 = ofColor::darkSalmon;
+    panelColor2 = ofColor::darkKhaki;
     
     panelsNum = channelAnalyzers.size();
     
@@ -38,11 +39,10 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
     }
    
     _panelDir = METERS_SETTINGS_DIR;
+    _bDrawFullDisplay = TRUE;
     
 }
-
 //----------------------------------------------
-
 void MetersPanel::update(){
     //set meters values from ofxAudioAnalyzerUnit
     for(ofxAAChannelMetersPanel* p : channelPanels){
@@ -125,6 +125,15 @@ void MetersPanel::adjustPosAndHeight(int y, int h){
     
 }
 //----------------------------------------------
+void MetersPanel::setFullDisplay(bool b){
+    
+    _bDrawFullDisplay = b;
+    for (auto chPan : channelPanels){
+        chPan->setFullDisplay(_bDrawFullDisplay);
+    }
+    
+}
+//----------------------------------------------
 std::map<string, float> MetersPanel::getMetersValues(){
     
     std::map<string, float> values;
@@ -151,7 +160,5 @@ std::map<string, float> MetersPanel::getMetersValues(){
        }
         
     }
-
-    
     return values;
 }

@@ -1,13 +1,15 @@
 
 #include "ofApp.h"
 
-//TODO: Comment addon funcs
-//TODO: Add ofxAudioAnalyzer constants configuration (setters & getters)
+
 
 //TODO: Change github repo
 
 //FIXME: HAY UN BUG EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
-//FIXME: draw performance - FPS
+
+
+//TODO: Comment addon funcs
+//TODO: Add ofxAudioAnalyzer constants configuration (setters & getters)
 
 
 
@@ -20,13 +22,13 @@ void ofApp::setup(){
     ofSetBackgroundColor(ofColor::black);
     ofEnableSmoothing();
     ofEnableAlphaBlending();
-    ofSetFrameRate(60);
+    ofSetFrameRate(FRAME_RATE);
     
     ofSetLogLevel(OF_LOG_VERBOSE);
     
     //Time Measurement-----------------
     
-    TIME_SAMPLE_SET_FRAMERATE( 60.0f ); //set the app's target framerate (MANDATORY)
+    TIME_SAMPLE_SET_FRAMERATE( FRAME_RATE ); //set the app's target framerate (MANDATORY)
     //specify where the widget is to be drawn
     TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_TOP_RIGHT );
     TIME_SAMPLE_SET_AVERAGE_RATE(0.1);	//averaging samples, (0..1],
@@ -176,6 +178,7 @@ void ofApp::keyPressed(int key){
     if(key == 'a' || key == 'A'){
         //sendOscData();
         //openProject();
+        //metersPanel.setFullDisplay(!metersPanel.getIsFullDisplay());
     }
     
     

@@ -36,11 +36,13 @@ public:
     void setHeight(int h){_h = h;}
     void setBackgroundColor(ofColor col){_bckgColor = col;}
     void setMainColor(ofColor col);
+    void setFullDisplay(bool b);
     
     ofVec2f getPosition(){return ofVec2f(_x, _y);}
     int getWidth(){return _w;}
     int getHeight(){return _h;}
     ofColor getBackgroundColor(){return _bckgColor;}
+    bool getIsFullDisplay(){return _bDrawFullDisplay;}
     
     void onMeterStateChanged(OnOffEventData & data);
     
@@ -78,6 +80,8 @@ protected:
     ofxAABinMeter * mMelBands;
     ofxAABinMeter * mMfcc;//dct
     ofxAABinMeter * mHpcp;
+    
+    bool _bDrawFullDisplay;
     
    // ofxXmlSettings xml;
 

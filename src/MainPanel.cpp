@@ -241,8 +241,6 @@ void MainPanel::setupGUI(){
     component->setStripeVisible(false);
     components.push_back(component);
     
- 
-    
     component = new ofxDatGuiButton("LOAD SETTINGS");
     component->setPosition(_x, _y + guiCompHeight*0.5);
     component->setWidth(guiCompWidth, 0.9);
@@ -342,7 +340,7 @@ void MainPanel::setupGUI(){
     component = gLoop;
     component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight*0);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
+    component->setHeight(guiCompHeight/2);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setBorder(bordCol, bordWidth);
@@ -351,7 +349,7 @@ void MainPanel::setupGUI(){
     components.push_back(component);
     
     component = new ofxDatGuiButton("SET IN");
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight*1);
+    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 0.5);
     component->setWidth(guiCompWidth, 0.9);
     component->setHeight(guiCompHeight/2);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
@@ -362,7 +360,18 @@ void MainPanel::setupGUI(){
     components.push_back(component);
     
     component = new ofxDatGuiButton("SET OUT");
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight*1.5);
+    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 1.0);
+    component->setWidth(guiCompWidth, 0.9);
+    component->setHeight(guiCompHeight/2);
+    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    components.push_back(component);
+    
+    component = new ofxDatGuiButton("METERS FULL DISPLAY");
+    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 1.5);
     component->setWidth(guiCompWidth, 0.9);
     component->setHeight(guiCompHeight/2);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
@@ -512,6 +521,10 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
     }else if(e.target->getLabel()=="SET OUT"){
         
         mMainAppPtr->timePanel.timeline.setOutPointAtPlayhead();
+    
+    }else if(e.target->getLabel()=="METERS FULL DISPLAY"){
+        
+        mMainAppPtr->metersPanel.toggleFullDisplay();
         
     }else if(e.target->getLabel()== "SEND OSC"){
         

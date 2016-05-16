@@ -31,6 +31,9 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUni
 //------------------------------------
 void ofxAAOnsetMeter::update(){
     
+    if(_bDrawFullDisplay==false) return;
+    //-----------------------------
+        
     onOffToggle->update();
     alphaSlider->update();
     tresholdSlider->update();
@@ -42,30 +45,47 @@ void ofxAAOnsetMeter::draw(){
     ofPushStyle();
     
     //bounds-box
-    ofNoFill();
+    if(_onsetValue)
+        ofFill();
+    else
+        ofNoFill();
+    
     ofSetColor(_mainColor);
     ofDrawRectangle(_drawRect);
     
     //meter----------
-    drawMeter();
+    //drawMeter();
+    
     //label------------------------------
+    if(_onsetValue)
+        ofSetColor(_backgroundColor);
+    else
+        ofSetColor(_mainColor);
+    
     drawLabel();
     
     ofPopStyle();
     
-    onOffToggle->draw();
-    alphaSlider->drawElemental();
-    tresholdSlider->drawElemental();
+    if(_bDrawFullDisplay){
+        onOffToggle->draw();
+        alphaSlider->drawElemental();
+        tresholdSlider->drawElemental();
+    }
 
 
 }
 //------------------------------------
 void ofxAAOnsetMeter::drawMeter(){
     
+    if(getEnabled()==false) return;
+    //-----------------------------
+    
     ofPushMatrix();
     ofTranslate(_x, _y);
     
     ofFill();
+    
+    //ofSetColor(_backgroundColor);
     
     float meter_h;
     _onsetValue ? meter_h= -1.0 * _h * 0.65 : meter_h=0.0;

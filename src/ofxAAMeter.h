@@ -44,6 +44,7 @@ public:
     meterOrientation getMeterOrient(){return _meterOrient;}
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return onOffToggle->getEnabled();}
+    bool getIsFullDisplay(){return _bDrawFullDisplay;}
 
     void setName(string name){_name = name;}
     void setMainColor(ofColor col){_mainColor = col;}
@@ -56,8 +57,7 @@ public:
     void setMaxValue(float val){_maxValue = val;}
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
-    
- 
+    void setFullDisplay(bool b){_bDrawFullDisplay = b;}
 
     ofRectangle getDrawRect(){return _drawRect;}
     
@@ -87,14 +87,16 @@ public:
     float line_h;
     
     meterOrientation _meterOrient;
-    
+    bool _bDrawFullDisplay;
    
     
 private:
     string _name;
     float _value;
     float _smoothAmnt;
-
+    int _label_x;
+    
+    
     
    
     

@@ -8,11 +8,10 @@
 
 class ofxAABinMeter : public ofxAAMeter{
 
-    public:
-    
+ public:
+
     ofxAABinMeter(string name, int x, int y, int w, int h);
     
-    //virtual void update();
     virtual void draw();
     
     virtual void drawMeter();
@@ -24,7 +23,8 @@ class ofxAABinMeter : public ofxAAMeter{
     
     vector<float>& getValues(){return _values;}
     
-    protected:
+ protected:
+    
     vector<float> _values;
     int _nBins;
 };

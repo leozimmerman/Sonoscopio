@@ -23,10 +23,14 @@ public:
     void saveSettings(string rootDir="");
     void loadSettings(string rootDir="");
     
+    void toggleFullDisplay(){setFullDisplay(!_bDrawFullDisplay);}
+    void setFullDisplay(bool b);
+    
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void adjustPosAndHeight(int y, int h);
     
     std::map<string, float> getMetersValues();
+    bool getIsFullDisplay(){return _bDrawFullDisplay;}
     
 
 private:
@@ -39,6 +43,7 @@ private:
     int panelsNum;
     
     string _panelDir;
+    bool _bDrawFullDisplay;
     
     
 };

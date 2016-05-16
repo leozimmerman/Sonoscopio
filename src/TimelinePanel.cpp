@@ -32,6 +32,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
     timeline.setWorkingFolder(TIMELINE_SETTINGS_DIR);
     timeline.setup();
+    timeline.setFrameRate(FRAME_RATE);
     timeline.setAutosave(TRUE);
     timeline.setOffset(ofVec2f(_x, _y));
    
@@ -81,7 +82,9 @@ void TimelinePanel::update(){
     }
     
     //update gui components
-    for(int i=0; i<components.size(); i++) components[i]->update();
+    for(int i=0; i<components.size(); i++){
+        components[i]->update();
+    }
 
 
 }
@@ -106,19 +109,21 @@ void TimelinePanel::draw(){
         components[i]->draw();
     }
     TS_STOP("gui");
+    
     //draw timeline------------
+ 
+    
     TS_START("timeline");
-    timeline.draw();
+    timeline.draw(false);//without ticker timeMarks
     TS_STOP("timeline");
     
-    //draw audio waveform in background----------
-    //adjust with zoom
+    //adjust waveform with zoom
     TS_START("recompute");
     if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
         audioTrack->recomputePreview();
+        ofLogVerbose()<<"TimePanel: recomputing audioPreview";
     }
     TS_STOP("recompute");
-    
     
    
     

@@ -26,6 +26,8 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     
     _smoothAmnt = 0.0;
     
+    _bDrawFullDisplay = TRUE;
+    
     ofColor bordCol = ofColor::grey;
     int bordWidth = 1;
     
@@ -56,6 +58,17 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     
     _meterOrient = VERTICAL;
     
+    //label position and constraing---------------
+    //constraing width
+    float label_w = verdana->stringWidth(_name);
+    if(label_w >= _w){
+        float space_ratio = 1 / (label_w / _w);
+        verdana->setLetterSpacing(space_ratio);
+    }
+    //align center
+    label_w = verdana->stringWidth(_name);
+    _label_x =  _w * .5 - label_w *.5;
+    
 
 }
 //------------------------------------------------
@@ -67,14 +80,18 @@ ofxAAMeter::~ofxAAMeter(){
 }
 //------------------------------------------------
 void ofxAAMeter::update(){
-    //update gui components
+    
+     if(_bDrawFullDisplay==false) return;
+    //-----------------------------
+    
     smoothSlider->update();
     onOffToggle->update();
-
 
 }
 //------------------------------------------------
 void ofxAAMeter::draw(){
+    
+    
     
     ofPushStyle();
     
@@ -85,30 +102,37 @@ void ofxAAMeter::draw(){
     
     //valueMeter-------------------------
     drawMeter();
-    
+
     //label------------------------------
     drawLabel();
-
-    //SLIDERS
-
-    onOffToggle->draw();
-    smoothSlider->drawElemental();
-    //smoothSlider->draw();
     
-    //display value as string
-    drawValueDisplay();
-    
-    
-   
     ofPopStyle();
+
+    if(_bDrawFullDisplay){
+        //SLIDERS
+        onOffToggle->draw();
+        smoothSlider->drawElemental();
+       
+        //display value as string
+        drawValueDisplay();
+    }
+    
+    
 }
 //------------------------------------------------
 void ofxAAMeter::drawMeter(){
     
+    if(getEnabled()==false) return;
+    
+    //--------------------------
+    
     ofPushMatrix();
     
     ofTranslate(_x, _y);
+    
     ofFill();
+    ofSetColor(_mainColor);
+    
     float scaledValue = ofMap(_value, _minValue, _maxValue, 0.0, 1.0, true);//clamped value
     float meter_h = -1 * (_h*0.75 * scaledValue);
     ofDrawRectangle( _w * .25 , _h, _w * 0.5, meter_h);
@@ -116,50 +140,40 @@ void ofxAAMeter::drawMeter(){
     ofPopMatrix();
 
 }
+
+//------------------------------------------------
+void ofxAAMeter::drawValueDisplay(){
+    
+    if(getEnabled()==false) return;
+    
+    ofPushMatrix();
+    ofTranslate(_x, _y);
+    
+    ofPushStyle();
+    
+    ofSetColor(_mainColor);
+    string strValue = ofToString(_value, 2);
+    
+    //ofDrawBitmapStringHighlight(strValue, 10,  line_h*4.5);//highlight takes more resources
+    ofDrawBitmapString(strValue, 10,  line_h*4.5);
+    
+    ofPopStyle();
+    
+    ofPopMatrix();
+}
 //------------------------------------------------
 void ofxAAMeter::drawLabel(){
     
     ofPushMatrix();
     
     ofTranslate(_x, _y);
-    
-    //constraing width
-    float label_w = verdana->stringWidth(_name);
-    if(label_w >= _w){
-        float space_ratio = 1 / (label_w / _w);
-        verdana->setLetterSpacing(space_ratio);
-    }
-    //align center
-    
-    label_w = verdana->stringWidth(_name);
-    int label_x =  _w * .5 - label_w *.5;
-    
-    //draw label
-    //verdana->drawString(_name, label_x , line_h);
-    
-    ofDrawBitmapString(_name, label_x, line_h);
-    
+    //verdana->drawString(_name, _label_x, line_h);
+    ofDrawBitmapString(_name, _label_x, line_h);
     
     ofPopMatrix();
 
 }
-//------------------------------------------------
-void ofxAAMeter::drawValueDisplay(){
-    
-    ofPushMatrix();
-    ofTranslate(_x, _y);
-    
-    ofSetColor(_mainColor);
-    string strValue = ofToString(_value, 2);
 
-//    float label_w = verdana->stringWidth(strValue);
-//    int label_x =  _w * .5 - label_w *.5;
-    //verdana.drawString(strValue, label_x,  line_h*4.5);
-    
-    ofDrawBitmapStringHighlight(strValue, 10,  line_h*4.5);
-
-    ofPopMatrix();
-}
 //------------------------------------------------
 #pragma mark - Setters
 //------------------------------------------------

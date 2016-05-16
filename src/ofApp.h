@@ -18,12 +18,12 @@
 #include "MetersPanel.h"
 
 
-
-//#define BUFFER_SIZE 512
+#define FRAME_RATE 60.0
 
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.4
 #define METER_PANEL_HEIGHT 0.45
+
 
 enum analysisMode{
     MONO,
