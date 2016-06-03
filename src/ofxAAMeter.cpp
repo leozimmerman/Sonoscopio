@@ -215,7 +215,7 @@ void ofxAAMeter::setEnabled(bool state){
 #pragma mark - Gui listeners
 //------------------------------------------------
 void ofxAAMeter::onSliderEvent(ofxDatGuiSliderEvent e){
-    cout << _name <<"::slider: " <<e.value << endl;
+    //cout << _name <<"::slider: " <<e.value << endl;
     _smoothAmnt = e.value;
 }
 //------------------------------------------------

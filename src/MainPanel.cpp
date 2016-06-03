@@ -101,49 +101,50 @@ void MainPanel::loadSettings(string rootDir){
         return;
     }
     
+    //-----------
     float val = xml.getValue("PANEL:VOLUME", 0.0);
     gVolume->setValue(val);
     if (mMainAppPtr->timePanel.audioTrack != NULL)
         mMainAppPtr->timePanel.audioTrack->setVolume(val);
-    //--
+    //-----------
     bool state = xml.getValue("PANEL:SPLIT", 0) > 0;
     gSplit->setEnabled(state);
     if(state)
         mMainAppPtr->setAnalysisMode(SPLIT);
     else
         mMainAppPtr->setAnalysisMode(MONO);
-    //--
+    //-----------
     state = xml.getValue("PANEL:LOOP", 0) > 0;
     gLoop->setEnabled(state);
     if(state)
         mMainAppPtr->timePanel.timeline.setLoopType(OF_LOOP_NORMAL);
     else
         mMainAppPtr->timePanel.timeline.setLoopType(OF_LOOP_NONE);
-    //-
+    //-----------
     state = xml.getValue("PANEL:SEND-OSC", 0) > 0;
     gSendOsc->setEnabled(state);
     mMainAppPtr->setIsSendingOsc(state);
-    //-
+    //-----------
     string text = xml.getValue("PANEL:HOST", "");
     gHost->setText(text);
     mMainAppPtr->setOscSenderHost(text);
-    //-
+    //-----------
     text = xml.getValue("PANEL:PORT", "");
     gPort->setText(text);
     mMainAppPtr->setOscSenderPort( std::stoi(text) );
-    //-
+    //-----------
     state = xml.getValue("PANEL:SHOW-BPM", 0) > 0;
     gShowBpm->setEnabled(state);
     mMainAppPtr->timePanel.timeline.setShowBPMGrid(state);
-    //-
+    //-----------
     text = xml.getValue("PANEL:BPM", "");
     gBpm->setText(text);
     mMainAppPtr->timePanel.timeline.setNewBPM( std::stof (text) );
-    //-
+    //-----------
     state = xml.getValue("PANEL:SNAP-BPM", 0) > 0;
     gSnapBpm->setEnabled(state);
     mMainAppPtr->timePanel.timeline.enableSnapToBPM(state);
-    //-
+    //-----------
     state = xml.getValue("PANEL:FRAMEBASED", 0) > 0;
     gFramebased->setEnabled(state);
     mMainAppPtr->timePanel.timeline.setFrameBased(state);
@@ -206,7 +207,7 @@ void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
         
         string fileExtension = ofToUpper(file.getExtension());
         
-        cout<<"upper-"<<fileExtension<<endl;
+        //cout<<"upper-"<<fileExtension<<endl;
         
         
         if (fileExtension == "WAV" || fileExtension == "MP3") {
@@ -477,7 +478,7 @@ void MainPanel::setupGUI(){
 //-------------------------------------------------
 void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-    cout << "MainPanel-onButtonEvent: " << e.target->getLabel() << "::" << e.enabled << endl;
+   // cout << "MainPanel-onButtonEvent: " << e.target->getLabel() << "::" << e.enabled << endl;
     
     
     if(e.target->getLabel()=="OPEN FILE"){

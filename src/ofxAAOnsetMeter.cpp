@@ -6,6 +6,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUni
 
     audioAnalyzer = analyzerPtr;
     
+    
     _alpha = 0.1;
     alphaSlider = new ofxDatGuiSlider("ALPHA", 0.0, 1.0, _alpha);
     alphaSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
@@ -15,14 +16,23 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUni
     alphaSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     alphaSlider->setPosition(_x + _w*0.05, _y + line_h*2.5);
     
-    _treshold = 0.2;
-    tresholdSlider = new ofxDatGuiSlider("TRESHOLD", 0.0, 1.0, _treshold);
-    tresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
-    tresholdSlider->setWidth(_w * 0.95, 0.0);
-    tresholdSlider->setHeight(line_h);
-    tresholdSlider->setLabelMargin(0.0);
-    tresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    tresholdSlider->setPosition(_x + _w*0.05, _y + line_h*3.5);
+    _silenceTreshold = 0.2;
+    silenceTresholdSlider = new ofxDatGuiSlider("SLNC-TRES", 0.0, 1.0, _silenceTreshold);
+    silenceTresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
+    silenceTresholdSlider->setWidth(_w * 0.95, 0.0);
+    silenceTresholdSlider->setHeight(line_h);
+    silenceTresholdSlider->setLabelMargin(0.0);
+    silenceTresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    silenceTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*4);
+    
+    _timeTreshold = 250.0;//ms
+    timeTresholdSlider = new ofxDatGuiSlider("TIME-TRES", 0.0, 1000.0, _timeTreshold);
+    timeTresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
+    timeTresholdSlider->setWidth(_w * 0.95, 0.0);
+    timeTresholdSlider->setHeight(line_h);
+    timeTresholdSlider->setLabelMargin(0.0);
+    timeTresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    timeTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*5.5);
     
     
     
@@ -36,7 +46,8 @@ void ofxAAOnsetMeter::update(){
         
     onOffToggle->update();
     alphaSlider->update();
-    tresholdSlider->update();
+    silenceTresholdSlider->update();
+    timeTresholdSlider->update();
 
 }
 //------------------------------------
@@ -69,7 +80,8 @@ void ofxAAOnsetMeter::draw(){
     if(_bDrawFullDisplay){
         onOffToggle->draw();
         alphaSlider->drawElemental();
-        tresholdSlider->drawElemental();
+        silenceTresholdSlider->drawElemental();
+        timeTresholdSlider->drawElemental();
     }
 
 
@@ -95,17 +107,25 @@ void ofxAAOnsetMeter::drawMeter(){
 }
 //------------------------------------
 void ofxAAOnsetMeter::setPosAndSize(int x, int y, int w, int h){
+    
     ofxAAMeter::setPosAndSize(x, y, w, h);
-    tresholdSlider->setPosition(_x + _w*0.05, _y + line_h*2.5);
-    alphaSlider->setPosition(_x + _w*0.05, _y + line_h*3.5);
+    alphaSlider->setPosition(_x + _w*0.05, _y + line_h*2.5);
+    silenceTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*4.0);
+    timeTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*5.5);
+    
 }
 //------------------------------------------------
 void ofxAAOnsetMeter::onSliderEvent(ofxDatGuiSliderEvent e){
     if(e.target->getLabel() == "ALPHA"){
         _alpha = e.value;
         audioAnalyzer->setOnsetAlpha(_alpha);
-    }else if(e.target->getLabel() == "TRESHOLD"){
-        _treshold = e.value;
-        audioAnalyzer->setOnsetTreshold(_treshold);
+    }
+    else if(e.target->getLabel() == "SLNC-TRES"){
+        _silenceTreshold = e.value;
+        audioAnalyzer->setOnsetSilenceTreshold(_silenceTreshold);
+    }
+    else if(e.target->getLabel() == "TIME-TRES"){
+        _timeTreshold = e.value;
+        audioAnalyzer->setOnsetTimeTreshold(_timeTreshold);
     }
 }

@@ -45,6 +45,7 @@
 		B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */; };
 		B35C553A1CD7A6DC0070293F /* ofxAAOnsetMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */; };
 		B35C553D1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */; };
+		B36815791D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B36815781D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp */; };
 		B396090F1CCA681100FEEB42 /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608E81CCA681100FEEB42 /* ofxOscBundle.cpp */; };
 		B39609101CCA681100FEEB42 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608EA1CCA681100FEEB42 /* ofxOscMessage.cpp */; };
 		B39609111CCA681100FEEB42 /* ofxOscParameterSync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B39608EC1CCA681100FEEB42 /* ofxOscParameterSync.cpp */; };
@@ -231,6 +232,7 @@
 		B35C55391CD7A6DC0070293F /* ofxAAOnsetMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAOnsetMeter.h; sourceTree = "<group>"; };
 		B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAChannelMetersPanel.cpp; sourceTree = "<group>"; };
 		B35C553C1CD7B0920070293F /* ofxAAChannelMetersPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAChannelMetersPanel.h; sourceTree = "<group>"; };
+		B36815781D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAudioAnalyzerAlgorithms.cpp; sourceTree = "<group>"; };
 		B39608E61CCA681100FEEB42 /* ofxOsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxOsc.h; sourceTree = "<group>"; };
 		B39608E71CCA681100FEEB42 /* ofxOscArg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxOscArg.h; sourceTree = "<group>"; };
 		B39608E81CCA681100FEEB42 /* ofxOscBundle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxOscBundle.cpp; sourceTree = "<group>"; };
@@ -887,9 +889,10 @@
 		B3B3E9101CC926EA007A2FA6 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B3C2A11F1CDA3FE700B3428D /* ofxAudioAnalyzerAlgorithms.h */,
+				B36815781D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp */,
 				B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp */,
 				B3B3E9121CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.h */,
-				B3C2A11F1CDA3FE700B3428D /* ofxAudioAnalyzerAlgorithms.h */,
 				B3AE246D1CDD191C00DABBA6 /* ofxAudioAnalyzer.cpp */,
 				B3AE246E1CDD191C00DABBA6 /* ofxAudioAnalyzer.h */,
 			);
@@ -1512,6 +1515,7 @@
 				B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */,
 				B3B3E9741CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp in Sources */,
 				B39609121CCA681100FEEB42 /* ofxOscReceiver.cpp in Sources */,
+				B36815791D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp in Sources */,
 				32FC7731C1EF7B87E491C93D /* ofxTween.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,

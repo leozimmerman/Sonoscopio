@@ -18,7 +18,7 @@
 #include "MetersPanel.h"
 
 
-#define FRAME_RATE 60.0
+#define FRAME_RATE 30.0
 
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.4
@@ -71,6 +71,8 @@ class ofApp : public ofBaseApp{
     void loadSettings();
     
     void openProject(string projectDir);
+    
+    void saveAnalysisDataToFile();
 
     //panels-----------
     MainPanel mainPanel;

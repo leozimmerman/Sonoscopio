@@ -43,9 +43,11 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setShowBPMGrid(false);
     
     //timeline.addAudioTrack("Audio","audio_files/rock.mp3");//stereo
-    timeline.addAudioTrack("Audio","audio_files/flauta.wav");//mono
+    //timeline.addAudioTrack("Audio","audio_files/flauta.wav");//mono
     //timeline.addAudioTrack("Audio","audio_files/mix-stereo.wav");//mono
     //timeline.addAudioTrack("Audio","audio_files/4chan.wav");//mono
+    timeline.addAudioTrack("Audio","audio_files/noto.wav");//mono
+    
     
     
     //this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate

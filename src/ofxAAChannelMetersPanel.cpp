@@ -35,7 +35,7 @@ void ofxAAChannelMetersPanel::update(){
     //set meters values from audioAnalyzer-------
     
     mPower->setValue(audioAnalyzer->getPower(mPower->getSmoothAmnt()));
-    
+  
     mPitchFreq->setValue(audioAnalyzer->getPitchFreq(mPitchFreq->getSmoothAmnt()));
     mPitchConf->setValue(audioAnalyzer->getPitchConfidence(mPitchConf->getSmoothAmnt()));
     mSalience->setValue(audioAnalyzer->getMelodySalience(mSalience->getSmoothAmnt()));
@@ -302,7 +302,8 @@ void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     audioAnalyzer->setActiveInharmonicity(state);
     
     mOnsets->setAlpha(xml.getValue("PANEL:ONSETS:ALPHA", 0.0));
-    mOnsets->setTreshold(xml.getValue("PANEL:ONSETS:TRESHOLD", 0.0));
+    mOnsets->setSilenceTreshold(xml.getValue("PANEL:ONSETS:SILENCETRESHOLD", 0.0));
+    mOnsets->setTimeTreshold(xml.getValue("PANEL:ONSETS:TIMETRESHOLD", 0.0));
     
     mSpectrum->setSmoothAmnt(xml.getValue("PANEL:SPECTRUM:SMOOTH", 0.0));
     state = xml.getValue("PANEL:SPECTRUM:STATE", 0) > 0;
@@ -385,7 +386,8 @@ void ofxAAChannelMetersPanel::saveSettingsToFile(string filename){
     savedSettings.addTag("ONSETS");
     savedSettings.pushTag("ONSETS");
     savedSettings.addValue("ALPHA", mOnsets->getAlpha());
-    savedSettings.addValue("TRESHOLD",mOnsets->getTreshold());
+    savedSettings.addValue("SILENCETRESHOLD",mOnsets->getSilenceTreshold());
+    savedSettings.addValue("TIMETRESHOLD", mOnsets->getTimeTreshold());
     savedSettings.popTag();
     
     savedSettings.addTag("SPECTRUM");
@@ -412,8 +414,6 @@ void ofxAAChannelMetersPanel::saveSettingsToFile(string filename){
     savedSettings.addValue("SMOOTH", mHpcp->getSmoothAmnt());
     savedSettings.addValue("STATE", mHpcp->getEnabled());
     savedSettings.popTag();
-    
-    
     
     
     savedSettings.saveFile(filename);

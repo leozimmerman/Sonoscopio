@@ -1,16 +1,31 @@
 
 #include "ofApp.h"
 
+//**********************************************************************
+//TODO: add save analisis data to xml -> make it threaded!
 
+//TODO: check inharmonicity
 
 //TODO: Change github repo
 
+//TODO: show max values of each marker. peaks como en cubase
+
+//FIXME: onset meters init values are not ofxAudioAnalyzer onset values
+
 //FIXME: HAY UN BUG EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
 
+//TODO: add Markers to timeline
+//TODO: add mute channels option
 
+
+
+
+
+//ofxAudioAnalyzer----------------------
 //TODO: Comment addon funcs
 //TODO: Add ofxAudioAnalyzer constants configuration (setters & getters)
 
+//**********************************************************************
 
 
 
@@ -143,11 +158,6 @@ void ofApp::draw(){
     
     
     
-//    ofPushStyle();
-//    ofSetColor(255,0,0);
-//    waveform.draw();
-//    ofPopStyle();
-    
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
@@ -274,22 +284,32 @@ void ofApp::sendOscData(){
     
     //???ADD OSC BUNDLES?
     
-    //send Meters values...
-    std::map<string, float> metersValues = metersPanel.getMetersValues();
+    vector<std::map<string, float>> metersValues = metersPanel.getMetersValues();
     
-    for (auto& kv : metersValues){
-        //cout<<kv.first<<" -- "<<kv.second<<endl;
-        
-        string key = kv.first;
-        float floatValue = kv.second;
+    for(int i=0; i<metersValues.size(); i++){
         
         ofxOscMessage m;
-        m.setAddress(key);
-        m.addFloatArg(floatValue);
-        oscSender.sendMessage(m, false);
         
+        //address: "/ch0" - "/ch1" - "/ch2" etc...
+        string address = "/ch" + ofToString(i);
+        m.setAddress(address);
+        
+        m.addFloatArg(metersValues[i].at(MTR_NAME_POWER));//0
+        m.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_FREQ));//1
+        m.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_CONF));//2
+        m.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_SALIENCE));//3
+        m.addFloatArg(metersValues[i].at(MTR_NAME_HFC));//4
+        m.addFloatArg(metersValues[i].at(MTR_NAME_CENTROID));//5
+        m.addFloatArg(metersValues[i].at(MTR_NAME_SPEC_COMP));//6
+        m.addFloatArg(metersValues[i].at(MTR_NAME_INHARMONICTY));//7
+        m.addInt32Arg(metersValues[i].at(MTR_NAME_ONSETS));//8
+        
+        oscSender.sendMessage(m, false);
     }
     
+
+    
+    ///timeline data
     //send timeline track values...
     std::map<string, float> timelineValues = timePanel.getTracksValues();
     
@@ -300,7 +320,7 @@ void ofApp::sendOscData(){
         float floatValue = kv.second;
         
         ofxOscMessage m;
-        m.setAddress(key);
+        m.setAddress("/" + key);//address: "/TL-(trackName)"
         m.addFloatArg(floatValue);
         oscSender.sendMessage(m, false);
         
@@ -395,8 +415,106 @@ void ofApp::loadSettings(){
         ofLogVerbose() << "ofApp: Settings LOADED from: "<<_projectDir;
 }
 //--------------------------------------------------------------
-#pragma mark - Other funcs
+#pragma mark - Save Analysis Data
+//--------------------------------------------------------------
+void ofApp::saveAnalysisDataToFile(){
 
+   
+    //------------------------------------------------------
+    
+    ofxXmlSettings savedSettings;
+    
+    ///??? hacen falta nuevas clases. por que no usar los del main app?
+    
+    ofSoundBuffer frameSoundBuffer;
+    ofxAudioAnalyzer offlineAnalyzer;
+    MetersPanel offlineMetersPanel;
+    
+    ///offlineAnalyzer.setup();
+    ///offlineMetersPanel.setup();
+   
+    int framesSize = 3000;
+    savedSettings.addTag("FILE-DATA");
+    savedSettings.pushTag("FILE-DATA");
+    
+    for(int frameNum=0; frameNum<framesSize; frameNum++){
+        
+        savedSettings.addTag("FRAME");
+        savedSettings.pushTag("FRAME");
+        
+        //Analyze buffer for Frame -----------------------
+        if(_currentAnalysisMode==SPLIT){
+            frameSoundBuffer = timePanel.audioTrack->getSoundBufferForFrame(frameNum, _bufferSize);//multichannel soundbuffer
+        }else if(_currentAnalysisMode==MONO){
+            frameSoundBuffer = timePanel.audioTrack->getSoundBufferMonoForFrame(frameNum, _bufferSize);//mono soundbuffer
+        }
+        
+        offlineAnalyzer.analyze(frameSoundBuffer);
+        
+        //Update metersPanel values-------------------------
+        offlineMetersPanel.update();
+        
+        //Get Analyzer data--------------------------------
+        savedSettings.addTag("ANALYZER");
+        savedSettings.pushTag("ANALYZER");
+
+        vector<std::map<string, float>> metersValues = metersPanel.getMetersValues();
+        for(int i=0; i<metersValues.size(); i++){
+            
+            string channelTag = "CHANNEL-" + ofToString(i);
+            
+            savedSettings.addTag(channelTag);
+            savedSettings.pushTag(channelTag);
+            
+            float power         = metersValues[i].at(MTR_NAME_POWER);
+            float pitchfreq     = metersValues[i].at(MTR_NAME_PITCH_FREQ);
+            float pitchConf     = metersValues[i].at(MTR_NAME_PITCH_CONF);
+            float pitchSalience = metersValues[i].at(MTR_NAME_PITCH_SALIENCE);
+            float hfc           = metersValues[i].at(MTR_NAME_HFC);
+            float centroid      = metersValues[i].at(MTR_NAME_CENTROID);
+            float specComp      = metersValues[i].at(MTR_NAME_SPEC_COMP);
+            float inharmonicity = metersValues[i].at(MTR_NAME_INHARMONICTY);
+            int onset           = metersValues[i].at(MTR_NAME_ONSETS);
+            
+            savedSettings.addValue("POWER", power);
+            savedSettings.addValue("PITCHFREQ", pitchfreq);
+            savedSettings.addValue("PITCHCONF", pitchConf);
+            savedSettings.addValue("SALIENCE", pitchSalience);
+            savedSettings.addValue("HFC", hfc);
+            savedSettings.addValue("CENTROID", centroid);
+            savedSettings.addValue("SPECCOMP", specComp);
+            savedSettings.addValue("INHARM", inharmonicity);
+            savedSettings.addValue("ONSET", onset);
+            
+            savedSettings.popTag();
+            
+        }
+        
+        savedSettings.popTag();//pop from ANALYZER back to FRAME
+        
+        savedSettings.addTag("TIMELINE");
+        savedSettings.pushTag("TIMELINE");
+//        //To add later----------------------------------------
+//        //timelineData
+//        timePanel.timeline.setCurrentFrame(frameNum);
+//        std::map<string, float> timelineValues = timePanel.getTracksValues();
+//        
+//        for (auto& kv : timelineValues){
+//            //cout<<kv.first<<" -- "<<kv.second<<endl;
+//            string key = kv.first; //"TL-(trackName)"
+//            float floatValue = kv.second;//0.37
+//        }
+        
+        savedSettings.popTag();//pop from TIMELINE back to FRAME
+        
+        savedSettings.popTag();//pop from FRAME back to FILE-DATA
+        
+    }
+    
+    savedSettings.saveFile("AnalysisData.xml");
+
+    
+}
 
 ///**************************************************************
 #pragma mark - OF core other tools

@@ -70,6 +70,8 @@ void MetersPanel::exit(){
 
 }
 //----------------------------------------------
+#pragma mark - Other funcs
+//----------------------------------------------
 void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     
     for (ofxAAChannelMetersPanel* p : channelPanels){
@@ -90,6 +92,8 @@ void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
         
         channelPanels.push_back(p);
     }
+    //------------------------------
+   
 
 }
 //----------------------------------------------
@@ -134,31 +138,33 @@ void MetersPanel::setFullDisplay(bool b){
     
 }
 //----------------------------------------------
-std::map<string, float> MetersPanel::getMetersValues(){
+vector<std::map<string, float>>& MetersPanel::getMetersValues(){
     
-    std::map<string, float> values;
-
+    //??? valuesForOsc declariation here or in header?
+    valuesForOsc.clear();
+    
     for (int i=0; i<channelPanels.size(); i++){
-       
+        
+        std::map<string, float> channelMap;
+        
         for(ofxAAMeter* m : channelPanels[i]->meters){
            
             if( m->getName()==MTR_NAME_MFCC || m->getName()==MTR_NAME_SPECTRUM ||
                m->getName()==MTR_NAME_HPCP || m->getName()==MTR_NAME_MEL_BANDS){
                 
-                ///send vector<floats> ??? send binMeters values to OSC?
-                
+                //???send vector<floats> ??? send binMeters values to OSC?
                 
             }else if (m->getName()==MTR_NAME_ONSETS){
-                string key = "ch" + ofToString(i)+":" + m->getName();
+                string key =  m->getName();
                 ofxAAOnsetMeter* om = dynamic_cast<ofxAAOnsetMeter*>(m);
-                values[key] = om->getValue();
+                channelMap[key] = om->getValue();
             }else{
-                string key = "ch" + ofToString(i)+":" + m->getName();
-                values[key]= m->getValue();
+                string key = m->getName();
+                channelMap[key]= m->getValue();
             }
             
-       }
-        
+        }
+        valuesForOsc.push_back(channelMap);
     }
-    return values;
+    return valuesForOsc;
 }

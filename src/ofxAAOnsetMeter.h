@@ -26,14 +26,19 @@ public:
         _alpha = alpha;
         alphaSlider->setValue(alpha);
     }
-    void setTreshold(float tres){
-        _treshold = tres;
-        tresholdSlider->setValue(tres);
+    void setSilenceTreshold(float tres){
+        _silenceTreshold = tres;
+        silenceTresholdSlider->setValue(tres);
+    }
+    void setTimeTreshold(float tres){
+        _timeTreshold = tres;
+        timeTresholdSlider->setValue(tres);
     }
     
     bool getValue(){return _onsetValue;}
     float getAlpha(){return _alpha;}
-    float getTreshold(){return _treshold;}
+    float getSilenceTreshold(){return _silenceTreshold;}
+    float getTimeTreshold(){return _timeTreshold;}
     
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
@@ -42,9 +47,12 @@ protected:
     ofxAudioAnalyzerUnit* audioAnalyzer;
     
     bool _onsetValue;
+    
     float _alpha;
-    float _treshold;
+    float _silenceTreshold;
+    float _timeTreshold;
     
     ofxDatGuiSlider * alphaSlider;
-    ofxDatGuiSlider * tresholdSlider;
+    ofxDatGuiSlider * silenceTresholdSlider;
+    ofxDatGuiSlider * timeTresholdSlider;
 };

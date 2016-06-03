@@ -29,7 +29,7 @@ public:
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void adjustPosAndHeight(int y, int h);
     
-    std::map<string, float> getMetersValues();
+    vector<std::map<string, float>>& getMetersValues();
     bool getIsFullDisplay(){return _bDrawFullDisplay;}
     
 
@@ -44,6 +44,8 @@ private:
     
     string _panelDir;
     bool _bDrawFullDisplay;
+    
+    vector < std::map<string, float> > valuesForOsc;
     
     
 };
