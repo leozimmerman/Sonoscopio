@@ -42,6 +42,7 @@
 		9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 832BDC407620CDBA568B713D /* tinyxmlerror.cpp */; };
 		9D7BB9637658A8E9D507C66C /* ofxTLColors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF90B9976FECCFE157607AF4 /* ofxTLColors.cpp */; };
 		9E8EC2BF8BCA13DA057FA929 /* ofxTLSwitches.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D23395AC4260312D47BB958 /* ofxTLSwitches.cpp */; };
+		B31212E81D05B98400DADDBC /* AnalysisDataSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31212E61D05B98400DADDBC /* AnalysisDataSaver.cpp */; };
 		B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */; };
 		B35C553A1CD7A6DC0070293F /* ofxAAOnsetMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */; };
 		B35C553D1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */; };
@@ -226,6 +227,8 @@
 		B07C508E7717E6C892502ADF /* ofxEasingQuad.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingQuad.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingQuad.h; sourceTree = SOURCE_ROOT; };
 		B1053D3806992BF38AC44BD8 /* alc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = alc.h; path = ../../../addons/ofxTimeline/libs/openal/include/AL/alc.h; sourceTree = SOURCE_ROOT; };
 		B21E7E5F548EEA92F368040B /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
+		B31212E61D05B98400DADDBC /* AnalysisDataSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnalysisDataSaver.cpp; sourceTree = "<group>"; };
+		B31212E71D05B98400DADDBC /* AnalysisDataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisDataSaver.h; sourceTree = "<group>"; };
 		B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimelinePanel.cpp; sourceTree = "<group>"; };
 		B34F35651CCABAEC00244E46 /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelinePanel.h; sourceTree = "<group>"; };
 		B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAOnsetMeter.cpp; sourceTree = "<group>"; };
@@ -780,6 +783,37 @@
 			name = AL;
 			sourceTree = "<group>";
 		};
+		B31212E91D05BB3C00DADDBC /* ofxAAMeters */ = {
+			isa = PBXGroup;
+			children = (
+				B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */,
+				B35C553C1CD7B0920070293F /* ofxAAChannelMetersPanel.h */,
+				B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */,
+				B35C55391CD7A6DC0070293F /* ofxAAOnsetMeter.h */,
+				B3AE246C1CDD155B00DABBA6 /* ofxAAMetersNames.h */,
+				B3CBB1DF1CD3ED0000E6BB34 /* ofxAABinMeter.cpp */,
+				B3CBB1E01CD3ED0000E6BB34 /* ofxAABinMeter.h */,
+				B3CBB1D81CD3B79500E6BB34 /* ofxAAMeter.cpp */,
+				B3CBB1D91CD3B79500E6BB34 /* ofxAAMeter.h */,
+			);
+			name = ofxAAMeters;
+			sourceTree = "<group>";
+		};
+		B31212EA1D05BB4C00DADDBC /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				B396091C1CCA6D6D00FEEB42 /* Panel.cpp */,
+				B396091D1CCA6D6D00FEEB42 /* Panel.h */,
+				B396091F1CCA6FD800FEEB42 /* MainPanel.cpp */,
+				B39609201CCA6FD800FEEB42 /* MainPanel.h */,
+				B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */,
+				B34F35651CCABAEC00244E46 /* TimelinePanel.h */,
+				B3CBB1D41CD3A8DB00E6BB34 /* MetersPanel.cpp */,
+				B3CBB1D51CD3A8DB00E6BB34 /* MetersPanel.h */,
+			);
+			name = Panels;
+			sourceTree = "<group>";
+		};
 		B39608E41CCA681100FEEB42 /* ofxOsc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1291,26 +1325,13 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B31212EA1D05BB4C00DADDBC /* Panels */,
+				B31212E91D05BB3C00DADDBC /* ofxAAMeters */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
-				B396091C1CCA6D6D00FEEB42 /* Panel.cpp */,
-				B396091D1CCA6D6D00FEEB42 /* Panel.h */,
-				B396091F1CCA6FD800FEEB42 /* MainPanel.cpp */,
-				B39609201CCA6FD800FEEB42 /* MainPanel.h */,
-				B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */,
-				B34F35651CCABAEC00244E46 /* TimelinePanel.h */,
-				B3CBB1D41CD3A8DB00E6BB34 /* MetersPanel.cpp */,
-				B3CBB1D51CD3A8DB00E6BB34 /* MetersPanel.h */,
-				B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */,
-				B35C553C1CD7B0920070293F /* ofxAAChannelMetersPanel.h */,
-				B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */,
-				B35C55391CD7A6DC0070293F /* ofxAAOnsetMeter.h */,
-				B3AE246C1CDD155B00DABBA6 /* ofxAAMetersNames.h */,
-				B3CBB1DF1CD3ED0000E6BB34 /* ofxAABinMeter.cpp */,
-				B3CBB1E01CD3ED0000E6BB34 /* ofxAABinMeter.h */,
-				B3CBB1D81CD3B79500E6BB34 /* ofxAAMeter.cpp */,
-				B3CBB1D91CD3B79500E6BB34 /* ofxAAMeter.h */,
+				B31212E61D05B98400DADDBC /* AnalysisDataSaver.cpp */,
+				B31212E71D05B98400DADDBC /* AnalysisDataSaver.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1496,6 +1517,7 @@
 				782C2B355CB6EBC83BDB95E0 /* kiss_fftr.c in Sources */,
 				DE69BD6CB5972050A485EC9C /* ofOpenALSoundPlayer_TimelineAdditions.cpp in Sources */,
 				168C43F69AF6A8042EA0B13F /* easing_terms_of_use.html in Sources */,
+				B31212E81D05B98400DADDBC /* AnalysisDataSaver.cpp in Sources */,
 				9266028E1AECBB027ABF64D8 /* ofxEasing.cpp in Sources */,
 				5E0DBDE5736DEB3A5886B3F1 /* ofxEasingBack.cpp in Sources */,
 				B3B3E9AB1CC927AE007A2FA6 /* ofxDatGuiComponent.cpp in Sources */,

@@ -309,7 +309,7 @@ void MainPanel::setupGUI(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    gSplit = new ofxDatGuiToggle("CHANNELS SPLIT", TRUE);
+    gSplit = new ofxDatGuiToggle("CHANNELS SPLIT", false);//FIXME: link with ofApp setup, _currentAnalysisMode
     component = gSplit;
     component->setPosition(_x + guiCompWidth, _y + guiCompHeight*1.0);
     component->setWidth(guiCompWidth, 0.9);

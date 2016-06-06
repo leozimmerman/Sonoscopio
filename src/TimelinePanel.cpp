@@ -33,7 +33,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setWorkingFolder(TIMELINE_SETTINGS_DIR);
     timeline.setup();
     timeline.setFrameRate(FRAME_RATE);
-    timeline.setAutosave(TRUE);
+    timeline.setAutosave(false);
     timeline.setOffset(ofVec2f(_x, _y));
    
     
@@ -41,11 +41,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
-    
-    //timeline.addAudioTrack("Audio","audio_files/rock.mp3");//stereo
-    //timeline.addAudioTrack("Audio","audio_files/flauta.wav");//mono
-    //timeline.addAudioTrack("Audio","audio_files/mix-stereo.wav");//mono
-    //timeline.addAudioTrack("Audio","audio_files/4chan.wav");//mono
+
     timeline.addAudioTrack("Audio","audio_files/noto.wav");//mono
     
     
@@ -57,7 +53,10 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     audioTrack = timeline.getAudioTrack("Audio");
     timeline.setPageName(PAGE_AUDIO_NAME);
     timeline.addPage(PAGE_TRACKS_NAME);
+    
     addTrack("default", CURVES);
+
+    
     timeline.setCurrentPage(PAGE_AUDIO_NAME);
     timeline.setShowPageTabs(false); //->modify if more pages are needed
     
@@ -122,7 +121,11 @@ void TimelinePanel::draw(){
     //adjust waveform with zoom
     TS_START("recompute");
     if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
-        audioTrack->recomputePreview();
+        ///FIXME: aca hay algo que quedo medio mongui
+        ///tira error cuando cambia el zoomy esta en tracks page
+//        audioTrack->recomputePreview();
+//        cout<<"shouldRecompute"<<audioTrack->getShouldRecomputePreview()<<endl;
+//        cout<<"isDirty"<<audioTrack->getViewIsDirty()<<endl;
         ofLogVerbose()<<"TimePanel: recomputing audioPreview";
     }
     TS_STOP("recompute");
@@ -162,11 +165,32 @@ void TimelinePanel::keyPressed(int key){
 #pragma mark - Settings funcs
 //--------------------------------------------------------------
 void TimelinePanel::loadSettings(string rootDir){
-    timeline.loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR);
+   
+    //timeline.load();
+    
+    cout<<"TimePanel: GOING TO LOAD!!"<<endl;
+    
+    //timeline.loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR);
+   
+    auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
+    tracksPage->loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR"/");
+
+    adjustTracksHeight();
+
+    cout<<"*********************************************"<<endl;
+    cout<<"TimePanel: settings LOADED!!"<<endl;
+    cout<<"**********************************************"<<endl;
 }
 //--------------------------------------------------------------
 void TimelinePanel::saveSettings(string rootDir){
+    
     timeline.saveTracksToFolder(rootDir + TIMELINE_SETTINGS_DIR);
+    
+    adjustTracksHeight();
+    
+    cout<<"*********************************************"<<endl;
+    cout<<"TimePanel: settings SAVED!!"<<endl;
+    cout<<"**********************************************"<<endl;
 }
 //--------------------------------------------------------------
 #pragma mark - Timeline funcs
@@ -209,6 +233,7 @@ void TimelinePanel::addTrack(string name, trackType type){
             break;
     }
     
+    
     adjustTracksHeight();
     
     
@@ -234,20 +259,27 @@ void TimelinePanel::toggleShowTracks(){
     
         timeline.setCurrentPage(PAGE_AUDIO_NAME);
         timeline.setFootersHidden(false);
-    
+        
     }
     
 }
 //--------------------------------------------------------------
 void TimelinePanel::adjustTracksHeight(){
     
+    //FIXME: tira error
+    
     if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
         
         int audioH = timeline.getPage(PAGE_AUDIO_NAME)->getComputedHeight();
         int tracksNum = timeline.getPage(PAGE_TRACKS_NAME)->getTracksNum();
-        float margin  = timeline.getDrawRect().height -  timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height -66;
+        
+        //float margin  = timeline.getDrawRect().height -  timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height -66;
+        
         timeline.setHeight(audioH + 66 - 17.68*tracksNum);
         
+        cout<<"tracksNum = "<<tracksNum<<endl;
+        cout<<"audioH = "<<audioH<<endl;
+        cout<<"setHeight = "<<audioH + 66 - 17.68*tracksNum<<endl;
         
     }
     

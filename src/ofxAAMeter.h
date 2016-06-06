@@ -31,6 +31,8 @@ public:
     virtual void drawMeter();
     virtual void drawValueDisplay();
     
+    void resetMaxValue(){_maxValueRegistered = 0.0;}
+    
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
     ofColor getBackgroundColor(){return _backgroundColor;}
@@ -39,8 +41,8 @@ public:
     int getPositionY(){return _y;}
     int getWidth(){return _w;}
     int getHeight(){return _h;}
-    float getMinValue(){return _minValue;}
-    float getMaxValue(){return _maxValue;}
+    float getMinEstimatedValue(){return _minEstimatedValue;}
+    float getMaxEstimatedValue(){return _maxEstimatedValue;}
     meterOrientation getMeterOrient(){return _meterOrient;}
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return onOffToggle->getEnabled();}
@@ -53,8 +55,8 @@ public:
     virtual void setPosAndSize(int x, int y, int w, int h);
     virtual void setYandHeight(int y, int h);
     void setHeight(float h);
-    void setMinValue(float val){_minValue = val;}
-    void setMaxValue(float val){_maxValue = val;}
+    void setMinEstimatedValue(float val){_minEstimatedValue = val;}
+    void setMaxEstimatedValue(float val){_maxEstimatedValue = val;}
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
     void setFullDisplay(bool b){_bDrawFullDisplay = b;}
@@ -72,7 +74,7 @@ public:
     
     protected:
     
-    float _minValue, _maxValue;
+    float _minEstimatedValue, _maxEstimatedValue;
     
     int _x, _y;
     int _w, _h;
@@ -93,6 +95,7 @@ public:
 private:
     string _name;
     float _value;
+    float _maxValueRegistered;//peak
     float _smoothAmnt;
     int _label_x;
     

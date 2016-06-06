@@ -18,6 +18,8 @@
 #include "MetersPanel.h"
 
 
+#include "AnalysisDataSaver.h"
+
 #define FRAME_RATE 30.0
 
 #define MAIN_PANEL_HEIGHT 0.15
@@ -64,7 +66,12 @@ class ofApp : public ofBaseApp{
     void sendOscData();
     void setIsSendingOsc(bool b){_bSendOsc = b;}
     
+    int getFrameRate(){return _frameRate;}
+    int getSampleRate(){return _samplerate;}
     int getBufferSize(){return _bufferSize;}
+    int getChannelsNum(){return _channelsNum;}
+    analysisMode getAnalysisMode(){return _currentAnalysisMode;}
+    int getTotalFramesNum(){return _totalFramesNum;};
     string getProjectDir(){return _projectDir;}
     
     void saveSettings();
@@ -73,6 +80,8 @@ class ofApp : public ofBaseApp{
     void openProject(string projectDir);
     
     void saveAnalysisDataToFile();
+    
+    void drawSavingAnalysisSign();
 
     //panels-----------
     MainPanel mainPanel;
@@ -85,25 +94,36 @@ class ofApp : public ofBaseApp{
 
     ofxOscSender oscSender;
     
+    
+    ///threadTest
+    AnalysisDataSaver dataSaver;
+    
 
 private:
     
-    int _channels;
+    int _frameRate;
+    int _totalFramesNum;
+    
     int _samplerate;
+    int  _bufferSize;
+    int _channelsNum;
     
     ofMutex audioMutex;
+    
+    analysisMode _currentAnalysisMode;
     
     bool _bSendOsc;
     string _oscHost;
     int _oscPort;
     
-    analysisMode _currentAnalysisMode;
     string _projectDir;
     
     //---
      ofPolyline waveform;///delete
     
-    int  _bufferSize;
+    ofTrueTypeFont	verdana;
+    
+    
     
     
 };

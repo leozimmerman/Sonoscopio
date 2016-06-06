@@ -48,7 +48,7 @@ void MetersPanel::update(){
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->update();
     }
-    //chPanel.update();
+    
 
 }
 

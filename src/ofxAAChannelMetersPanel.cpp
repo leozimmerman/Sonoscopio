@@ -113,8 +113,8 @@ void ofxAAChannelMetersPanel::setupMeters(){
     
     x_pos += VMeterWidth;
     mPitchFreq = new ofxAAMeter(MTR_NAME_PITCH_FREQ, _x + x_pos, _y, VMeterWidth, VMeterHeight);
-    mPitchFreq->setMinValue(PITCH_MIN_VALUE_FOR_METER);//hz
-    mPitchFreq->setMaxValue(PITCH_MAX_VALUE_FOR_METER);//hz
+    mPitchFreq->setMinEstimatedValue(PITCH_MIN_VALUE_FOR_METER);//hz
+    mPitchFreq->setMaxEstimatedValue(PITCH_MAX_VALUE_FOR_METER);//hz
     meters.push_back(mPitchFreq);
     
     x_pos += VMeterWidth;
@@ -150,22 +150,22 @@ void ofxAAChannelMetersPanel::setupMeters(){
     int y_pos = 0;
     mSpectrum = new ofxAABinMeter(MTR_NAME_SPECTRUM, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
     mSpectrum->setBinsNum(audioAnalyzer->getSpectrumBinsNum());
-    mSpectrum->setMinValue(DB_MIN);
-    mSpectrum->setMaxValue(DB_MAX);
+    mSpectrum->setMinEstimatedValue(DB_MIN);
+    mSpectrum->setMaxEstimatedValue(DB_MAX);
     meters.push_back(mSpectrum);
     
     y_pos += HMeterHeight;
     mMelBands = new ofxAABinMeter(MTR_NAME_MEL_BANDS, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
     mMelBands->setBinsNum(audioAnalyzer->getMelBandsBinsNum());
-    mMelBands->setMinValue(DB_MIN);
-    mMelBands->setMaxValue(DB_MAX);
+    mMelBands->setMinEstimatedValue(DB_MIN);
+    mMelBands->setMaxEstimatedValue(DB_MAX);
     meters.push_back(mMelBands);
     
     y_pos += HMeterHeight;
     mMfcc = new ofxAABinMeter(MTR_NAME_MFCC, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
     mMfcc->setBinsNum(audioAnalyzer->getMfccBinsNum());
-    mMfcc->setMinValue(0.0);
-    mMfcc->setMaxValue(MFCC_MAX_ESTIMATED_VALUE);
+    mMfcc->setMinEstimatedValue(0.0);
+    mMfcc->setMaxEstimatedValue(MFCC_MAX_ESTIMATED_VALUE);
     meters.push_back(mMfcc);
     
     y_pos += HMeterHeight;

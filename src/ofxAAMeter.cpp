@@ -21,8 +21,10 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     _backgroundColor.set(ofColor::black);
     _mainColor.set(ofColor::white);
     
-    _minValue = 0.0;
-    _maxValue = 1.0;
+    _value = 0.0;
+    _minEstimatedValue = 0.0;
+    _maxEstimatedValue = 1.0;
+    _maxValueRegistered = 0.0;
     
     _smoothAmnt = 0.0;
     
@@ -133,7 +135,7 @@ void ofxAAMeter::drawMeter(){
     ofFill();
     ofSetColor(_mainColor);
     
-    float scaledValue = ofMap(_value, _minValue, _maxValue, 0.0, 1.0, true);//clamped value
+    float scaledValue = ofMap(_value, _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
     float meter_h = -1 * (_h*0.75 * scaledValue);
     ofDrawRectangle( _w * .25 , _h, _w * 0.5, meter_h);
     
@@ -151,11 +153,17 @@ void ofxAAMeter::drawValueDisplay(){
     
     ofPushStyle();
     
+    //current Value
     ofSetColor(_mainColor);
     string strValue = ofToString(_value, 2);
-    
-    //ofDrawBitmapStringHighlight(strValue, 10,  line_h*4.5);//highlight takes more resources
     ofDrawBitmapString(strValue, 10,  line_h*4.5);
+    
+    //maxValueRegistered - Peak
+    if(_value > _maxValueRegistered) _maxValueRegistered = _value;
+    
+    ofSetColor(ofColor::red);
+    string strMaxValue = ofToString(_maxValueRegistered, 2);
+    ofDrawBitmapString(strMaxValue, 10,  line_h*5.5);
     
     ofPopStyle();
     
@@ -210,6 +218,8 @@ void ofxAAMeter::setSmoothAmnt(float val){
 //------------------------------------------------
 void ofxAAMeter::setEnabled(bool state){
     onOffToggle->setEnabled(state);
+    
+   
 }
 //------------------------------------------------
 #pragma mark - Gui listeners
@@ -224,6 +234,12 @@ void ofxAAMeter::onButtonEvent(ofxDatGuiButtonEvent e){
     data.name = _name;
     data.state = e.enabled;
     ofNotifyEvent(onOffEventGlobal, data);
+    
+    //reset max value with toggle off button
+    if(e.enabled==false){
+        resetMaxValue();
+    }
+    
 }
 
 

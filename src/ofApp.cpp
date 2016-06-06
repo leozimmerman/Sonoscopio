@@ -1,14 +1,13 @@
 
-#include "ofApp.h"
-
 //**********************************************************************
-//TODO: add save analisis data to xml -> make it threaded!
 
 //TODO: check inharmonicity
 
 //TODO: Change github repo
 
-//TODO: show max values of each marker. peaks como en cubase
+//FIXME: init meters values
+
+//FIXME: timepanel: recomputing audioPreview issue
 
 //FIXME: onset meters init values are not ofxAudioAnalyzer onset values
 
@@ -17,6 +16,7 @@
 //TODO: add Markers to timeline
 //TODO: add mute channels option
 
+//TODO: make LOAD Settings create dinamically the tracks that are missing
 
 
 
@@ -26,7 +26,7 @@
 //TODO: Add ofxAudioAnalyzer constants configuration (setters & getters)
 
 //**********************************************************************
-
+#include "ofApp.h"
 
 
 #pragma mark - Core funcs
@@ -38,6 +38,7 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofEnableAlphaBlending();
     ofSetFrameRate(FRAME_RATE);
+    _frameRate = FRAME_RATE;
     
     ofSetLogLevel(OF_LOG_VERBOSE);
     
@@ -54,7 +55,7 @@ void ofApp::setup(){
     TIME_SAMPLE_DISABLE();
     
     //Panels setup------------------
-    _currentAnalysisMode = SPLIT;
+    _currentAnalysisMode = MONO;
     _bufferSize = 512;
     
     int mainH = MAIN_PANEL_HEIGHT * ofGetHeight();
@@ -68,11 +69,19 @@ void ofApp::setup(){
     ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
     
     //Audio info--------------
-    _channels = timePanel.audioTrack->getNumChannels();
+    _channelsNum = timePanel.audioTrack->getNumChannels();
     _samplerate = timePanel.audioTrack->getSampleRate();
+    _totalFramesNum = timePanel.timeline.getDurationInFrames();
     
     //AudioAnalyzer-------------------
-    mainAnalyzer.setup(_samplerate, _bufferSize, _channels);
+    int this_channelNum;
+    if(_currentAnalysisMode == SPLIT){
+        this_channelNum =  _channelsNum;
+    }else if(_currentAnalysisMode == MONO){
+        this_channelNum = 1;
+    }
+    
+    mainAnalyzer.setup(_samplerate, _bufferSize, this_channelNum);
     metersPanel.setup(0, mainH + timeH, ofGetWidth(), meterH, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
     
     //OSC sender-----------------------
@@ -84,12 +93,25 @@ void ofApp::setup(){
     //-------------------------------
     _projectDir = "";
     
+    //----------------------------
+    dataSaver.setup(ofGetAppPtr());
+    
+    verdana.load("fonts/verdana.ttf", 25, false, false);
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
+    
+    //if dataSaver thread is running do not update anything and wait for it to finish
+    if(dataSaver.isThreadRunning()){
+        return;
+    }
+    
+    //**********************************************************************
     
     //analyze soundBuffer----------------
     ofSoundUpdate();
@@ -156,13 +178,21 @@ void ofApp::draw(){
     mainPanel.draw();
     TS_STOP("MAIN-PANEL");
     
+    //saving data sign
+    if(dataSaver.isThreadRunning()){
+        drawSavingAnalysisSign();
+    }
+    
     
     
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
+    
     mainAnalyzer.exit();
     metersPanel.exit();
+    
+    dataSaver.stop();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -185,11 +215,12 @@ void ofApp::keyPressed(int key){
     
    
     
-    if(key == 'a' || key == 'A'){
-        //sendOscData();
-        //openProject();
-        //metersPanel.setFullDisplay(!metersPanel.getIsFullDisplay());
+    if(key == 'f'){
+        dataSaver.start();
+    }else if (key == 'g'){
+        dataSaver.stop();
     }
+    
     
     
 }
@@ -203,10 +234,12 @@ void ofApp::openAudioFile(string filename){
     timePanel.openAudioFile(filename);
     mainPanel.setFileInfoString(timePanel.getFileInfo());
     
-    _channels = timePanel.audioTrack->getNumChannels();
+    _channelsNum = timePanel.audioTrack->getNumChannels();
     _samplerate = timePanel.audioTrack->getSampleRate();
     
     resetAnalysisEngine();
+    
+    dataSaver.reset();
 
     audioMutex.unlock();
     
@@ -215,18 +248,15 @@ void ofApp::openAudioFile(string filename){
 //--------------------------------------------------------------
 void ofApp::resetAnalysisEngine(){
     
+    int this_channelNum;
     if(_currentAnalysisMode == SPLIT){
-        
-        mainAnalyzer.reset(_samplerate, _bufferSize, _channels);
-        metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
-        
+        this_channelNum =  _channelsNum;
     }else if(_currentAnalysisMode == MONO){
-        
-        mainAnalyzer.reset(_samplerate, _bufferSize, 1);
-        metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
-        
+        this_channelNum = 1;
     }
     
+    mainAnalyzer.reset(_samplerate, _bufferSize, this_channelNum);
+    metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
 }
 //--------------------------------------------------------------
 void ofApp::setAnalysisMode(analysisMode mode){
@@ -309,12 +339,11 @@ void ofApp::sendOscData(){
     
 
     
-    ///timeline data
-    //send timeline track values...
+    //timeline data
     std::map<string, float> timelineValues = timePanel.getTracksValues();
     
     for (auto& kv : timelineValues){
-        //cout<<kv.first<<" -- "<<kv.second<<endl;
+        //cout<<"timeline send osc :: "<<kv.first<<" -- "<<kv.second<<endl;
         
         string key = kv.first;
         float floatValue = kv.second;
@@ -384,9 +413,9 @@ void ofApp::openProject(string projectDir ){
     
     openAudioFile(audioFileName);
     
-    mainPanel.loadSettings(_projectDir);
+   /// mainPanel.loadSettings(_projectDir);
     timePanel.loadSettings(_projectDir);
-    metersPanel.loadSettings(_projectDir);
+   ///  metersPanel.loadSettings(_projectDir);
 }
 //--------------------------------------------------------------
 //??? Add closeProject?
@@ -409,6 +438,8 @@ void ofApp::loadSettings(){
     timePanel.loadSettings(_projectDir);
     metersPanel.loadSettings(_projectDir);
     
+    dataSaver.reset();
+    
     if(_projectDir=="")
         ofLogVerbose() << "ofApp: Settings LOADED from data/";
     else
@@ -418,20 +449,19 @@ void ofApp::loadSettings(){
 #pragma mark - Save Analysis Data
 //--------------------------------------------------------------
 void ofApp::saveAnalysisDataToFile(){
-
+    
+    ///TODO: borrar esta funcion
    
     //------------------------------------------------------
     
     ofxXmlSettings savedSettings;
     
-    ///??? hacen falta nuevas clases. por que no usar los del main app?
+    //??? hacen falta nuevas clases. por que no usar los del main app?
     
     ofSoundBuffer frameSoundBuffer;
     ofxAudioAnalyzer offlineAnalyzer;
     MetersPanel offlineMetersPanel;
     
-    ///offlineAnalyzer.setup();
-    ///offlineMetersPanel.setup();
    
     int framesSize = 3000;
     savedSettings.addTag("FILE-DATA");
@@ -514,6 +544,26 @@ void ofApp::saveAnalysisDataToFile(){
     savedSettings.saveFile("AnalysisData.xml");
 
     
+}
+//-------------------------------------------------------------
+void ofApp::drawSavingAnalysisSign(){
+    ofPushStyle();
+    
+    ofFill();
+    ofSetColor(0,150);
+    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+    ofSetColor(255);
+    
+    string displayStr = "Saving Analysis Data...  " + ofToString(dataSaver.getPercentage(), 2) + "%";
+    
+    //align center
+    int label_w = verdana.stringWidth(displayStr);
+    int label_x =  ofGetWidth() * .5 - label_w *.5;
+    
+    verdana.drawString(displayStr, label_x , ofGetHeight()/2);
+    
+    
+    ofPopStyle();
 }
 
 ///**************************************************************
