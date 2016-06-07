@@ -99,7 +99,7 @@ void AnalysisDataSaver::threadedFunction(){
                 
                 percentage = (frameNum / (float)totalFramesNum) * 100.0;
                 
-                cout<<"saving frame: "<<frameNum<<endl;
+                ofLogVerbose("AnalysisDataSaver threaded Function: ")<<"saving frame: "<<frameNum<<endl;
                 string frameTag = "FRAME-" + ofToString(frameNum);
                 savedSettings.addTag(frameTag);
                 savedSettings.pushTag(frameTag);
@@ -110,7 +110,7 @@ void AnalysisDataSaver::threadedFunction(){
                 
                 //analyze buffer for frame:
                 //TODO: remove all couts
-                cout<<"going to get bufferForFrame..."<<endl;
+                
              
                 if(currentAnalysisMode==SPLIT){
                     frameSoundBuffer = sMainApp->timePanel.audioTrack->getSoundBufferForFrame(frameNum, bufferSize);//multichannel soundbuffer

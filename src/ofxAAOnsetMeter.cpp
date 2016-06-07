@@ -6,8 +6,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUni
 
     audioAnalyzer = analyzerPtr;
     
-    
-    _alpha = 0.1;
+    _alpha = audioAnalyzer->getOnsetAlpha();
     alphaSlider = new ofxDatGuiSlider("ALPHA", 0.0, 1.0, _alpha);
     alphaSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     alphaSlider->setWidth(_w * 0.95, 0.0);
@@ -16,7 +15,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUni
     alphaSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     alphaSlider->setPosition(_x + _w*0.05, _y + line_h*2.5);
     
-    _silenceTreshold = 0.2;
+    _silenceTreshold = audioAnalyzer->getOnsetSilenceTreshold();
     silenceTresholdSlider = new ofxDatGuiSlider("SLNC-TRES", 0.0, 1.0, _silenceTreshold);
     silenceTresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     silenceTresholdSlider->setWidth(_w * 0.95, 0.0);
@@ -25,7 +24,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUni
     silenceTresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     silenceTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*4);
     
-    _timeTreshold = 250.0;//ms
+    _timeTreshold = audioAnalyzer->getOnsetTimeTreshold();//ms
     timeTresholdSlider = new ofxDatGuiSlider("TIME-TRES", 0.0, 1000.0, _timeTreshold);
     timeTresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     timeTresholdSlider->setWidth(_w * 0.95, 0.0);
@@ -33,8 +32,6 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUni
     timeTresholdSlider->setLabelMargin(0.0);
     timeTresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     timeTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*5.5);
-    
-    
     
 }
 
@@ -113,6 +110,27 @@ void ofxAAOnsetMeter::setPosAndSize(int x, int y, int w, int h){
     silenceTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*4.0);
     timeTresholdSlider->setPosition(_x + _w*0.05, _y + line_h*5.5);
     
+}
+//------------------------------------------------
+void ofxAAOnsetMeter::setAlpha(float alpha){
+    _alpha = alpha;
+    alphaSlider->setValue(alpha);
+    if(audioAnalyzer!=NULL)
+        audioAnalyzer->setOnsetAlpha(alpha);
+}
+//------------------------------------------------
+void ofxAAOnsetMeter::setSilenceTreshold(float tres){
+    _silenceTreshold = tres;
+    silenceTresholdSlider->setValue(tres);
+    if(audioAnalyzer!=NULL)
+        audioAnalyzer->setOnsetSilenceTreshold(tres);
+}
+//------------------------------------------------
+void ofxAAOnsetMeter::setTimeTreshold(float tres){
+    _timeTreshold = tres;
+    timeTresholdSlider->setValue(tres);
+    if(audioAnalyzer!=NULL)
+        audioAnalyzer->setOnsetTimeTreshold(tres);
 }
 //------------------------------------------------
 void ofxAAOnsetMeter::onSliderEvent(ofxDatGuiSliderEvent e){

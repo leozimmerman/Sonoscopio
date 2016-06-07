@@ -7,7 +7,6 @@
 #include "ofxTimeline.h"
 #include "ofxTLAudioTrack.h"
 
-
 #include "ofxTimeMeasurements.h"
 #include "ofxAudioAnalyzer.h"
 
@@ -16,7 +15,6 @@
 #include "MainPanel.h"
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
-
 
 #include "AnalysisDataSaver.h"
 

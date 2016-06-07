@@ -22,18 +22,9 @@ public:
     virtual void setPosAndSize(int x, int y, int w, int h);
     
     void setValue(bool val){_onsetValue = val;}
-    void setAlpha(float alpha){
-        _alpha = alpha;
-        alphaSlider->setValue(alpha);
-    }
-    void setSilenceTreshold(float tres){
-        _silenceTreshold = tres;
-        silenceTresholdSlider->setValue(tres);
-    }
-    void setTimeTreshold(float tres){
-        _timeTreshold = tres;
-        timeTresholdSlider->setValue(tres);
-    }
+    void setAlpha(float alpha);
+    void setSilenceTreshold(float tres);
+    void setTimeTreshold(float tres);
     
     bool getValue(){return _onsetValue;}
     float getAlpha(){return _alpha;}

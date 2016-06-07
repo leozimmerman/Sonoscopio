@@ -1,29 +1,31 @@
 
 //**********************************************************************
 
-//TODO: check inharmonicity
+//FIXME: init meters values - en split mode - tira cualquier cosa
 
-//TODO: Change github repo
+//FIXME: avoid reseting engine when playing&analyzing
 
-//FIXME: init meters values
+//TODO: check inharmonicity - when loading settings stays in value=1
 
 //FIXME: timepanel: recomputing audioPreview issue
 
-//FIXME: onset meters init values are not ofxAudioAnalyzer onset values
-
 //FIXME: HAY UN BUG EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
+
+//TODO: add setMaxEstimatedValues() to meters panel
+//TODO: add MFCC and DCT parameters variables when reset analyzer
+
+//TODO: make LOAD Settings create dinamically the tracks that are missing
+
+//FIXME: MFCC load settings turn off!
+
+//TODO: Change github repo and name
 
 //TODO: add Markers to timeline
 //TODO: add mute channels option
 
-//TODO: make LOAD Settings create dinamically the tracks that are missing
-
-
-
-
 //ofxAudioAnalyzer----------------------
 //TODO: Comment addon funcs
-//TODO: Add ofxAudioAnalyzer constants configuration (setters & getters)
+
 
 //**********************************************************************
 #include "ofApp.h"

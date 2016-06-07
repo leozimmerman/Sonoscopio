@@ -48,8 +48,6 @@ void MetersPanel::update(){
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->update();
     }
-    
-
 }
 
 
@@ -158,6 +156,7 @@ vector<std::map<string, float>>& MetersPanel::getMetersValues(){
                 string key =  m->getName();
                 ofxAAOnsetMeter* om = dynamic_cast<ofxAAOnsetMeter*>(m);
                 channelMap[key] = om->getValue();
+                
             }else{
                 string key = m->getName();
                 channelMap[key]= m->getValue();
