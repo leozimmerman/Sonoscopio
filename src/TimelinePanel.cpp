@@ -42,7 +42,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
 
-    timeline.addAudioTrack("Audio","audio_files/noto.wav");//mono
+    timeline.addAudioTrack("Audio","audio_files/atlas_3chan.wav");//3chans
     
     
     

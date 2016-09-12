@@ -43,6 +43,8 @@
 		9D7BB9637658A8E9D507C66C /* ofxTLColors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF90B9976FECCFE157607AF4 /* ofxTLColors.cpp */; };
 		9E8EC2BF8BCA13DA057FA929 /* ofxTLSwitches.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D23395AC4260312D47BB958 /* ofxTLSwitches.cpp */; };
 		B31212E81D05B98400DADDBC /* AnalysisDataSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31212E61D05B98400DADDBC /* AnalysisDataSaver.cpp */; };
+		B31FCD131D79F15800436175 /* ofxAAMultiPitchKlapuriAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31FCD0F1D79F15800436175 /* ofxAAMultiPitchKlapuriAlgorithm.cpp */; };
+		B31FCD141D79F15800436175 /* ofxAAOnsetsAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B31FCD111D79F15800436175 /* ofxAAOnsetsAlgorithm.cpp */; };
 		B34F35661CCABAEC00244E46 /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */; };
 		B35C553A1CD7A6DC0070293F /* ofxAAOnsetMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */; };
 		B35C553D1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B35C553B1CD7B0920070293F /* ofxAAChannelMetersPanel.cpp */; };
@@ -229,6 +231,10 @@
 		B21E7E5F548EEA92F368040B /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		B31212E61D05B98400DADDBC /* AnalysisDataSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnalysisDataSaver.cpp; sourceTree = "<group>"; };
 		B31212E71D05B98400DADDBC /* AnalysisDataSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalysisDataSaver.h; sourceTree = "<group>"; };
+		B31FCD0F1D79F15800436175 /* ofxAAMultiPitchKlapuriAlgorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAMultiPitchKlapuriAlgorithm.cpp; sourceTree = "<group>"; };
+		B31FCD101D79F15800436175 /* ofxAAMultiPitchKlapuriAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAMultiPitchKlapuriAlgorithm.h; sourceTree = "<group>"; };
+		B31FCD111D79F15800436175 /* ofxAAOnsetsAlgorithm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAOnsetsAlgorithm.cpp; sourceTree = "<group>"; };
+		B31FCD121D79F15800436175 /* ofxAAOnsetsAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAOnsetsAlgorithm.h; sourceTree = "<group>"; };
 		B34F35641CCABAEC00244E46 /* TimelinePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimelinePanel.cpp; sourceTree = "<group>"; };
 		B34F35651CCABAEC00244E46 /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelinePanel.h; sourceTree = "<group>"; };
 		B35C55381CD7A6DC0070293F /* ofxAAOnsetMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAOnsetMeter.cpp; sourceTree = "<group>"; };
@@ -923,12 +929,16 @@
 		B3B3E9101CC926EA007A2FA6 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B3C2A11F1CDA3FE700B3428D /* ofxAudioAnalyzerAlgorithms.h */,
-				B36815781D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp */,
-				B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp */,
-				B3B3E9121CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.h */,
 				B3AE246D1CDD191C00DABBA6 /* ofxAudioAnalyzer.cpp */,
 				B3AE246E1CDD191C00DABBA6 /* ofxAudioAnalyzer.h */,
+				B3B3E9111CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.cpp */,
+				B3B3E9121CC926EA007A2FA6 /* ofxAudioAnalyzerUnit.h */,
+				B3C2A11F1CDA3FE700B3428D /* ofxAudioAnalyzerAlgorithms.h */,
+				B36815781D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp */,
+				B31FCD0F1D79F15800436175 /* ofxAAMultiPitchKlapuriAlgorithm.cpp */,
+				B31FCD101D79F15800436175 /* ofxAAMultiPitchKlapuriAlgorithm.h */,
+				B31FCD111D79F15800436175 /* ofxAAOnsetsAlgorithm.cpp */,
+				B31FCD121D79F15800436175 /* ofxAAOnsetsAlgorithm.h */,
 			);
 			name = src;
 			path = ../../../addons/ofxAudioAnalyzer/src;
@@ -1528,6 +1538,7 @@
 				59EEACB88F062457FF86492C /* ofxEasingExpo.cpp in Sources */,
 				152EAECABD008D84AF7F27F8 /* ofxEasingLinear.cpp in Sources */,
 				6D7B53ED56654ABBF2FF13B1 /* ofxEasingQuad.cpp in Sources */,
+				B31FCD131D79F15800436175 /* ofxAAMultiPitchKlapuriAlgorithm.cpp in Sources */,
 				B3B3E9AD1CC927AE007A2FA6 /* ofxDatGui.cpp in Sources */,
 				85A41526FDFA1A8CDAEE81F7 /* ofxEasingQuart.cpp in Sources */,
 				7E769097DE6561633305B24C /* ofxEasingQuint.cpp in Sources */,
@@ -1540,6 +1551,7 @@
 				B36815791D01C25D00FF128E /* ofxAudioAnalyzerAlgorithms.cpp in Sources */,
 				32FC7731C1EF7B87E491C93D /* ofxTween.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
+				B31FCD141D79F15800436175 /* ofxAAOnsetsAlgorithm.cpp in Sources */,
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,
 				B39609171CCA681100FEEB42 /* OscOutboundPacketStream.cpp in Sources */,
 				9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */,

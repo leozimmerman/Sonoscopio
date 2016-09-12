@@ -35,7 +35,8 @@ public:
     
 protected:
     
-    ofxAudioAnalyzerUnit* audioAnalyzer;
+    //ofxAudioAnalyzerUnit* audioAnalyzer;
+    ofxAAOnsetsAlgorithm* onsets;
     
     bool _onsetValue;
     

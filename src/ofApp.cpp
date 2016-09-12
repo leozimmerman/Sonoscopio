@@ -1,35 +1,18 @@
 
 //**********************************************************************
+//TODO: Remove Exit with Esc
+//TODO: make LOAD Settings create dinamically the tracks that are missing
+//TODO: check inharmonicity - when loading settings stays in value=1
+//TODO: Add reset Peaks values to meters?
 
 //FIXME: init meters values - en split mode - tira cualquier cosa
-
-//FIXME: avoid reseting engine when playing&analyzing
-
-//TODO: check inharmonicity - when loading settings stays in value=1
-
+//FIXME: avoid reseting engine when playing&analyzing ????
 //FIXME: timepanel: recomputing audioPreview issue
-
-//FIXME: HAY UN BUG EN EL ANALYZER, MIRAR POWER VALUES CADA 4 FRAMES
-
-//TODO: add setMaxEstimatedValues() to meters panel
-//TODO: add MFCC and DCT parameters variables when reset analyzer
-
-//TODO: make LOAD Settings create dinamically the tracks that are missing
-
 //FIXME: MFCC load settings turn off!
-
-//TODO: Change github repo and name
-
-//TODO: add Markers to timeline
-//TODO: add mute channels option
-
-//ofxAudioAnalyzer----------------------
-//TODO: Comment addon funcs
-
-
+//FIXME: En ATLAS split channel 2 hay un bug con el confidence
 //**********************************************************************
-#include "ofApp.h"
 
+#include "ofApp.h"
 
 #pragma mark - Core funcs
 //--------------------------------------------------------------
@@ -150,16 +133,9 @@ void ofApp::update(){
     TS_STOP("SEND-OSC");
     //--------------------------
     
-//    waveform.clear();
-//    int ch=0; //channel to visualize
-//    
-//    for(size_t i = 0; i < soundBuffer.getNumFrames(); i++) {
-//        float sample = soundBuffer.getSample(i, ch);
-//        float x = ofMap(i, 0, soundBuffer.getNumFrames(), 0, ofGetWidth());
-//        float y = ofMap(sample, -1, 1, 0, ofGetHeight());
-//        waveform.addVertex(x, y);
-//    }
+    
 
+    
     
 }
 

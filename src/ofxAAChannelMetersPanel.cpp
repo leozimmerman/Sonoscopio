@@ -34,23 +34,24 @@ void ofxAAChannelMetersPanel::update(){
     
     //set meters values from audioAnalyzer-------
     
-    mPower->setValue(audioAnalyzer->getPower(mPower->getSmoothAmnt()));
-  
-    mPitchFreq->setValue(audioAnalyzer->getPitchFreq(mPitchFreq->getSmoothAmnt()));
-    mPitchConf->setValue(audioAnalyzer->getPitchConfidence(mPitchConf->getSmoothAmnt()));
-    mSalience->setValue(audioAnalyzer->getMelodySalience(mSalience->getSmoothAmnt()));
+    mPower->setValue(audioAnalyzer->getValue(POWER, mPower->getSmoothAmnt()));
+    mPitchFreq->setValue(audioAnalyzer->getValue(PITCH_FREQ, mPitchFreq->getSmoothAmnt()));
+    mPitchConf->setValue(audioAnalyzer->getValue(PITCH_CONFIDENCE, mPitchConf->getSmoothAmnt()));
+    mSalience->setValue(audioAnalyzer->getValue(PITCH_SALIENCE, mSalience->getSmoothAmnt()));
+    
+    mHfc->setValue(audioAnalyzer->getValue(HFC, mHfc->getSmoothAmnt(), TRUE));
+    mCentroid->setValue(audioAnalyzer->getValue(CENTROID, mCentroid->getSmoothAmnt(), TRUE));
+    mSpecComp->setValue(audioAnalyzer->getValue(SPECTRAL_COMPLEXITY, mSpecComp->getSmoothAmnt(), TRUE));
+    mInharm->setValue(audioAnalyzer->getValue(INHARMONICITY, mInharm->getSmoothAmnt()));
+    
+    mSpectrum->setValues(audioAnalyzer->getValues(SPECTRUM, mSpectrum->getSmoothAmnt()));
+    mMelBands->setValues(audioAnalyzer->getValues(MEL_BANDS, mMelBands->getSmoothAmnt()));
+    mMfcc->setValues(audioAnalyzer->getValues(MFCC, mMfcc->getSmoothAmnt()));
+    mHpcp->setValues(audioAnalyzer->getValues(HPCP, mHpcp->getSmoothAmnt()));
 
-    mHfc->setValue(audioAnalyzer->getHfcNormalized(mHfc->getSmoothAmnt()));
-    mCentroid->setValue(audioAnalyzer->getCentroidNormalized(mCentroid->getSmoothAmnt()));
-    mSpecComp->setValue(audioAnalyzer->getSpectralComplexNormalized(mSpecComp->getSmoothAmnt()));
-    mInharm->setValue(audioAnalyzer->getInharmonicity(mInharm->getSmoothAmnt()));
-
-    mOnsets->setValue(audioAnalyzer->getIsOnset());
-
-    mSpectrum->setValues(audioAnalyzer->getSpectrumRef(mSpectrum->getSmoothAmnt()));
-    mMelBands->setValues(audioAnalyzer->getMelBandsRef(mMelBands->getSmoothAmnt()));
-    mMfcc->setValues(audioAnalyzer->getDctRef(mMfcc->getSmoothAmnt()));
-    mHpcp->setValues(audioAnalyzer->getHpcpRef(mHpcp->getSmoothAmnt()));
+    mOnsets->setValue(audioAnalyzer->getOnsetValue());
+    
+    
     
     //set values to std::for osc sending
     
@@ -149,28 +150,28 @@ void ofxAAChannelMetersPanel::setupMeters(){
     x_pos = VMetersWidthTotal;
     int y_pos = 0;
     mSpectrum = new ofxAABinMeter(MTR_NAME_SPECTRUM, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    mSpectrum->setBinsNum(audioAnalyzer->getSpectrumBinsNum());
+    mSpectrum->setBinsNum(audioAnalyzer->getBinsNum(SPECTRUM));
     mSpectrum->setMinEstimatedValue(DB_MIN);
     mSpectrum->setMaxEstimatedValue(DB_MAX);
     meters.push_back(mSpectrum);
     
     y_pos += HMeterHeight;
     mMelBands = new ofxAABinMeter(MTR_NAME_MEL_BANDS, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    mMelBands->setBinsNum(audioAnalyzer->getMelBandsBinsNum());
+    mMelBands->setBinsNum(audioAnalyzer->getBinsNum(MEL_BANDS));
     mMelBands->setMinEstimatedValue(DB_MIN);
     mMelBands->setMaxEstimatedValue(DB_MAX);
     meters.push_back(mMelBands);
     
     y_pos += HMeterHeight;
     mMfcc = new ofxAABinMeter(MTR_NAME_MFCC, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    mMfcc->setBinsNum(audioAnalyzer->getMfccBinsNum());
+    mMfcc->setBinsNum(audioAnalyzer->getBinsNum(MFCC));
     mMfcc->setMinEstimatedValue(0.0);
     mMfcc->setMaxEstimatedValue(MFCC_MAX_ESTIMATED_VALUE);
     meters.push_back(mMfcc);
     
     y_pos += HMeterHeight;
     mHpcp = new ofxAABinMeter(MTR_NAME_HPCP, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
-    mHpcp->setBinsNum(audioAnalyzer->getHpcpBinsNum());
+    mHpcp->setBinsNum(audioAnalyzer->getBinsNum(HPCP));
     meters.push_back(mHpcp);
     
     
@@ -222,25 +223,29 @@ void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
     //cout << "panel: "<<data.state << endl;
 
     if(data.name == MTR_NAME_POWER){
-        audioAnalyzer->setActivePower(data.state);
-    }else if(data.name == MTR_NAME_PITCH_FREQ || data.name == MTR_NAME_PITCH_CONF){
-        audioAnalyzer->setActivePitch(data.state);
+        audioAnalyzer->setActive(POWER, data.state);
+    }else if(data.name == MTR_NAME_PITCH_FREQ){
+        audioAnalyzer->setActive(PITCH_FREQ, data.state);
+    }else if(data.name == MTR_NAME_PITCH_CONF){
+        audioAnalyzer->setActive(PITCH_CONFIDENCE, data.state);
     }else if(data.name == MTR_NAME_PITCH_SALIENCE){
-        audioAnalyzer->setActiveMelodySalience(data.state);
+        audioAnalyzer->setActive(PITCH_SALIENCE, data.state);
     }else if(data.name == MTR_NAME_HFC){
-        audioAnalyzer->setActiveHfc(data.state);
+        audioAnalyzer->setActive(HFC, data.state);
     }else if(data.name == MTR_NAME_CENTROID){
-        audioAnalyzer->setActiveCentroid(data.state);
+        audioAnalyzer->setActive(CENTROID, data.state);
     }else if(data.name == MTR_NAME_SPEC_COMP){
-        audioAnalyzer->setActiveSpectralComplex(data.state);
+        audioAnalyzer->setActive(SPECTRAL_COMPLEXITY, data.state);
     }else if(data.name == MTR_NAME_INHARMONICTY){
-        audioAnalyzer->setActiveInharmonicity(data.state);
+        audioAnalyzer->setActive(INHARMONICITY, data.state);
     }else if(data.name == MTR_NAME_ONSETS){
-        audioAnalyzer->setActiveOnsets(data.state);
-    }else if(data.name == MTR_NAME_MEL_BANDS || data.name == MTR_NAME_MFCC){
-        audioAnalyzer->setActiveMelbandsAndMfcc(data.state);
+        audioAnalyzer->setActive(ONSETS, data.state);
+    }else if(data.name == MTR_NAME_MEL_BANDS){
+        audioAnalyzer->setActive(MEL_BANDS, data.state);
+    }else if (data.name == MTR_NAME_MFCC){
+        audioAnalyzer->setActive(MFCC, data.state);
     }else if(data.name == MTR_NAME_HPCP){
-        audioAnalyzer->setActiveHpcp(data.state);
+        audioAnalyzer->setActive(HPCP, data.state);
     }
     
 }
@@ -264,46 +269,49 @@ void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     mPower->setSmoothAmnt(xml.getValue("PANEL:POWER:SMOOTH", 0.0));
     bool state = xml.getValue("PANEL:POWER:STATE", 0) > 0;
     mPower->setEnabled(state);
-    audioAnalyzer->setActivePower(state);
+    audioAnalyzer->setActive(POWER, state);
     
     mPitchFreq->setSmoothAmnt(xml.getValue("PANEL:PITCHFREQ:SMOOTH", 0.0));
     state = xml.getValue("PANEL:PITCHFREQ:STATE", 0) > 0;
     mPitchFreq->setEnabled(state);
-    audioAnalyzer->setActivePitch(state);
+    audioAnalyzer->setActive(PITCH_FREQ, state);
     
     mPitchConf->setSmoothAmnt(xml.getValue("PANEL:PITCHCONF:SMOOTH", 0.0));
     state = xml.getValue("PANEL:PITCHCONF:STATE", 0) > 0;
     mPitchConf->setEnabled(state);
-    audioAnalyzer->setActivePitch(state);
+    audioAnalyzer->setActive(PITCH_CONFIDENCE, state);
     
     mSalience->setSmoothAmnt(xml.getValue("PANEL:SALIENCE:SMOOTH", 0.0));
     state = xml.getValue("PANEL:SALIENCE:STATE", 0) > 0;
     mSalience->setEnabled(state);
-    audioAnalyzer->setActiveMelodySalience(state);
+    audioAnalyzer->setActive(PITCH_SALIENCE, state);
     
     mHfc->setSmoothAmnt(xml.getValue("PANEL:HFC:SMOOTH", 0.0));
     state = xml.getValue("PANEL:HFC:STATE", 0) > 0;
     mHfc->setEnabled(state);
-    audioAnalyzer->setActiveHfc(state);
+    audioAnalyzer->setActive(HFC, state);
     
     mCentroid->setSmoothAmnt(xml.getValue("PANEL:CENTROID:SMOOTH", 0.0));
     state = xml.getValue("PANEL:CENTROID:STATE", 0) > 0;
     mCentroid->setEnabled(state);
-    audioAnalyzer->setActiveCentroid(state);
+    audioAnalyzer->setActive(CENTROID, state);
     
     mSpecComp->setSmoothAmnt(xml.getValue("PANEL:SPECCOMP:SMOOTH", 0.0));
     state = xml.getValue("PANEL:SPECCOMP:STATE", 0) > 0;
     mSpecComp->setEnabled(state);
-    audioAnalyzer->setActiveSpectralComplex(state);
+    audioAnalyzer->setActive(SPECTRAL_COMPLEXITY, state);
     
     mInharm->setSmoothAmnt(xml.getValue("PANEL:INHARM:SMOOTH", 0.0));
     state = xml.getValue("PANEL:INHARM:STATE", 0) > 0;
     mInharm->setEnabled(state);
-    audioAnalyzer->setActiveInharmonicity(state);
+    audioAnalyzer->setActive(INHARMONICITY, state);
     
     mOnsets->setAlpha(xml.getValue("PANEL:ONSETS:ALPHA", 0.0));
     mOnsets->setSilenceTreshold(xml.getValue("PANEL:ONSETS:SILENCETRESHOLD", 0.0));
     mOnsets->setTimeTreshold(xml.getValue("PANEL:ONSETS:TIMETRESHOLD", 0.0));
+    state = xml.getValue("PANEL:ONSETS:STATE", 0) > 0;
+    mOnsets->setEnabled(state);
+    audioAnalyzer->setActive(ONSETS, state);
     
     mSpectrum->setSmoothAmnt(xml.getValue("PANEL:SPECTRUM:SMOOTH", 0.0));
     state = xml.getValue("PANEL:SPECTRUM:STATE", 0) > 0;
@@ -313,23 +321,21 @@ void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     mMelBands->setSmoothAmnt(xml.getValue("PANEL:MELBANDS:SMOOTH", 0.0));
     state = xml.getValue("PANEL:MELBANDS:STATE", 0) > 0;
     mMelBands->setEnabled(state);
-    audioAnalyzer->setActiveMelbandsAndMfcc(state);//linked to mfcc
+    audioAnalyzer->setActive(MEL_BANDS, state);//linked to mfcc
     
     mMfcc->setSmoothAmnt(xml.getValue("PANEL:MFCC:SMOOTH", 0.0));
     state = xml.getValue("PANEL:MFCC:STATE", 0) > 0;
     mMfcc->setEnabled(state);
-    audioAnalyzer->setActiveMelbandsAndMfcc(state);//linked to melbands
+    audioAnalyzer->setActive(MFCC, state);//linked to melbands
     
     mHpcp->setSmoothAmnt(xml.getValue("PANEL:HPCP:SMOOTH", 0.0));
     state = xml.getValue("PANEL:HPCP:STATE", 0) > 0;
     mHpcp->setEnabled(state);
-    audioAnalyzer->setActiveHpcp(state);
+    audioAnalyzer->setActive(HPCP, state);
     
 }
 //--------------------------------------------------------------
 void ofxAAChannelMetersPanel::saveSettingsToFile(string filename){
-
-
     
     ofxXmlSettings savedSettings;
     savedSettings.addTag("PANEL");
@@ -388,6 +394,7 @@ void ofxAAChannelMetersPanel::saveSettingsToFile(string filename){
     savedSettings.addValue("ALPHA", mOnsets->getAlpha());
     savedSettings.addValue("SILENCETRESHOLD",mOnsets->getSilenceTreshold());
     savedSettings.addValue("TIMETRESHOLD", mOnsets->getTimeTreshold());
+    savedSettings.addValue("STATE", mOnsets->getEnabled());
     savedSettings.popTag();
     
     savedSettings.addTag("SPECTRUM");
@@ -408,13 +415,11 @@ void ofxAAChannelMetersPanel::saveSettingsToFile(string filename){
     savedSettings.addValue("STATE", mMfcc->getEnabled());
     savedSettings.popTag();
     
-    
     savedSettings.addTag("HPCP");
     savedSettings.pushTag("HPCP");
     savedSettings.addValue("SMOOTH", mHpcp->getSmoothAmnt());
     savedSettings.addValue("STATE", mHpcp->getEnabled());
     savedSettings.popTag();
-    
     
     savedSettings.saveFile(filename);
     
