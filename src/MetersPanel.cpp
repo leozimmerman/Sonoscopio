@@ -53,7 +53,10 @@ void MetersPanel::update(){
 
 //----------------------------------------------
 void MetersPanel::draw(){
-
+    
+    //for testing
+    //drawBackground();
+    
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->draw();
     }
@@ -66,6 +69,27 @@ void MetersPanel::exit(){
     }
     channelPanels.clear();
 
+}
+//----------------------------------------------
+#pragma mark - Settings
+//----------------------------------------------
+
+void MetersPanel::loadSettings(string rootDir){
+    
+    //string fileName = workingDir+"/"+"metersSettings.xml";
+    
+    for(int i=0; i<channelPanels.size(); i++){
+        string filename = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
+        channelPanels[i]->loadSettingsFromFile(filename);
+    }
+}
+//----------------------------------------------
+void MetersPanel::saveSettings(string rootDir){
+    
+    for(int i=0; i<channelPanels.size(); i++){
+        string filename = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
+        channelPanels[i]->saveSettingsToFile(filename);
+    }
 }
 //----------------------------------------------
 #pragma mark - Other funcs
@@ -94,23 +118,18 @@ void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
    
 
 }
+
 //----------------------------------------------
-void MetersPanel::loadSettings(string rootDir){
+void MetersPanel::resize(int y, int w, int h){
     
-    //string fileName = workingDir+"/"+"metersSettings.xml";
+    _w = w;
+    
     
     for(int i=0; i<channelPanels.size(); i++){
-        string filename = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
-        channelPanels[i]->loadSettingsFromFile(filename);
+        channelPanels[i]->setWidth(_w);
     }
-}
-//----------------------------------------------
-void MetersPanel::saveSettings(string rootDir){
     
-    for(int i=0; i<channelPanels.size(); i++){
-        string filename = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
-        channelPanels[i]->saveSettingsToFile(filename);
-    }
+    adjustPosAndHeight(y, h);
 }
 //----------------------------------------------
 void MetersPanel::adjustPosAndHeight(int y, int h){

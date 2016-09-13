@@ -94,8 +94,8 @@ void ofxAAChannelMetersPanel::exit(){
 //------------------------------------------------
 void ofxAAChannelMetersPanel::setupMeters(){
     
-    VMetersNum = 9; //onsets included
-    HMetersNum = 4;
+    VMetersNum = VERT_METERS_NUM; //onsets included
+    HMetersNum = HORIZ_METERS_NUM;
     
     VMetersWidthTotal = _w * VERT_METERS_WIDTH;
     HMetersWidthTotal = _w - VMetersWidthTotal;
@@ -191,6 +191,71 @@ void ofxAAChannelMetersPanel::setFullDisplay(bool b){
     for (auto m : meters){
         m->setFullDisplay(_bDrawFullDisplay);
     }
+}
+//------------------------------------------------
+void ofxAAChannelMetersPanel::setWidth(int w){
+    
+    _w = w ;
+    
+    VMetersNum = VERT_METERS_NUM; //onsets included
+    HMetersNum = HORIZ_METERS_NUM;
+    
+    VMetersWidthTotal = _w * VERT_METERS_WIDTH;
+    HMetersWidthTotal = _w - VMetersWidthTotal;
+    
+    VMeterWidth = VMetersWidthTotal / VMetersNum;
+    VMeterHeight = _h;
+    
+    HMeterWidth = HMetersWidthTotal;
+    HMeterHeight = _h / HMetersNum;
+    
+    //---------------------------
+    
+    //Vertical Meters
+    int x_pos = 0;
+    mPower->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+    
+    x_pos += VMeterWidth;
+    mPitchFreq->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+   
+    x_pos += VMeterWidth;
+    mPitchConf->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+    
+    x_pos += VMeterWidth;
+    mSalience->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+    
+    x_pos += VMeterWidth;
+    mHfc->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+    
+    x_pos += VMeterWidth;
+    mCentroid->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+   
+    
+    x_pos += VMeterWidth;
+    mSpecComp->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+    
+    x_pos += VMeterWidth;
+    mInharm->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+    
+    x_pos += VMeterWidth;
+    mOnsets->setPosAndSize(_x + x_pos, _y, VMeterWidth, VMeterHeight);
+  
+    
+    //Horizontal Meters
+    x_pos = VMetersWidthTotal;
+    int y_pos = 0;
+    mSpectrum->setPosAndSize( _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    
+    y_pos += HMeterHeight;
+    mMelBands->setPosAndSize(_x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    
+    y_pos += HMeterHeight;
+    mMfcc->setPosAndSize(_x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    
+    y_pos += HMeterHeight;
+    mHpcp->setPosAndSize(_x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    
+    
 }
 //------------------------------------------------
 void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){

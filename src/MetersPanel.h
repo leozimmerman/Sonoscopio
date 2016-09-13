@@ -27,6 +27,8 @@ public:
     void setFullDisplay(bool b);
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
+    
+    void resize(int y, int w, int h);
     void adjustPosAndHeight(int y, int h);
     
     vector<std::map<string, float>>& getMetersValues();

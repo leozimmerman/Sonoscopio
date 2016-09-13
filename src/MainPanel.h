@@ -23,7 +23,10 @@ class MainPanel : public Panel{
         void openOpenFileDialog();
         void processOpenFileSelection(ofFileDialogResult openFileResult);
     
+        void resize(int w, int h);
+    
         void setupGUI();
+    
         vector<ofxDatGuiComponent*> components;
         void onButtonEvent(ofxDatGuiButtonEvent e);
         void onTextInputEvent(ofxDatGuiTextInputEvent e);
@@ -56,6 +59,7 @@ class MainPanel : public Panel{
         ofxDatGuiTextInput* gHost;
         ofxDatGuiTextInput* gPort;
         ofxDatGuiTextInput* gBpm;
+        ofxDatGuiFRM* gFps;
     
         string _panelDir;
     

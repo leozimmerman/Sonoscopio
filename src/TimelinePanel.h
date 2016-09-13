@@ -36,6 +36,7 @@ public:
     
     void setupGUI();
     
+    void resize(int y, int w, int h);
     void resizeHeight(int tl_h);
     
     void openAudioFile(string filename);

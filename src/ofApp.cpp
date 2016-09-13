@@ -2,9 +2,13 @@
 //**********************************************************************
 //TODO: Remove Exit with Esc
 //TODO: make LOAD Settings create dinamically the tracks that are missing
-//TODO: check inharmonicity - when loading settings stays in value=1
+//TODO: Add algorithms
 //TODO: Add reset Peaks values to meters?
 
+//TODO: Data Save to xml from MainPanel
+//TODO: Add FrameRate To Main Panel
+
+//FIXME: check inharmonicity - when loading settings stays in value=1
 //FIXME: init meters values - en split mode - tira cualquier cosa
 //FIXME: avoid reseting engine when playing&analyzing ????
 //FIXME: timepanel: recomputing audioPreview issue
@@ -45,7 +49,7 @@ void ofApp::setup(){
     
     int mainH = MAIN_PANEL_HEIGHT * ofGetHeight();
     int timeH = TIME_PANEL_HEIGHT * ofGetHeight();
-    int meterH = METER_PANEL_HEIGHT * ofGetHeight();
+    int metersH = METER_PANEL_HEIGHT * ofGetHeight();
     
     mainPanel.setup(0, 0, ofGetWidth(), mainH, ofGetAppPtr());
     timePanel.setup(0, mainH, ofGetWidth(), timeH, ofGetAppPtr());
@@ -67,7 +71,7 @@ void ofApp::setup(){
     }
     
     mainAnalyzer.setup(_samplerate, _bufferSize, this_channelNum);
-    metersPanel.setup(0, mainH + timeH, ofGetWidth(), meterH, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
+    metersPanel.setup(0, mainH + timeH, ofGetWidth(), metersH, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
     
     //OSC sender-----------------------
     _oscHost = "localhost";
@@ -134,15 +138,11 @@ void ofApp::update(){
     //--------------------------
     
     
-
-    
     
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-    
     
     TS_START("METERS-PANEL");
     metersPanel.draw();
@@ -174,30 +174,47 @@ void ofApp::exit(){
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    
+    /*
+     * 'e' expands focused track
+     * 'd' enables/disables focused track
+     * 'a' adjust tracks height shorcut
+     */
     timePanel.keyPressed(key);
+    
+    //--------------------------------
     /*
-    'e' expands focused track
-    'd' enables/disables focused track
-    'a' adjust tracks height shorcut
-    */
-    /*
-     'm': time measurement on/off
+     * 'm': time measurement on/off
+     * 'g' Data Saver Starts
+     * 'h' Data Saver Stops
      */
     switch (key) {
+        
         case 'm':
             if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
             else TIME_SAMPLE_ENABLE();
+            break;
+        
+        case 'g':
+            dataSaver.start();
+            break;
+            
+        case 'h':
+            dataSaver.stop();
+            break;
+        
+            ///TEST
+        case 'f':
+            ofToggleFullscreen();
+            break;
+            
+        default:
             break;
     }
     
    
     
-    if(key == 'f'){
-        dataSaver.start();
-    }else if (key == 'g'){
-        dataSaver.stop();
-    }
+    
     
     
     
@@ -314,8 +331,6 @@ void ofApp::sendOscData(){
         
         oscSender.sendMessage(m, false);
     }
-    
-
     
     //timeline data
     std::map<string, float> timelineValues = timePanel.getTracksValues();
@@ -544,8 +559,21 @@ void ofApp::drawSavingAnalysisSign(){
     ofPopStyle();
 }
 
-///**************************************************************
+//------------------------------------------------------------
 #pragma mark - OF core other tools
+//------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
+    
+    ofLogVerbose()<<"Window resized: "<< w <<"x"<< h;
+    
+    int mainH = MAIN_PANEL_HEIGHT * h;
+    int timeH = TIME_PANEL_HEIGHT * h;
+    int metersH = METER_PANEL_HEIGHT * h;
+    
+    mainPanel.resize(w, mainH);
+    timePanel.resize(mainH, w, timeH);
+    metersPanel.resize(mainH+timeH, w, metersH);
+}
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 }
@@ -569,10 +597,7 @@ void ofApp::mouseReleased(int x, int y, int button){
 
 }
 
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-	
-}
+
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){

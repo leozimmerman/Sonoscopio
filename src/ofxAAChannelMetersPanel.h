@@ -15,6 +15,9 @@
 #define PITCH_MAX_VALUE_FOR_METER 2093.0 //hz
 #define VERT_METERS_WIDTH 0.7
 
+#define VERT_METERS_NUM 9
+#define HORIZ_METERS_NUM 4
+
 class ofxAAChannelMetersPanel{
 public:
     
@@ -32,7 +35,7 @@ public:
     void adjustPosAndHeight(int y, int h);
     
     void setPosition(ofVec2f pos){_x = pos.x; _y = pos.y;}
-    void setWidth(int w){_w = w ;}
+    void setWidth(int w);
     void setHeight(int h){_h = h;}
     void setBackgroundColor(ofColor col){_bckgColor = col;}
     void setMainColor(ofColor col);

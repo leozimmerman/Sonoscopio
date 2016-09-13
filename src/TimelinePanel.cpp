@@ -20,7 +20,8 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     
     tMainApp = dynamic_cast<ofApp*>(appPtr);
     
-    setBackgroundColor(ofColor(50));
+    _bckgColor = ofColor(50);
+    
     bordCol = ofColor::grey;
     bordWidth = 1;
     waveformCol.set(120);
@@ -301,8 +302,9 @@ void TimelinePanel::toggleEnableDisableFocusedTrack(){
 void TimelinePanel::setupGUI(){
     
     ofxDatGuiComponent* component;
-    guiCompWidth = _w / 7;
     
+    guiCompWidth = _w / 7;
+    guiCompHeight = 26;
     
     int gui_y = _y + timeline.getHeight();
     int gui_x = _x;
@@ -312,7 +314,6 @@ void TimelinePanel::setupGUI(){
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setWidth(guiCompWidth * 2, 0.35);//width x2
     component->onTextInputEvent(this, &TimelinePanel::onTextInputEvent);
-    guiCompHeight = component->getHeight();///--guiCompHeight
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
@@ -393,18 +394,7 @@ string TimelinePanel::getFileInfo(){
     return s;
     
 }
-//--------------------------------------------------------------
-void TimelinePanel::resizeHeight(int tl_h){
-    
-    _h = tl_h + guiCompHeight;
-    
-    for(int i=0; i<components.size(); i++){
-        int gui_y = _y + tl_h;
-        components[i]->setPosition(components[i]->getX(), gui_y);
-    }
-    
-    ofNotifyEvent(heightResizedEvent, _h, this);
-}
+
 //--------------------------------------------------------------
 std::map<string, float> TimelinePanel::getTracksValues(){
     
@@ -440,6 +430,81 @@ std::map<string, float> TimelinePanel::getTracksValues(){
     
     return values;
 }
+//--------------------------------------------------------------
+#pragma mark - Size
+//--------------------------------------------------------------
+//--------------------------------------------------------------
+void TimelinePanel::resize(int y, int w, int h){
+    
+    _y = y;
+    _w = w;
+    _h = h;
+    
+    //Adjust Timeline
+    timeline.setOffset(ofVec2f(_x, _y));
+    timeline.setWidth(_w);
+    timeline.setHeight(_h);
+    
+    
+    //Adjust Gui
+    ofxDatGuiComponent* component;
+    
+    guiCompWidth = _w / 7;
+    guiCompHeight = 26;
+    
+    int gui_y = _y + timeline.getHeight();
+    int gui_x = _x;
+    
+    //TRACK NAME
+    component = components[0];
+    component->setPosition(gui_x, gui_y);
+    component->setWidth(guiCompWidth * 2, 0.35);//width x2
+    
+    //TRACK TYPE
+    gui_x += guiCompWidth*2;
+    component = components[1];
+    component->setPosition(gui_x, gui_y);
+    component->setWidth(guiCompWidth, 0.9);
+    
+    //ADD
+    gui_x += guiCompWidth;
+    component = components[2];
+    component->setPosition(gui_x, gui_y);
+    component->setWidth(guiCompWidth, 0.9);
+    
+    //REMOVE
+    gui_x += guiCompWidth;
+    component = components[3];
+    component->setPosition(gui_x, gui_y);
+    component->setWidth(guiCompWidth, 0.9);
+    
+    //SHOW TRACKS
+    gui_x += guiCompWidth;
+    component = components[4];
+    component->setPosition(gui_x, gui_y);
+    component->setWidth(guiCompWidth, 0.9);
+    
+    //ADJUST TRACKS
+    gui_x += guiCompWidth;
+    component = components[5];
+    component->setPosition(gui_x, gui_y);
+    component->setWidth(guiCompWidth, 0.9);
+    
+    //resizeHeight(h);
+}
+//--------------------------------------------------------------
+void TimelinePanel::resizeHeight(int tl_h){
+    
+    _h = tl_h + guiCompHeight;
+    
+    for(int i=0; i<components.size(); i++){
+        int gui_y = _y + tl_h;
+        components[i]->setPosition(components[i]->getX(), gui_y);
+    }
+    
+    ofNotifyEvent(heightResizedEvent, _h, this);
+}
+
 //--------------------------------------------------------------
 #pragma mark - gui listeners
 //--------------------------------------------------------------
