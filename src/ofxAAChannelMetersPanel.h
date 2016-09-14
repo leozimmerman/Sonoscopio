@@ -12,11 +12,11 @@
 #include "ofxXmlSettings.h"
 
 #define PITCH_MIN_VALUE_FOR_METER 130.0 //hz
-#define PITCH_MAX_VALUE_FOR_METER 2093.0 //hz
-#define VERT_METERS_WIDTH 0.7
+//#define PITCH_MAX_VALUE_FOR_METER 2093.0 //hz
+#define VERT_METERS_WIDTH 0.8//Width percentage for Vertical Meters
 
-#define VERT_METERS_NUM 9
-#define HORIZ_METERS_NUM 4
+#define VERT_METERS_NUM 12
+#define HORIZ_METERS_NUM 5
 
 class ofxAAChannelMetersPanel{
 public:
@@ -76,6 +76,9 @@ protected:
     ofxAAMeter * mCentroid;
     ofxAAMeter * mSpecComp;
     ofxAAMeter * mInharm;
+    ofxAAMeter * mDissonance;
+    ofxAAMeter * mRollOff;
+    ofxAAMeter * mOddToEven;
     
     ofxAAOnsetMeter * mOnsets;
     
@@ -83,10 +86,11 @@ protected:
     ofxAABinMeter * mMelBands;
     ofxAABinMeter * mMfcc;//dct
     ofxAABinMeter * mHpcp;
+    ofxAABinMeter * mTristimulus;
     
     bool _bDrawFullDisplay;
     
-   // ofxXmlSettings xml;
+
 
     
     

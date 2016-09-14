@@ -22,6 +22,7 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     _mainColor.set(ofColor::white);
     
     _value = 0.0;
+    _valueNorm = -1.0;
     _minEstimatedValue = 0.0;
     _maxEstimatedValue = 1.0;
     _maxValueRegistered = 0.0;
@@ -135,8 +136,19 @@ void ofxAAMeter::drawMeter(){
     ofFill();
     ofSetColor(_mainColor);
     
-    float scaledValue = ofMap(_value, _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
+    float scaledValue;
+    
+    if (_valueNorm >= 0){
+        scaledValue = _valueNorm;
+    }else{
+        scaledValue = ofMap(_value, _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
+    }
+    
+    
+   
     float meter_h = -1 * (_h*0.75 * scaledValue);
+
+
     ofDrawRectangle( _w * .25 , _h, _w * 0.5, meter_h);
     
     ofPopMatrix();
@@ -200,6 +212,10 @@ void ofxAAMeter::setPosAndSize(int x, int y, int w, int h){
 //------------------------------------------------
 void ofxAAMeter::setValue(float val){
     _value = val;
+}
+//------------------------------------------------
+void ofxAAMeter::setNormalizedValue(float val){
+    _valueNorm = val;
 }
 //------------------------------------------------
 void ofxAAMeter::setYandHeight(int y, int h){

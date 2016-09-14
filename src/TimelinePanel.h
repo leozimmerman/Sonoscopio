@@ -14,11 +14,14 @@
 
 #define TIMELINE_SETTINGS_DIR "timeline_settings"
 
+#define TL_GUI_COMP_HEIGHT 26
+
 enum trackType {
     CURVES,
     BANGS,
     SWITCHES
 };
+
 
 class TimelinePanel : public Panel{
     
@@ -31,10 +34,13 @@ public:
     
     void keyPressed(int key);
     
+    void setFrameRate(int fps);
+    
     void loadSettings(string rootDir="");
     void saveSettings(string rootDir="");
     
-    void setupGUI();
+    void setupGui();
+    void adjustGuiSize(int y, int w, int h);
     
     void resize(int y, int w, int h);
     void resizeHeight(int tl_h);
@@ -54,30 +60,33 @@ public:
 
     void bangFired(ofxTLBangEventArgs& args);
     
-    vector<ofxDatGuiComponent*> components;
-    void onButtonEvent(ofxDatGuiButtonEvent e);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    void onDropdownEvent(ofxDatGuiDropdownEvent e);
-    
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;
     
     ofEvent<int> heightResizedEvent;
     
+
+    
     
 private:
     
-    int guiCompWidth, guiCompHeight;
+    int _frameRate;
+    
+    int _guiCompHeight;
     string currentTrackName;
     trackType currentTrackType;
     
     bool _isThereBang = false;
     ofxTLTrack* _bangedTrack;
     
+    ofColor waveformCol;
+    
     ofColor bordCol;
     int bordWidth;
-    
-    ofColor waveformCol;
+    vector<ofxDatGuiComponent*> components;
+    void onButtonEvent(ofxDatGuiButtonEvent e);
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    void onDropdownEvent(ofxDatGuiDropdownEvent e);
     
 };
 

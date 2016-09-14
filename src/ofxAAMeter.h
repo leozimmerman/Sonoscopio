@@ -52,6 +52,7 @@ public:
     void setMainColor(ofColor col){_mainColor = col;}
     void setBackgroundColor(ofColor col){_backgroundColor = col;}
     void setValue(float val);
+    void setNormalizedValue(float val);
     virtual void setPosAndSize(int x, int y, int w, int h);
     virtual void setYandHeight(int y, int h);
     void setHeight(float h);
@@ -95,6 +96,7 @@ public:
 private:
     string _name;
     float _value;
+    float _valueNorm;
     float _maxValueRegistered;//peak
     float _smoothAmnt;
     int _label_x;

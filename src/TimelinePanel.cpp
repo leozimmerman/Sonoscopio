@@ -17,13 +17,13 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     _w = width;
     _h = height;
     
+    _frameRate = FRAME_RATE;
     
     tMainApp = dynamic_cast<ofApp*>(appPtr);
     
     _bckgColor = ofColor(50);
     
-    bordCol = ofColor::grey;
-    bordWidth = 1;
+
     waveformCol.set(120);
     
     currentTrackType = CURVES;
@@ -33,19 +33,16 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
     timeline.setWorkingFolder(TIMELINE_SETTINGS_DIR);
     timeline.setup();
-    timeline.setFrameRate(FRAME_RATE);
+    timeline.setFrameRate(_frameRate);
     timeline.setAutosave(false);
     timeline.setOffset(ofVec2f(_x, _y));
    
-    
     timeline.setLoopType(OF_LOOP_NONE);
     
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
 
     timeline.addAudioTrack("Audio","audio_files/atlas_3chan.wav");//3chans
-    
-    
     
     //this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
     timeline.setTimecontrolTrack("Audio");
@@ -57,20 +54,20 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     
     addTrack("default", CURVES);
 
-    
     timeline.setCurrentPage(PAGE_AUDIO_NAME);
     timeline.setShowPageTabs(false); //->modify if more pages are needed
     
     timeline.setWidth(_w);
     timeline.setHeight(_h);
     
-    
-    //-------------------------------------------
-    
     ofAddListener(timeline.events().bangFired, this, &TimelinePanel::bangFired);
     
-    setupGUI();
     
+    //--------------------------
+    _guiCompHeight = TL_GUI_COMP_HEIGHT;
+    bordCol = ofColor::grey;
+    bordWidth = 1;
+    setupGui();
     
     
 }
@@ -79,7 +76,7 @@ void TimelinePanel::update(){
     
     //check for height changes
     int tl_h = timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height + 66;
-    if(tl_h != _h - guiCompHeight){
+    if(tl_h != _h - _guiCompHeight){
         resizeHeight(tl_h);
     }
     
@@ -196,6 +193,13 @@ void TimelinePanel::saveSettings(string rootDir){
 //--------------------------------------------------------------
 #pragma mark - Timeline funcs
 //--------------------------------------------------------------
+void TimelinePanel::setFrameRate(int fps){
+    
+    _frameRate = fps;
+    timeline.setFrameRate(_frameRate);
+    
+}
+//--------------------------------------------------------------
 void TimelinePanel::openAudioFile(string filename){
 
     timeline.stop();
@@ -299,32 +303,20 @@ void TimelinePanel::toggleEnableDisableFocusedTrack(){
 //--------------------------------------------------------------
 #pragma mark - Utils
 //--------------------------------------------------------------
-void TimelinePanel::setupGUI(){
+void TimelinePanel::setupGui(){
     
     ofxDatGuiComponent* component;
     
-    guiCompWidth = _w / 7;
-    guiCompHeight = 26;
-    
-    int gui_y = _y + timeline.getHeight();
-    int gui_x = _x;
-    
     component = new ofxDatGuiTextInput("TRACK NAME", "#track name#");
-    component->setPosition(gui_x, gui_y);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setWidth(guiCompWidth * 2, 0.35);//width x2
     component->onTextInputEvent(this, &TimelinePanel::onTextInputEvent);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     components.push_back(component);
     
-    
-    gui_x += guiCompWidth*2;
     vector<string> options = {"curves", "bangs", "switches"};
     dropdown = new ofxDatGuiDropdown("TRACK TYPE", options);
-    dropdown->setPosition(gui_x, gui_y);
-    dropdown->setWidth(guiCompWidth, 0.9);
     //dropdown->expand();
     dropdown->onDropdownEvent(this, &TimelinePanel::onDropdownEvent);
     component = dropdown;
@@ -334,10 +326,8 @@ void TimelinePanel::setupGUI(){
     component->setStripeColor(bordCol);
     components.push_back(dropdown);
     
-    gui_x += guiCompWidth;
+
     component = new ofxDatGuiButton("ADD");
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
@@ -345,10 +335,7 @@ void TimelinePanel::setupGUI(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    gui_x += guiCompWidth;
     component = new ofxDatGuiButton("REMOVE");
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
@@ -356,10 +343,7 @@ void TimelinePanel::setupGUI(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    gui_x += guiCompWidth;
     component = new ofxDatGuiButton("SHOW TRACKS");
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
@@ -367,10 +351,7 @@ void TimelinePanel::setupGUI(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    gui_x += guiCompWidth;
     component = new ofxDatGuiButton("ADJUST TRACKS");
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.9);
     component->onButtonEvent(this, &TimelinePanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
@@ -378,18 +359,19 @@ void TimelinePanel::setupGUI(){
     component->setStripeVisible(false);
     components.push_back(component);
     
+    //-:Set components Positions and Widths
+    adjustGuiSize(_y, _w, _h);
     
     
 }
 //--------------------------------------------------------------
 string TimelinePanel::getFileInfo(){
     
-    string s;
-    
-    s =
+    string s =
     "duration: " + ofToString(audioTrack->getDuration(), 2) + "sec."
     "\nsample rate: " + ofToString(audioTrack->getSampleRate()) +
-    "\nchannels: " + ofToString(audioTrack->getNumChannels());
+    "\nchannels: " + ofToString(audioTrack->getNumChannels()) +
+    "\nframes: " + ofToString(timeline.getDurationInFrames()) + " at " + ofToString(_frameRate) + "fps";
     
     return s;
     
@@ -431,8 +413,7 @@ std::map<string, float> TimelinePanel::getTracksValues(){
     return values;
 }
 //--------------------------------------------------------------
-#pragma mark - Size
-//--------------------------------------------------------------
+#pragma mark - Sizes
 //--------------------------------------------------------------
 void TimelinePanel::resize(int y, int w, int h){
     
@@ -447,14 +428,36 @@ void TimelinePanel::resize(int y, int w, int h){
     
     
     //Adjust Gui
-    ofxDatGuiComponent* component;
+    adjustGuiSize(_y, _w, _h);
     
-    guiCompWidth = _w / 7;
-    guiCompHeight = 26;
+   
+   
+}
+//--------------------------------------------------------------
+void TimelinePanel::resizeHeight(int tl_h){
+    
+    _h = tl_h + _guiCompHeight;
+    
+    for(int i=0; i<components.size(); i++){
+        int gui_y = _y + tl_h;
+        components[i]->setPosition(components[i]->getX(), gui_y);
+    }
+    
+    ofNotifyEvent(heightResizedEvent, _h, this);
+}
+//--------------------------------------------------------------
+void TimelinePanel::adjustGuiSize(int y, int w, int h){
+    
+   
+    
+    int guiCompWidth = _w / 7;
+    
     
     int gui_y = _y + timeline.getHeight();
     int gui_x = _x;
     
+    
+    ofxDatGuiComponent* component;
     //TRACK NAME
     component = components[0];
     component->setPosition(gui_x, gui_y);
@@ -491,22 +494,10 @@ void TimelinePanel::resize(int y, int w, int h){
     component->setWidth(guiCompWidth, 0.9);
     
     //resizeHeight(h);
+    
 }
 //--------------------------------------------------------------
-void TimelinePanel::resizeHeight(int tl_h){
-    
-    _h = tl_h + guiCompHeight;
-    
-    for(int i=0; i<components.size(); i++){
-        int gui_y = _y + tl_h;
-        components[i]->setPosition(components[i]->getX(), gui_y);
-    }
-    
-    ofNotifyEvent(heightResizedEvent, _h, this);
-}
-
-//--------------------------------------------------------------
-#pragma mark - gui listeners
+#pragma mark - Gui listeners
 //--------------------------------------------------------------
 
 void TimelinePanel::onButtonEvent(ofxDatGuiButtonEvent e)

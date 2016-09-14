@@ -2,11 +2,13 @@
 //**********************************************************************
 //TODO: Remove Exit with Esc
 //TODO: make LOAD Settings create dinamically the tracks that are missing
+
 //TODO: Add algorithms
 //TODO: Add reset Peaks values to meters?
 
-//TODO: Data Save to xml from MainPanel
-//TODO: Add FrameRate To Main Panel
+//TODO: Sacar ofxAAMetersNames.h, innecesario?? ponele Defines.h o Constants.h
+
+
 
 //FIXME: check inharmonicity - when loading settings stays in value=1
 //FIXME: init meters values - en split mode - tira cualquier cosa
@@ -275,6 +277,19 @@ void ofApp::setBufferSize(int bs){
     
 }
 //--------------------------------------------------------------
+void ofApp::setFrameRate(int fps){
+    
+    
+    _frameRate = fps;
+    ofSetFrameRate(_frameRate);
+    timePanel.setFrameRate(_frameRate);
+    
+    //update file info frames num info:
+    mainPanel.setFileInfoString(timePanel.getFileInfo());
+    
+    ofLogVerbose()<<"Frame Rate changed to: "<<ofToString(fps);
+}
+//--------------------------------------------------------------
 #pragma mark - TimePanel funcs
 //--------------------------------------------------------------
 void ofApp::startStopPlaying(){
@@ -319,6 +334,7 @@ void ofApp::sendOscData(){
         string address = "/ch" + ofToString(i);
         m.setAddress(address);
         
+        //sames order as Osc Indexes (ofxAudioAnalyzerAlgorithms.h)
         m.addFloatArg(metersValues[i].at(MTR_NAME_POWER));//0
         m.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_FREQ));//1
         m.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_CONF));//2
@@ -327,9 +343,14 @@ void ofApp::sendOscData(){
         m.addFloatArg(metersValues[i].at(MTR_NAME_CENTROID));//5
         m.addFloatArg(metersValues[i].at(MTR_NAME_SPEC_COMP));//6
         m.addFloatArg(metersValues[i].at(MTR_NAME_INHARMONICTY));//7
-        m.addInt32Arg(metersValues[i].at(MTR_NAME_ONSETS));//8
+        m.addFloatArg(metersValues[i].at(MTR_NAME_DISSONANCE));//8
+        m.addFloatArg(metersValues[i].at(MTR_NAME_ROLL_OFF));//9
+        m.addFloatArg(metersValues[i].at(MTR_NAME_ODD_TO_EVEN));//10
+        m.addInt32Arg(metersValues[i].at(MTR_NAME_ONSETS));//11
         
         oscSender.sendMessage(m, false);
+        
+        
     }
     
     //timeline data

@@ -25,7 +25,8 @@ class MainPanel : public Panel{
     
         void resize(int w, int h);
     
-        void setupGUI();
+        void setupGui();
+        void adjustGui(int w, int h);
     
         vector<ofxDatGuiComponent*> components;
         void onButtonEvent(ofxDatGuiButtonEvent e);
@@ -59,7 +60,8 @@ class MainPanel : public Panel{
         ofxDatGuiTextInput* gHost;
         ofxDatGuiTextInput* gPort;
         ofxDatGuiTextInput* gBpm;
-        ofxDatGuiFRM* gFps;
+        ofxDatGuiTextInput* gFps;
+        ofxDatGuiFRM* gFpsMonitor;
     
         string _panelDir;
     

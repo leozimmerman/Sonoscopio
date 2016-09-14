@@ -54,6 +54,7 @@ class ofApp : public ofBaseApp{
     void openAudioFile(string filename);
     void onTimelinePanelResize(int & h);
     
+    void setFrameRate(int fps);
     void setAnalysisMode(analysisMode mode);
     void resetAnalysisEngine();
     void setBufferSize(int bs);
