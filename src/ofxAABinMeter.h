@@ -12,12 +12,17 @@ class ofxAABinMeter : public ofxAAMeter{
 
     ofxAABinMeter(string name, int x, int y, int w, int h);
     
-    virtual void draw();
+    void draw();
     
-    virtual void drawMeter();
+    void drawMeter();
+    void drawLabel();
     
     void setBinsNum(int bins){_nBins = bins;}
     void setValues(vector<float>& vals){_values = vals;}
+    
+    //void updateColors();
+    void updateComponentsPositions();
+    void updateComponentsWidth();
     
     void setPosAndSize(int x, int y, int w, int h);
     

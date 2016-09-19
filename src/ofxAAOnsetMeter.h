@@ -21,6 +21,11 @@ public:
     
     virtual void setPosAndSize(int x, int y, int w, int h);
     
+    
+    void updateSlidersColors();
+    void updateComponentsWidth();
+    void updateComponentsPositions();
+    
     void setValue(bool val){_onsetValue = val;}
     void setAlpha(float alpha);
     void setSilenceTreshold(float tres);
@@ -44,7 +49,7 @@ protected:
     float _silenceTreshold;
     float _timeTreshold;
     
-    ofxDatGuiSlider * alphaSlider;
-    ofxDatGuiSlider * silenceTresholdSlider;
-    ofxDatGuiSlider * timeTresholdSlider;
+    CustomSlider * alphaSlider;
+    CustomSlider * silenceTresholdSlider;
+    CustomSlider * timeTresholdSlider;
 };

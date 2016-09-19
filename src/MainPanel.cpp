@@ -32,8 +32,11 @@ void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
     //fonts for text display
     ofTrueTypeFont::setGlobalDpi(72);
     verdana.load("fonts/verdana.ttf", 12, true, true);
-    verdana.setLineHeight(14.0f);
+    verdana.setLineHeight(13.0f);
     verdana.setLetterSpacing(1.037);
+    
+    
+    
     
     fileInfoStr = "non file loaded";
     
@@ -79,7 +82,7 @@ void MainPanel::drawFileInfo(){
     
     //draw string
     ofSetColor(fileinfoFontCol);
-    verdana.drawString(infoStr,  _w - guiCompWidth*0.95, _h * 0.15);
+    verdana.drawString(infoStr,  _w - _guiCompWidth*0.95, _h * 0.15);
     
     ofPopStyle();
 
@@ -234,6 +237,7 @@ void MainPanel::setupGui(){
 
     ofxDatGuiComponent* component;
     
+    //1stCol-------
     component = new ofxDatGuiButton("OPEN FILE");
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
@@ -276,19 +280,30 @@ void MainPanel::setupGui(){
     
     components.push_back(component);
     
-    //--------
+    //2ndCol--------
+    //SET FRAMERATE
+    gFps = new ofxDatGuiTextInput("SET FPS", "30");
+    component = gFps;
+    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->onTextInputEvent(this, &MainPanel::onTextInputEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    component->setLabelMargin(20.0);
+    components.push_back(component);
     
-    component = new ofxDatGuiButton("PLAY / STOP");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    //FRAMERATE MONITOR
+    gFpsMonitor = new ofxDatGuiFRM(0.5f);//updates ever 0.5 secs.
+    component = gFpsMonitor;
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     components.push_back(component);
     
-    gVolume = new ofxDatGuiSlider("VOLUME", 0.0, 1.0, 1.0);
-    component = gVolume;
-    component->onSliderEvent(this, &MainPanel::onSliderEvent);
+    gFramebased = new ofxDatGuiToggle("FRAME BASED", false);
+    component = gFramebased;
+    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
@@ -311,28 +326,24 @@ void MainPanel::setupGui(){
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    
     components.push_back(component);
     
-    //---------
-    //SET FRAMERATE
-    gFps = new ofxDatGuiTextInput("SET FPS", "30");
-    component = gFps;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MainPanel::onTextInputEvent);
+    //3rdCol--------
+    component = new ofxDatGuiButton("PLAY / STOP");
+    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     components.push_back(component);
     
-    //FRAMERATE MONITOR
-    gFpsMonitor = new ofxDatGuiFRM(0.5f);//updates ever 0.5 secs.
-    component = gFpsMonitor;
+    gVolume = new ofxDatGuiSlider("VOLUME", 0.0, 1.0, 1.0);
+    component = gVolume;
+    component->onSliderEvent(this, &MainPanel::onSliderEvent);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     components.push_back(component);
-    
     
     gLoop = new ofxDatGuiToggle("LOOP ON-OFF", false);
     component = gLoop;
@@ -359,15 +370,46 @@ void MainPanel::setupGui(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    component = new ofxDatGuiButton("METERS FULL DISPLAY");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    //4thCol---------
+    gShowBpm = new ofxDatGuiToggle("SHOW BPM GRID", false);
+    component = gShowBpm;
+    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     components.push_back(component);
     
-    //---------
+    
+    gBpm = new ofxDatGuiTextInput("BPM", "120");
+    component = gBpm;
+    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->onTextInputEvent(this, &MainPanel::onTextInputEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    components.push_back(component);
+    
+    gSnapBpm = new ofxDatGuiToggle("SNAP", false);
+    component = gSnapBpm;
+    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    components.push_back(component);
+    
+    
+    component = new ofxDatGuiButton("FULL SCREEN");
+    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    components.push_back(component);
+
+    
+    //5th---------
     gSendOsc = new ofxDatGuiToggle("SEND OSC", TRUE);
     component = gSendOsc;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
@@ -402,54 +444,6 @@ void MainPanel::setupGui(){
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     components.push_back(component);
-
-    
-    //---------
-    gShowBpm = new ofxDatGuiToggle("SHOW BPM GRID", false);
-    component = gShowBpm;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-  
-    gBpm = new ofxDatGuiTextInput("BPM", "120");
-    component = gBpm;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MainPanel::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    gSnapBpm = new ofxDatGuiToggle("SNAP", false);
-    component = gSnapBpm;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-   
-    gFramebased = new ofxDatGuiToggle("FRAME BASED", false);
-    component = gFramebased;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    component = new ofxDatGuiButton("FULL SCREEN");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
     
     //---------
     //-:SET POSITION, WIDTH AND HEIGHT OF COMPONENTS
@@ -468,8 +462,9 @@ void MainPanel::adjustGui(int w, int h){
     _w = w;
     _h = h;
     
-    guiCompWidth = _w / 6;
-    guiCompHeight = _h / 2;
+    _guiCompWidth = _w / 6;
+    int guiCompWidth = _guiCompWidth;
+    int guiCompHeight = _h / 4;
     
     if(components.size()==0){
         ofLogError()<<"Cant resize MainPanel, components size = 0";
@@ -478,152 +473,150 @@ void MainPanel::adjustGui(int w, int h){
     
     ofxDatGuiComponent* component;
     
+    //1stCol--------
     //"OPEN FILE"
     component = components[0];
     component->setPosition(_x, _y+ guiCompHeight*0);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
     
     //LOAD SETTINGS
     component = components[1];
-    component->setPosition(_x, _y + guiCompHeight*0.5);
+    component->setPosition(_x, _y + guiCompHeight * 1);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
     
     //SAVE SETTINGS
     component = components[2];
-    component->setPosition(_x, _y + guiCompHeight*1.0);
+    component->setPosition(_x, _y + guiCompHeight * 2);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
 
     
     //OPEN PROJECT
     component = components[3];
-    component->setPosition(_x, _y+ guiCompHeight*1.5);
+    component->setPosition(_x, _y+ guiCompHeight * 3);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
     
-    //--------
+    //2ndCol--------
 
-    //PLAY / STOP
-    component = components[4];
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight*0);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
-    
-    //VOLUME
-    component = components[5];
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight*0.5);
-    component->setWidth(guiCompWidth, 0.4);
-    component->setHeight(guiCompHeight/2);
-    
-    //CHANNEL SPLIT
-    component = components[6];
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight*1.0);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
-    
-    //BUFFER SIZE
-    component = components[7];
-    component->setPosition(_x + guiCompWidth, _y+ guiCompHeight*1.5);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
-    
-    
-    //---------
     //SET FPS
-    component = components[8];
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 0.0);
+    component = components[4];
+    component->setPosition(_x + guiCompWidth, _y + guiCompHeight * 0);
     component->setWidth(guiCompWidth/2, 0.7);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
     
     //FRAMERATE MONITOR
-    component = components[9];
-    component->setPosition(_x + guiCompWidth * 2.5, _y + guiCompHeight * 0.0);
+    component = components[5];
+    component->setPosition(_x + guiCompWidth*1.5, _y + guiCompHeight * 0);
     component->setWidth(guiCompWidth/2, 0.65);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
+    
+    //FRAMEBASED
+    component = components[6];
+    component->setPosition(_x + guiCompWidth, _y + guiCompHeight * 1);
+    component->setWidth(guiCompWidth, 0.9);
+    component->setHeight(guiCompHeight);
+    
+    //CHANNEL SPLIT
+    component = components[7];
+    component->setPosition(_x + guiCompWidth, _y+ guiCompHeight * 2);
+    component->setWidth(guiCompWidth, 0.9);
+    component->setHeight(guiCompHeight);
+    
+    
+    //BUFFER SIZE
+    component = components[8];
+    component->setPosition(_x + guiCompWidth, _y + guiCompHeight * 3);
+    component->setWidth(guiCompWidth, 0.7);
+    component->setHeight(guiCompHeight);
+    
+    //3rdCol---------
+    //PLAY-STOP
+    component = components[9];
+    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 0);
+    component->setWidth(guiCompWidth, 0.65);
+    component->setHeight(guiCompHeight);
+    
+    //VOLUME
+    component = components[10];
+    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 1);
+    component->setWidth(guiCompWidth, 0.4);
+    component->setHeight(guiCompHeight);
     
     //LOOP ON-OFF
-    component = components[10];
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 0.5);
+    component = components[11];
+    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 2);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
     
     //SET-IN
-    component = components[11];
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 1.0);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight/2);
-    
-    //SET-OUT
     component = components[12];
-    component->setPosition(_x + guiCompWidth * 2.5, _y + guiCompHeight * 1.0);
+    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 3);
     component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
    
     
-    //METERS FULL DISPLAY
+    //SET-OUT
     component = components[13];
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 1.5);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setPosition(_x + guiCompWidth * 2.5, _y + guiCompHeight * 3);
+    component->setWidth(guiCompWidth/2, 0.9);
+    component->setHeight(guiCompHeight);
     
-    //---------
-    //SEND-OSC
+    
+    
+    //4thCol---------
+    //SHOW BPM
     component = components[14];
-    component->setPosition(_x + guiCompWidth *3, _y + guiCompHeight*0);
+    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*0);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
 
     
-    //HOST
-    component = components[15];
-    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight * 0.5);
-    component->setWidth(guiCompWidth, 0.35);
-    component->setHeight(guiCompHeight/2);
-  
-    //PORT
-    component = components[16];
-    component->setPosition(_x + guiCompWidth * 3, _y + + guiCompHeight * 1.0);
-    component->setWidth(guiCompWidth, 0.35);
-    component->setHeight(guiCompHeight/2);
-    
-    //SAVE ANALYSIS
-    component = components[17];
-    component->setPosition(_x + guiCompWidth * 3, _y + + guiCompHeight * 1.5);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
-    
-    //---------
-    //SHOW BPM
-    component = components[18];
-    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight*0);
-    component->setWidth(guiCompWidth, 0.5);
-    component->setHeight(guiCompHeight/2);
-    
     //BPM
-    component = components[19];
-    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight*0.5);
-    component->setWidth(guiCompWidth/2, 0.65);
-    component->setHeight(guiCompHeight/2);
-    
+    component = components[15];
+    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight * 1);
+    component->setWidth(guiCompWidth, 0.65);
+    component->setHeight(guiCompHeight);
+  
     //SNAP TO BPM
-    component = components[20];
-    component->setPosition(_x + guiCompWidth * 4.5, _y + guiCompHeight*0.5);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight/2);
-    
-    //FRAME-BASED
-    component = components[21];
-    component->setPosition(_x + guiCompWidth *4, _y + guiCompHeight*1.0);
+    component = components[16];
+    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight * 2);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
     
     //FULLSCREEN
-    component = components[22];
-    component->setPosition(_x + guiCompWidth *4, _y + guiCompHeight*1.5);
+    component = components[17];
+    component->setPosition(_x + guiCompWidth * 3, _y + + guiCompHeight * 3);
     component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight/2);
+    component->setHeight(guiCompHeight);
+    
+    //5th---------
+    //SEND OSC
+    component = components[18];
+    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight * 0);
+    component->setWidth(guiCompWidth, 0.9);
+    component->setHeight(guiCompHeight);
+    
+    //HOST
+    component = components[19];
+    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight * 1);
+    component->setWidth(guiCompWidth, 0.5);
+    component->setHeight(guiCompHeight);
+    
+    //PORT
+    component = components[20];
+    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight * 2);
+    component->setWidth(guiCompWidth, 0.5);
+    component->setHeight(guiCompHeight);
+    
+    //SAVE ANALYSIS
+    component = components[21];
+    component->setPosition(_x + guiCompWidth *4, _y + guiCompHeight * 3);
+    component->setWidth(guiCompWidth, 0.9);
+    component->setHeight(guiCompHeight);
+    
 
 }
 //-------------------------------------------------
@@ -676,10 +669,6 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
         
         mMainAppPtr->timePanel.timeline.setOutPointAtPlayhead();
     
-    }else if(e.target->getLabel()=="METERS FULL DISPLAY"){
-        
-        mMainAppPtr->metersPanel.toggleFullDisplay();
-        
     }else if(e.target->getLabel()== "SEND OSC"){
         
         mMainAppPtr->setIsSendingOsc(e.enabled);

@@ -43,12 +43,13 @@ class MainPanel : public Panel{
         string fileInfoStr;
         string fileName;
         ofTrueTypeFont	verdana;
-        int  guiCompWidth, guiCompHeight;
+        int  _guiCompWidth;
     
         ofColor bordCol;
         int bordWidth;
     
         ofColor fileinfoFontCol;
+    
     
         ofxDatGuiSlider* gVolume;
         ofxDatGuiToggle* gSplit;

@@ -25,9 +25,10 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
     setupGui();
     //------------------------
     
-    setBackgroundColor(ofColor::darkGreen);
-    panelColor1 = ofColor::darkSeaGreen;
-    panelColor2 = ofColor::darkKhaki;
+    setBackgroundColor(ofColor::darkBlue);
+    
+    panelColor1 = COLOR_MAIN_A;
+    panelColor2 = COLOR_MAIN_B;
     
     panelsNum = channelAnalyzers.size();
     
@@ -41,14 +42,11 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
         if(i%2) p->setMainColor(panelColor2);
         else p->setMainColor(panelColor1);
         
-        
         channelPanels.push_back(p);
     }
    
     _panelDir = METERS_SETTINGS_DIR;
     _bDrawFullDisplay = TRUE;
-    
-    
     
 }
 //----------------------------------------------

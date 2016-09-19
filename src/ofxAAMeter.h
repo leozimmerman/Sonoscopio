@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "ofxDatGui.h"
 #include "ofxAAMetersNames.h"
+#include "ExtendedDatGuiComponents.h"
 
 enum meterOrientation{
     VERTICAL,
@@ -15,6 +16,25 @@ public:
     string name;
     bool state;
 };
+
+//-:Meters Colors
+//#define COLOR_MAIN_A ofColor::darkSeaGreen
+#define COLOR_MAIN_B ofColor::darkKhaki
+
+
+#define COLOR_MAIN_A ofColor::turquoise
+//#define COLOR_MAIN_B ofColor::lightSalmon
+
+#define COLOR_PEAKS ofColor::crimson
+#define COLOR_SMTH_LABEL ofColor::mediumOrchid
+
+#define COLOR_ONOFF_ON ofColor::chartreuse
+#define COLOR_ONOFF_OFF ofColor::dimGray
+
+#define COLOR_RECT_METER ofColor::white
+#define COLOR_RECT_METER_ALPHA 40
+
+
 
 
 class ofxAAMeter{
@@ -31,7 +51,8 @@ public:
     virtual void drawMeter();
     virtual void drawValueDisplay();
     
-    void resetMaxValue(){_maxValueRegistered = 0.0;}
+    //void resetMaxValue(){_maxValueRegistered = 0.0;}
+    void resetPeak();
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
@@ -45,16 +66,18 @@ public:
     float getMaxEstimatedValue(){return _maxEstimatedValue;}
     meterOrientation getMeterOrient(){return _meterOrient;}
     float getSmoothAmnt(){return _smoothAmnt;}
-    bool getEnabled(){return onOffToggle->getEnabled();}
+    bool getEnabled(){return _enabled;}
     bool getIsFullDisplay(){return _bDrawFullDisplay;}
 
     void setName(string name){_name = name;}
-    void setMainColor(ofColor col){_mainColor = col;}
+    void setMainColor(ofColor col);
     void setBackgroundColor(ofColor col){_backgroundColor = col;}
     void setValue(float val);
     void setNormalizedValue(float val);
     virtual void setPosAndSize(int x, int y, int w, int h);
+    virtual void updateComponentsPositions();
     virtual void setYandHeight(int y, int h);
+    virtual void updateComponentsWidth();
     void setHeight(float h);
     void setMinEstimatedValue(float val){_minEstimatedValue = val;}
     void setMaxEstimatedValue(float val){_maxEstimatedValue = val;}
@@ -64,8 +87,9 @@ public:
 
     ofRectangle getDrawRect(){return _drawRect;}
     
-    ofxDatGuiSlider * smoothSlider;
-    ofxDatGuiButton* onOffToggle;
+    CustomSlider * smoothSlider;
+    OnOffToggle* onOffToggle;
+    PeakMeterButton* peakButton;
     
     virtual void onSliderEvent(ofxDatGuiSliderEvent e);
     virtual void onButtonEvent(ofxDatGuiButtonEvent e);
@@ -73,7 +97,7 @@ public:
     static ofEvent<OnOffEventData> onOffEventGlobal;//this is a shared event for all the instances of this class, so any instance of this class will broadcast to the same event,
     
     
-    protected:
+protected:
     
     float _minEstimatedValue, _maxEstimatedValue;
     
@@ -87,20 +111,26 @@ public:
     ofColor _backgroundColor;
     
     ofTrueTypeFont*	verdana;
-    float line_h;
+    
     
     meterOrientation _meterOrient;
     bool _bDrawFullDisplay;
+    
+    string  _name;
+    bool    _enabled;
+    
+    float   _line_h;
+    int     _label_x;
+    
    
     
 private:
-    string _name;
+    
     float _value;
     float _valueNorm;
     float _maxValueRegistered;//peak
     float _smoothAmnt;
-    int _label_x;
-    
+
     
     
    

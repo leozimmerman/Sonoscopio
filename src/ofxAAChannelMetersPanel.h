@@ -34,6 +34,8 @@ public:
     
     void adjustPosAndHeight(int y, int h);
     
+    void drawBackground();
+    
     void setPosition(ofVec2f pos){_x = pos.x; _y = pos.y;}
     void setWidth(int w);
     void setHeight(int h){_h = h;}

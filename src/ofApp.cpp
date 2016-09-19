@@ -3,12 +3,8 @@
 //TODO: Remove Exit with Esc
 //TODO: make LOAD Settings create dinamically the tracks that are missing
 
-//TODO: Add algorithms
-//TODO: Add reset Peaks values to meters?
 
 //TODO: Sacar ofxAAMetersNames.h, innecesario?? ponele Defines.h o Constants.h
-
-
 
 //FIXME: check inharmonicity - when loading settings stays in value=1
 //FIXME: init meters values - en split mode - tira cualquier cosa
@@ -95,7 +91,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+    ofSetWindowTitle("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
     
     //if dataSaver thread is running do not update anything and wait for it to finish
     if(dataSaver.isThreadRunning()){

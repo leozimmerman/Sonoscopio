@@ -11,7 +11,7 @@ void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudi
     _w = width;
     _h = height;
     
-    setBackgroundColor(ofColor::teal);
+    setBackgroundColor(ofColor::black);
     audioAnalyzer = aaPtr;
     
     _mainColor = ofColor::white;
@@ -77,6 +77,10 @@ void ofxAAChannelMetersPanel::update(){
 }
 //------------------------------------------------
 void ofxAAChannelMetersPanel::draw(){
+    
+    //background
+    drawBackground();
+
     
     for(int i=0; i<meters.size(); i++){
            meters[i]->draw();
@@ -220,8 +224,19 @@ void ofxAAChannelMetersPanel::setupMeters(){
 //------------------------------------------------
 void ofxAAChannelMetersPanel::setMainColor(ofColor col){
     _mainColor = col;
+    
+    _bckgColor = _mainColor;
+    _bckgColor.setBrightness(40);//darker mainColor
+    
     for (auto m : meters){
+        
         m->setMainColor(_mainColor);
+        
+        //update onsets sliders colors
+        if(m->getName()==MTR_NAME_ONSETS){
+            ofxAAOnsetMeter* om = dynamic_cast<ofxAAOnsetMeter*>(m);
+            om->updateSlidersColors();
+        }
     }
 }
 //------------------------------------------------
@@ -332,6 +347,15 @@ void ofxAAChannelMetersPanel::adjustPosAndHeight(int y, int h){
 }
 
 
+//--------------------------------------------------------------
+void ofxAAChannelMetersPanel::drawBackground(){
+    
+    ofPushStyle();
+    ofSetColor(_bckgColor);
+    ofDrawRectangle(_x, _y, _w, _h);
+    ofPopStyle();
+
+}
 //--------------------------------------------------------------
 ///listener for all on/off buttons of the channel panel
 void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
