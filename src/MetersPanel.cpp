@@ -51,6 +51,7 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
 }
 //----------------------------------------------
 void MetersPanel::update(){
+    
     //set meters values from ofxAudioAnalyzerUnit
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->update();
@@ -144,6 +145,7 @@ void MetersPanel::saveSettings(string rootDir){
     //-:Save panel settings (gui) ------------------
     string filenamePanel = rootDir + _panelDir + "/meters_settings_gui.xml";
     ofxXmlSettings savedSettings;
+    
     savedSettings.addTag("PANEL");
     savedSettings.pushTag("PANEL");
     savedSettings.addValue("MAX-FREQ",      gMaxFreq->getText());
@@ -233,6 +235,11 @@ void MetersPanel::setFullDisplay(bool b){
 //----------------------------------------------
 void MetersPanel::setupGui(){
     
+    if(channelAnalyzers[0] == NULL){
+        ofLogError()<<"Meters Panel: Channel Analyzer is null, cant setupGui.";
+        return;
+    }
+    
     ofxDatGuiComponent* component;
     
     component = new ofxDatGuiButton("FULL DISPLAY");
@@ -243,7 +250,9 @@ void MetersPanel::setupGui(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    gMaxFreq = new ofxDatGuiTextInput("MAX FREQ", "#freq#");
+    
+    gMaxFreq = new ofxDatGuiTextInput("MAX FREQ",
+                                      ofToString(channelAnalyzers[0]->getMaxEstimatedValue(PITCH_FREQ)));
     component = gMaxFreq;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
@@ -253,7 +262,9 @@ void MetersPanel::setupGui(){
     component->setLabelMargin(10.0);
     components.push_back(component);
     
-    gMaxHfc = new ofxDatGuiTextInput("MAX HFC", "#hfc#");
+    
+    gMaxHfc = new ofxDatGuiTextInput("MAX HFC",
+                                     ofToString(channelAnalyzers[0]->getMaxEstimatedValue(HFC)));
     component = gMaxHfc;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
@@ -263,7 +274,8 @@ void MetersPanel::setupGui(){
     component->setLabelMargin(10.0);
     components.push_back(component);
     
-    gMaxCentroid = new ofxDatGuiTextInput("MAX CENTROID", "#centroid#");
+    gMaxCentroid = new ofxDatGuiTextInput("MAX CENTROID",
+                                          ofToString(channelAnalyzers[0]->getMaxEstimatedValue(CENTROID)));
     component = gMaxCentroid;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
@@ -273,7 +285,8 @@ void MetersPanel::setupGui(){
     component->setLabelMargin(10.0);
     components.push_back(component);
     
-    gMaxSpecComp = new ofxDatGuiTextInput("MAX SPEC-COMP", "#sp-cmp#");
+    gMaxSpecComp = new ofxDatGuiTextInput("MAX SPEC-COMP",
+                                          ofToString(channelAnalyzers[0]->getMaxEstimatedValue(SPECTRAL_COMPLEXITY)));
     component = gMaxSpecComp;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
@@ -283,7 +296,8 @@ void MetersPanel::setupGui(){
     component->setLabelMargin(10.0);
     components.push_back(component);
     
-    gMaxRollOff = new ofxDatGuiTextInput("MAX ROLL-OFF", "#roll-off#");
+    gMaxRollOff = new ofxDatGuiTextInput("MAX ROLL-OFF",
+                                         ofToString(channelAnalyzers[0]->getMaxEstimatedValue(ROLL_OFF)));
     component = gMaxRollOff;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
@@ -293,7 +307,8 @@ void MetersPanel::setupGui(){
     component->setLabelMargin(10.0);
     components.push_back(component);
     
-    gMaxOddEven = new ofxDatGuiTextInput("MAX ODD-EVEN", "#oddEven#");
+    gMaxOddEven = new ofxDatGuiTextInput("MAX ODD-EVEN",
+                                         ofToString(channelAnalyzers[0]->getMaxEstimatedValue(ODD_TO_EVEN)));
     component = gMaxOddEven;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
@@ -359,6 +374,20 @@ void MetersPanel::adjustGuiSize(int y, int w, int h){
     
 }
 //----------------------------------------------
+bool MetersPanel::getFocused(){
+    if(gMaxFreq->getFocused() ||
+       gMaxHfc->getFocused() ||
+       gMaxCentroid->getFocused()  ||
+       gMaxSpecComp->getFocused()  ||
+       gMaxRollOff->getFocused()  ||
+       gMaxOddEven->getFocused()   )
+    {
+        return true;
+    }else{
+        return false;
+    }
+}
+//----------------------------------------------
 vector<std::map<string, float>>& MetersPanel::getMetersValues(){
     
     //??? valuesForOsc declariation here or in header?
@@ -391,67 +420,54 @@ vector<std::map<string, float>>& MetersPanel::getMetersValues(){
     return valuesForOsc;
 }
 //--------------------------------------------------------------
+void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithm algorithm, float value){
+    
+    for (ofxAudioAnalyzerUnit* anUnit : channelAnalyzers){
+        anUnit->setMaxEstimatedValue(algorithm, value);
+    }
+    
+}
+//--------------------------------------------------------------
 #pragma mark - Gui listeners
 //--------------------------------------------------------------
 
 void MetersPanel::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-    //ofLogVerbose() << "onButtonEvent: " << e.target->getLabel() << "::" << e.enabled ;
-    
-
     if(e.target->getLabel()=="FULL DISPLAY"){
-        
         toggleFullDisplay();
-        
     }
-    
 }
-//--------------------------------------------------------------
-void MetersPanel::onDropdownEvent(ofxDatGuiDropdownEvent e)
-{
-//    //ofLogVerbose() << "onDropdownEvent: " << e.child ;
-//    
-//    switch (e.child) {
-//            
-//        case 0:
-//            currentTrackType = CURVES;
-//            break;
-//        case 1:
-//            currentTrackType = BANGS;
-//            break;
-//        case 2:
-//            currentTrackType = SWITCHES;
-//            break;
-//            
-//        default:
-//            break;
-//    }
-}
+
 //--------------------------------------------------------------
 void MetersPanel::onTextInputEvent(ofxDatGuiTextInputEvent e)
 {
     //cout << "onButtonEvent: " << e.text << endl;
     //cout << "onTextInput: " << e.text << endl;
-    if (e.target->getLabel()=="MAX FREQ"){
-        setAnalyzerMaxEstimatedValue(PITCH_FREQ, std::stof (e.text));
-    }else if (e.target->getLabel()=="MAX HFC"){
-        setAnalyzerMaxEstimatedValue(HFC, std::stof (e.text));
-    }else if (e.target->getLabel()=="MAX CENTROID"){
-        setAnalyzerMaxEstimatedValue(CENTROID, std::stof (e.text));
-    }else if (e.target->getLabel()=="MAX SPEC-COMP"){
-        setAnalyzerMaxEstimatedValue(SPECTRAL_COMPLEXITY, std::stof (e.text));
-    }else if (e.target->getLabel()=="MAX ROLL-OFF"){
-        setAnalyzerMaxEstimatedValue(ROLL_OFF, std::stof (e.text));
-    }else if (e.target->getLabel()=="MAX ODD-EVEN"){
-        setAnalyzerMaxEstimatedValue(ODD_TO_EVEN, std::stof (e.text));
+    float inputValue = 0.0;
+    try{
+        inputValue = std::stof (e.text) ;
+    }
+    catch (const std::invalid_argument& ia) {
+        e.target->setText("ERROR");
+        std::cerr << "Invalid Value: " << ia.what() << '\n';
+        return;
     }
     
-    ofLogVerbose()<<"Set: "<<e.target->getLabel()<<" = " << std::stof (e.text);
+    if (e.target->getLabel()=="MAX FREQ"){
+        setAnalyzerMaxEstimatedValue(PITCH_FREQ, inputValue);
+    }else if (e.target->getLabel()=="MAX HFC"){
+        setAnalyzerMaxEstimatedValue(HFC, inputValue);
+    }else if (e.target->getLabel()=="MAX CENTROID"){
+        setAnalyzerMaxEstimatedValue(CENTROID, inputValue);
+    }else if (e.target->getLabel()=="MAX SPEC-COMP"){
+        setAnalyzerMaxEstimatedValue(SPECTRAL_COMPLEXITY, inputValue);
+    }else if (e.target->getLabel()=="MAX ROLL-OFF"){
+        setAnalyzerMaxEstimatedValue(ROLL_OFF, inputValue);
+    }else if (e.target->getLabel()=="MAX ODD-EVEN"){
+        setAnalyzerMaxEstimatedValue(ODD_TO_EVEN, inputValue);
+    }
+    
+    ofLogVerbose()<<"Max value Set: "<<e.target->getLabel()<<" = " << inputValue;
         
 }
-//--------------------------------------------------------------
-void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithm algorithm, float value){
-    for (ofxAudioAnalyzerUnit* anUnit : channelAnalyzers){
-        anUnit->setMaxEstimatedValue(algorithm, value);
-    }
-}
+

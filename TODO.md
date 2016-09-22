@@ -5,9 +5,8 @@
 
 
 ## VERSIONES FUTURAS
-- Add Markers to Timeline.
 - Mute Channels option.
-- Add setMaxEstimatedValues() for normalizing values to meters. Use peak values?
+- Add offline onsets processing. Display as BPM grid.
     
 
 

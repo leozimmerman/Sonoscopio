@@ -79,7 +79,7 @@ void AnalysisDataSaver::threadedFunction(){
             
             ofxXmlSettings savedSettings;
             
-            cout<<"saving file data"<<endl;
+            //cout<<"saving file data"<<endl;
             //FILE-DATA-----------------
             savedSettings.addTag("FILE-INFO");
             savedSettings.pushTag("FILE-INFO");
@@ -109,9 +109,7 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.pushTag("ANALYZER");
                 
                 //analyze buffer for frame:
-                //TODO: remove all couts
-                
-             
+           
                 if(currentAnalysisMode==SPLIT){
                     frameSoundBuffer = sMainApp->timePanel.audioTrack->getSoundBufferForFrame(frameNum, bufferSize);//multichannel soundbuffer
                 }else if(currentAnalysisMode==MONO){
@@ -189,7 +187,9 @@ void AnalysisDataSaver::threadedFunction(){
         
             
             //save and stop----------------------------------
-            savedSettings.saveFile("analysis_data/analysisData.xml");
+            string fileName = ANALYSIS_DATA_DIR "/analysisData.xml";
+            //savedSettings.saveFile("analysis_data/analysisData.xml");
+            savedSettings.saveFile(fileName);
             unlock();
             stop();
             

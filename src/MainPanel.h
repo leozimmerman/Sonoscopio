@@ -2,11 +2,12 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Panel.h"
+
 #include "ofxDatGui.h"
 #include "ofxXmlSettings.h"
 
-#define MAIN_SETTINGS_DIR "main_settings"
+#include "Directories.h"
+#include "Panel.h"
 
 class MainPanel : public Panel{
 
@@ -38,8 +39,10 @@ class MainPanel : public Panel{
         void loadSettings(string rootDir="");
         void saveSettings(string rootDir="");
     
+        bool getFocused();
     
     private:
+    
         string fileInfoStr;
         string fileName;
         ofTrueTypeFont	verdana;
@@ -49,7 +52,6 @@ class MainPanel : public Panel{
         int bordWidth;
     
         ofColor fileinfoFontCol;
-    
     
         ofxDatGuiSlider* gVolume;
         ofxDatGuiToggle* gSplit;

@@ -4,7 +4,6 @@
 #include "ofMain.h"
 
 #include "ofxAAMeter.h"
-#include "ofxAAMetersNames.h"
 #include "ofxAudioAnalyzerUnit.h"
 
 

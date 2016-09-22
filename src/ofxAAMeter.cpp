@@ -37,7 +37,7 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     
     //Font-Label----------
     verdana  = new ofTrueTypeFont();
-    verdana->load("fonts/verdana.ttf", 10, false, false);
+    verdana->load("gui_assets/fonts/verdana.ttf", 10, false, false);
     verdana->setLineHeight(14.0f);
     verdana->setLetterSpacing(1.037);
     _line_h = verdana->getLineHeight();
@@ -63,7 +63,6 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     onOffToggle->setLabelMargin(0.0);
     onOffToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     onOffToggle->setBackgroundColor(ofColor::black);
-    
     
     smoothSlider = new CustomSlider(MTR_SMOOTHING, 0.0, 1.0, _smoothAmnt);
     smoothSlider->onSliderEvent(this, &ofxAAMeter::onSliderEvent);

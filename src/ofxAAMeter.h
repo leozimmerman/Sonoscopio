@@ -3,7 +3,6 @@
 
 #include "ofMain.h"
 #include "ofxDatGui.h"
-#include "ofxAAMetersNames.h"
 #include "ExtendedDatGuiComponents.h"
 
 enum meterOrientation{
@@ -17,18 +16,40 @@ public:
     bool state;
 };
 
+//-:NAMES
+#define MTR_NAME_POWER "POWER"
+#define MTR_NAME_PITCH_FREQ "FREQ"
+#define MTR_NAME_PITCH_CONF "CONFID"
+#define MTR_NAME_PITCH_SALIENCE "SALIENCE"
+#define MTR_NAME_HFC "HFC"
+#define MTR_NAME_CENTROID "CENTROID"
+#define MTR_NAME_SPEC_COMP "SPEC-COMP"
+#define MTR_NAME_INHARMONICTY "INHARM"
+#define MTR_NAME_DISSONANCE "DISONNANCE"
+#define MTR_NAME_ROLL_OFF "ROLL-OFF"
+#define MTR_NAME_ODD_TO_EVEN "ODD-EVEN"
+#define MTR_NAME_SPECTRUM "SPECTRUM"
+#define MTR_NAME_MEL_BANDS "MEL-BANDS"
+#define MTR_NAME_MFCC "MFCC"
+#define MTR_NAME_HPCP "HPCP"
+#define MTR_NAME_TRISTIMULUS "TRISTIMULUS"
+#define MTR_NAME_ONSETS "ONSETS"
+#define MTR_SMOOTHING "SMTH"
+#define MTR_ON_OFF "ON"
+#define MTR_PEAK "PEAK"
+
 //-:Meters Colors
-//#define COLOR_MAIN_A ofColor::darkSeaGreen
+#define COLOR_MAIN_A ofColor::darkSeaGreen
 #define COLOR_MAIN_B ofColor::darkKhaki
 
 
-#define COLOR_MAIN_A ofColor::turquoise
+//#define COLOR_MAIN_A ofColor::mediumTurquoise
 //#define COLOR_MAIN_B ofColor::lightSalmon
 
 #define COLOR_PEAKS ofColor::crimson
 #define COLOR_SMTH_LABEL ofColor::mediumOrchid
 
-#define COLOR_ONOFF_ON ofColor::chartreuse
+//#define COLOR_ONOFF_ON ofColor::chartreuse
 #define COLOR_ONOFF_OFF ofColor::dimGray
 
 #define COLOR_RECT_METER ofColor::white
@@ -51,7 +72,6 @@ public:
     virtual void drawMeter();
     virtual void drawValueDisplay();
     
-    //void resetMaxValue(){_maxValueRegistered = 0.0;}
     void resetPeak();
     
     string getName(){return _name;}
@@ -87,14 +107,14 @@ public:
 
     ofRectangle getDrawRect(){return _drawRect;}
     
-    CustomSlider * smoothSlider;
-    OnOffToggle* onOffToggle;
-    PeakMeterButton* peakButton;
-    
     virtual void onSliderEvent(ofxDatGuiSliderEvent e);
     virtual void onButtonEvent(ofxDatGuiButtonEvent e);
     
     static ofEvent<OnOffEventData> onOffEventGlobal;//this is a shared event for all the instances of this class, so any instance of this class will broadcast to the same event,
+    
+    CustomSlider * smoothSlider;
+    OnOffToggle* onOffToggle;
+    PeakMeterButton* peakButton;
     
     
 protected:
@@ -106,12 +126,10 @@ protected:
     
     ofRectangle _drawRect;
     
-
     ofColor _mainColor;
     ofColor _backgroundColor;
     
     ofTrueTypeFont*	verdana;
-    
     
     meterOrientation _meterOrient;
     bool _bDrawFullDisplay;
@@ -121,8 +139,6 @@ protected:
     
     float   _line_h;
     int     _label_x;
-    
-   
     
 private:
     

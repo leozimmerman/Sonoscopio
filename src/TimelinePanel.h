@@ -2,17 +2,17 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Panel.h"
+
 
 #include "ofxTimeline.h"
 #include "ofxTLAudioTrack.h"
-
 #include "ofxDatGui.h"
+
+#include "Directories.h"
+#include "Panel.h"
 
 #define PAGE_AUDIO_NAME "PageAudio"
 #define PAGE_TRACKS_NAME "PageTracks"
-
-#define TIMELINE_SETTINGS_DIR "timeline_settings"
 
 #define TL_GUI_COMP_HEIGHT 26
 
@@ -45,16 +45,26 @@ public:
     void resize(int y, int w, int h);
     void resizeHeight(int tl_h);
     
+    void addMarker();
+    void addMarker(float millis);
+    void clearMarkers();
+    
     void openAudioFile(string filename);
     string getFileInfo();
     
     void startStopPlaying();
+    
+    bool getIfIsDragging(){return _footerIsDragging;}
+    
+    void checkIfHeightChanged();
+    void checkIfWaveformPreviewChanged();
     
     void addTrack(string name, trackType type);
     void removeTrack(string name);
     void toggleShowTracks();
     void adjustTracksHeight();
     void toggleEnableDisableFocusedTrack();
+    void expandFocusedTrack();
     
     std::map<string, float> getTracksValues();
 
@@ -65,7 +75,7 @@ public:
     
     ofEvent<int> heightResizedEvent;
     
-
+    bool getFocused(){return gTrackName->getFocused();}
     
     
 private:
@@ -83,7 +93,13 @@ private:
     
     ofColor bordCol;
     int bordWidth;
+    
+    bool _footerIsDragging;
+    
+    vector<float> _markers;
+    
     vector<ofxDatGuiComponent*> components;
+    ofxDatGuiTextInput* gTrackName;
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
     void onDropdownEvent(ofxDatGuiDropdownEvent e);

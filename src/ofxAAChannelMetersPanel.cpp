@@ -382,8 +382,11 @@ void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
     }else if(data.name == MTR_NAME_ONSETS){
         audioAnalyzer->setActive(ONSETS, data.state);
     }else if(data.name == MTR_NAME_MEL_BANDS){
-        audioAnalyzer->setActive(MEL_BANDS, data.state);
+        //audioAnalyzer->setActive(MEL_BANDS, data.state);
+        audioAnalyzer->setActive(MFCC, data.state);//turns on-off mfcc and mel-bands together
+         mMfcc->setEnabled(data.state);//if MelBands are off, Mfcc must be off too.
     }else if (data.name == MTR_NAME_MFCC){
+        //-This toggle is hidden
         audioAnalyzer->setActive(MFCC, data.state);
     }else if(data.name == MTR_NAME_HPCP){
         audioAnalyzer->setActive(HPCP, data.state);
@@ -479,17 +482,20 @@ void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     mSpectrum->setSmoothAmnt(xml.getValue("PANEL:SPECTRUM:SMOOTH", 0.0));
     state = xml.getValue("PANEL:SPECTRUM:STATE", 0) > 0;
     mSpectrum->setEnabled(state);
-    //spectrm cant be turned off
+    //spectrm cant be turned off, no audioAnalyzer->setActive
     
+    //-MelBands and Mfcc must have the same state
     mMelBands->setSmoothAmnt(xml.getValue("PANEL:MELBANDS:SMOOTH", 0.0));
     state = xml.getValue("PANEL:MELBANDS:STATE", 0) > 0;
     mMelBands->setEnabled(state);
-    audioAnalyzer->setActive(MEL_BANDS, state);//linked to mfcc
+    ///audioAnalyzer->setActive(MEL_BANDS, state);
     
     mMfcc->setSmoothAmnt(xml.getValue("PANEL:MFCC:SMOOTH", 0.0));
     state = xml.getValue("PANEL:MFCC:STATE", 0) > 0;
     mMfcc->setEnabled(state);
-    audioAnalyzer->setActive(MFCC, state);//linked to melbands
+    
+    audioAnalyzer->setActive(MFCC, state);//also turn on-off melBands
+    //--
     
     mHpcp->setSmoothAmnt(xml.getValue("PANEL:HPCP:SMOOTH", 0.0));
     state = xml.getValue("PANEL:HPCP:STATE", 0) > 0;

@@ -31,12 +31,9 @@ void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
 
     //fonts for text display
     ofTrueTypeFont::setGlobalDpi(72);
-    verdana.load("fonts/verdana.ttf", 12, true, true);
+    verdana.load("gui_assets/fonts/verdana.ttf", 12, true, true);
     verdana.setLineHeight(13.0f);
     verdana.setLetterSpacing(1.037);
-    
-    
-    
     
     fileInfoStr = "non file loaded";
     
@@ -135,7 +132,7 @@ void MainPanel::loadSettings(string rootDir){
     gPort->setText(text);
     mMainAppPtr->setOscSenderPort( std::stoi(text) );
     //-----------
-    state = xml.getValue("PANEL:SHOW-BPM", 0) > 0;
+    state = xml.getValue("PANEL:BPM-GRID", 0) > 0;
     gShowBpm->setEnabled(state);
     mMainAppPtr->timePanel.timeline.setShowBPMGrid(state);
     //-----------
@@ -171,7 +168,7 @@ void MainPanel::saveSettings(string rootDir){
     savedSettings.addValue("SEND-OSC", gSendOsc->getEnabled());
     savedSettings.addValue("HOST", gHost->getText());
     savedSettings.addValue("PORT", gPort->getText());
-    savedSettings.addValue("SHOW-BPM", gShowBpm->getEnabled());
+    savedSettings.addValue("BPM-GRID", gShowBpm->getEnabled());
     savedSettings.addValue("BPM", gBpm->getText());
     savedSettings.addValue("SNAP-BPM", gSnapBpm->getEnabled());
     savedSettings.addValue("FRAMEBASED", gFramebased->getEnabled());
@@ -371,8 +368,34 @@ void MainPanel::setupGui(){
     components.push_back(component);
     
     //4thCol---------
-    gShowBpm = new ofxDatGuiToggle("SHOW BPM GRID", false);
+    component = new ofxDatGuiButton("ADD MARKER");
+    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    components.push_back(component);
+    
+    component = new ofxDatGuiButton("CLEAR MARKERS");
+    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    components.push_back(component);
+    
+    gShowBpm = new ofxDatGuiToggle("BPM GRID", false);
     component = gShowBpm;
+    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    component->setLabelMargin(10);
+    component->onButtonEvent(this, &MainPanel::onButtonEvent);
+    component->setBorder(bordCol, bordWidth);
+    component->setBorderVisible(TRUE);
+    component->setStripeVisible(false);
+    components.push_back(component);
+    
+    gSnapBpm = new ofxDatGuiToggle("SNAP", false);
+    component = gSnapBpm;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setBorder(bordCol, bordWidth);
@@ -390,14 +413,7 @@ void MainPanel::setupGui(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    gSnapBpm = new ofxDatGuiToggle("SNAP", false);
-    component = gSnapBpm;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
+
     
     
     component = new ofxDatGuiButton("FULL SCREEN");
@@ -567,57 +583,82 @@ void MainPanel::adjustGui(int w, int h){
     
     
     //4thCol---------
-    //SHOW BPM
+    //ADD MARKER
     component = components[14];
     component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*0);
-    component->setWidth(guiCompWidth, 0.9);
+    component->setWidth(guiCompWidth/2, 0.9);
+    component->setHeight(guiCompHeight);
+    
+    //CLEAR MARKER
+    component = components[15];
+    component->setPosition(_x + guiCompWidth * 3.5, _y + guiCompHeight*0);
+    component->setWidth(guiCompWidth/2, 0.9);
+    component->setHeight(guiCompHeight);
+    
+    //BPM GRID
+    component = components[16];
+    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*1);
+    component->setWidth(guiCompWidth/2, 0.9);
+    component->setHeight(guiCompHeight);
+    
+    //SNAP TO BPM
+    component = components[17];
+    component->setPosition(_x + guiCompWidth * 3.5, _y + guiCompHeight * 1);
+    component->setWidth(guiCompWidth/2, 0.9);
     component->setHeight(guiCompHeight);
 
     
     //BPM
-    component = components[15];
-    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight * 1);
+    component = components[18];
+    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight * 2);
     component->setWidth(guiCompWidth, 0.65);
     component->setHeight(guiCompHeight);
   
-    //SNAP TO BPM
-    component = components[16];
-    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight * 2);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
     
     //FULLSCREEN
-    component = components[17];
+    component = components[19];
     component->setPosition(_x + guiCompWidth * 3, _y + + guiCompHeight * 3);
     component->setWidth(guiCompWidth, 0.9);
     component->setHeight(guiCompHeight);
     
     //5th---------
     //SEND OSC
-    component = components[18];
+    component = components[20];
     component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight * 0);
     component->setWidth(guiCompWidth, 0.9);
     component->setHeight(guiCompHeight);
     
     //HOST
-    component = components[19];
+    component = components[21];
     component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight * 1);
     component->setWidth(guiCompWidth, 0.5);
     component->setHeight(guiCompHeight);
     
     //PORT
-    component = components[20];
+    component = components[22];
     component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight * 2);
     component->setWidth(guiCompWidth, 0.5);
     component->setHeight(guiCompHeight);
     
     //SAVE ANALYSIS
-    component = components[21];
+    component = components[23];
     component->setPosition(_x + guiCompWidth *4, _y + guiCompHeight * 3);
     component->setWidth(guiCompWidth, 0.9);
     component->setHeight(guiCompHeight);
     
 
+}
+//-------------------------------------------------
+bool MainPanel::getFocused(){
+    if(gHost->getFocused() ||
+       gPort->getFocused() ||
+       gBpm->getFocused()  ||
+       gFps->getFocused()   )
+    {
+        return true;
+    }else{
+        return false;
+    }
 }
 //-------------------------------------------------
 #pragma mark - Listeners
@@ -673,7 +714,7 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
         
         mMainAppPtr->setIsSendingOsc(e.enabled);
         
-    }else if(e.target->getLabel()== "SHOW BPM GRID"){
+    }else if(e.target->getLabel()== "BPM GRID"){
         
         mMainAppPtr->timePanel.timeline.setShowBPMGrid(e.enabled);
     
@@ -691,6 +732,18 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
         ofToggleFullscreen();
         
     }
+    else if(e.target->getLabel()== "ADD MARKER"){
+        
+        mMainAppPtr->timePanel.addMarker();
+        
+    }
+    else if(e.target->getLabel()== "CLEAR MARKERS"){
+        
+        mMainAppPtr->timePanel.clearMarkers();
+        
+    }
+
+    
     
   
 }
@@ -702,21 +755,33 @@ void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
     //cout << "onButtonEvent: " << e.text << endl;
     //cout << "onTextInput: " << e.text << endl;
     if (e.target->getLabel()=="BPM"){
-        
-        mMainAppPtr->timePanel.timeline.setNewBPM( std::stof (e.text) );
-        
+        try{
+            mMainAppPtr->timePanel.timeline.setNewBPM( std::stof (e.text) );
+        }
+        catch (const std::invalid_argument& ia) {
+            e.target->setText("ERROR");
+            std::cerr << "Invalid BPM: " << ia.what() << '\n';
+        }
     }else if (e.target->getLabel()=="HOST"){
         
         mMainAppPtr->setOscSenderHost(e.text);
         
     }else if (e.target->getLabel()=="PORT"){
-        
-        mMainAppPtr->setOscSenderPort( std::stoi(e.text) );
-        
+        try{
+            mMainAppPtr->setOscSenderPort( std::stoi(e.text) );
+        }
+        catch (const std::invalid_argument& ia) {
+            e.target->setText("ERROR");
+            std::cerr << "Invalid PORT: " << ia.what() << '\n';
+        }
     }else if (e.target->getLabel()=="SET FPS"){
-        
-        mMainAppPtr->setFrameRate( std::stoi(e.text) );
-        
+        try{
+            mMainAppPtr->setFrameRate( std::stoi(e.text) );
+        }
+        catch (const std::invalid_argument& ia) {
+            e.target->setText("ERROR");
+            std::cerr << "Invalid FPS: " << ia.what() << '\n';
+        }
     }
     
 }
@@ -724,10 +789,8 @@ void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
 void MainPanel::onSliderEvent(ofxDatGuiSliderEvent e){
     //cout << "onSliderEvent: " << e.value << "::" << e.scale << endl;
     if (e.target->getLabel()=="VOLUME"){
-    
         if (mMainAppPtr->timePanel.audioTrack != NULL)
             mMainAppPtr->timePanel.audioTrack->setVolume(e.value);
-    
     }
 }
 

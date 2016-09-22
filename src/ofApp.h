@@ -78,7 +78,7 @@ class ofApp : public ofBaseApp{
     
     void openProject(string projectDir);
     
-    void saveAnalysisDataToFile();
+    //void saveAnalysisDataToFile();
     
     void drawSavingAnalysisSign();
 

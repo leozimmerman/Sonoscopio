@@ -4,6 +4,8 @@
 #include "ofxXmlSettings.h"
 #include "ofThread.h"
 
+#include "Directories.h"
+
 class AnalysisDataSaver: public ofThread{
 
 public:

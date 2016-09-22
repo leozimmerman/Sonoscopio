@@ -1,17 +1,21 @@
 
 //**********************************************************************
-//TODO: Remove Exit with Esc
-//TODO: make LOAD Settings create dinamically the tracks that are missing
+
+//-: MAIN PANEL:
+//FIXME: BMP grid not working?
+
+//-: TIMELINE PANEL:
 
 
-//TODO: Sacar ofxAAMetersNames.h, innecesario?? ponele Defines.h o Constants.h
+//-: METERS PANEL:
 
-//FIXME: check inharmonicity - when loading settings stays in value=1
-//FIXME: init meters values - en split mode - tira cualquier cosa
+
+//-: GRAL:
 //FIXME: avoid reseting engine when playing&analyzing ????
-//FIXME: timepanel: recomputing audioPreview issue
-//FIXME: MFCC load settings turn off!
-//FIXME: En ATLAS split channel 2 hay un bug con el confidence
+
+
+
+
 //**********************************************************************
 
 #include "ofApp.h"
@@ -83,9 +87,10 @@ void ofApp::setup(){
     //----------------------------
     dataSaver.setup(ofGetAppPtr());
     
-    verdana.load("fonts/verdana.ttf", 25, false, false);
+    verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
     
-    
+    //adjust timePanel Height
+    timePanel.checkIfHeightChanged();
 }
 
 //--------------------------------------------------------------
@@ -126,7 +131,7 @@ void ofApp::update(){
     TS_START("PANELS-UPDATE");
     mainPanel.update();
     timePanel.update();
-    metersPanel.update();
+    if(timePanel.getIfIsDragging() == false) metersPanel.update();
     TS_STOP("PANELS-UPDATE");
     
     //send OSC-----------------------
@@ -159,8 +164,6 @@ void ofApp::draw(){
         drawSavingAnalysisSign();
     }
     
-    
-    
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
@@ -173,6 +176,12 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
+    //---------------------------
+    //If any dat gui text input is in focus return
+    if(mainPanel.getFocused() || timePanel.getFocused() || metersPanel.getFocused()){
+        return;
+    }
+    //---------------------------
     /*
      * 'e' expands focused track
      * 'd' enables/disables focused track
@@ -193,15 +202,22 @@ void ofApp::keyPressed(int key){
             else TIME_SAMPLE_ENABLE();
             break;
         
-        case 'g':
-            dataSaver.start();
-            break;
+//        case 'g':
+//            dataSaver.start();
+//            break;
+//            
+//        case 'h':
+//            dataSaver.stop();
+//            break;
             
-        case 'h':
-            dataSaver.stop();
-            break;
+//        case 't':
+//            timePanel.addMarker();
+//            break;
+//            
+//        case 'y':
+//            timePanel.clearMarkers();
+//            break;
         
-            ///TEST
         case 'f':
             ofToggleFullscreen();
             break;
@@ -209,10 +225,6 @@ void ofApp::keyPressed(int key){
         default:
             break;
     }
-    
-   
-    
-    
     
     
     
@@ -422,7 +434,7 @@ void ofApp::openProject(string projectDir ){
     //-------------------------------------------------------
     
     openAudioFile(audioFileName);
-    
+    //???
    /// mainPanel.loadSettings(_projectDir);
     timePanel.loadSettings(_projectDir);
    ///  metersPanel.loadSettings(_projectDir);
@@ -457,104 +469,7 @@ void ofApp::loadSettings(){
 }
 //--------------------------------------------------------------
 #pragma mark - Save Analysis Data
-//--------------------------------------------------------------
-void ofApp::saveAnalysisDataToFile(){
-    
-    ///TODO: borrar esta funcion
-   
-    //------------------------------------------------------
-    
-    ofxXmlSettings savedSettings;
-    
-    //??? hacen falta nuevas clases. por que no usar los del main app?
-    
-    ofSoundBuffer frameSoundBuffer;
-    ofxAudioAnalyzer offlineAnalyzer;
-    MetersPanel offlineMetersPanel;
-    
-   
-    int framesSize = 3000;
-    savedSettings.addTag("FILE-DATA");
-    savedSettings.pushTag("FILE-DATA");
-    
-    for(int frameNum=0; frameNum<framesSize; frameNum++){
-        
-        savedSettings.addTag("FRAME");
-        savedSettings.pushTag("FRAME");
-        
-        //Analyze buffer for Frame -----------------------
-        if(_currentAnalysisMode==SPLIT){
-            frameSoundBuffer = timePanel.audioTrack->getSoundBufferForFrame(frameNum, _bufferSize);//multichannel soundbuffer
-        }else if(_currentAnalysisMode==MONO){
-            frameSoundBuffer = timePanel.audioTrack->getSoundBufferMonoForFrame(frameNum, _bufferSize);//mono soundbuffer
-        }
-        
-        offlineAnalyzer.analyze(frameSoundBuffer);
-        
-        //Update metersPanel values-------------------------
-        offlineMetersPanel.update();
-        
-        //Get Analyzer data--------------------------------
-        savedSettings.addTag("ANALYZER");
-        savedSettings.pushTag("ANALYZER");
 
-        vector<std::map<string, float>> metersValues = metersPanel.getMetersValues();
-        for(int i=0; i<metersValues.size(); i++){
-            
-            string channelTag = "CHANNEL-" + ofToString(i);
-            
-            savedSettings.addTag(channelTag);
-            savedSettings.pushTag(channelTag);
-            
-            float power         = metersValues[i].at(MTR_NAME_POWER);
-            float pitchfreq     = metersValues[i].at(MTR_NAME_PITCH_FREQ);
-            float pitchConf     = metersValues[i].at(MTR_NAME_PITCH_CONF);
-            float pitchSalience = metersValues[i].at(MTR_NAME_PITCH_SALIENCE);
-            float hfc           = metersValues[i].at(MTR_NAME_HFC);
-            float centroid      = metersValues[i].at(MTR_NAME_CENTROID);
-            float specComp      = metersValues[i].at(MTR_NAME_SPEC_COMP);
-            float inharmonicity = metersValues[i].at(MTR_NAME_INHARMONICTY);
-            int onset           = metersValues[i].at(MTR_NAME_ONSETS);
-            
-            savedSettings.addValue("POWER", power);
-            savedSettings.addValue("PITCHFREQ", pitchfreq);
-            savedSettings.addValue("PITCHCONF", pitchConf);
-            savedSettings.addValue("SALIENCE", pitchSalience);
-            savedSettings.addValue("HFC", hfc);
-            savedSettings.addValue("CENTROID", centroid);
-            savedSettings.addValue("SPECCOMP", specComp);
-            savedSettings.addValue("INHARM", inharmonicity);
-            savedSettings.addValue("ONSET", onset);
-            
-            savedSettings.popTag();
-            
-        }
-        
-        savedSettings.popTag();//pop from ANALYZER back to FRAME
-        
-        savedSettings.addTag("TIMELINE");
-        savedSettings.pushTag("TIMELINE");
-//        //To add later----------------------------------------
-//        //timelineData
-//        timePanel.timeline.setCurrentFrame(frameNum);
-//        std::map<string, float> timelineValues = timePanel.getTracksValues();
-//        
-//        for (auto& kv : timelineValues){
-//            //cout<<kv.first<<" -- "<<kv.second<<endl;
-//            string key = kv.first; //"TL-(trackName)"
-//            float floatValue = kv.second;//0.37
-//        }
-        
-        savedSettings.popTag();//pop from TIMELINE back to FRAME
-        
-        savedSettings.popTag();//pop from FRAME back to FILE-DATA
-        
-    }
-    
-    savedSettings.saveFile("AnalysisData.xml");
-
-    
-}
 //-------------------------------------------------------------
 void ofApp::drawSavingAnalysisSign(){
     ofPushStyle();
@@ -581,17 +496,28 @@ void ofApp::drawSavingAnalysisSign(){
 //------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
     
-    ofLogVerbose()<<"Window resized: "<< w <<"x"<< h;
+    ofLogVerbose()<<"**** Window resized: "<< w <<"x"<< h;
     
     int mainH = MAIN_PANEL_HEIGHT * h;
     int timeH = TIME_PANEL_HEIGHT * h;
     int metersH = METER_PANEL_HEIGHT * h;
     
     mainPanel.resize(w, mainH);
-    timePanel.resize(mainH, w, timeH);
     metersPanel.resize(mainH+timeH, w, metersH);
+    timePanel.resize(mainH, w, timeH);
+    
 }
 //--------------------------------------------------------------
+void ofApp::mouseReleased(int x, int y, int button){
+    //for testing...
+    //cout<<"Mouse Released: "<<x<<"-"<<y<<"-"<<button<<endl;
+    
+    timePanel.checkIfHeightChanged();
+    timePanel.checkIfWaveformPreviewChanged();
+}
+//--------------------------------------------------------------
+#pragma mark - OF Not USed
+//-----------------------------------------------------------
 void ofApp::keyReleased(int key){
 }
 //--------------------------------------------------------------
@@ -608,12 +534,6 @@ void ofApp::mouseDragged(int x, int y, int button){
 void ofApp::mousePressed(int x, int y, int button){
 
 }
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
 
 
 //--------------------------------------------------------------

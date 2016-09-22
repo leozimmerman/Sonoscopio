@@ -10,6 +10,17 @@ ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h) :  ofxAAMe
     
     updateComponentsPositions();
     updateComponentsWidth();
+    
+    
+    //spectrum cant be turned off
+    //mfcc cant work if melBands is turn off
+    if(_name == MTR_NAME_SPECTRUM ||
+       _name == MTR_NAME_MFCC){
+        
+        onOffToggle->setVisible(false);
+        onOffToggle->ofxDatGuiComponent::setEnabled(false);
+        
+    }
 }
 
 //-------------------------------------------------------
@@ -29,13 +40,8 @@ void ofxAABinMeter::draw(){
     if(_enabled) drawMeter();
     
     if(_bDrawFullDisplay){
-        //spectrum cant be turned off
-         //mfcc cant work if melBands is turn off
-        if(getName() != MTR_NAME_SPECTRUM &&
-           getName() != MTR_NAME_MFCC){
-            onOffToggle->drawTransparent();
-        }
-        
+       
+        onOffToggle->drawTransparent();
         if(_enabled) smoothSlider->drawSimplified();
     }
     
@@ -104,24 +110,26 @@ void ofxAABinMeter::setPosAndSize(int x, int y, int w, int h){
 //-------------------------------------------------------
 void ofxAABinMeter::updateComponentsPositions(){
    
-    smoothSlider->setPosition(_x + _w - _w * 0.3, _y);
+    smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
+    onOffToggle->setPosition(_x, _y);
     
-    if(_name != MTR_NAME_SPECTRUM &&
-       _name != MTR_NAME_MFCC){
-        
-        onOffToggle->setPosition(_x, _y);
-        
-    }else{
-        onOffToggle->setPosition(_x + _w *10 , _y + _h *10);//-->OUT OF SCREEN! Spectrum and MFCC, cant be turned off
-    }
-
 }
 //-------------------------------------------------------
 void ofxAABinMeter::updateComponentsWidth(){
     
-    smoothSlider->setWidth( _w * 0.3, 0.0);
-    onOffToggle->setWidth( _w*0.25, 0.0);
-
+    //-:LABEL
+    //constraing width
+    float label_w = verdana->stringWidth(_name);
+    float widthForLabel = _w * 0.95;
+    if(label_w >= widthForLabel){
+        float space_ratio = 1 / (label_w / widthForLabel);
+        verdana->setLetterSpacing(space_ratio);
+    }
+    //align center
+    label_w = verdana->stringWidth(_name);
+    _label_x =  _w * .5 - label_w *.5;
     
+    smoothSlider->setWidth(_w * 0.25 , 0.0);
+    onOffToggle->setWidth (_w * 0.25, 0.0);
 
 }

@@ -6,13 +6,12 @@
 #include "ofxAAMeter.h"
 #include "ofxAABinMeter.h"
 #include "ofxAAOnsetMeter.h"
-#include "ofxAAMetersNames.h"
+
 
 #include "ofxAudioAnalyzerUnit.h"
 #include "ofxXmlSettings.h"
 
 #define PITCH_MIN_VALUE_FOR_METER 130.0 //hz
-//#define PITCH_MAX_VALUE_FOR_METER 2093.0 //hz
 #define VERT_METERS_WIDTH 0.8//Width percentage for Vertical Meters
 
 #define VERT_METERS_NUM 12
@@ -91,10 +90,6 @@ protected:
     ofxAABinMeter * mTristimulus;
     
     bool _bDrawFullDisplay;
-    
-
-
-    
     
 
 };

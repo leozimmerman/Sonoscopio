@@ -7,11 +7,9 @@
 
 #include"ofxAudioAnalyzerUnit.h"
 
+#include "Directories.h"
 #include "Panel.h"
 #include "ofxAAChannelMetersPanel.h"
-
-
-#define METERS_SETTINGS_DIR "meters_settings"
 
 #define MT_GUI_COMP_HEIGHT 26
 
@@ -41,6 +39,7 @@ public:
     void setupGui();
     void adjustGuiSize(int y, int w, int h);
     
+    bool getFocused();
 
 private:
     
@@ -62,15 +61,17 @@ private:
     int bordWidth;
     int _guiCompHeight;
     vector<ofxDatGuiComponent*> components;
-    void onButtonEvent(ofxDatGuiButtonEvent e);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    void onDropdownEvent(ofxDatGuiDropdownEvent e);
     ofxDatGuiTextInput* gMaxFreq;
     ofxDatGuiTextInput* gMaxHfc;
     ofxDatGuiTextInput* gMaxCentroid;
     ofxDatGuiTextInput* gMaxSpecComp;
     ofxDatGuiTextInput* gMaxRollOff;
     ofxDatGuiTextInput* gMaxOddEven;
+    
+    void onButtonEvent(ofxDatGuiButtonEvent e);
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
+
+    
     
     
     

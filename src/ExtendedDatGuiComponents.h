@@ -18,7 +18,6 @@ public:
     OnOffToggle(string label, bool enabled) : ofxDatGuiToggle(label, enabled){
         
         colorOn = ofColor::white;
-        
         colorOff = ofColor::gray;
     
     };
