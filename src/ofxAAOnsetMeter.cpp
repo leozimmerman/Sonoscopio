@@ -2,7 +2,7 @@
 #include "ofxAAOnsetMeter.h"
 
 //------------------------------------
-ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUnit* analyzerPtr) : ofxAAMeter(MTR_NAME_ONSETS, x, y, w, h){
+ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAudioAnalyzerUnit* analyzerPtr) : ofxAAMeter(MTR_NAME_ONSETS, x, y, w, h, panelId){
 
     //audioAnalyzer = analyzerPtr;
     onsets = analyzerPtr->getOnsetsAlgorithmPtr();

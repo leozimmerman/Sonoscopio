@@ -10,7 +10,7 @@ class ofxAABinMeter : public ofxAAMeter{
 
  public:
 
-    ofxAABinMeter(string name, int x, int y, int w, int h);
+    ofxAABinMeter(string name, int x, int y, int w, int h, int panelId);
     
     void draw();
     

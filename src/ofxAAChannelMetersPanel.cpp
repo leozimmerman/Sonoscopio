@@ -4,25 +4,28 @@
 //------------------------------------------------
 #pragma mark - Core funcs
 //------------------------------------------------
-void ofxAAChannelMetersPanel::setup(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr){
-    
+ofxAAChannelMetersPanel::ofxAAChannelMetersPanel(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr){
+
     _x = x;
     _y = y;
     _w = width;
     _h = height;
     
+    _panelId = panelId;
+
     setBackgroundColor(ofColor::black);
     audioAnalyzer = aaPtr;
-    
-    _mainColor = ofColor::white;
-    
-    _bDrawFullDisplay = TRUE;
-    
-    setupMeters();
-    
-    ofAddListener(ofxAAMeter::onOffEventGlobal, this, &ofxAAChannelMetersPanel::onMeterStateChanged);
 
+    _mainColor = ofColor::white;
+
+    _bDrawFullDisplay = TRUE;
+
+    setupMeters();
+
+    ofAddListener(ofxAAMeter::onOffEventGlobal, this, &ofxAAChannelMetersPanel::onMeterStateChanged);
+    
 }
+
 //------------------------------------------------
 void ofxAAChannelMetersPanel::update(){
     
@@ -70,8 +73,6 @@ void ofxAAChannelMetersPanel::update(){
 
     mOnsets->setValue(audioAnalyzer->getOnsetValue());
     
-    
-    
     //set values to std::for osc sending
     
 }
@@ -81,9 +82,8 @@ void ofxAAChannelMetersPanel::draw(){
     //background
     drawBackground();
 
-    
     for(int i=0; i<meters.size(); i++){
-           meters[i]->draw();
+        meters[i]->draw();
     }
 
 }
@@ -114,6 +114,8 @@ void ofxAAChannelMetersPanel::exit(){
     
     meters.clear();
     
+    ofRemoveListener(ofxAAMeter::onOffEventGlobal, this, &ofxAAChannelMetersPanel::onMeterStateChanged);
+    
     ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
 }
 
@@ -137,83 +139,83 @@ void ofxAAChannelMetersPanel::setupMeters(){
     //-------------------------------------------
     //Vertical Meters
     int x_pos = 0;
-    mPower = new ofxAAMeter(MTR_NAME_POWER, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mPower = new ofxAAMeter(MTR_NAME_POWER, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mPower);
     
     x_pos += VMeterWidth;
-    mPitchFreq = new ofxAAMeter(MTR_NAME_PITCH_FREQ, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mPitchFreq = new ofxAAMeter(MTR_NAME_PITCH_FREQ, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mPitchFreq);
     
     x_pos += VMeterWidth;
-    mPitchConf = new ofxAAMeter(MTR_NAME_PITCH_CONF, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mPitchConf = new ofxAAMeter(MTR_NAME_PITCH_CONF, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mPitchConf);
     
     x_pos += VMeterWidth;
-    mSalience = new ofxAAMeter(MTR_NAME_PITCH_SALIENCE, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mSalience = new ofxAAMeter(MTR_NAME_PITCH_SALIENCE, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mSalience);
     
     x_pos += VMeterWidth;
-    mHfc = new ofxAAMeter(MTR_NAME_HFC, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mHfc = new ofxAAMeter(MTR_NAME_HFC, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mHfc);
     
     x_pos += VMeterWidth;
-    mCentroid = new ofxAAMeter(MTR_NAME_CENTROID, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mCentroid = new ofxAAMeter(MTR_NAME_CENTROID, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mCentroid);
     
     x_pos += VMeterWidth;
-    mSpecComp = new ofxAAMeter(MTR_NAME_SPEC_COMP, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mSpecComp = new ofxAAMeter(MTR_NAME_SPEC_COMP, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mSpecComp);
     
     x_pos += VMeterWidth;
-    mInharm = new ofxAAMeter(MTR_NAME_INHARMONICTY, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mInharm = new ofxAAMeter(MTR_NAME_INHARMONICTY, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mInharm);
     
     x_pos += VMeterWidth;
-    mDissonance = new ofxAAMeter(MTR_NAME_DISSONANCE, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mDissonance = new ofxAAMeter(MTR_NAME_DISSONANCE, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mDissonance);
     
     x_pos += VMeterWidth;
-    mRollOff = new ofxAAMeter(MTR_NAME_ROLL_OFF, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mRollOff = new ofxAAMeter(MTR_NAME_ROLL_OFF, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mRollOff);
     
     x_pos += VMeterWidth;
-    mOddToEven = new ofxAAMeter(MTR_NAME_ODD_TO_EVEN, _x + x_pos, _y, VMeterWidth, VMeterHeight);
+    mOddToEven = new ofxAAMeter(MTR_NAME_ODD_TO_EVEN, _x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId);
     meters.push_back(mOddToEven);
     
     x_pos += VMeterWidth;
-    mOnsets = new ofxAAOnsetMeter(_x + x_pos, _y, VMeterWidth, VMeterHeight, audioAnalyzer);
+    mOnsets = new ofxAAOnsetMeter(_x + x_pos, _y, VMeterWidth, VMeterHeight, _panelId, audioAnalyzer);
     meters.push_back(mOnsets);
     
     //Horizontal Meters
     x_pos = VMetersWidthTotal;
     int y_pos = 0;
-    mSpectrum = new ofxAABinMeter(MTR_NAME_SPECTRUM, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mSpectrum = new ofxAABinMeter(MTR_NAME_SPECTRUM, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight, _panelId);
     mSpectrum->setBinsNum(audioAnalyzer->getBinsNum(SPECTRUM));
     mSpectrum->setMinEstimatedValue(DB_MIN);
     mSpectrum->setMaxEstimatedValue(DB_MAX);
     meters.push_back(mSpectrum);
     
     y_pos += HMeterHeight;
-    mMelBands = new ofxAABinMeter(MTR_NAME_MEL_BANDS, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mMelBands = new ofxAABinMeter(MTR_NAME_MEL_BANDS, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight, _panelId);
     mMelBands->setBinsNum(audioAnalyzer->getBinsNum(MEL_BANDS));
     mMelBands->setMinEstimatedValue(DB_MIN);
     mMelBands->setMaxEstimatedValue(DB_MAX);
     meters.push_back(mMelBands);
     
     y_pos += HMeterHeight;
-    mMfcc = new ofxAABinMeter(MTR_NAME_MFCC, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mMfcc = new ofxAABinMeter(MTR_NAME_MFCC, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight, _panelId);
     mMfcc->setBinsNum(audioAnalyzer->getBinsNum(MFCC));
     mMfcc->setMinEstimatedValue(0.0);
     mMfcc->setMaxEstimatedValue(MFCC_MAX_ESTIMATED_VALUE);
     meters.push_back(mMfcc);
     
     y_pos += HMeterHeight;
-    mHpcp = new ofxAABinMeter(MTR_NAME_HPCP, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mHpcp = new ofxAABinMeter(MTR_NAME_HPCP, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight, _panelId);
     mHpcp->setBinsNum(audioAnalyzer->getBinsNum(HPCP));
     meters.push_back(mHpcp);
     
     y_pos += HMeterHeight;
-    mTristimulus = new ofxAABinMeter(MTR_NAME_TRISTIMULUS, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight);
+    mTristimulus = new ofxAABinMeter(MTR_NAME_TRISTIMULUS, _x + x_pos, _y + y_pos, HMeterWidth, HMeterHeight, _panelId);
     mTristimulus->setBinsNum(TRISTIMULUS_BANDS_NUM);
     meters.push_back(mTristimulus);
     
@@ -226,7 +228,7 @@ void ofxAAChannelMetersPanel::setMainColor(ofColor col){
     _mainColor = col;
     
     _bckgColor = _mainColor;
-    _bckgColor.setBrightness(40);//darker mainColor
+    _bckgColor.setBrightness(30);//darker mainColor
     
     for (auto m : meters){
         
@@ -357,12 +359,13 @@ void ofxAAChannelMetersPanel::drawBackground(){
 
 }
 //--------------------------------------------------------------
-///listener for all on/off buttons of the channel panel
+///listener for all on/off buttons of all pannels
 void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
     
-    //cout << "panel: "<<data.name << endl;
-    //cout << "panel: "<<data.state << endl;
-
+    if(data.panelId != _panelId) return;
+    
+    //-----------------------
+    
     if(data.name == MTR_NAME_POWER){
         audioAnalyzer->setActive(POWER, data.state);
     }else if(data.name == MTR_NAME_PITCH_FREQ){
@@ -382,9 +385,9 @@ void ofxAAChannelMetersPanel::onMeterStateChanged(OnOffEventData & data){
     }else if(data.name == MTR_NAME_ONSETS){
         audioAnalyzer->setActive(ONSETS, data.state);
     }else if(data.name == MTR_NAME_MEL_BANDS){
+        mMfcc->setEnabled(data.state);//if MelBands are off, Mfcc must be off too.
         //audioAnalyzer->setActive(MEL_BANDS, data.state);
         audioAnalyzer->setActive(MFCC, data.state);//turns on-off mfcc and mel-bands together
-         mMfcc->setEnabled(data.state);//if MelBands are off, Mfcc must be off too.
     }else if (data.name == MTR_NAME_MFCC){
         //-This toggle is hidden
         audioAnalyzer->setActive(MFCC, data.state);
@@ -493,7 +496,6 @@ void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     mMfcc->setSmoothAmnt(xml.getValue("PANEL:MFCC:SMOOTH", 0.0));
     state = xml.getValue("PANEL:MFCC:STATE", 0) > 0;
     mMfcc->setEnabled(state);
-    
     audioAnalyzer->setActive(MFCC, state);//also turn on-off melBands
     //--
     

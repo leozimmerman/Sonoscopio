@@ -151,6 +151,32 @@ void MainPanel::loadSettings(string rootDir){
     text = xml.getValue("PANEL:FRAMERATE", "");
     gFps->setText(text);
     mMainAppPtr->setFrameRate( std::stoi(text) );
+    //-----------
+    text = xml.getValue("PANEL:BUFFER-SIZE", "");
+    int bs = std::stoi(text);
+    switch (bs) {
+        case 256:
+            gBufferSize->select(0);
+            mMainAppPtr->setBufferSize(256);
+            break;
+        case 512:
+            gBufferSize->select(1);
+            mMainAppPtr->setBufferSize(512);
+            break;
+        case 1024:
+            gBufferSize->select(2);
+            mMainAppPtr->setBufferSize(1024);
+            break;
+        case 2048:
+            gBufferSize->select(3);
+            mMainAppPtr->setBufferSize(2048);
+            break;
+            
+        default:
+            break;
+    }
+    
+    //-----------
     
     
 }
@@ -164,6 +190,7 @@ void MainPanel::saveSettings(string rootDir){
     savedSettings.pushTag("PANEL");
     savedSettings.addValue("VOLUME", gVolume->getValue());
     savedSettings.addValue("SPLIT", gSplit->getEnabled());
+    savedSettings.addValue("BUFFER-SIZE", gBufferSize->getSelected()->getName());
     savedSettings.addValue("LOOP", gLoop->getEnabled());
     savedSettings.addValue("SEND-OSC", gSendOsc->getEnabled());
     savedSettings.addValue("HOST", gHost->getText());
@@ -183,6 +210,9 @@ void MainPanel::saveSettings(string rootDir){
 #pragma mark - Filesystem funcs
 //--------------------------------------------------------------
 void MainPanel::openOpenFileDialog(){
+    
+    mMainAppPtr->stop();
+    
     //Open the Open File Dialog
     ofFileDialogResult openFileResult = ofSystemLoadDialog("Select a wav or mp3");
     //Check if the user opened a file
@@ -279,7 +309,7 @@ void MainPanel::setupGui(){
     
     //2ndCol--------
     //SET FRAMERATE
-    gFps = new ofxDatGuiTextInput("SET FPS", "30");
+    gFps = new ofxDatGuiTextInput("SET FPS", ofToString(INIT_FPS));
     component = gFps;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MainPanel::onTextInputEvent);
@@ -315,8 +345,11 @@ void MainPanel::setupGui(){
     component->setStripeVisible(false);
     components.push_back(component);
     
+    
+    
     vector<string> buff_sizes = {"256", "512", "1024", "2048"};
-    component = new ofxDatGuiDropdown("BUFFER SIZE", buff_sizes);
+    gBufferSize = new ofxDatGuiDropdown("BUFFER SIZE", buff_sizes);
+    component = gBufferSize;
     component->onDropdownEvent(this, &MainPanel::onBufferSizeDropdownEvent);
     component->onButtonEvent(this, &MainPanel::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
@@ -700,7 +733,7 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
         
     }else if(e.target->getLabel()=="PLAY / STOP"){
         
-        mMainAppPtr->startStopPlaying();
+        mMainAppPtr->togglePlay();
         
     }else if(e.target->getLabel()=="SET IN"){
         
@@ -724,7 +757,7 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
     
     }else if(e.target->getLabel()== "SAVE ANALYSIS"){
         
-        mMainAppPtr->dataSaver.start();
+        mMainAppPtr->saveAnalysisDataToFile();
         
     }
     else if(e.target->getLabel()== "FULL SCREEN"){

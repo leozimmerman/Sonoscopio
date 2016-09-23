@@ -65,6 +65,7 @@ class MainPanel : public Panel{
         ofxDatGuiTextInput* gBpm;
         ofxDatGuiTextInput* gFps;
         ofxDatGuiFRM* gFpsMonitor;
+        ofxDatGuiDropdown* gBufferSize;
     
         string _panelDir;
     

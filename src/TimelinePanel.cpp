@@ -17,7 +17,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     _w = width;
     _h = height;
     
-    _frameRate = FRAME_RATE;
+    _frameRate = INIT_FPS;
     
     tMainApp = dynamic_cast<ofApp*>(appPtr);
     
@@ -45,7 +45,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
 
-    timeline.addAudioTrack("Audio","audio_files/mix-stereo.wav");//3chans
+    timeline.addAudioTrack("Audio","audio_files/flauta.wav");
     
     //this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
     timeline.setTimecontrolTrack("Audio");
@@ -279,15 +279,6 @@ void TimelinePanel::setFrameRate(int fps){
     timeline.setFrameRate(_frameRate);
 }
 
-//--------------------------------------------------------------
-void TimelinePanel::startStopPlaying(){
-    if(timeline.getIsPlaying()){
-        timeline.stop();
-    }else{
-        timeline.play();
-    }
-    
-}
 //--------------------------------------------------------------
 void TimelinePanel::bangFired(ofxTLBangEventArgs& args){
     //cout << "bang fired!" << args.flag << endl;

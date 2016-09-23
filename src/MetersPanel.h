@@ -34,6 +34,8 @@ public:
     void adjustPosAndHeight(int y, int h);
     
     vector<std::map<string, float>>& getMetersValues();
+    vector<std::map<string, vector<float>>>& getMetersVectorValues();
+    
     bool getIsFullDisplay(){return _bDrawFullDisplay;}
     
     void setupGui();
@@ -55,7 +57,8 @@ private:
     string _panelDir;
     bool _bDrawFullDisplay;
     
-    vector < std::map<string, float> > valuesForOsc;
+    vector < std::map<string, float> > singleValuesForOsc;
+    vector < std::map<string, vector<float> > > vectorValuesForOsc;
     
     ofColor bordCol;
     int bordWidth;

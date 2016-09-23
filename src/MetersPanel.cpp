@@ -37,7 +37,8 @@ void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, 
     for (int i=0; i<panelsNum; i++){
         
         int y_pos = _y + panelHeight*i;
-        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
+        int panelId = i;
+        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
        
         if(i%2) p->setMainColor(panelColor2);
         else p->setMainColor(panelColor1);
@@ -175,7 +176,6 @@ void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     channelPanels.clear();
     
     //--------------------------
-    
     channelAnalyzers = chanAnalyzerPtrs;
     panelsNum = channelAnalyzers.size();
     
@@ -183,7 +183,8 @@ void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     
     for (int i=0; i<panelsNum; i++){
         int y_pos = _y + panelHeight*i;
-        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, channelAnalyzers[i]);
+        int panelId = i;
+        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
         if(i%2) p->setMainColor(panelColor2);
         else p->setMainColor(panelColor1);
         
@@ -390,8 +391,7 @@ bool MetersPanel::getFocused(){
 //----------------------------------------------
 vector<std::map<string, float>>& MetersPanel::getMetersValues(){
     
-    //??? valuesForOsc declariation here or in header?
-    valuesForOsc.clear();
+    singleValuesForOsc.clear();
     
     for (int i=0; i<channelPanels.size(); i++){
         
@@ -399,26 +399,44 @@ vector<std::map<string, float>>& MetersPanel::getMetersValues(){
         
         for(ofxAAMeter* m : channelPanels[i]->meters){
            
-            if( m->getName()==MTR_NAME_MFCC || m->getName()==MTR_NAME_SPECTRUM ||
-               m->getName()==MTR_NAME_HPCP || m->getName()==MTR_NAME_MEL_BANDS){
-                
-                //???send vector<floats> ??? send binMeters values to OSC?
-                
-            }else if (m->getName()==MTR_NAME_ONSETS){
+           if (m->getName()==MTR_NAME_ONSETS){
+               
                 string key =  m->getName();
                 ofxAAOnsetMeter* om = dynamic_cast<ofxAAOnsetMeter*>(m);
                 channelMap[key] = om->getValue();
                 
-            }else{
+            }else if(m->getName()!= MTR_NAME_MFCC && m->getName()!= MTR_NAME_SPECTRUM &&
+                     m->getName()!= MTR_NAME_HPCP && m->getName()!= MTR_NAME_MEL_BANDS &&
+                     m->getName()!= MTR_NAME_TRISTIMULUS){
                 string key = m->getName();
                 channelMap[key]= m->getValue();
             }
             
         }
-        valuesForOsc.push_back(channelMap);
+        singleValuesForOsc.push_back(channelMap);
     }
-    return valuesForOsc;
+    return singleValuesForOsc;
 }
+//--------------------------------------------------------------
+vector<std::map<string, vector<float>>>& MetersPanel::getMetersVectorValues(){
+    
+    vectorValuesForOsc.clear();
+    
+    for (int i=0; i<channelPanels.size(); i++){
+        
+        std::map<string, vector<float>> channelMap;
+        
+        channelMap[MTR_NAME_MEL_BANDS] = channelPanels[i]->getMelBandsValues();
+        channelMap[MTR_NAME_MFCC] = channelPanels[i]->getMfccValues();
+        channelMap[MTR_NAME_HPCP] = channelPanels[i]->getHpcpValues();
+        channelMap[MTR_NAME_TRISTIMULUS] = channelPanels[i]->getTristimulusValues();
+        
+        vectorValuesForOsc.push_back(channelMap);
+    }
+    
+    return vectorValuesForOsc;
+}
+
 //--------------------------------------------------------------
 void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithm algorithm, float value){
     

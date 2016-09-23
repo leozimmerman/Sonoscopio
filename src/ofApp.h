@@ -18,12 +18,11 @@
 
 #include "AnalysisDataSaver.h"
 
-#define FRAME_RATE 30.0
-
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.4
 #define METER_PANEL_HEIGHT 0.45
 
+#define INIT_FPS 30
 
 enum analysisMode{
     MONO,
@@ -49,7 +48,9 @@ class ofApp : public ofBaseApp{
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
     
-    void startStopPlaying();
+    void togglePlay();
+    void stop();
+    void rewind();
     
     void openAudioFile(string filename);
     void onTimelinePanelResize(int & h);
@@ -78,8 +79,7 @@ class ofApp : public ofBaseApp{
     
     void openProject(string projectDir);
     
-    //void saveAnalysisDataToFile();
-    
+    void saveAnalysisDataToFile();
     void drawSavingAnalysisSign();
 
     //panels-----------
@@ -89,16 +89,13 @@ class ofApp : public ofBaseApp{
     
     ofxAudioAnalyzer mainAnalyzer;
     
-    ofSoundBuffer soundBuffer;
-
-    ofxOscSender oscSender;
-    
-    
-    ///threadTest
     AnalysisDataSaver dataSaver;
     
 
 private:
+    
+    ofSoundBuffer soundBuffer;
+    ofxOscSender oscSender;
     
     int _frameRate;
     int _totalFramesNum;
@@ -114,6 +111,7 @@ private:
     bool _bSendOsc;
     string _oscHost;
     int _oscPort;
+    bool _bSendOscVectorValues;
     
     string _projectDir;
     

@@ -52,7 +52,7 @@ public:
     void openAudioFile(string filename);
     string getFileInfo();
     
-    void startStopPlaying();
+    
     
     bool getIfIsDragging(){return _footerIsDragging;}
     

@@ -11,7 +11,7 @@ class ofxAAOnsetMeter : public ofxAAMeter{
     
 public:
     
-    ofxAAOnsetMeter(int x, int y, int w, int h, ofxAudioAnalyzerUnit* analyzerPtr);
+    ofxAAOnsetMeter(int x, int y, int w, int h, int panelId,  ofxAudioAnalyzerUnit* analyzerPtr);
     
     virtual void update();
     virtual void draw();

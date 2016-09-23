@@ -7,7 +7,7 @@ ofEvent<OnOffEventData> ofxAAMeter::onOffEventGlobal = ofEvent<OnOffEventData>()
 //------------------------------------------------
 #pragma mark - Core funcs
 //------------------------------------------------
-ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
+ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h, int panelId){
     
     _name = name;
     
@@ -15,6 +15,7 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h){
     _y = y;
     _w = w;
     _h = h;
+    _panelId = panelId;
     
     _drawRect.set(x, y, w, h);
     
@@ -114,6 +115,7 @@ void ofxAAMeter::draw(){
     //bounds-box
     ofNoFill();
     ofSetColor(_mainColor);
+    
     ofDrawRectangle(_drawRect);
     drawLabel();
     
@@ -311,6 +313,7 @@ void ofxAAMeter::onButtonEvent(ofxDatGuiButtonEvent e){
         OnOffEventData data;
         data.name = _name;
         data.state = e.enabled;
+        data.panelId = _panelId;
         ofNotifyEvent(onOffEventGlobal, data);
         
         _enabled = e.enabled;

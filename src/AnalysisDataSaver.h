@@ -25,6 +25,8 @@ public:
     
     float getPercentage(){return percentage;};
 
+    void setFrameRate(int fps){frameRate = fps;}
+    
 private:
     
     int frameRate;
@@ -34,6 +36,8 @@ private:
     int channelsNum;
     
     float percentage;
+    
+    bool bSaveVectorValues;
 
 
 };

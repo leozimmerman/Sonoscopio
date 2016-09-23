@@ -1,7 +1,7 @@
 
 #include "ofxAABinMeter.h"
 
-ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h) :  ofxAAMeter(name, x,  y,  w,  h){
+ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h, int panelId) :  ofxAAMeter(name, x,  y,  w,  h, panelId){
     
     _meterOrient = HORIZONTAL;
     
@@ -27,9 +27,10 @@ ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h) :  ofxAAMe
 void ofxAABinMeter::draw(){
 
     
-    ofPushStyle();
+   
     
     //bounds-box
+    ofPushStyle();
     ofNoFill();
     ofSetColor(_mainColor);
     ofDrawRectangle(_drawRect);

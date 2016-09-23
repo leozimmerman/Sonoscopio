@@ -14,6 +14,7 @@ class OnOffEventData{
 public:
     string name;
     bool state;
+    int panelId;
 };
 
 //-:NAMES
@@ -39,12 +40,12 @@ public:
 #define MTR_PEAK "PEAK"
 
 //-:Meters Colors
-#define COLOR_MAIN_A ofColor::darkSeaGreen
-#define COLOR_MAIN_B ofColor::darkKhaki
+//#define COLOR_MAIN_A ofColor::darkSeaGreen
+//#define COLOR_MAIN_B ofColor::darkKhaki
 
 
-//#define COLOR_MAIN_A ofColor::mediumTurquoise
-//#define COLOR_MAIN_B ofColor::lightSalmon
+#define COLOR_MAIN_A ofColor::paleTurquoise
+#define COLOR_MAIN_B ofColor::paleGoldenRod
 
 #define COLOR_PEAKS ofColor::crimson
 #define COLOR_SMTH_LABEL ofColor::mediumOrchid
@@ -61,7 +62,7 @@ public:
 class ofxAAMeter{
 public:
     
-    ofxAAMeter(string name, int x, int y, int w, int h);
+    ofxAAMeter(string name, int x, int y, int w, int h, int panelId);
     virtual ~ofxAAMeter();
 
     //void setup();
@@ -123,6 +124,8 @@ protected:
     
     int _x, _y;
     int _w, _h;
+    
+    int _panelId; //for OnOff Event Listeners
     
     ofRectangle _drawRect;
     

@@ -20,11 +20,12 @@
 class ofxAAChannelMetersPanel{
 public:
     
-    ofxAAChannelMetersPanel(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr){
-        setup(x, y, width, height, aaPtr);
-    }
+//    ofxAAChannelMetersPanel(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr){
+//        setup(x, y, width, height, aaPtr);
+//    }
+    ofxAAChannelMetersPanel(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr);
     ~ofxAAChannelMetersPanel(){}
-    virtual void setup(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr);
+    ///virtual void setup(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr);
     virtual void update();
     virtual void draw();
     virtual void exit();
@@ -55,6 +56,13 @@ public:
     void loadSettingsFromFile(string filename);
     void saveSettingsToFile(string filename);
     
+    //for osc and data saving
+    vector<float>& getMelBandsValues(){return mMelBands->getValues();}
+    vector<float>& getMfccValues(){return mMfcc->getValues();}
+    vector<float>& getHpcpValues(){return mHpcp->getValues();}
+    vector<float>& getTristimulusValues(){return mTristimulus->getValues();}
+    
+    
 protected:
     
     ofxAudioAnalyzerUnit* audioAnalyzer;
@@ -63,6 +71,8 @@ protected:
     int _w, _h;
     ofColor _bckgColor;
     ofColor _mainColor;
+    
+    int _panelId;
     
     int VMetersNum, HMetersNum ;
     int HMetersWidthTotal, VMetersWidthTotal;
