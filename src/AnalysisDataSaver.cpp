@@ -11,24 +11,9 @@ void AnalysisDataSaver::setup(ofBaseApp* appPtr){
     
     sMainApp = dynamic_cast<ofApp*>(appPtr);
     
-    frameRate = sMainApp->getFrameRate();
-    totalFramesNum = sMainApp->getTotalFramesNum();
-    
-    sampleRate = sMainApp->getSampleRate();
-    bufferSize = sMainApp->getBufferSize();
-    
-    currentAnalysisMode = sMainApp->getAnalysisMode();
-    
-    if(currentAnalysisMode==SPLIT){
-        channelsNum = sMainApp->getChannelsNum();
-    }
-    else{
-        channelsNum = 1;
-    }
-    
-    percentage = 0.0;
-    
     bSaveVectorValues = TRUE;
+    
+    reset();
     
 }
 //------------------------------------
@@ -39,8 +24,11 @@ void AnalysisDataSaver::reset(){
         return;
     }
     
+    soundfilePath = sMainApp->getSoundfilePath();
+    
     frameRate = sMainApp->getFrameRate();
     totalFramesNum = sMainApp->getTotalFramesNum();
+    durationSecs = sMainApp->getDurationInSeconds();
     
     sampleRate = sMainApp->getSampleRate();
     bufferSize = sMainApp->getBufferSize();
@@ -58,11 +46,19 @@ void AnalysisDataSaver::reset(){
     percentage = 0.0;
 }
 //------------------------------------
+void AnalysisDataSaver::updateFrameRate(){
+    
+    frameRate       = sMainApp->getFrameRate();
+    totalFramesNum  = sMainApp->getTotalFramesNum();
+    
+}
+//------------------------------------
 void AnalysisDataSaver::start(){
     // Mutex blocking is set to true by default
     // It is rare that one would want to use startThread(false).
     startThread();
     ofLogVerbose("AnalysisDataSaver: ")<<"thread started.";
+ 
 }
 //------------------------------------
 void AnalysisDataSaver::stop(){
@@ -87,8 +83,10 @@ void AnalysisDataSaver::threadedFunction(){
             //FILE-DATA-----------------
             savedSettings.addTag("FILE-INFO");
             savedSettings.pushTag("FILE-INFO");
+            savedSettings.addValue("soundfile", soundfilePath);
             savedSettings.addValue("frameRate", frameRate);
             savedSettings.addValue("totalFramesNum", totalFramesNum);
+            savedSettings.addValue("durationSeconds", durationSecs);
             savedSettings.addValue("sampleRate", sampleRate);
             savedSettings.addValue("bufferSize", bufferSize);
             savedSettings.addValue("channelsNum", channelsNum);
@@ -113,7 +111,7 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.pushTag("ANALYZER");
                 
                 //analyze buffer for frame:
-           
+                
                 if(currentAnalysisMode==SPLIT){
                     frameSoundBuffer = sMainApp->timePanel.audioTrack->getSoundBufferForFrame(frameNum, bufferSize);//multichannel soundbuffer
                 }else if(currentAnalysisMode==MONO){
@@ -121,24 +119,25 @@ void AnalysisDataSaver::threadedFunction(){
                 }
                 
                 sMainApp->mainAnalyzer.analyze(frameSoundBuffer);
-                sMainApp->metersPanel.update();
-                //---------------------------------
-                vector<std::map<string, float>> metersValues = sMainApp->metersPanel.getMetersValues();
                 
-                ///FIXME: a veces esto tira error, cuando no abro archivo o no se que mierda.
-               vector<std::map<string, vector<float>>> metersVectorValues = sMainApp->metersPanel.getMetersVectorValues();
+                sMainApp->metersPanel.update();
+                
+                
+                //-:Get Meters values--------------------------------
+                vector<std::map<string, float>> metersValues = sMainApp->metersPanel.getMetersValues();
+                vector<std::map<string, vector<float>>> metersVectorValues = sMainApp->metersPanel.getMetersVectorValues();
 
                 if(metersVectorValues.size() != metersValues.size()){
                     ofLogError("datasSaver threaded function:")<<"metersValues and metersVectorValues sizes not matching.";
                     return;
                 }
-                ///--------------
+                
+                //--------------
                 
                 if(metersValues.size() != channelsNum){
                     ofLogError("datasSaver threaded function:")<< "metersPanel channels number incorrect.";
                 }
                 
-
                 for(int i=0; i<metersValues.size(); i++){
                     
                     //"i" -> channel
@@ -218,8 +217,8 @@ void AnalysisDataSaver::threadedFunction(){
                     
                     }
                     
-                
                     //-------------------
+                    
                     savedSettings.popTag();//pop from CHANNEL-i back into ANALYZER
                     
                 }
@@ -255,6 +254,7 @@ void AnalysisDataSaver::threadedFunction(){
             //save and stop----------------------------------
             string fileName = ANALYSIS_DATA_DIR "/analysisData.xml";
             //savedSettings.saveFile("analysis_data/analysisData.xml");
+            
             savedSettings.saveFile(fileName);
             unlock();
             stop();

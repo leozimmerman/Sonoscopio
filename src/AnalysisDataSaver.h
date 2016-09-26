@@ -25,15 +25,18 @@ public:
     
     float getPercentage(){return percentage;};
 
-    void setFrameRate(int fps){frameRate = fps;}
+    void updateFrameRate();
     
 private:
     
+    string soundfilePath;
     int frameRate;
     int totalFramesNum;
+    float durationSecs;
     int sampleRate;
     int bufferSize;
     int channelsNum;
+    
     
     float percentage;
     

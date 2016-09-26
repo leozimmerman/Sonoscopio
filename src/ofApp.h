@@ -71,7 +71,9 @@ class ofApp : public ofBaseApp{
     int getBufferSize(){return _bufferSize;}
     int getChannelsNum(){return _channelsNum;}
     analysisMode getAnalysisMode(){return _currentAnalysisMode;}
-    int getTotalFramesNum(){return _totalFramesNum;};
+    int getTotalFramesNum(){return timePanel.timeline.getDurationInFrames();}
+    string getSoundfilePath(){return timePanel.audioTrack->getSoundfilePath();}
+    float getDurationInSeconds(){return timePanel.timeline.getDurationInSeconds();}
     string getProjectDir(){return _projectDir;}
     
     void saveSettings();
@@ -98,7 +100,7 @@ private:
     ofxOscSender oscSender;
     
     int _frameRate;
-    int _totalFramesNum;
+    //int _totalFramesNum;
     
     int _samplerate;
     int  _bufferSize;
@@ -114,9 +116,6 @@ private:
     bool _bSendOscVectorValues;
     
     string _projectDir;
-    
-    //---
-     ofPolyline waveform;///delete
     
     ofTrueTypeFont	verdana;
     

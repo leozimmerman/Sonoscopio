@@ -13,3 +13,5 @@
 #define TIMELINE_SETTINGS_DIR "timeline_settings"
 
 #define ANALYSIS_DATA_DIR "analysis_data"
+
+#define INIT_AUDIO_FILE "audio_files/mix-stereo.wav"

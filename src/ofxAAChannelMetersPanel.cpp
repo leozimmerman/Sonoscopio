@@ -29,14 +29,12 @@ ofxAAChannelMetersPanel::ofxAAChannelMetersPanel(int x, int y, int width, int he
 //------------------------------------------------
 void ofxAAChannelMetersPanel::update(){
     
-    //update gui components of all meters-------
-    
+    //-:Update gui components of all meters
     for(int i=0; i<meters.size(); i++){
         meters[i]->update();
     }
     
-    //set meters values from audioAnalyzer-------
-    
+    //-:Set meters values from audioAnalyzer:
     mPower->setValue(audioAnalyzer->getValue(POWER, mPower->getSmoothAmnt()));
     
     mPitchFreq->setValue(audioAnalyzer->getValue(PITCH_FREQ, mPitchFreq->getSmoothAmnt()));

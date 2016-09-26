@@ -50,7 +50,7 @@ void ofApp::setup(){
     //Audio info--------------
     _channelsNum = timePanel.audioTrack->getNumChannels();
     _samplerate = timePanel.audioTrack->getSampleRate();
-    _totalFramesNum = timePanel.timeline.getDurationInFrames();
+    //_totalFramesNum = timePanel.timeline.getDurationInFrames();
     
     //AudioAnalyzer-------------------
     int this_channelNum;
@@ -137,6 +137,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+ 
+    //If saving thread is running dont draw Panels.
+    if(dataSaver.isThreadRunning()){
+        drawSavingAnalysisSign();
+        return;
+    }
     
     TS_START("METERS-PANEL");
     metersPanel.draw();
@@ -150,10 +156,7 @@ void ofApp::draw(){
     mainPanel.draw();
     TS_STOP("MAIN-PANEL");
     
-    //saving data sign
-    if(dataSaver.isThreadRunning()){
-        drawSavingAnalysisSign();
-    }
+ 
     
 }
 //--------------------------------------------------------------
@@ -221,13 +224,15 @@ void ofApp::openAudioFile(string filename){
     
     _channelsNum = timePanel.audioTrack->getNumChannels();
     _samplerate = timePanel.audioTrack->getSampleRate();
-    _totalFramesNum = timePanel.timeline.getDurationInFrames();
+    //_totalFramesNum = timePanel.timeline.getDurationInFrames();
     
     resetAnalysisEngine();
     
     dataSaver.reset();
 
     audioMutex.unlock();
+    
+    
     
 }
 
@@ -269,7 +274,7 @@ void ofApp::setFrameRate(int fps){
     //update file info frames num info:
     mainPanel.setFileInfoString(timePanel.getFileInfo());
     
-    dataSaver.setFrameRate(_frameRate);
+    dataSaver.updateFrameRate();
     
  
     TIME_SAMPLE_SET_FRAMERATE( _frameRate );
