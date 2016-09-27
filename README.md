@@ -1,7 +1,13 @@
 #SONOSCOPIO
 In development.
 
-##Projects & Settings
+## Compilation
+- OF 0.9.3
+- OS X El Capitan: version 10.11.6
+- X code 8
+- OSX SDK 10.11 (!)
+
+## Projects & Settings
 
 * If none project is opened, it will save and load settings to
  - bin/data/main_settings/

@@ -1639,7 +1639,7 @@
 					../../../addons/ofxTimeline/libs/openal/lib/osx/libsndfile.a,
 					../../../addons/ofxTimeline/libs/sndfile/lib/osx/libsndfile.a,
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.11;
 			};
 			name = Debug;
 		};
@@ -1710,7 +1710,7 @@
 					../../../addons/ofxTimeline/libs/openal/lib/osx/libsndfile.a,
 					../../../addons/ofxTimeline/libs/sndfile/lib/osx/libsndfile.a,
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.11;
 			};
 			name = Release;
 		};
