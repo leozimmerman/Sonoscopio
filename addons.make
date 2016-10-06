@@ -1,7 +1,11 @@
+ofxAudioAnalyzer
 ofxAudioDecoder
+ofxDatGui
 ofxMSATimer
+ofxOsc
 ofxRange
 ofxTextInputField
+ofxTimeMeasurements
 ofxTimecode
 ofxTimeline
 ofxTween
