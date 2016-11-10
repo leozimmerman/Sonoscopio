@@ -7,7 +7,7 @@
 
 #include"ofxAudioAnalyzerUnit.h"
 
-#include "Directories.h"
+#include "Macros.h"
 #include "Panel.h"
 #include "ofxAAChannelMetersPanel.h"
 

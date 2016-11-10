@@ -1,5 +1,5 @@
 //
-//  Directories.h
+//  Macros.h
 //  Sonoscopio
 //
 //  Created by Leo on 9/22/16.

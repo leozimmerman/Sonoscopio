@@ -4,7 +4,7 @@
 #include "ofxXmlSettings.h"
 #include "ofThread.h"
 
-#include "Directories.h"
+#include "Macros.h"
 
 class AnalysisDataSaver: public ofThread{
 

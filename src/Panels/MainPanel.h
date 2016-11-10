@@ -6,7 +6,7 @@
 #include "ofxDatGui.h"
 #include "ofxXmlSettings.h"
 
-#include "Directories.h"
+#include "Macros.h"
 #include "Panel.h"
 
 class MainPanel : public Panel{

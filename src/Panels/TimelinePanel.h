@@ -8,7 +8,7 @@
 #include "ofxTLAudioTrack.h"
 #include "ofxDatGui.h"
 
-#include "Directories.h"
+#include "Macros.h"
 #include "Panel.h"
 
 #define PAGE_AUDIO_NAME "PageAudio"
