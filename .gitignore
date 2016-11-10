@@ -1,16 +1,7 @@
 #Settings files
+# Empty folders has its own .gitignore
+
 ofxTimeMeasurements.settings
-
-#analysis_data/
-#analysisData.xml
-#! bin/data/analysis_data/.gitkeep
-
-audio_files/
-
-main_settings/
-meters_settings/
-projects/
-timeline_settings/
 
 
 ##OF builds
