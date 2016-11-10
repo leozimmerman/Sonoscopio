@@ -1,7 +1,12 @@
 #Settings files
 ofxTimeMeasurements.settings
-analysis_data/
+
+#analysis_data/
+#analysisData.xml
+#! bin/data/analysis_data/.gitkeep
+
 audio_files/
+
 main_settings/
 meters_settings/
 projects/
@@ -18,8 +23,7 @@ obj/
 
 ### Xcode ###
 # Xcode
-#
-# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
 
 ## Build generated
 build/
