@@ -1,7 +1,6 @@
 
 //**********************************************************************
 
-//FIXME: Hay un bug en el Analysis Data Saver, no se donde mierda. A veces se cuelga guardando.
 //TODO: Check Time Measurements of Drawing funcs. Tarda mucho. En 60 fps, no se banca muchos canales.
 
 //**********************************************************************
