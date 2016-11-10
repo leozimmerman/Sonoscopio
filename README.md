@@ -3,6 +3,8 @@
 
 *(!) Software still in development. This is currently a beta testing version, use it your own risk*
 
+![alt text](snapshot.png)
+
 ## Main features
 
 - Wav & mp3 files loading
@@ -89,7 +91,7 @@ For receiving OSC data in another app:
      + address "/TL-(trackname)": El value del track
 
 ## Dependencies
-*Sonoscopio* uses several open source repositories, projects, libraries, etc. Run clone_addons.sh to clone all of them easily.
+*Sonoscopio* uses several open source repositories, projects, libraries, etc. Run *clone_addons.sh* to clone all of them easily.
 
 - [openFrameworks](http://openframeworks.cc/): Main app's core functionality.
 - [ofxAudioAnalyzer](https://github.com/leozimmerman/ofxAudioAnalyzer): For the audio analysis engine. This addon uses [Essentia](http://essentia.upf.edu/) library.
