@@ -474,8 +474,8 @@ void ofxAAChannelMetersPanel::loadSettingsFromFile(string filename){
     audioAnalyzer->setActive(ODD_TO_EVEN, state);
     
     mOnsets->setAlpha(xml.getValue("PANEL:ONSETS:ALPHA", 0.0));
-    mOnsets->setSilenceTreshold(xml.getValue("PANEL:ONSETS:SILENCETRESHOLD", 0.0));
-    mOnsets->setTimeTreshold(xml.getValue("PANEL:ONSETS:TIMETRESHOLD", 0.0));
+    mOnsets->setSilenceThreshold(xml.getValue("PANEL:ONSETS:SILENCEThreshold", 0.0));
+    mOnsets->setTimeThreshold(xml.getValue("PANEL:ONSETS:TIMEThreshold", 0.0));
     state = xml.getValue("PANEL:ONSETS:STATE", 0) > 0;
     mOnsets->setEnabled(state);
     audioAnalyzer->setActive(ONSETS, state);
@@ -585,8 +585,8 @@ void ofxAAChannelMetersPanel::saveSettingsToFile(string filename){
     savedSettings.addTag("ONSETS");
     savedSettings.pushTag("ONSETS");
     savedSettings.addValue("ALPHA", mOnsets->getAlpha());
-    savedSettings.addValue("SILENCETRESHOLD",mOnsets->getSilenceTreshold());
-    savedSettings.addValue("TIMETRESHOLD", mOnsets->getTimeTreshold());
+    savedSettings.addValue("SILENCEThreshold",mOnsets->getSilenceThreshold());
+    savedSettings.addValue("TIMEThreshold", mOnsets->getTimeThreshold());
     savedSettings.addValue("STATE", mOnsets->getEnabled());
     savedSettings.popTag();
     

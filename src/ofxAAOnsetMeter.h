@@ -27,13 +27,13 @@ public:
     
     void setValue(bool val){_onsetValue = val;}
     void setAlpha(float alpha);
-    void setSilenceTreshold(float tres);
-    void setTimeTreshold(float tres);
+    void setSilenceThreshold(float tres);
+    void setTimeThreshold(float tres);
     
     bool getValue(){return _onsetValue;}
     float getAlpha(){return _alpha;}
-    float getSilenceTreshold(){return _silenceTreshold;}
-    float getTimeTreshold(){return _timeTreshold;}
+    float getSilenceThreshold(){return _silenceThreshold;}
+    float getTimeThreshold(){return _timeThreshold;}
     
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
@@ -45,10 +45,10 @@ protected:
     bool _onsetValue;
     
     float _alpha;
-    float _silenceTreshold;
-    float _timeTreshold;
+    float _silenceThreshold;
+    float _timeThreshold;
     
     CustomSlider * alphaSlider;
-    CustomSlider * silenceTresholdSlider;
-    CustomSlider * timeTresholdSlider;
+    CustomSlider * silenceThresholdSlider;
+    CustomSlider * timeThresholdSlider;
 };

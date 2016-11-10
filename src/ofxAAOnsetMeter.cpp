@@ -15,21 +15,21 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
     alphaSlider->setLabelMargin(0.0);
     alphaSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
-    _silenceTreshold = onsets->getOnsetSilenceTreshold();
-    silenceTresholdSlider = new CustomSlider("SIL-TH", 0.0, 1.0, _silenceTreshold);
-    silenceTresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
+    _silenceThreshold = onsets->getOnsetSilenceThreshold();
+    silenceThresholdSlider = new CustomSlider("SIL-TH", 0.0, 1.0, _silenceThreshold);
+    silenceThresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     
-    silenceTresholdSlider->setHeight(_line_h);
-    silenceTresholdSlider->setLabelMargin(0.0);
-    silenceTresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    silenceThresholdSlider->setHeight(_line_h);
+    silenceThresholdSlider->setLabelMargin(0.0);
+    silenceThresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
-    _timeTreshold = onsets->getOnsetTimeTreshold();//ms
-    timeTresholdSlider = new CustomSlider("TI-TH", 0.0, 1000.0, _timeTreshold);
-    timeTresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
+    _timeThreshold = onsets->getOnsetTimeThreshold();//ms
+    timeThresholdSlider = new CustomSlider("TI-TH", 0.0, 1000.0, _timeThreshold);
+    timeThresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     
-    timeTresholdSlider->setHeight(_line_h);
-    timeTresholdSlider->setLabelMargin(0.0);
-    timeTresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    timeThresholdSlider->setHeight(_line_h);
+    timeThresholdSlider->setLabelMargin(0.0);
+    timeThresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
     updateComponentsWidth();
     updateComponentsPositions();
@@ -43,8 +43,8 @@ void ofxAAOnsetMeter::update(){
         
     onOffToggle->update();
     alphaSlider->update();
-    silenceTresholdSlider->update();
-    timeTresholdSlider->update();
+    silenceThresholdSlider->update();
+    timeThresholdSlider->update();
 
 }
 //------------------------------------
@@ -71,8 +71,8 @@ void ofxAAOnsetMeter::draw(){
         onOffToggle->drawTransparent();
         if(_enabled){
             alphaSlider->drawSimplified();
-            silenceTresholdSlider->drawSimplified();
-            timeTresholdSlider->drawSimplified();
+            silenceThresholdSlider->drawSimplified();
+            timeThresholdSlider->drawSimplified();
         }
     }
 
@@ -108,8 +108,8 @@ void ofxAAOnsetMeter::updateComponentsPositions(){
     ofxAAMeter::updateComponentsPositions();
     
     alphaSlider->setPosition            (_x + _w * 0.1, _y + _line_h * 2.0);
-    silenceTresholdSlider->setPosition  (_x + _w * 0.1, _y + _line_h * 3.5);
-    timeTresholdSlider->setPosition     (_x + _w * 0.1, _y + _line_h * 5.0);
+    silenceThresholdSlider->setPosition  (_x + _w * 0.1, _y + _line_h * 3.5);
+    timeThresholdSlider->setPosition     (_x + _w * 0.1, _y + _line_h * 5.0);
 
 }
 //------------------------------------------------
@@ -118,16 +118,16 @@ void ofxAAOnsetMeter::updateComponentsWidth(){
     ofxAAMeter::updateComponentsWidth();
     
     alphaSlider->setWidth(_w*0.8, 0.0);
-    silenceTresholdSlider->setWidth(_w*0.8, 0.0);
-    timeTresholdSlider->setWidth(_w*0.8, 0.0);
+    silenceThresholdSlider->setWidth(_w*0.8, 0.0);
+    timeThresholdSlider->setWidth(_w*0.8, 0.0);
    
 }
 //------------------------------------------------
 void ofxAAOnsetMeter::updateSlidersColors(){
     
     alphaSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
-    silenceTresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
-    timeTresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
+    silenceThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
+    timeThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
     
 }
 //------------------------------------------------
@@ -138,18 +138,18 @@ void ofxAAOnsetMeter::setAlpha(float alpha){
         onsets->setOnsetAlpha(alpha);
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::setSilenceTreshold(float tres){
-    _silenceTreshold = tres;
-    silenceTresholdSlider->setValue(tres);
+void ofxAAOnsetMeter::setSilenceThreshold(float tres){
+    _silenceThreshold = tres;
+    silenceThresholdSlider->setValue(tres);
     if(onsets!=NULL)
-        onsets->setOnsetSilenceTreshold(tres);
+        onsets->setOnsetSilenceThreshold(tres);
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::setTimeTreshold(float tres){
-    _timeTreshold = tres;
-    timeTresholdSlider->setValue(tres);
+void ofxAAOnsetMeter::setTimeThreshold(float tres){
+    _timeThreshold = tres;
+    timeThresholdSlider->setValue(tres);
     if(onsets!=NULL){
-        onsets->setOnsetTimeTreshold(tres);
+        onsets->setOnsetTimeThreshold(tres);
     }
 }
 //------------------------------------------------
@@ -159,11 +159,11 @@ void ofxAAOnsetMeter::onSliderEvent(ofxDatGuiSliderEvent e){
         onsets->setOnsetAlpha(_alpha);
     }
     else if(e.target->getLabel() == "SIL-TH"){
-        _silenceTreshold = e.value;
-        onsets->setOnsetSilenceTreshold(_silenceTreshold);
+        _silenceThreshold = e.value;
+        onsets->setOnsetSilenceThreshold(_silenceThreshold);
     }
     else if(e.target->getLabel() == "TI-TH"){
-        _timeTreshold = e.value;
-        onsets->setOnsetTimeTreshold(_timeTreshold);//make it ms.
+        _timeThreshold = e.value;
+        onsets->setOnsetTimeThreshold(_timeThreshold);//make it ms.
     }
 }

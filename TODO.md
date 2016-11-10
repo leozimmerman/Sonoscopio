@@ -1,8 +1,8 @@
 # ToDo list
 
 ## VERSION 1.0
+- Revisar thread mutex locks en draw y update, con el data saver: http://openframeworks.cc/ofBook/chapters/threads.html
 
-- Fix Analysis Data Saver bug.
 - Check time measurement of drawing methods.
 - Hard degub testing.
 
