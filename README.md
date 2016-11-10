@@ -1,6 +1,11 @@
 #SONOSCOPIO
 In development.
 
+## Installation
+- Download OF 0.9.3
+- Clone this repository into OF_ROOT_DIR/apps/myApps/
+- Run clone_addons.sh in the terminal
+
 ## Compilation
 - OF 0.9.3
 - OS X El Capitan: version 10.11.6

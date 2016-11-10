@@ -17,7 +17,7 @@ ${PREFIX}leozimmerman/ofxAudioAnalyzer.git
 ${PREFIX}leozimmerman/ofxAudioDecoder.git
 
 #ofxDatGui------------------------
-${PREFIX}leozimmerman/ofxGpuParticles.git
+${PREFIX}leozimmerman/ofxDatGui.git
 cd ofxDatGui
 git checkout sonoscopio
 cd ../
