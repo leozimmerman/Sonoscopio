@@ -3,6 +3,8 @@
 
 *(!) Software still in development. This is currently a beta testing version, use it your own risk*
 
+Demo video: https://vimeo.com/191193752
+
 ![alt text](snapshot.png)
 
 ## Main features
