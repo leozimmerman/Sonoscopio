@@ -72,6 +72,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     
     timeline.addPage(PAGE_TRACKS_NAME);
     addTrack("DEFAULT", CURVES);
+    
 
     timeline.setCurrentPage(PAGE_AUDIO_NAME);
     timeline.setShowPageTabs(false); //->modify if more pages are needed
@@ -196,10 +197,12 @@ void TimelinePanel::loadSettings(string rootDir){
            
             if(trackType=="Curves"){
                 addTrack(trackName, CURVES);
-            }else if(trackType=="Bangs"){
+            } else if(trackType=="Bangs"){
                 addTrack(trackName, BANGS);
-            }else if(trackType=="Switches"){
+            } else if(trackType=="Switches"){
                 addTrack(trackName, SWITCHES);
+            } else if(trackType=="Notes"){
+                addTrack(trackName, NOTES);
             }
             
         }
@@ -324,6 +327,10 @@ void TimelinePanel::addTrack(string name, trackType type){
             break;
         case SWITCHES:
             timeline.addSwitches(name);
+            break;
+        case NOTES:
+            timeline.addNotes(name);
+            break;
             
         default:
             break;
@@ -441,7 +448,8 @@ std::map<string, float> TimelinePanel::getTracksValues(){
                 }else{
                     value = 0.0;
                 }
-                
+            }else if(track->getTrackType()=="Notes"){
+                value = timeline.getNote(name);
             }
             //add key & value
             values[key]= value;
@@ -543,7 +551,7 @@ void TimelinePanel::setupGui(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    vector<string> options = {"curves", "bangs", "switches"};
+    vector<string> options = {"curves", "bangs", "switches", "notes"};
     dropdown = new ofxDatGuiDropdown("TRACK TYPE", options);
     //dropdown->expand();
     dropdown->onDropdownEvent(this, &TimelinePanel::onDropdownEvent);
@@ -675,6 +683,9 @@ void TimelinePanel::onDropdownEvent(ofxDatGuiDropdownEvent e)
             break;
         case 2:
             currentTrackType = SWITCHES;
+            break;
+        case 3:
+            currentTrackType = NOTES;
             break;
             
         default:

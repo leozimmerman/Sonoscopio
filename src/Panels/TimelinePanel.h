@@ -36,7 +36,8 @@
 enum trackType {
     CURVES,
     BANGS,
-    SWITCHES
+    SWITCHES,
+    NOTES
 };
 
 
