@@ -62,6 +62,7 @@ void ofApp::setup(){
    
     mainPanel.setFileInfoString(timePanel.getFileInfo());
     ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
+    ofAddListener(ofxAAOnsetMeter::onsetEventGlobal, this, &ofApp::onsetFired);
     
     //Audio info--------------
     _channelsNum = timePanel.audioTrack->getNumChannels();
@@ -204,6 +205,7 @@ void ofApp::keyPressed(int key){
      * 't': time measurement on/off
      * 'm': add marker
      * 'w': rewind
+     * 'k': add keyframe in focused track
      */
     switch (key) {
         
@@ -218,6 +220,10 @@ void ofApp::keyPressed(int key){
         
         case 'w':
             rewind();
+            break;
+            
+        case 'k':
+            addKeyframeInFocusedTrack();
             break;
             
             
@@ -325,7 +331,6 @@ void ofApp::stop(){
 void ofApp::rewind(){
     timePanel.timeline.setCurrentTimeToInPoint();
 }
-
 //--------------------------------------------------------------
 #pragma mark - OSC funcs
 //--------------------------------------------------------------
@@ -467,9 +472,6 @@ void ofApp::sendOscData(){
         oscSender.sendMessage(msg, false);
         
     }
-    
-
-    
 
 }
 //--------------------------------------------------------------
@@ -623,6 +625,19 @@ void ofApp::windowResized(int w, int h){
     timePanel.resize(mainH, w, timeH);
     
 }
+
+//--------------------------------------------------------------
+#pragma mark - Other
+//--------------------------------------------------------------
+void ofApp::onsetFired(int & panelId){
+    addKeyframeInFocusedTrack();
+}
+//--------------------------------------------------------------
+void ofApp::addKeyframeInFocusedTrack(){
+    timePanel.addKeyframeInFocusedTrack();
+}
+
+#pragma mark - OF Native
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
     //for testing...
@@ -631,8 +646,6 @@ void ofApp::mouseReleased(int x, int y, int button){
     timePanel.checkIfHeightChanged();
     timePanel.checkIfWaveformPreviewChanged();
 }
-//--------------------------------------------------------------
-#pragma mark - OF Not USed
 //-----------------------------------------------------------
 void ofApp::keyReleased(int key){
 }

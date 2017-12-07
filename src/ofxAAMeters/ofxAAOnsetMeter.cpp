@@ -18,6 +18,9 @@
 
 #include "ofxAAOnsetMeter.h"
 
+// the static event, or any static variable, must be initialized outside of the class definition.
+ofEvent<int> ofxAAOnsetMeter::onsetEventGlobal = ofEvent<int>();
+
 //------------------------------------
 ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAudioAnalyzerUnit* analyzerPtr) : ofxAAMeter(MTR_NAME_ONSETS, x, y, w, h, panelId){
 
@@ -25,7 +28,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
     onsets = analyzerPtr->getOnsetsAlgorithmPtr();
     
     _alpha = onsets->getOnsetAlpha();
-    alphaSlider = new CustomSlider("ALPHA", 0.0, 1.0, _alpha);
+    alphaSlider = new CustomSlider(MTR_ALPHA, 0.0, 1.0, _alpha);
     alphaSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     
     alphaSlider->setHeight(_line_h);
@@ -33,7 +36,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
     alphaSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
     _silenceThreshold = onsets->getOnsetSilenceThreshold();
-    silenceThresholdSlider = new CustomSlider("SIL-TH", 0.0, 1.0, _silenceThreshold);
+    silenceThresholdSlider = new CustomSlider(MTR_SIL_TH, 0.0, 1.0, _silenceThreshold);
     silenceThresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     
     silenceThresholdSlider->setHeight(_line_h);
@@ -41,12 +44,21 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
     silenceThresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
     _timeThreshold = onsets->getOnsetTimeThreshold();//ms
-    timeThresholdSlider = new CustomSlider("TI-TH", 0.0, 1000.0, _timeThreshold);
+    timeThresholdSlider = new CustomSlider(MTR_TI_TH, 0.0, 1000.0, _timeThreshold);
     timeThresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
     
     timeThresholdSlider->setHeight(_line_h);
     timeThresholdSlider->setLabelMargin(0.0);
     timeThresholdSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+    
+    _isArmed = false;
+    armToggle = new OnOffToggle(MTR_ARM, _isArmed);
+    armToggle->onButtonEvent(this, &ofxAAOnsetMeter::onButtonEvent);
+    armToggle->setLabels("ARM", "ARM");
+    armToggle->setHeight(_line_h*0.85);
+    armToggle->setLabelMargin(0.0);
+    armToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    armToggle->setBackgroundColor(ofColor::black);
     
     updateComponentsWidth();
     updateComponentsPositions();
@@ -62,6 +74,7 @@ void ofxAAOnsetMeter::update(){
     alphaSlider->update();
     silenceThresholdSlider->update();
     timeThresholdSlider->update();
+    armToggle->update();
 
 }
 //------------------------------------
@@ -90,6 +103,7 @@ void ofxAAOnsetMeter::draw(){
             alphaSlider->drawSimplified();
             silenceThresholdSlider->drawSimplified();
             timeThresholdSlider->drawSimplified();
+            armToggle->drawTransparent();
         }
     }
 
@@ -124,9 +138,10 @@ void ofxAAOnsetMeter::updateComponentsPositions(){
     
     ofxAAMeter::updateComponentsPositions();
     
-    alphaSlider->setPosition            (_x + _w * 0.1, _y + _line_h * 2.0);
+    alphaSlider->setPosition             (_x + _w * 0.1, _y + _line_h * 2.0);
     silenceThresholdSlider->setPosition  (_x + _w * 0.1, _y + _line_h * 3.5);
     timeThresholdSlider->setPosition     (_x + _w * 0.1, _y + _line_h * 5.0);
+    armToggle->setPosition               (_x + _w * 0.1, _y + _line_h * 8.0);//On-off at 6.5
 
 }
 //------------------------------------------------
@@ -137,15 +152,30 @@ void ofxAAOnsetMeter::updateComponentsWidth(){
     alphaSlider->setWidth(_w*0.8, 0.0);
     silenceThresholdSlider->setWidth(_w*0.8, 0.0);
     timeThresholdSlider->setWidth(_w*0.8, 0.0);
+    armToggle->setWidth(_w*0.8, 0.0);
    
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::updateSlidersColors(){
+void ofxAAOnsetMeter::updateComponentsColors(){
     
     alphaSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
     silenceThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
     timeThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
+    armToggle->setColors(ofColor::red, COLOR_ONOFF_OFF);
     
+}
+//------------------------------------------------
+void ofxAAOnsetMeter::setValue(bool val){
+    _onsetValue = val;
+    if (_onsetValue && _isArmed) {
+        sendOnsetEvent();
+    }
+}
+//------------------------------------------------
+void ofxAAOnsetMeter::sendOnsetEvent(){
+    int value = _panelId;
+    
+    ofNotifyEvent(onsetEventGlobal, value);
 }
 //------------------------------------------------
 void ofxAAOnsetMeter::setAlpha(float alpha){
@@ -171,16 +201,23 @@ void ofxAAOnsetMeter::setTimeThreshold(float tres){
 }
 //------------------------------------------------
 void ofxAAOnsetMeter::onSliderEvent(ofxDatGuiSliderEvent e){
-    if(e.target->getLabel() == "ALPHA"){
+    if(e.target->getLabel() == MTR_ALPHA){
         _alpha = e.value;
         onsets->setOnsetAlpha(_alpha);
     }
-    else if(e.target->getLabel() == "SIL-TH"){
+    else if(e.target->getLabel() == MTR_SIL_TH){
         _silenceThreshold = e.value;
         onsets->setOnsetSilenceThreshold(_silenceThreshold);
     }
-    else if(e.target->getLabel() == "TI-TH"){
+    else if(e.target->getLabel() == MTR_TI_TH){
         _timeThreshold = e.value;
         onsets->setOnsetTimeThreshold(_timeThreshold);//make it ms.
+    }
+}
+//------------------------------------------------
+void ofxAAOnsetMeter::onButtonEvent(ofxDatGuiButtonEvent e) {
+    ofxAAMeter::onButtonEvent(e);
+    if(e.target->getLabel()==MTR_ARM){
+        _isArmed = e.enabled;
     }
 }

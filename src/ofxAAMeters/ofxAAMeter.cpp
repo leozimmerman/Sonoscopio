@@ -335,7 +335,7 @@ void ofxAAMeter::onButtonEvent(ofxDatGuiButtonEvent e){
         
         _enabled = e.enabled;
      
-    }else if(e.target->getType() == ofxDatGuiType::BUTTON){
+    } else if(e.target->getType() == ofxDatGuiType::BUTTON){
         resetPeak();
     }
 

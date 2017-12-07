@@ -405,7 +405,12 @@ void TimelinePanel::toggleEnableDisableFocusedTrack(){
         ftrack->isEnabled() ? ftrack->disable() : ftrack->enable();
     }
 }
-
+void TimelinePanel::addKeyframeInFocusedTrack(){
+    ofxTLKeyframes* ftrack = (ofxTLKeyframes*) timeline.getFocusedTrack();
+    if (ftrack != NULL) {
+        ftrack->addKeyframe();
+    }
+}
 
 
 //--------------------------------------------------------------
@@ -515,7 +520,6 @@ void TimelinePanel::resizeHeight(int tl_h){
 #pragma mark - Markers
 //--------------------------------------------------------------
 void TimelinePanel::addMarker(){
-    
     timeline.getTicker()->addMarker(timeline.getCurrentTimeMillis());
     _markers.push_back(timeline.getCurrentTimeMillis());
     

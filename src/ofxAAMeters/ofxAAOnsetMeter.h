@@ -23,6 +23,12 @@
 #include "ofxAAMeter.h"
 #include "ofxAudioAnalyzerUnit.h"
 
+#define MTR_ALPHA "ALPHA"
+#define MTR_SIL_TH "SIL-TH"
+#define MTR_TI_TH "TI-TH"
+#define MTR_ARM "ARM"
+
+
 
 class ofxAAOnsetMeter : public ofxAAMeter{
     
@@ -38,34 +44,49 @@ public:
     virtual void setPosAndSize(int x, int y, int w, int h);
     
     
-    void updateSlidersColors();
+    void updateComponentsColors();
     void updateComponentsWidth();
     void updateComponentsPositions();
     
-    void setValue(bool val){_onsetValue = val;}
+    void setValue(bool val);
     void setAlpha(float alpha);
     void setSilenceThreshold(float tres);
     void setTimeThreshold(float tres);
+    void setArmed(bool val) {_isArmed = val;}
     
+    
+
     bool getValue(){return _onsetValue;}
     float getAlpha(){return _alpha;}
     float getSilenceThreshold(){return _silenceThreshold;}
     float getTimeThreshold(){return _timeThreshold;}
     
     void onSliderEvent(ofxDatGuiSliderEvent e);
+    void onButtonEvent(ofxDatGuiButtonEvent e);
+    
+    /*Ver onOffEventGlobal si hace falta mandar mas data*/
+    static ofEvent<int> onsetEventGlobal;
     
 protected:
+    void sendOnsetEvent();
+    
     
     //ofxAudioAnalyzerUnit* audioAnalyzer;
     ofxAAOnsetsAlgorithm* onsets;
     
     bool _onsetValue;
+    bool _isArmed; //for recording
     
     float _alpha;
     float _silenceThreshold;
     float _timeThreshold;
     
+    
+    
     CustomSlider * alphaSlider;
     CustomSlider * silenceThresholdSlider;
     CustomSlider * timeThresholdSlider;
+    OnOffToggle* armToggle;
 };
+
+

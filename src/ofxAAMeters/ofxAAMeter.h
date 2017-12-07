@@ -74,13 +74,12 @@ public:
 #define COLOR_RECT_METER_ALPHA 40
 
 
-
-
 class ofxAAMeter{
 public:
     
     ofxAAMeter(string name, int x, int y, int w, int h, int panelId);
     virtual ~ofxAAMeter();
+
 
     //void setup();
     virtual void update();

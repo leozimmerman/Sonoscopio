@@ -252,7 +252,7 @@ void ofxAAChannelMetersPanel::setMainColor(ofColor col){
         //update onsets sliders colors
         if(m->getName()==MTR_NAME_ONSETS){
             ofxAAOnsetMeter* om = dynamic_cast<ofxAAOnsetMeter*>(m);
-            om->updateSlidersColors();
+            om->updateComponentsColors();
         }
     }
 }

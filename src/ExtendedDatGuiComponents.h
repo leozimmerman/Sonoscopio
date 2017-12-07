@@ -19,12 +19,20 @@ public:
         
         colorOn = ofColor::white;
         colorOff = ofColor::gray;
+        
+        onLabel = "ON";
+        offLabel = "OFF";
     
     };
     
     void setColors(ofColor on, ofColor off){
         colorOn = on;
         colorOff = off;
+    }
+    
+    void setLabels(string on, string off){
+        onLabel = on;
+        offLabel = off;
     }
     
     void drawTransparent(){
@@ -38,11 +46,11 @@ public:
             if (mEnabled == true){
                 ofSetColor(colorOn);
                 ofDrawRectangle(x, y, mStyle.width, mStyle.height);
-                mFont->draw("ON", x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
+                mFont->draw(onLabel, x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
             }   else{
                 ofSetColor(colorOff);
                 ofDrawRectangle(x, y, mStyle.width, mStyle.height);
-                mFont->draw("OFF", x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
+                mFont->draw(offLabel, x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
             }
             ofPopStyle();
         }
@@ -51,6 +59,8 @@ public:
 private:
     ofColor colorOn;
     ofColor colorOff;
+    string onLabel;
+    string offLabel;
 
 };
 //----------------------------------------------

@@ -33,6 +33,7 @@
 #include "MetersPanel.h"
 
 #include "AnalysisDataSaver.h"
+#include "ofEvents.h"
 
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.4
@@ -67,6 +68,7 @@ class ofApp : public ofBaseApp{
     void togglePlay();
     void stop();
     void rewind();
+    void addKeyframeInFocusedTrack();
     
     void openAudioFile(string filename);
     void onTimelinePanelResize(int & h);
@@ -99,6 +101,8 @@ class ofApp : public ofBaseApp{
     
     void saveAnalysisDataToFile();
     void drawSavingAnalysisSign();
+    
+    void onsetFired(int & panelId);
 
     //panels-----------
     MainPanel mainPanel;

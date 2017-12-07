@@ -1,9 +1,9 @@
 # ToDo list
 
 ## NOW
-- Record onsets in Bangs tracks or sequencer tracks.
-- Sequencer track - with recording option.
-- Audio analysis configuration: Modal.
+- Testear TLNotes get values.
+
+- Modal window: audio analysis config / timeilne config / keyboard shortcuts.
 
 
 ## VERSION 1.0
