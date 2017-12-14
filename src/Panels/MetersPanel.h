@@ -44,6 +44,7 @@ public:
     
     void toggleFullDisplay(){setFullDisplay(!_bDrawFullDisplay);}
     void setFullDisplay(bool b);
+    bool getIsHidden(){return _isHidden;}
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     
@@ -59,6 +60,7 @@ public:
     void adjustGuiSize(int y, int w, int h);
     
     bool getFocused();
+    void setHidden(bool h) {_isHidden = h;}
 
 private:
     
@@ -91,8 +93,6 @@ private:
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
 
-    
-    
-    
+    bool _isHidden = false;
     
 };

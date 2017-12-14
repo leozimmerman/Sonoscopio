@@ -73,6 +73,7 @@ public:
     
     
     bool getIfIsDragging(){return _footerIsDragging;}
+    bool getIsHidden(){return _isHidden;}
     
     void checkIfHeightChanged();
     void checkIfWaveformPreviewChanged();
@@ -96,7 +97,7 @@ public:
     ofEvent<int> heightResizedEvent;
     
     bool getFocused(){return gTrackName->getFocused();}
-    
+    void setHidden(bool h);
     
 private:
     
@@ -123,6 +124,8 @@ private:
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
     void onDropdownEvent(ofxDatGuiDropdownEvent e);
+    
+    bool _isHidden = false;
     
 };
 

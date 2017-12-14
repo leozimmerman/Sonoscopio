@@ -49,11 +49,13 @@ class Panel{
     
     
     
+    
     protected:
     
         int _x, _y;
         int _w, _h;
         ofColor _bckgColor;
+    
     
     
     

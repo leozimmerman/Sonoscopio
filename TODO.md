@@ -1,8 +1,11 @@
 # ToDo list
 
 ## NOW
-- Testear TLNotes get values.
 
+- Add view modes select from main panel.
+- Save project view mode for open closing.
+
+- Testear TLNotes get values.
 - Modal window: audio analysis config / timeilne config / keyboard shortcuts.
 
 

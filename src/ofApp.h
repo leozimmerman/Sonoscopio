@@ -46,6 +46,12 @@ enum analysisMode{
     SPLIT
 };
 
+enum viewMode{
+    ALL,
+    TIMEPANEL_ONLY,
+    METERSPANEL_ONLY
+};
+
 class ofApp : public ofBaseApp{
 
   public:
@@ -73,8 +79,11 @@ class ofApp : public ofBaseApp{
     void openAudioFile(string filename);
     void onTimelinePanelResize(int & h);
     
+    void hideMetersPanel(bool hide);
+    
     void setFrameRate(int fps);
     void setAnalysisMode(analysisMode mode);
+    void setViewMode(viewMode mode);
     void resetAnalysisEngine();
     void setBufferSize(int bs);
     
@@ -89,6 +98,7 @@ class ofApp : public ofBaseApp{
     int getBufferSize(){return _bufferSize;}
     int getChannelsNum(){return _channelsNum;}
     analysisMode getAnalysisMode(){return _currentAnalysisMode;}
+    viewMode getViewMode(){return _currentViewMode;}
     int getTotalFramesNum(){return timePanel.timeline.getDurationInFrames();}
     string getSoundfilePath(){return timePanel.audioTrack->getSoundfilePath();}
     float getDurationInSeconds(){return timePanel.timeline.getDurationInSeconds();}
@@ -129,6 +139,7 @@ private:
     ofMutex audioMutex;
     
     analysisMode _currentAnalysisMode;
+    viewMode _currentViewMode;
     
     bool _bSendOsc;
     string _oscHost;
@@ -139,7 +150,8 @@ private:
     
     ofTrueTypeFont	verdana;
     
-    
+    float _timePanelHeightPercent;
+    float _metersPanelHeightPercent;
     
     
 };

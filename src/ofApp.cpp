@@ -56,6 +56,8 @@ void ofApp::setup(){
     int mainH = MAIN_PANEL_HEIGHT * ofGetHeight();
     int timeH = TIME_PANEL_HEIGHT * ofGetHeight();
     int metersH = METER_PANEL_HEIGHT * ofGetHeight();
+    _timePanelHeightPercent   = TIME_PANEL_HEIGHT;
+    _metersPanelHeightPercent = METER_PANEL_HEIGHT;
     
     mainPanel.setup(0, 0, ofGetWidth(), mainH, ofGetAppPtr());
     timePanel.setup(0, mainH, ofGetWidth(), timeH, ofGetAppPtr());
@@ -224,6 +226,18 @@ void ofApp::keyPressed(int key){
             
         case 'k':
             addKeyframeInFocusedTrack();
+            break;
+            
+        //TODO: sacar de aca, poner en main panel
+  
+        case '1':
+            setViewMode(ALL);
+            break;
+        case '2':
+            setViewMode(TIMEPANEL_ONLY);
+            break;
+        case '3':
+            setViewMode(METERSPANEL_ONLY);
             break;
             
             
@@ -596,7 +610,6 @@ void ofApp::drawSavingAnalysisSign(){
     
     verdana.drawString(displayStr, label_x , ofGetHeight()/2);
     
-    
     ofPopStyle();
 }
 
@@ -610,22 +623,68 @@ void ofApp::onTimelinePanelResize(int &h){
     
     metersPanel.adjustPosAndHeight(new_y, new_h);
     
+    ofLogVerbose()<<"-- timelinePanel resized: "<< h;
 }
 //------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
     
-    ofLogVerbose()<<"**** Window resized: "<< w <<"x"<< h;
     
-    int mainH = MAIN_PANEL_HEIGHT * h;
-    int timeH = TIME_PANEL_HEIGHT * h;
-    int metersH = METER_PANEL_HEIGHT * h;
+    int mainH   = MAIN_PANEL_HEIGHT * h;
+    int timeH   = _timePanelHeightPercent * h;
+    int metersH = _metersPanelHeightPercent * h;
     
     mainPanel.resize(w, mainH);
     metersPanel.resize(mainH+timeH, w, metersH);
     timePanel.resize(mainH, w, timeH);
     
+    ofLogVerbose()<<"-- Window resized: "<< w <<"x"<< h;
+    
 }
+//--------------------------------------------------------------
+//This function belongs to ofApp instead of metersPanel because panels sizes are timelinePanel dependant.
+void ofApp::hideMetersPanel(bool hide){
+    
+    int w = ofGetWidth();
+    int h = ofGetHeight();
+    
+    metersPanel.setHidden(hide);
+    
+    if (hide){
+        _timePanelHeightPercent   = 0.77;
+        _metersPanelHeightPercent = 0.08;
+    } else {
+        _timePanelHeightPercent = TIME_PANEL_HEIGHT;
+        _metersPanelHeightPercent = METER_PANEL_HEIGHT;
+    }
+    windowResized(w, h);
+    
+}
+//--------------------------------------------------------------
+void ofApp::setViewMode(viewMode mode){
+    _currentViewMode = mode;
+    
+    switch (_currentViewMode) {
+            
+        case ALL:
+            hideMetersPanel(false);
+            timePanel.setHidden(false);
+            break;
+            
+        case TIMEPANEL_ONLY:
+            timePanel.setHidden(false);
+            hideMetersPanel(true);
+            break;
+            
+        case METERSPANEL_ONLY:
+            hideMetersPanel(false);
+            timePanel.setHidden(true);
+            break;
+            
 
+        default:
+            break;
+    }
+}
 //--------------------------------------------------------------
 #pragma mark - Other
 //--------------------------------------------------------------

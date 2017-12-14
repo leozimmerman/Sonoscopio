@@ -88,6 +88,8 @@ void MetersPanel::draw(){
     //for testing
     //drawBackground();
     
+    if (_isHidden){ return; }
+    
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->draw();
     }
@@ -216,7 +218,6 @@ void MetersPanel::resize(int y, int w, int h){
     
     _w = w;
     
-    
     for(int i=0; i<channelPanels.size(); i++){
         channelPanels[i]->setWidth(_w);
     }
@@ -237,8 +238,6 @@ void MetersPanel::adjustPosAndHeight(int y, int h){
         int y_pos = _y + panelHeight*i;
         channelPanels[i]->adjustPosAndHeight(y_pos, panelHeight);
     }
-    
-    
     
 }
 //----------------------------------------------

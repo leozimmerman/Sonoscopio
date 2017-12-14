@@ -82,11 +82,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setInOutRange(ofRange(0.0, 1.0));//always start with in/out at the sides, ignores xml file
 
     
-    
-    
-    
     ofAddListener(timeline.events().bangFired, this, &TimelinePanel::bangFired);
-    
     
     //--------------------------
     _guiCompHeight = TL_GUI_COMP_HEIGHT;
@@ -113,23 +109,32 @@ void TimelinePanel::draw(){
     
     drawBackground();
     
+
+    
+    TS_START("timeline");
+    timeline.draw(false, _isHidden);//without ticker timeMarks & hidden mode
+    TS_STOP("timeline");
+    
+    
+    //hidden--------------------
+    if (_isHidden) {return;}
+    
     TS_START("waveforms");
     if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
         audioTrack->drawWaveforms();
     }
     TS_STOP("waveforms");
     
-    //draw gui------------------
     TS_START("gui");
     for(int i=0; i<components.size(); i++){
         components[i]->draw();
     }
     TS_STOP("gui");
     
-    //draw timeline------------
-    TS_START("timeline");
-    timeline.draw(false);//without ticker timeMarks
-    TS_STOP("timeline");
+    
+
+    
+    
 
 }
 //--------------------------------------------------------------
@@ -470,6 +475,7 @@ std::map<string, float> TimelinePanel::getTracksValues(){
 void TimelinePanel::checkIfHeightChanged(){
     
     int tl_h = timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height + 66;
+    
     if(tl_h != _h - _guiCompHeight){
         resizeHeight(tl_h);
     }
@@ -497,7 +503,7 @@ void TimelinePanel::resize(int y, int w, int h){
     timeline.setOffset(ofVec2f(_x, _y));
     timeline.setWidth(_w);
     
-    timeline.setHeight(_h);
+    timeline.setHeight(_h - _guiCompHeight);
     
     adjustGuiSize(_y, _w, _h);
     
@@ -515,6 +521,21 @@ void TimelinePanel::resizeHeight(int tl_h){
     }
     
     ofNotifyEvent(heightResizedEvent, _h, this);
+}
+//--------------------------------------------------------------
+void TimelinePanel::setHidden(bool h){
+    
+    if (_isHidden == h) { return; }
+    
+    _isHidden = h;
+    
+    if (_isHidden) {
+        _guiCompHeight = 1;
+        resize(_y, _w, 30);
+    } else {
+        _guiCompHeight = TL_GUI_COMP_HEIGHT;
+        resize(_y, _w, TIME_PANEL_HEIGHT * ofGetHeight());
+    }
 }
 //--------------------------------------------------------------
 #pragma mark - Markers
