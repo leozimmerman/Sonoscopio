@@ -35,6 +35,8 @@
 #include "AnalysisDataSaver.h"
 #include "ofEvents.h"
 
+#include "ofxModal.h"
+
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.4
 #define METER_PANEL_HEIGHT 0.45
@@ -113,8 +115,10 @@ class ofApp : public ofBaseApp{
     void drawSavingAnalysisSign();
     
     void onsetFired(int & panelId);
+    
+    shared_ptr<ofxModalAlert> mAlert;
+    void onModalEvent(ofxModalEvent e);
 
-    //panels-----------
     MainPanel mainPanel;
     TimelinePanel timePanel;
     MetersPanel metersPanel;

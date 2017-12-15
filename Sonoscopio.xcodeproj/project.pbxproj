@@ -64,6 +64,8 @@
 		9D7BB9637658A8E9D507C66C /* ofxTLColors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF90B9976FECCFE157607AF4 /* ofxTLColors.cpp */; };
 		9E8EC2BF8BCA13DA057FA929 /* ofxTLSwitches.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D23395AC4260312D47BB958 /* ofxTLSwitches.cpp */; };
 		ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADD194746185E2DA11468377 /* IpEndpointName.cpp */; };
+		B363C7691FE4301F0014F7F7 /* ofxModalWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B363C7631FE4301E0014F7F7 /* ofxModalWindow.cpp */; };
+		B363C7791FE433750014F7F7 /* ofxParagraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B363C7781FE433750014F7F7 /* ofxParagraph.cpp */; };
 		B3A04FB21FD20109003BA8A7 /* ofxTLNotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A04FB01FD20108003BA8A7 /* ofxTLNotes.cpp */; };
 		B3A475BC1DD4FBE600B1371C /* ofxAABinMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475B41DD4FBE600B1371C /* ofxAABinMeter.cpp */; };
 		B3A475BD1DD4FBE600B1371C /* ofxAAChannelMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475B61DD4FBE600B1371C /* ofxAAChannelMetersPanel.cpp */; };
@@ -339,6 +341,14 @@
 		B31C608870ECEB2490A93736 /* ofxOscParameterSync.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscParameterSync.h; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.h; sourceTree = SOURCE_ROOT; };
 		B34D03E9EB70A8632DF955EB /* iotypewrappers.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = iotypewrappers.h; path = ../../../addons/ofxAudioAnalyzer/libs/essentia/include/essentia/iotypewrappers.h; sourceTree = SOURCE_ROOT; };
 		B363C75C1FE3233D0014F7F7 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
+		B363C7631FE4301E0014F7F7 /* ofxModalWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxModalWindow.cpp; path = local_addons/ofxModal/src/ofxModalWindow.cpp; sourceTree = "<group>"; };
+		B363C7641FE4301E0014F7F7 /* ofxModalEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxModalEvent.h; path = local_addons/ofxModal/src/ofxModalEvent.h; sourceTree = "<group>"; };
+		B363C7651FE4301E0014F7F7 /* ofxModalWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxModalWindow.h; path = local_addons/ofxModal/src/ofxModalWindow.h; sourceTree = "<group>"; };
+		B363C7661FE4301E0014F7F7 /* ofxModalConfirm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxModalConfirm.h; path = local_addons/ofxModal/src/ofxModalConfirm.h; sourceTree = "<group>"; };
+		B363C7671FE4301F0014F7F7 /* ofxModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxModal.h; path = local_addons/ofxModal/src/ofxModal.h; sourceTree = "<group>"; };
+		B363C7681FE4301F0014F7F7 /* ofxModalTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxModalTheme.h; path = local_addons/ofxModal/src/ofxModalTheme.h; sourceTree = "<group>"; };
+		B363C7771FE433750014F7F7 /* ofxParagraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxParagraph.h; path = local_addons/ofxModal/modules/ofxParagraph/src/ofxParagraph.h; sourceTree = "<group>"; };
+		B363C7781FE433750014F7F7 /* ofxParagraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxParagraph.cpp; path = local_addons/ofxModal/modules/ofxParagraph/src/ofxParagraph.cpp; sourceTree = "<group>"; };
 		B3A04FB01FD20108003BA8A7 /* ofxTLNotes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxTLNotes.cpp; path = ../../../addons/ofxTimeline/src/ofxTLNotes.cpp; sourceTree = "<group>"; };
 		B3A04FB11FD20109003BA8A7 /* ofxTLNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxTLNotes.h; path = ../../../addons/ofxTimeline/src/ofxTLNotes.h; sourceTree = "<group>"; };
 		B3A475B31DD4FBD500B1371C /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
@@ -635,6 +645,7 @@
 		6948EE371B920CB800B5AC1A /* local_addons */ = {
 			isa = PBXGroup;
 			children = (
+				B363C7611FE42FF10014F7F7 /* ofxModal */,
 			);
 			name = local_addons;
 			sourceTree = "<group>";
@@ -1045,6 +1056,53 @@
 				2C25F96592D6C72C99D6CA46 /* efx.h */,
 			);
 			name = AL;
+			sourceTree = "<group>";
+		};
+		B363C7611FE42FF10014F7F7 /* ofxModal */ = {
+			isa = PBXGroup;
+			children = (
+				B363C7711FE4333D0014F7F7 /* modules */,
+				B363C7621FE430040014F7F7 /* src */,
+			);
+			name = ofxModal;
+			sourceTree = "<group>";
+		};
+		B363C7621FE430040014F7F7 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B363C7671FE4301F0014F7F7 /* ofxModal.h */,
+				B363C7661FE4301E0014F7F7 /* ofxModalConfirm.h */,
+				B363C7641FE4301E0014F7F7 /* ofxModalEvent.h */,
+				B363C7681FE4301F0014F7F7 /* ofxModalTheme.h */,
+				B363C7631FE4301E0014F7F7 /* ofxModalWindow.cpp */,
+				B363C7651FE4301E0014F7F7 /* ofxModalWindow.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		B363C7711FE4333D0014F7F7 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				B363C7721FE433420014F7F7 /* ofxParagraph */,
+			);
+			name = modules;
+			sourceTree = "<group>";
+		};
+		B363C7721FE433420014F7F7 /* ofxParagraph */ = {
+			isa = PBXGroup;
+			children = (
+				B363C7731FE433510014F7F7 /* src */,
+			);
+			name = ofxParagraph;
+			sourceTree = "<group>";
+		};
+		B363C7731FE433510014F7F7 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				B363C7781FE433750014F7F7 /* ofxParagraph.cpp */,
+				B363C7771FE433750014F7F7 /* ofxParagraph.h */,
+			);
+			name = src;
 			sourceTree = "<group>";
 		};
 		B3A475B11DD4FBBB00B1371C /* Panels */ = {
@@ -1459,6 +1517,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				B363C7791FE433750014F7F7 /* ofxParagraph.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				329D8C3F749A794D650258B2 /* AnalysisDataSaver.cpp in Sources */,
 				98355E578D9CCEE106FBC6EC /* ofSoundPlayerExtended.cpp in Sources */,
@@ -1509,6 +1568,7 @@
 				C3BC382653A57CE71D4513F1 /* ofxTLFlags.cpp in Sources */,
 				1479A06207A85DFDECA39F00 /* ofxTLImageSequence.cpp in Sources */,
 				DEF58837140932F5996C61C2 /* ofxTLImageSequenceFrame.cpp in Sources */,
+				B363C7691FE4301F0014F7F7 /* ofxModalWindow.cpp in Sources */,
 				95E6E69DB45E5F9E4F1C21E0 /* ofxTLImageTrack.cpp in Sources */,
 				D7058ECB9868A26965509291 /* ofxTLInOut.cpp in Sources */,
 				B3A475BF1DD4FBE600B1371C /* ofxAAOnsetMeter.cpp in Sources */,

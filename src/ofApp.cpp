@@ -89,6 +89,10 @@ void ofApp::setup(){
     _bSendOsc = TRUE;
     _bSendOscVectorValues = TRUE;
     
+    //MODAL-------------------------------
+    mAlert = make_shared<ofxModalAlert>();
+    mAlert->addListener(this, &ofApp::onModalEvent);
+    
     //-------------------------------
     _projectDir = "";
     
@@ -238,6 +242,10 @@ void ofApp::keyPressed(int key){
             break;
         case '3':
             setViewMode(METERSPANEL_ONLY);
+            break;
+            
+        case 'q':
+            mAlert->alert("It's time to go outside.");
             break;
             
             
@@ -694,6 +702,12 @@ void ofApp::onsetFired(int & panelId){
 //--------------------------------------------------------------
 void ofApp::addKeyframeInFocusedTrack(){
     timePanel.addKeyframeInFocusedTrack();
+}
+//--------------------------------------------------------------
+void ofApp::onModalEvent(ofxModalEvent e) {
+    if (e.type == ofxModalEvent::CONFIRM){
+        cout << "confirm button was selected" << endl;
+    }
 }
 
 #pragma mark - OF Native
