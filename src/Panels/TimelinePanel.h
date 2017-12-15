@@ -127,5 +127,9 @@ private:
     
     bool _isHidden = false;
     
+    //margins related to ofxTimeline height auto adjust func.
+    float _strangeMargin1 = 66.0;
+    float _strangeMargin2 = 36.5;
+    
 };
 

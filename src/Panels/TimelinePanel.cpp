@@ -385,11 +385,7 @@ void TimelinePanel::adjustTracksHeight(){
         int audioH = timeline.getPage(PAGE_AUDIO_NAME)->getComputedHeight();
         int tracksNum = timeline.getPage(PAGE_TRACKS_NAME)->getTracksNum();
         
-        timeline.setHeight(audioH + 66 - 17.68*tracksNum);
-        
-        //cout<<"tracksNum = "<<tracksNum<<endl;
-        //cout<<"audioH = "<<audioH<<endl;
-        //cout<<"setHeight = "<<audioH + 66 - 17.68*tracksNum<<endl;
+        timeline.setHeight(audioH + _strangeMargin1 - 17.68*tracksNum);
         
     }
     
@@ -474,9 +470,9 @@ std::map<string, float> TimelinePanel::getTracksValues(){
 //--------------------------------------------------------------
 void TimelinePanel::checkIfHeightChanged(){
     
-    int tl_h = timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height + 66;
+    int tl_h = timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height + _strangeMargin1;
     
-    if(tl_h != _h - _guiCompHeight){
+    if(tl_h != _h - _guiCompHeight - _strangeMargin2){
         resizeHeight(tl_h);
     }
     
@@ -503,8 +499,7 @@ void TimelinePanel::resize(int y, int w, int h){
     timeline.setOffset(ofVec2f(_x, _y));
     timeline.setWidth(_w);
     
-    timeline.setHeight(_h - _guiCompHeight);
-    
+    timeline.setHeight(_h - _guiCompHeight - _strangeMargin2);
     adjustGuiSize(_y, _w, _h);
     
     adjustTracksHeight();
@@ -525,13 +520,11 @@ void TimelinePanel::resizeHeight(int tl_h){
 //--------------------------------------------------------------
 void TimelinePanel::setHidden(bool h){
     
-    if (_isHidden == h) { return; }
-    
     _isHidden = h;
     
     if (_isHidden) {
         _guiCompHeight = 1;
-        resize(_y, _w, 30);
+        resize(_y, _w, _strangeMargin1);
     } else {
         _guiCompHeight = TL_GUI_COMP_HEIGHT;
         resize(_y, _w, TIME_PANEL_HEIGHT * ofGetHeight());
