@@ -77,11 +77,12 @@ class MainPanel : public Panel{
         ofxDatGuiToggle* gShowBpm;
         ofxDatGuiToggle* gSnapBpm;
         ofxDatGuiToggle* gFramebased;
+        ofxDatGuiFRM* gFpsMonitor;
+        //REMOVE
         ofxDatGuiTextInput* gHost;
         ofxDatGuiTextInput* gPort;
         ofxDatGuiTextInput* gBpm;
         ofxDatGuiTextInput* gFps;
-        ofxDatGuiFRM* gFpsMonitor;
         ofxDatGuiDropdown* gBufferSize;
     
         string _panelDir;

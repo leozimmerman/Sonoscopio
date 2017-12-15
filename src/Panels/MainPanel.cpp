@@ -465,7 +465,6 @@ void MainPanel::setupGui(){
     
 
     
-    
     component = new ofxDatGuiButton("FULL SCREEN");
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     component->onButtonEvent(this, &MainPanel::onButtonEvent);

@@ -36,6 +36,7 @@
 #include "ofEvents.h"
 
 #include "ofxModal.h"
+#include "CustomModals.h"
 
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.4
@@ -104,7 +105,10 @@ class ofApp : public ofBaseApp{
     int getTotalFramesNum(){return timePanel.timeline.getDurationInFrames();}
     string getSoundfilePath(){return timePanel.audioTrack->getSoundfilePath();}
     float getDurationInSeconds(){return timePanel.timeline.getDurationInSeconds();}
+    float getBpm(){return timePanel.timeline.getBPM();}
     string getProjectDir(){return _projectDir;}
+    string getOscHost(){return _oscHost;}
+    int getOscPort(){return _oscPort;}
     
     void saveSettings();
     void loadSettings();
@@ -116,8 +120,12 @@ class ofApp : public ofBaseApp{
     
     void onsetFired(int & panelId);
     
-    shared_ptr<ofxModalAlert> mAlert;
+    shared_ptr<TextModal> mText;
+    shared_ptr<MenuModal> mMenu;
+    
     void onModalEvent(ofxModalEvent e);
+    void showKeyboardShortcuts();
+    void showMenu();
 
     MainPanel mainPanel;
     TimelinePanel timePanel;

@@ -90,9 +90,11 @@ void ofApp::setup(){
     _bSendOscVectorValues = TRUE;
     
     //MODAL-------------------------------
-    mAlert = make_shared<ofxModalAlert>();
-    mAlert->addListener(this, &ofApp::onModalEvent);
-    
+    mText = make_shared<TextModal>();
+    mText->addListener(this, &ofApp::onModalEvent);
+    mMenu = make_shared<MenuModal>();
+    mMenu->addListener(this, &ofApp::onModalEvent);
+    mMenu->setMainAppPtr(ofGetAppPtr());
     //-------------------------------
     _projectDir = "";
     
@@ -195,7 +197,7 @@ void ofApp::keyPressed(int key){
     
     //---------------------------
     //If any dat gui text input is in focus return
-    if(mainPanel.getFocused() || timePanel.getFocused() || metersPanel.getFocused()){
+    if(mainPanel.getFocused() || timePanel.getFocused() || metersPanel.getFocused() || mMenu->getFocused()){
         return;
     }
     //---------------------------
@@ -245,9 +247,12 @@ void ofApp::keyPressed(int key){
             break;
             
         case 'q':
-            mAlert->alert("It's time to go outside.");
+            showKeyboardShortcuts();
             break;
             
+        case 'z':
+            showMenu();
+            break;
             
         default:
             break;
@@ -705,9 +710,31 @@ void ofApp::addKeyframeInFocusedTrack(){
 }
 //--------------------------------------------------------------
 void ofApp::onModalEvent(ofxModalEvent e) {
-    if (e.type == ofxModalEvent::CONFIRM){
-        cout << "confirm button was selected" << endl;
+    if (e.type == ofxModalEvent::SHOWN){
+        // dispatched when the window has finished animating in //
+    }    else if (e.type == ofxModalEvent::HIDDEN){
+        // dispatched when the window has finished animating out //
+    }    else if (e.type == ofxModalEvent::CONFIRM){
+        // dispatched when the button at index 0 is selected //
+        cout << "OK button was selected" << endl;
+    }    else if (e.type == ofxModalEvent::CANCEL){
+        // dispatched when the button at index 1 is selected //
+        cout << "CANCEL button was selected" << endl;
     }
+    
+   
+}
+//--------------------------------------------------------------
+void ofApp::showKeyboardShortcuts(){
+    
+    string title = "KEYBOARD SHORTCUTS";
+    string msg = "'t': time measurement on/off  |  'm': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut";
+    
+    mText->display(title, msg);
+}
+//--------------------------------------------------------------
+void ofApp::showMenu(){
+    mMenu->display();
 }
 
 #pragma mark - OF Native

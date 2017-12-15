@@ -66,6 +66,7 @@
 		ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADD194746185E2DA11468377 /* IpEndpointName.cpp */; };
 		B363C7691FE4301F0014F7F7 /* ofxModalWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B363C7631FE4301E0014F7F7 /* ofxModalWindow.cpp */; };
 		B363C7791FE433750014F7F7 /* ofxParagraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B363C7781FE433750014F7F7 /* ofxParagraph.cpp */; };
+		B363C7801FE4398F0014F7F7 /* CustomModals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B363C77E1FE4398F0014F7F7 /* CustomModals.cpp */; };
 		B3A04FB21FD20109003BA8A7 /* ofxTLNotes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A04FB01FD20108003BA8A7 /* ofxTLNotes.cpp */; };
 		B3A475BC1DD4FBE600B1371C /* ofxAABinMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475B41DD4FBE600B1371C /* ofxAABinMeter.cpp */; };
 		B3A475BD1DD4FBE600B1371C /* ofxAAChannelMetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475B61DD4FBE600B1371C /* ofxAAChannelMetersPanel.cpp */; };
@@ -349,6 +350,8 @@
 		B363C7681FE4301F0014F7F7 /* ofxModalTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxModalTheme.h; path = local_addons/ofxModal/src/ofxModalTheme.h; sourceTree = "<group>"; };
 		B363C7771FE433750014F7F7 /* ofxParagraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxParagraph.h; path = local_addons/ofxModal/modules/ofxParagraph/src/ofxParagraph.h; sourceTree = "<group>"; };
 		B363C7781FE433750014F7F7 /* ofxParagraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxParagraph.cpp; path = local_addons/ofxModal/modules/ofxParagraph/src/ofxParagraph.cpp; sourceTree = "<group>"; };
+		B363C77E1FE4398F0014F7F7 /* CustomModals.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CustomModals.cpp; path = CustomModals/CustomModals.cpp; sourceTree = "<group>"; };
+		B363C77F1FE4398F0014F7F7 /* CustomModals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomModals.h; path = CustomModals/CustomModals.h; sourceTree = "<group>"; };
 		B3A04FB01FD20108003BA8A7 /* ofxTLNotes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxTLNotes.cpp; path = ../../../addons/ofxTimeline/src/ofxTLNotes.cpp; sourceTree = "<group>"; };
 		B3A04FB11FD20109003BA8A7 /* ofxTLNotes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxTLNotes.h; path = ../../../addons/ofxTimeline/src/ofxTLNotes.h; sourceTree = "<group>"; };
 		B3A475B31DD4FBD500B1371C /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
@@ -1105,6 +1108,15 @@
 			name = src;
 			sourceTree = "<group>";
 		};
+		B363C77D1FE439610014F7F7 /* CustomModals */ = {
+			isa = PBXGroup;
+			children = (
+				B363C77E1FE4398F0014F7F7 /* CustomModals.cpp */,
+				B363C77F1FE4398F0014F7F7 /* CustomModals.h */,
+			);
+			name = CustomModals;
+			sourceTree = "<group>";
+		};
 		B3A475B11DD4FBBB00B1371C /* Panels */ = {
 			isa = PBXGroup;
 			children = (
@@ -1334,6 +1346,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B363C77D1FE439610014F7F7 /* CustomModals */,
 				B3A475B21DD4FBC300B1371C /* ofxAAMeters */,
 				B3A475B11DD4FBBB00B1371C /* Panels */,
 				B3A475B31DD4FBD500B1371C /* Macros.h */,
@@ -1604,6 +1617,7 @@
 				32FC7731C1EF7B87E491C93D /* ofxTween.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,
+				B363C7801FE4398F0014F7F7 /* CustomModals.cpp in Sources */,
 				9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */,
 				5A4349E9754D6FA14C0F2A3A /* tinyxmlparser.cpp in Sources */,
 				B3A475C81DD4FBF000B1371C /* MainPanel.cpp in Sources */,
