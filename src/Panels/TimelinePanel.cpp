@@ -472,7 +472,7 @@ void TimelinePanel::checkIfHeightChanged(){
     
     int tl_h = timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height + _strangeMargin1;
     
-    if(tl_h != _h - _guiCompHeight - _strangeMargin2){
+    if(tl_h != _h - _guiCompHeight){
         resizeHeight(tl_h);
     }
     
@@ -525,6 +525,7 @@ void TimelinePanel::setHidden(bool h){
     if (_isHidden) {
         _guiCompHeight = 1;
         resize(_y, _w, _strangeMargin1);
+        ofNotifyEvent(heightResizedEvent, _h, this);
     } else {
         _guiCompHeight = TL_GUI_COMP_HEIGHT;
         resize(_y, _w, TIME_PANEL_HEIGHT * ofGetHeight());
