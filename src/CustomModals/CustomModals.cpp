@@ -12,7 +12,7 @@ ofApp* menuMainAppPtr;
 
 MenuModal::MenuModal(){
     
-    setTitle("CONIGURATION");
+    setTitle("CONFIGURATION");
     
     getButton(0)->setLabel("APPLY");
     getButton(0)->onButtonEvent(this, &MenuModal::onApplyButtonEvent);

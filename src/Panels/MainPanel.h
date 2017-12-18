@@ -26,6 +26,8 @@
 #include "Macros.h"
 #include "Panel.h"
 
+#define FILE_INFO_HEIGHT 20
+
 class MainPanel : public Panel{
 
     public:
@@ -79,15 +81,18 @@ class MainPanel : public Panel{
         ofxDatGuiToggle* gFramebased;
         ofxDatGuiFRM* gFpsMonitor;
         //REMOVE
-        ofxDatGuiTextInput* gHost;
-        ofxDatGuiTextInput* gPort;
-        ofxDatGuiTextInput* gBpm;
-        ofxDatGuiTextInput* gFps;
-        ofxDatGuiDropdown* gBufferSize;
+        //ofxDatGuiTextInput* gHost;
+        //ofxDatGuiTextInput* gPort;
+        //ofxDatGuiTextInput* gBpm;
+        //ofxDatGuiTextInput* gFps;
+        //ofxDatGuiDropdown* gBufferSize;
     
         string _panelDir;
     
         ofDirectory projects_dir;
+    
+        int _rows;
+        int _columns;
     
 
 };

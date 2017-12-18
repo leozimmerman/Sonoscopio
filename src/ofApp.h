@@ -39,7 +39,7 @@
 #include "CustomModals.h"
 
 #define MAIN_PANEL_HEIGHT 0.15
-#define TIME_PANEL_HEIGHT 0.4
+#define TIME_PANEL_HEIGHT 0.40
 #define METER_PANEL_HEIGHT 0.45
 
 #define INIT_FPS 30

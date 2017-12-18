@@ -46,6 +46,12 @@ public:
     void applyConfiguration();
     bool getFocused();
     
+    string getHostText(){ return gHost->getText(); }
+    string getPortText(){ return gPort->getText(); }
+    string getBpmText() { return gBpm->getText(); }
+    string getFpsText(){ return gFps->getText(); }
+    string getBufferSizeText(){ return gBufferSize->getSelected()->getName(); }
+    
 private:
 
     

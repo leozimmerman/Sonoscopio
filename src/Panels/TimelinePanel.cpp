@@ -421,9 +421,9 @@ string TimelinePanel::getFileInfo(){
     
     string s =
     "duration: " + ofToString(audioTrack->getDuration(), 2) + "sec."
-    "\nsample rate: " + ofToString(audioTrack->getSampleRate()) +
-    "\nchannels: " + ofToString(audioTrack->getNumChannels()) +
-    "\nframes: " + ofToString(timeline.getDurationInFrames()) + " at " + ofToString(_frameRate) + "fps";
+    " - sample rate: " + ofToString(audioTrack->getSampleRate()) +
+    " - channels: " + ofToString(audioTrack->getNumChannels()) +
+    " - frames: " + ofToString(timeline.getDurationInFrames()) + " at " + ofToString(_frameRate) + "fps";
     
     return s;
     

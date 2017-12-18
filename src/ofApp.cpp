@@ -663,7 +663,7 @@ void ofApp::hideMetersPanel(bool hide){
     metersPanel.setHidden(hide);
     
     if (hide){
-        _timePanelHeightPercent   = 0.85;
+        _timePanelHeightPercent   = 1.0 - MAIN_PANEL_HEIGHT;
         _metersPanelHeightPercent = 0.0;
     } else {
         _timePanelHeightPercent = TIME_PANEL_HEIGHT;
