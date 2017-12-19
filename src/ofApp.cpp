@@ -732,7 +732,7 @@ void ofApp::onModalEvent(ofxModalEvent e) {
 void ofApp::showKeyboardShortcuts(){
     
     string title = "KEYBOARD SHORTCUTS";
-    string msg = "'t': time measurement on/off  |  'm': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut";
+    string msg = "'cmd 1,2,3: view modes | 'cmd + t': time measurement on/off  |  'cmd + m': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut";
     
     mText->display(title, msg);
 }
