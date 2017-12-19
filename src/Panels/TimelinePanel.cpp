@@ -64,7 +64,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
 
     timeline.addAudioTrack("Audio", INIT_AUDIO_FILE);
     
-    //this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
+    //this means that calls to play/stop etc will be  routed to the waveform anofd that timing will be 100% accurate
     timeline.setTimecontrolTrack("Audio");
     timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration());
     
@@ -110,24 +110,22 @@ void TimelinePanel::draw(){
     drawBackground();
     
 
+    TS_START("waveforms");
+    if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME && !_isHidden){
+        audioTrack->drawWaveforms();
+    }
+    TS_STOP("waveforms");
     
     TS_START("timeline");
     timeline.draw(false, _isHidden);//without ticker timeMarks & hidden mode
     TS_STOP("timeline");
     
     
-    //hidden--------------------
-    if (_isHidden) {return;}
-    
-    TS_START("waveforms");
-    if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
-        audioTrack->drawWaveforms();
-    }
-    TS_STOP("waveforms");
-    
     TS_START("gui");
-    for(int i=0; i<components.size(); i++){
-        components[i]->draw();
+    if (!_isHidden) {
+        for(int i=0; i<components.size(); i++){
+            components[i]->draw();
+        }
     }
     TS_STOP("gui");
     
@@ -159,6 +157,16 @@ void TimelinePanel::keyPressed(int key){
     }
 }
 
+//--------------------------------------------------------------
+bool TimelinePanel::getFocused(){
+    if (gTrackName->getFocused()) {
+        return true;
+    } else {
+        return false;
+    }
+    
+    
+}
 //--------------------------------------------------------------
 #pragma mark - Settings
 //--------------------------------------------------------------

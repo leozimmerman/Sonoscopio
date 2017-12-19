@@ -96,7 +96,7 @@ public:
     
     ofEvent<int> heightResizedEvent;
     
-    bool getFocused(){return gTrackName->getFocused();}
+    bool getFocused();
     void setHidden(bool h);
     
 private:
