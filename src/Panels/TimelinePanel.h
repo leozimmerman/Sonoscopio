@@ -87,6 +87,8 @@ public:
     
     void addKeyframeInFocusedTrack();
     
+    void hideTracks();
+    
     std::map<string, float> getTracksValues();
 
     void bangFired(ofxTLBangEventArgs& args);

@@ -367,8 +367,15 @@ void TimelinePanel::removeTrack(string name){
     
 }
 //--------------------------------------------------------------
+void TimelinePanel::hideTracks(){
+    if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME) {
+        timeline.setCurrentPage(PAGE_AUDIO_NAME);
+        timeline.setFootersHidden(false);
+        adjustTracksHeight();
+    }
+}
+//--------------------------------------------------------------
 void TimelinePanel::toggleShowTracks(){
-    
     
     if(timeline.getCurrentPageName() == PAGE_AUDIO_NAME){
 

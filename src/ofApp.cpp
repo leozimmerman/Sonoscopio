@@ -119,7 +119,8 @@ void ofApp::update(){
     
     //**********************************************************************
     
-    ofSetWindowTitle("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
+    //ofSetWindowTitle("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
+    ofSetWindowTitle("Sonoscopio");
     
     //analyze soundBuffer----------------
     ofSoundUpdate();
@@ -679,6 +680,8 @@ void ofApp::hideMetersPanel(bool hide){
 //--------------------------------------------------------------
 void ofApp::setViewMode(viewMode mode){
     _currentViewMode = mode;
+    timePanel.hideTracks();
+    
     
     switch (_currentViewMode) {
             
