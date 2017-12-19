@@ -42,7 +42,7 @@ public:
     void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     void onApplyButtonEvent(ofxDatGuiButtonEvent e);
     
-    void display();
+    void display(int height);
     void applyConfiguration();
     bool getFocused();
     

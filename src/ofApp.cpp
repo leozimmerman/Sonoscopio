@@ -217,33 +217,12 @@ void ofApp::keyPressed(int key){
      */
     switch (key) {
         
-        case 't':
-            if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
-            else TIME_SAMPLE_ENABLE();
-            break;
-    
-        case 'm':
-            timePanel.addMarker();
-            break;
-        
         case 'w':
             rewind();
             break;
             
         case 'k':
             addKeyframeInFocusedTrack();
-            break;
-            
-        //TODO: sacar de aca, poner en main panel
-  
-        case '1':
-            setViewMode(ALL);
-            break;
-        case '2':
-            setViewMode(TIMEPANEL_ONLY);
-            break;
-        case '3':
-            setViewMode(METERSPANEL_ONLY);
             break;
             
         case 'q':
@@ -256,6 +235,31 @@ void ofApp::keyPressed(int key){
             
         default:
             break;
+    }
+    
+    if (ofGetModifierShortcutKeyPressed()) {
+        switch (key) {
+            case '1':
+                setViewMode(ALL);
+                break;
+            case '2':
+                setViewMode(TIMEPANEL_ONLY);
+                break;
+            case '3':
+                setViewMode(METERSPANEL_ONLY);
+                break;
+                
+            case 'm':
+                timePanel.addMarker();
+                break;
+                
+            case 't':
+                if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
+                else TIME_SAMPLE_ENABLE();
+                break;
+        }
+        
+
     }
     
     
@@ -734,7 +738,7 @@ void ofApp::showKeyboardShortcuts(){
 }
 //--------------------------------------------------------------
 void ofApp::showMenu(){
-    mMenu->display();
+    mMenu->display(ofGetHeight());
 }
 
 #pragma mark - OF Native

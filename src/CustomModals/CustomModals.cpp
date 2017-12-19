@@ -17,6 +17,8 @@ MenuModal::MenuModal(){
     getButton(0)->setLabel("APPLY");
     getButton(0)->onButtonEvent(this, &MenuModal::onApplyButtonEvent);
     
+    addButton("CANCEL");
+    
     ofxDatGuiComponent* component;
     //SET FRAMERATE
     gFps = new ofxDatGuiTextInput("SET FPS", ofToString(INIT_FPS));
@@ -67,8 +69,6 @@ MenuModal::MenuModal(){
     addComponent(component);
     
     
-    addButton("CANCEL");
-    
 //    autoSize();
     
     
@@ -78,7 +78,7 @@ void MenuModal::setMainAppPtr(ofBaseApp* appPtr){
     menuMainAppPtr = dynamic_cast<ofApp*>(appPtr);
 }
 
-void MenuModal::display(){
+void MenuModal::display(int height){
     
     int fps = menuMainAppPtr->getFrameRate();
     string host = menuMainAppPtr->getOscHost();
@@ -92,9 +92,10 @@ void MenuModal::display(){
     gBpm->setText(std::to_string(bpm));
     selectedBufferSize = bufferSize;
     
+    setHeight(height);
+    
     show();
     
-    cout<<"MENU MODAL DISPLAY"<<endl;
 }
 
 void MenuModal::applyConfiguration(){
@@ -131,38 +132,7 @@ void MenuModal::applyConfiguration(){
 
 
 void MenuModal::onTextInputEvent(ofxDatGuiTextInputEvent e){
-//    //cout << "onButtonEvent: " << e.text << endl;
-//    //cout << "onTextInput: " << e.text << endl;
-//    if (e.target->getLabel()=="BPM"){
-//        try{
-//           /// mMainAppPtr->timePanel.timeline.setNewBPM( std::stof (e.text) );
-//        }
-//        catch (const std::invalid_argument& ia) {
-//            e.target->setText("ERROR");
-//            std::cerr << "Invalid BPM: " << ia.what() << '\n';
-//        }
-//    }else if (e.target->getLabel()=="HOST"){
-//
-//        ///mMainAppPtr->setOscSenderHost(e.text);
-//
-//    }else if (e.target->getLabel()=="PORT"){
-//        try{
-//           /// mMainAppPtr->setOscSenderPort( std::stoi(e.text) );
-//        }
-//        catch (const std::invalid_argument& ia) {
-//            e.target->setText("ERROR");
-//            std::cerr << "Invalid PORT: " << ia.what() << '\n';
-//        }
-//    } else if (e.target->getLabel()=="SET FPS"){
-//        try{
-//            ///mMainAppPtr->setFrameRate( std::stoi(e.text) );
-//        }
-//        catch (const std::invalid_argument& ia) {
-//            e.target->setText("ERROR");
-//            std::cerr << "Invalid FPS: " << ia.what() << '\n';
-//        }
-//    }
-    
+
 }
 
 //--------------------------------------------------------------
