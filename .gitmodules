@@ -10,3 +10,21 @@
 [submodule "local_addons/GUI/ofxDatGui"]
 	path = local_addons/GUI/ofxDatGui
 	url = https://github.com/leozimmerman/ofxDatGui
+[submodule "local_addons/Timeline/ofxRange"]
+	path = local_addons/Timeline/ofxRange
+	url = https://github.com/Flightphase/ofxRange.git
+[submodule "local_addons/Timeline/ofxTextInputField"]
+	path = local_addons/Timeline/ofxTextInputField
+	url = https://github.com/elliotwoods/ofxTextInputField.git
+[submodule "local_addons/Timeline/ofxTimecode"]
+	path = local_addons/Timeline/ofxTimecode
+	url = https://github.com/YCAMInterlab/ofxTimecode.git
+[submodule "local_addons/Timeline/ofxTween"]
+	path = local_addons/Timeline/ofxTween
+	url = https://github.com/obviousjim/ofxTween.git
+[submodule "local_addons/Timeline/ofxMSATimer"]
+	path = local_addons/Timeline/ofxMSATimer
+	url = https://github.com/obviousjim/ofxMSATimer.git
+[submodule "local_addons/Utils/ofxTimeMeasurements"]
+	path = local_addons/Utils/ofxTimeMeasurements
+	url = https://github.com/armadillu/ofxTimeMeasurements.git
