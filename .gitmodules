@@ -1,3 +1,12 @@
 [submodule "local_addons/ofxModal"]
-	path = local_addons/ofxModal
+	path = local_addons/GUI/ofxModal
 	url = https://github.com/leozimmerman/ofxModal
+[submodule "local_addons/GUI/ofxSmartFont"]
+	path = local_addons/GUI/ofxSmartFont
+	url = https://github.com/leozimmerman/ofxSmartFont
+[submodule "local_addons/GUI/ofxParagraph"]
+	path = local_addons/GUI/ofxParagraph
+	url = https://github.com/leozimmerman/ofxParagraph
+[submodule "local_addons/GUI/ofxDatGui"]
+	path = local_addons/GUI/ofxDatGui
+	url = https://github.com/leozimmerman/ofxDatGui
