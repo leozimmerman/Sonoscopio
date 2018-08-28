@@ -1,0 +1,3 @@
+[submodule "local_addons/ofxModal"]
+	path = local_addons/ofxModal
+	url = https://github.com/leozimmerman/ofxModal
