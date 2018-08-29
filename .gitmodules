@@ -28,3 +28,12 @@
 [submodule "local_addons/Utils/ofxTimeMeasurements"]
 	path = local_addons/Utils/ofxTimeMeasurements
 	url = https://github.com/armadillu/ofxTimeMeasurements.git
+[submodule "local_addons/Timeline/ofxTimeline"]
+	path = local_addons/Timeline/ofxTimeline
+	url = https://github.com/leozimmerman/ofxTimeline.git
+[submodule "local_addons/Audio/ofxAudioAnalyzer"]
+	path = local_addons/Audio/ofxAudioAnalyzer
+	url = https://github.com/leozimmerman/ofxAudioAnalyzer
+[submodule "local_addons/Audio/ofxAudioDecoder"]
+	path = local_addons/Audio/ofxAudioDecoder
+	url = https://github.com/leozimmerman/ofxAudioDecoder.git
