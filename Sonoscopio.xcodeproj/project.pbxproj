@@ -164,7 +164,6 @@
 		AE803632C8979292003FC2CF /* AnalysisDataSaver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = AnalysisDataSaver.cpp; path = src/AnalysisDataSaver.cpp; sourceTree = SOURCE_ROOT; };
 		B21E7E5F548EEA92F368040B /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		B31C608870ECEB2490A93736 /* ofxOscParameterSync.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscParameterSync.h; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.h; sourceTree = SOURCE_ROOT; };
-		B363C75C1FE3233D0014F7F7 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		B363C77E1FE4398F0014F7F7 /* CustomModals.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CustomModals.cpp; path = CustomModals/CustomModals.cpp; sourceTree = "<group>"; };
 		B363C77F1FE4398F0014F7F7 /* CustomModals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomModals.h; path = CustomModals/CustomModals.h; sourceTree = "<group>"; };
 		B3712ED62135DDB9007BA046 /* ofxSmartFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxSmartFont.cpp; path = local_addons/GUI/ofxSmartFont/src/ofxSmartFont.cpp; sourceTree = "<group>"; };
@@ -1366,7 +1365,6 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
-				B363C75C1FE3233D0014F7F7 /* TODO.md */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
