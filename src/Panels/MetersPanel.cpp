@@ -25,14 +25,16 @@ ofApp* meMainAppPtr;
 //----------------------------------------------
 #pragma mark - Core Funcs
 //----------------------------------------------
-void MetersPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
+void MetersPanel::setup(int x, int y, int width, int height, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
+    
+    meMainAppPtr = (ofApp*)ofGetAppPtr();
     
     _x = x;
     _y = y;
     _w = width;
     _h = height;
     
-    meMainAppPtr = dynamic_cast<ofApp*>(appPtr);
+    
     channelAnalyzers = chanAnalyzerPtrs;
     
     //-------------------------

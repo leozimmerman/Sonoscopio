@@ -21,7 +21,7 @@
 #include "ofApp.h"
 
 ofApp* sMainApp;
-analysisMode currentAnalysisMode;
+AnalysisMode currentAnalysisMode;
 
 //------------------------------------
 void AnalysisDataSaver::setup(ofBaseApp* appPtr){
@@ -42,19 +42,19 @@ void AnalysisDataSaver::reset(){
     }
     
     soundfilePath = sMainApp->getSoundfilePath();
-    
-    frameRate = sMainApp->getFrameRate();
+    //TODO: Remove this reference to config
+    frameRate = sMainApp->config.getFrameRate();
     totalFramesNum = sMainApp->getTotalFramesNum();
     durationSecs = sMainApp->getDurationInSeconds();
     
-    sampleRate = sMainApp->getSampleRate();
-    bufferSize = sMainApp->getBufferSize();
+    sampleRate = sMainApp->config.getSampleRate();
+    bufferSize = sMainApp->config.getBufferSize();
 
     
-    currentAnalysisMode = sMainApp->getAnalysisMode();
+    currentAnalysisMode = sMainApp->config.getAnalysisMode();
     
     if(currentAnalysisMode==SPLIT){
-        channelsNum = sMainApp->getChannelsNum();
+        channelsNum = sMainApp->config.getChannelsNum();
     }
     else{
         channelsNum = 1;
@@ -64,8 +64,8 @@ void AnalysisDataSaver::reset(){
 }
 //------------------------------------
 void AnalysisDataSaver::updateFrameRate(){
-    
-    frameRate       = sMainApp->getFrameRate();
+    //TODO: Remove this reference to config
+    frameRate       = sMainApp->config.getFrameRate();
     totalFramesNum  = sMainApp->getTotalFramesNum();
     
 }

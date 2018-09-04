@@ -25,16 +25,16 @@
 #include"ofxAudioAnalyzerUnit.h"
 
 #include "Macros.h"
-#include "Panel.h"
+#include "BasePanel.h"
 #include "ofxAAChannelMetersPanel.h"
 
 #define MT_GUI_COMP_HEIGHT 26
 
-class MetersPanel : public Panel{
+class MetersPanel : public BasePanel {
     
 public:
     
-    void setup(int x, int y, int width, int height, ofBaseApp* appPtr, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
+    void setup(int x, int y, int width, int height, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void update();
     void draw();
     void exit();

@@ -24,15 +24,15 @@
 #include "ofxXmlSettings.h"
 
 #include "Macros.h"
-#include "Panel.h"
+#include "BasePanel.h"
 
 #define FILE_INFO_HEIGHT 20
 
-class MainPanel : public Panel{
+class MainPanel : public BasePanel{
 
     public:
     
-        void setup(int x, int y, int width, int height, ofBaseApp* appPtr);
+        void setup(int x, int y, int width, int height);
         void update();
         void draw();
         void exit();

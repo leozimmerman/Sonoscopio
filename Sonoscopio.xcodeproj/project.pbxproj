@@ -95,6 +95,7 @@
 		B3A475C81DD4FBF000B1371C /* MainPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C01DD4FBF000B1371C /* MainPanel.cpp */; };
 		B3A475C91DD4FBF000B1371C /* MetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C21DD4FBF000B1371C /* MetersPanel.cpp */; };
 		B3A475CB1DD4FBF000B1371C /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */; };
+		B3FD348A213DD25300B30C17 /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FD3488213DD25300B30C17 /* OscSender.cpp */; };
 		C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8881B3C8C0A1C45F042E7A /* OscPrintReceivedElements.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
@@ -511,9 +512,12 @@
 		B3A475C11DD4FBF000B1371C /* MainPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainPanel.h; path = Panels/MainPanel.h; sourceTree = "<group>"; };
 		B3A475C21DD4FBF000B1371C /* MetersPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MetersPanel.cpp; path = Panels/MetersPanel.cpp; sourceTree = "<group>"; };
 		B3A475C31DD4FBF000B1371C /* MetersPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetersPanel.h; path = Panels/MetersPanel.h; sourceTree = "<group>"; };
-		B3A475C51DD4FBF000B1371C /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Panel.h; path = Panels/Panel.h; sourceTree = "<group>"; };
+		B3A475C51DD4FBF000B1371C /* BasePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePanel.h; path = Panels/BasePanel.h; sourceTree = "<group>"; };
 		B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimelinePanel.cpp; path = Panels/TimelinePanel.cpp; sourceTree = "<group>"; };
 		B3A475C71DD4FBF000B1371C /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimelinePanel.h; path = Panels/TimelinePanel.h; sourceTree = "<group>"; };
+		B3FD3487213DBA3300B30C17 /* Configurations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configurations.h; sourceTree = "<group>"; };
+		B3FD3488213DD25300B30C17 /* OscSender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OscSender.cpp; sourceTree = "<group>"; };
+		B3FD3489213DD25300B30C17 /* OscSender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscSender.h; sourceTree = "<group>"; };
 		BC8881B3C8C0A1C45F042E7A /* OscPrintReceivedElements.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = OscPrintReceivedElements.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscPrintReceivedElements.cpp; sourceTree = SOURCE_ROOT; };
 		C2FAC65C491D4231379F3298 /* ofxOscReceiver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscReceiver.cpp; path = ../../../addons/ofxOsc/src/ofxOscReceiver.cpp; sourceTree = SOURCE_ROOT; };
 		C58862C6D212C8E8A83810F4 /* ofxOscMessage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscMessage.h; path = ../../../addons/ofxOsc/src/ofxOscMessage.h; sourceTree = SOURCE_ROOT; };
@@ -1395,9 +1399,9 @@
 				B3A475C11DD4FBF000B1371C /* MainPanel.h */,
 				B3A475C21DD4FBF000B1371C /* MetersPanel.cpp */,
 				B3A475C31DD4FBF000B1371C /* MetersPanel.h */,
-				B3A475C51DD4FBF000B1371C /* Panel.h */,
 				B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */,
 				B3A475C71DD4FBF000B1371C /* TimelinePanel.h */,
+				B3A475C51DD4FBF000B1371C /* BasePanel.h */,
 			);
 			name = Panels;
 			sourceTree = "<group>";
@@ -1577,6 +1581,9 @@
 				AE803632C8979292003FC2CF /* AnalysisDataSaver.cpp */,
 				3EC1427CE6C0D0441861140B /* AnalysisDataSaver.h */,
 				7413FA8F1E9A9D785B1C2E16 /* ExtendedDatGuiComponents.h */,
+				B3FD3487213DBA3300B30C17 /* Configurations.h */,
+				B3FD3488213DD25300B30C17 /* OscSender.cpp */,
+				B3FD3489213DD25300B30C17 /* OscSender.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1796,6 +1803,7 @@
 				B3712F362135E8E3007BA046 /* ofxEasingElastic.cpp in Sources */,
 				B3712F9C2136F733007BA046 /* ofxTLImageSequenceFrame.cpp in Sources */,
 				B3712F9E2136F733007BA046 /* ofxTLInOut.cpp in Sources */,
+				B3FD348A213DD25300B30C17 /* OscSender.cpp in Sources */,
 				B3A475BF1DD4FBE600B1371C /* ofxAAOnsetMeter.cpp in Sources */,
 				B3712FCB21373856007BA046 /* ofxAudioAnalyzerUnit.cpp in Sources */,
 				B3712EF72135DE9E007BA046 /* ofxDatGuiComponent.cpp in Sources */,

@@ -28,99 +28,92 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    //Gral---------------------------
+    setupOFContext();
+    setupTimeMeasurment();
+    setupPanels();
+    setupListeners();
+
+    oscSender.setup(config.osc().host,  config.osc().port);
+    setupModals();
+    dataSaver.setup(ofGetAppPtr());
+    
+    verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
+    
+    //adjust timePanel Height
+    timePanel.checkIfHeightChanged(); //TODO: Vuela cuando se cambia el layout
+}
+
+void ofApp::setupOFContext() {
+    ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetBackgroundColor(ofColor::black);
     ofEnableSmoothing();
     ofEnableAlphaBlending();
-    _frameRate = INIT_FPS;
-    ofSetFrameRate(_frameRate);
+    config.setFrameRate(INIT_FPS);
+    ofSetFrameRate(INIT_FPS);
+}
+
+void ofApp::setupTimeMeasurment() {
     
-    ofSetLogLevel(OF_LOG_VERBOSE);
-    
-    //Time Measurement-----------------
-    
-    TIME_SAMPLE_SET_FRAMERATE( _frameRate ); //set the app's target framerate (MANDATORY)
+    TIME_SAMPLE_SET_FRAMERATE(config.getFrameRate()); //set the app's target framerate (MANDATORY)
     //specify where the widget is to be drawn
     TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_TOP_RIGHT );
-    TIME_SAMPLE_SET_AVERAGE_RATE(0.1);	//averaging samples, (0..1],
+    TIME_SAMPLE_SET_AVERAGE_RATE(0.1);    //averaging samples, (0..1],
     //1.0 gets you no averaging at all
     //use lower values to get steadier readings
-    TIME_SAMPLE_DISABLE_AVERAGE();	//disable averaging
+    TIME_SAMPLE_DISABLE_AVERAGE();    //disable averaging
     TIME_SAMPLE_SET_REMOVE_EXPIRED_THREADS(true); //inactive threads will be dropped from the table
     TIME_SAMPLE_DISABLE();
+}
+
+void ofApp::setupPanels() {
     
-    //Panels setup------------------
-    _currentAnalysisMode = MONO;
-    _bufferSize = 512;
-    
+    //TODO: Todo esto vuela cuando se cambie el layout....
     int mainH = MAIN_PANEL_HEIGHT * ofGetHeight();
     int timeH = TIME_PANEL_HEIGHT * ofGetHeight();
     int metersH = METER_PANEL_HEIGHT * ofGetHeight();
     _timePanelHeightPercent   = TIME_PANEL_HEIGHT;
     _metersPanelHeightPercent = METER_PANEL_HEIGHT;
     
-    mainPanel.setup(0, 0, ofGetWidth(), mainH, ofGetAppPtr());
-    timePanel.setup(0, mainH, ofGetWidth(), timeH, ofGetAppPtr());
-   
-    mainPanel.setFileInfoString(timePanel.getFileInfo());
-    ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
-    ofAddListener(ofxAAOnsetMeter::onsetEventGlobal, this, &ofApp::onsetFired);
+    mainPanel.setup(0, 0, ofGetWidth(), mainH);
+    timePanel.setup(0, mainH, ofGetWidth(), timeH, INIT_AUDIO_FILE);
+    mainPanel.setFileInfoString(timePanel.getFileInfo());//FIXME:Esto esta raro...
     
-    //Audio info--------------
-    _channelsNum = timePanel.audioTrack->getNumChannels();
-    _samplerate = timePanel.audioTrack->getSampleRate();
-    //_totalFramesNum = timePanel.timeline.getDurationInFrames();
+    setupConfiguration();
     
-    //AudioAnalyzer-------------------
-    int this_channelNum;
-    if(_currentAnalysisMode == SPLIT){
-        this_channelNum =  _channelsNum;
-    }else if(_currentAnalysisMode == MONO){
-        this_channelNum = 1;
-    }
-    
-    mainAnalyzer.setup(_samplerate, _bufferSize, this_channelNum);
-    metersPanel.setup(0, mainH + timeH, ofGetWidth(), metersH, ofGetAppPtr(), mainAnalyzer.getChannelAnalyzersPtrs());
-    
-    //OSC sender-----------------------
-    _oscHost = "localhost";
-    _oscPort = 12345;
-    setOscSender(_oscHost, _oscPort);
-    _bSendOsc = TRUE;
-    _bSendOscVectorValues = TRUE;
-    
-    //MODAL-------------------------------
+    mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
+    metersPanel.setup(0, mainH + timeH, ofGetWidth(), metersH, mainAnalyzer.getChannelAnalyzersPtrs());
+}
+
+void ofApp::setupConfiguration() {
+    config.setChannelsNum(timePanel.audioTrack->getNumChannels());
+    config.setSampleRate(timePanel.audioTrack->getSampleRate());
+    config.setAnalysisMode(INIT_ANALYSIS_MODE);
+    config.setBufferSize(INIT_BUFFER_SIZE);
+    config.setProjectDir(INIT_PROJECT_DIR);
+    config.setOscConfiguration("localhost", 12345,  TRUE, TRUE);
+}
+
+void ofApp::setupModals() {
     mText = make_shared<TextModal>();
     mText->addListener(this, &ofApp::onModalEvent);
     mMenu = make_shared<MenuModal>();
     mMenu->addListener(this, &ofApp::onModalEvent);
     mMenu->setMainAppPtr(ofGetAppPtr());
-    //-------------------------------
-    _projectDir = "";
-    
-    //----------------------------
-    dataSaver.setup(ofGetAppPtr());
-    
-    verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
-    
-    //adjust timePanel Height
-    timePanel.checkIfHeightChanged();
+}
+
+void ofApp::setupListeners() {
+    ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
+    ofAddListener(ofxAAOnsetMeter::onsetEventGlobal, this, &ofApp::onsetFired);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    
-    
-    //if dataSaver thread is running do not update anything and wait for it to finish
     if(dataSaver.isThreadRunning()){
         return;
     }
-    
-    //**********************************************************************
-    
-    //ofSetWindowTitle("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
-    ofSetWindowTitle("Sonoscopio");
+
+    ofSetWindowTitle("Sonoscopio");//("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
     
     //analyze soundBuffer----------------
     ofSoundUpdate();
@@ -128,10 +121,10 @@ void ofApp::update(){
     audioMutex.lock();
     
     TS_START("GET-AUDIO-BUFFERS");
-    if(_currentAnalysisMode==SPLIT){
-        soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(_bufferSize);//multichannel soundbuffer
-    }else if(_currentAnalysisMode==MONO){
-        soundBuffer = timePanel.audioTrack->getCurrentSoundBufferMono(_bufferSize);//mono soundbuffer
+    if(config.getAnalysisMode()==SPLIT){
+        soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(config.getBufferSize());//multichannel soundbuffer
+    }else if(config.getAnalysisMode()==MONO){
+        soundBuffer = timePanel.audioTrack->getCurrentSoundBufferMono(config.getBufferSize());//mono soundbuffer
     }
     TS_STOP("GET-AUDIO-BUFFERS");
     
@@ -153,12 +146,12 @@ void ofApp::update(){
     
     //send OSC-----------------------
     TS_START("SEND-OSC");
-    if(_bSendOsc) sendOscData();
+    if(config.osc().bSend) {
+        oscSender.sendOscData(metersPanel.getMetersValues(), metersPanel.getMetersVectorValues(), timePanel.getTracksValues(), config.osc().bSendVectorValues);
+    }
     TS_STOP("SEND-OSC");
-    //--------------------------
-    
-    
-    
+
+
 }
 
 //--------------------------------------------------------------
@@ -192,6 +185,7 @@ void ofApp::exit(){
     metersPanel.exit();
     
     dataSaver.stop();
+   
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -270,35 +264,25 @@ void ofApp::keyPressed(int key){
 //--------------------------------------------------------------
 void ofApp::openAudioFile(string filename){
     
-    
     audioMutex.lock();
-    
     timePanel.openAudioFile(filename);
     mainPanel.setFileInfoString(timePanel.getFileInfo());
-    
-    _channelsNum = timePanel.audioTrack->getNumChannels();
-    _samplerate = timePanel.audioTrack->getSampleRate();
-    //_totalFramesNum = timePanel.timeline.getDurationInFrames();
-    
+    config.setChannelsNum(timePanel.audioTrack->getNumChannels());
+    config.setSampleRate(timePanel.audioTrack->getSampleRate());
     resetAnalysisEngine();
-    
     dataSaver.reset();
-
     audioMutex.unlock();
-    
-    
     
 }
 
 
 //--------------------------------------------------------------
-void ofApp::setAnalysisMode(analysisMode mode){
+void ofApp::setAnalysisMode(AnalysisMode mode){
     
     stop();
     
     audioMutex.lock();
-    
-    _currentAnalysisMode = mode;
+    config.setAnalysisMode(mode);
     resetAnalysisEngine();
     
     audioMutex.unlock();
@@ -307,47 +291,43 @@ void ofApp::setAnalysisMode(analysisMode mode){
 void ofApp::setBufferSize(int bs){
     
     stop();
-    
     audioMutex.lock();
-    
-    _bufferSize = bs;
+    config.setBufferSize(bs);
     resetAnalysisEngine();
-    
     audioMutex.unlock();
-    
 }
+//--------------------------------------------------------------
+void ofApp::resetAnalysisEngine(){
+    
+    int this_channelNum;
+    if(config.getAnalysisMode() == SPLIT){
+        this_channelNum = config.getChannelsNum();
+    }else if(config.getAnalysisMode() == MONO){
+        this_channelNum = 1;
+    }
+
+    mainAnalyzer.reset(config.getSampleRate(), config.getBufferSize(), this_channelNum);
+    metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
+    dataSaver.reset();
+}
+
 //--------------------------------------------------------------
 void ofApp::setFrameRate(int fps){
     
     stop();
     
-    _frameRate = fps;
-    ofSetFrameRate(_frameRate);
-    timePanel.setFrameRate(_frameRate);
+    config.setFrameRate(fps);
+    ofSetFrameRate(fps);
+    timePanel.setFrameRate(fps);
     
     //update file info frames num info:
     mainPanel.setFileInfoString(timePanel.getFileInfo());
     
     dataSaver.updateFrameRate();
     
- 
-    TIME_SAMPLE_SET_FRAMERATE( _frameRate );
+    TIME_SAMPLE_SET_FRAMERATE(fps);
     
     ofLogVerbose()<<"Frame Rate changed to: "<<ofToString(fps);
-}
-//--------------------------------------------------------------
-void ofApp::resetAnalysisEngine(){
-    
-    int this_channelNum;
-    if(_currentAnalysisMode == SPLIT){
-        this_channelNum =  _channelsNum;
-    }else if(_currentAnalysisMode == MONO){
-        this_channelNum = 1;
-    }
-    
-    mainAnalyzer.reset(_samplerate, _bufferSize, this_channelNum);
-    metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
-    dataSaver.reset();
 }
 //--------------------------------------------------------------
 #pragma mark - Playback Controls
@@ -364,149 +344,6 @@ void ofApp::rewind(){
     timePanel.timeline.setCurrentTimeToInPoint();
 }
 //--------------------------------------------------------------
-#pragma mark - OSC funcs
-//--------------------------------------------------------------
-void ofApp::setOscSender(string host, int port){
-    oscSender.setup(host, port);
-}
-//--------------------------------------------------------------
-void ofApp::setOscSenderHost(string host){
-    oscSender.setup(host, _oscPort);
-}
-//--------------------------------------------------------------
-void ofApp::setOscSenderPort(int port){
-    oscSender.setup(_oscHost, port);
-}
-//--------------------------------------------------------------
-void ofApp::sendOscData(){
-    
-    
-    //-------------------------------------------------
-    //-:Send Meters Values
-    
-    vector<std::map<string, float>> metersValues = metersPanel.getMetersValues();
-    vector<std::map<string, vector<float>>> metersVectorValues = metersPanel.getMetersVectorValues();
-    
-    if(metersVectorValues.size() != metersValues.size()){
-        ofLogError()<<"ofApp sendOscData: metersValues and metersVectorValues not matching.";
-        return;
-    }
-   
-    
-
-    for(int i=0; i<metersValues.size(); i++){
-        
-        //"i" -> channel
-        
-        //Send Single Values-----------------
-        ofxOscMessage msg;
-        
-        //address: "/ch0" - "/ch1" - "/ch2" etc...
-        string address = "/ch" + ofToString(i);
-        msg.setAddress(address);
-        
-        //->sames order as Osc Indexes (ofxAudioAnalyzerAlgorithms.h)
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_POWER));//0
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_FREQ));//1
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_CONF));//2
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_SALIENCE));//3
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_HFC));//4
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_CENTROID));//5
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_SPEC_COMP));//6
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_INHARMONICTY));//7
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_DISSONANCE));//8
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_ROLL_OFF));//9
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_ODD_TO_EVEN));//10
-        msg.addInt32Arg(metersValues[i].at(MTR_NAME_ONSETS));//11
-        
-        oscSender.sendMessage(msg, false);//???ADD OSC BUNDLES?
-        
-        if(_bSendOscVectorValues){
-            
-            //Send MelBands-------------------------
-            
-            ofxOscMessage msgMel;
-            
-            //address: "/ch0mel" - "/ch1mel" - "/ch2mel" etc...
-            address = "/ch" + ofToString(i) + "mel";
-            msgMel.setAddress(address);
-            
-            //cout<<"melbands size: "<< metersVectorValues[i].at(MTR_NAME_MEL_BANDS).size()<<" add: "<< address << endl;
-            
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_MEL_BANDS).size(); j++){
-                msgMel.addFloatArg(metersVectorValues[i].at(MTR_NAME_MEL_BANDS)[j]);
-            }
-            oscSender.sendMessage(msgMel, false);
-            
-            //Send MFCC-----------------------------
-            
-            ofxOscMessage msgMfcc;
-            
-            //address: "/ch0mfcc" - "/ch1mfcc" - "/ch2mfcc" etc...
-            address = "/ch" + ofToString(i) + "mfcc";
-            msgMfcc.setAddress(address);
-            
-            //cout<<"mfcc size: "<< metersVectorValues[i].at(MTR_NAME_MFCC).size()<<" add: "<< address << endl;
-            
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_MFCC).size(); j++){
-                msgMfcc.addFloatArg(metersVectorValues[i].at(MTR_NAME_MFCC)[j]);
-            }
-            oscSender.sendMessage(msgMfcc, false);
-            
-            //Send MFCC-----------------------------
-            
-            ofxOscMessage msgHpcp;
-            
-            //address: "/ch0hpcp" - "/ch1hpcp" - "/ch2hpcp" etc...
-            address = "/ch" + ofToString(i) + "hpcp";
-            msgHpcp.setAddress(address);
-            
-            //cout<<"hpcp size: "<< metersVectorValues[i].at(MTR_NAME_HPCP).size()<<" add: "<< address << endl;
-            
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_HPCP).size(); j++){
-                msgHpcp.addFloatArg(metersVectorValues[i].at(MTR_NAME_HPCP)[j]);
-            }
-            oscSender.sendMessage(msgHpcp, false);
-            
-            
-            //Send Tristimulus-----------------------------
-            
-            ofxOscMessage msgTris;
-            
-            //address: "/ch0tris" - "/ch1tris" - "/ch2tris" etc...
-            address = "/ch" + ofToString(i) + "tris";
-            msgTris.setAddress(address);
-            
-            //cout<<"tris size: "<< metersVectorValues[i].at(MTR_NAME_TRISTIMULUS).size()<<" add: "<< address << endl;
-            
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_TRISTIMULUS).size(); j++){
-                msgTris.addFloatArg(metersVectorValues[i].at(MTR_NAME_TRISTIMULUS)[j]);
-            }
-            oscSender.sendMessage(msgTris, false);
-
-        
-        }
-        
-    }
-    
-    //-------------------------------------------------
-    //-:Send Timeline Tracks Values (one msg x each track)
-    std::map<string, float> timelineValues = timePanel.getTracksValues();
-    for (auto& kv : timelineValues){
-        //cout<<"timeline send osc :: "<<kv.first<<" -- "<<kv.second<<endl;
-        
-        string key = kv.first;
-        float floatValue = kv.second;
-        
-        ofxOscMessage msg;
-        msg.setAddress("/" + key);//address: "/TL-(trackName)"
-        msg.addFloatArg(floatValue);
-        oscSender.sendMessage(msg, false);
-        
-    }
-
-}
-//--------------------------------------------------------------
 #pragma mark - Settings funcs
 //--------------------------------------------------------------
 void ofApp::openProject(string projectDir ){
@@ -515,21 +352,21 @@ void ofApp::openProject(string projectDir ){
     
     ofLogVerbose()<<"ofApp Opening project in :"<<projectDir<<endl;
     
-    _projectDir = projectDir + "/";
+    std::string projDir = projectDir + "/";
     
     //-----------------------------
     //-:Check if project dir is correct
-    ofDirectory dir(_projectDir);
+    ofDirectory dir(projDir);
     
     //-----------------------------
     //-:Check settings folders
-    if(!dir.doesDirectoryExist(_projectDir + "main_settings")){
+    if(!dir.doesDirectoryExist(projDir + "main_settings")){
         ofLogError()<< "ofApp openProject: No main_settings folder found in the project directory.";
         return;
-    }else if(!dir.doesDirectoryExist(_projectDir + "meters_settings")){
+    }else if(!dir.doesDirectoryExist(projDir + "meters_settings")){
         ofLogError()<< "ofApp openProject: No meters_settings folder found in the project directory.";
         return;
-    }else if(!dir.doesDirectoryExist(_projectDir + "timeline_settings")){
+    }else if(!dir.doesDirectoryExist(projDir + "timeline_settings")){
         ofLogError()<< "ofApp openProject: No timeline_settings folder found in the project directory.";
         return;
     }
@@ -555,7 +392,7 @@ void ofApp::openProject(string projectDir ){
     //-:Check audio file name
     string audioFileName;
     
-    if(dir.getPath(0) == _projectDir+"audiofile.wav" || dir.getPath(0) == _projectDir+"audiofile.mp3"){
+    if(dir.getPath(0) == projDir+"audiofile.wav" || dir.getPath(0) == projDir+"audiofile.mp3"){
         audioFileName = dir.getPath(0);//set audiofile name
     }else{
         ofLogError()<< "ofApp openProject: Audio file name is incorrect. Must be named audiofile.wav or audiofile.mp3";
@@ -567,39 +404,40 @@ void ofApp::openProject(string projectDir ){
     
     openAudioFile(audioFileName);
    
-    mainPanel.loadSettings(_projectDir);
-    timePanel.loadSettings(_projectDir);
-    metersPanel.loadSettings(_projectDir);
+    mainPanel.loadSettings(projDir);
+    timePanel.loadSettings(projDir);
+    metersPanel.loadSettings(projDir);
+    config.setProjectDir(projDir);
 }
 //--------------------------------------------------------------
 //??? Add closeProject?
 //--------------------------------------------------------------
 void ofApp::saveSettings(){
+    std::string dir = config.getProjectDir();
+    mainPanel.saveSettings(dir);
+    timePanel.saveSettings(dir);
+    metersPanel.saveSettings(dir);
     
-    mainPanel.saveSettings(_projectDir);
-    timePanel.saveSettings(_projectDir);
-    metersPanel.saveSettings(_projectDir);
-    
-    if(_projectDir=="")
+    if(dir=="")
         ofLogVerbose() << "ofApp: Settings SAVED to data/";
     else
-        ofLogVerbose() << "ofApp: Settings SAVED to: "<<_projectDir;
+        ofLogVerbose() << "ofApp: Settings SAVED to: "<<dir;
 }
 //--------------------------------------------------------------
 void ofApp::loadSettings(){
-    
+    std::string dir = config.getProjectDir();
     stop();
     
-    mainPanel.loadSettings(_projectDir);
-    timePanel.loadSettings(_projectDir);
-    metersPanel.loadSettings(_projectDir);
+    mainPanel.loadSettings(dir);
+    timePanel.loadSettings(dir);
+    metersPanel.loadSettings(dir);
     
     dataSaver.reset();
     
-    if(_projectDir=="")
+    if(dir=="")
         ofLogVerbose() << "ofApp: Settings LOADED from data/";
     else
-        ofLogVerbose() << "ofApp: Settings LOADED from: "<<_projectDir;
+        ofLogVerbose() << "ofApp: Settings LOADED from: "<<dir;
 }
 //--------------------------------------------------------------
 #pragma mark - Save Analysis Data
@@ -678,12 +516,11 @@ void ofApp::hideMetersPanel(bool hide){
     
 }
 //--------------------------------------------------------------
-void ofApp::setViewMode(viewMode mode){
-    _currentViewMode = mode;
+void ofApp::setViewMode(ViewMode mode){
+    config.setViewMode(mode);
     timePanel.hideTracks();
     
-    
-    switch (_currentViewMode) {
+    switch (mode) {
             
         case ALL:
             hideMetersPanel(false);

@@ -26,8 +26,6 @@
 #include "ofxTimeMeasurements.h"
 #include "ofxAudioAnalyzer.h"
 
-#include "ofxOsc.h"
-
 #include "MainPanel.h"
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
@@ -39,28 +37,20 @@
 #include "CustomModals.h"
 
 #include "ofxHotKeys.h"
+#include "Configurations.h"
+#include "OscSender.h"
 
 #define MAIN_PANEL_HEIGHT 0.15
 #define TIME_PANEL_HEIGHT 0.40
 #define METER_PANEL_HEIGHT 0.45
 
-#define INIT_FPS 30
 
-enum analysisMode{
-    MONO,
-    SPLIT
-};
-
-enum viewMode{
-    ALL,
-    TIMEPANEL_ONLY,
-    METERSPANEL_ONLY
-};
 
 class ofApp : public ofBaseApp{
 
   public:
-	
+ 
+    
     void setup();
 	void update();
 	void draw();
@@ -76,6 +66,14 @@ class ofApp : public ofBaseApp{
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
     
+    void setupOFContext();
+    void setupTimeMeasurment();
+    void setupPanels();
+    void setupListeners();
+    void setupConfiguration();
+    void setupOsc();
+    void setupModals();
+    
     void togglePlay();
     void stop();
     void rewind();
@@ -87,30 +85,17 @@ class ofApp : public ofBaseApp{
     void hideMetersPanel(bool hide);
     
     void setFrameRate(int fps);
-    void setAnalysisMode(analysisMode mode);
-    void setViewMode(viewMode mode);
+    void setAnalysisMode(AnalysisMode mode);
+    void setViewMode(ViewMode mode);
     void resetAnalysisEngine();
     void setBufferSize(int bs);
     
-    void setOscSender(string host, int port);
-    void setOscSenderHost(string host);
-    void setOscSenderPort(int port);
-    void sendOscData();
-    void setIsSendingOsc(bool b){_bSendOsc = b;}
     
-    int getFrameRate(){return _frameRate;}
-    int getSampleRate(){return _samplerate;}
-    int getBufferSize(){return _bufferSize;}
-    int getChannelsNum(){return _channelsNum;}
-    analysisMode getAnalysisMode(){return _currentAnalysisMode;}
-    viewMode getViewMode(){return _currentViewMode;}
+    
     int getTotalFramesNum(){return timePanel.timeline.getDurationInFrames();}
     string getSoundfilePath(){return timePanel.audioTrack->getSoundfilePath();}
     float getDurationInSeconds(){return timePanel.timeline.getDurationInSeconds();}
     float getBpm(){return timePanel.timeline.getBPM();}
-    string getProjectDir(){return _projectDir;}
-    string getOscHost(){return _oscHost;}
-    int getOscPort(){return _oscPort;}
     
     void saveSettings();
     void loadSettings();
@@ -134,35 +119,15 @@ class ofApp : public ofBaseApp{
     MetersPanel metersPanel;
     
     ofxAudioAnalyzer mainAnalyzer;
-    
     AnalysisDataSaver dataSaver;
+    MainConfiguration config;
+    OscSender oscSender;
     
-
 private:
     
     ofSoundBuffer soundBuffer;
-    ofxOscSender oscSender;
-    
-    int _frameRate;
-    //int _totalFramesNum;
-    
-    int _samplerate;
-    int  _bufferSize;
-    int _channelsNum;
-    
     ofMutex audioMutex;
-    
-    analysisMode _currentAnalysisMode;
-    viewMode _currentViewMode;
-    
-    bool _bSendOsc;
-    string _oscHost;
-    int _oscPort;
-    bool _bSendOscVectorValues;
-    
-    string _projectDir;
-    
-    ofTrueTypeFont	verdana;
+    ofTrueTypeFont	verdana; //Esto??
     
     float _timePanelHeightPercent;
     float _metersPanelHeightPercent;

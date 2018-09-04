@@ -27,7 +27,9 @@ ofxDatGuiDropdown* dropdown;
 
 //-------------------------------------------------
 
-void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
+void TimelinePanel::setup(int x, int y, int width, int height, string audiofile){
+    
+    tMainApp = (ofApp*)ofGetAppPtr();
     
     _x = x;
     _y = y;
@@ -35,8 +37,6 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     _h = height;
     
     _frameRate = INIT_FPS;
-    
-    tMainApp = dynamic_cast<ofApp*>(appPtr);
     
     _bckgColor = ofColor(40);
 
@@ -62,7 +62,7 @@ void TimelinePanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
 
-    timeline.addAudioTrack("Audio", INIT_AUDIO_FILE);
+    timeline.addAudioTrack("Audio", audiofile);
     
     //this means that calls to play/stop etc will be  routed to the waveform anofd that timing will be 100% accurate
     timeline.setTimecontrolTrack("Audio");

@@ -20,7 +20,7 @@
 
 #include "ofMain.h"
 
-class Panel{
+class BasePanel {
     
     public:
     
@@ -55,8 +55,7 @@ class Panel{
         int _x, _y;
         int _w, _h;
         ofColor _bckgColor;
-    
-    
+        
     
     
 };

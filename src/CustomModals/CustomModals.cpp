@@ -79,12 +79,12 @@ void MenuModal::setMainAppPtr(ofBaseApp* appPtr){
 }
 
 void MenuModal::display(int height){
-    
-    int fps = menuMainAppPtr->getFrameRate();
-    string host = menuMainAppPtr->getOscHost();
-    int port = menuMainAppPtr->getOscPort();
+    //TODO: Remove this reference to config
+    int fps = menuMainAppPtr->config.getFrameRate();
+    string host = menuMainAppPtr->config.osc().host;
+    int port = menuMainAppPtr->config.osc().port;
     int bpm = menuMainAppPtr->getBpm();
-    int bufferSize = menuMainAppPtr->getBufferSize();
+    int bufferSize = menuMainAppPtr->config.getBufferSize();
     
     gFps->setText(std::to_string(fps));
     gHost->setText(host);
@@ -119,8 +119,8 @@ void MenuModal::applyConfiguration(){
         menuMainAppPtr->setFrameRate( fps );
         menuMainAppPtr->setBufferSize(bufferSize);
         menuMainAppPtr->timePanel.timeline.setNewBPM( bpm );
-        menuMainAppPtr->setOscSenderHost(host);
-        menuMainAppPtr->setOscSenderPort( port );
+        menuMainAppPtr->oscSender.setHost(host);
+        menuMainAppPtr->oscSender.setPort(port);
         
         
     } catch (const std::invalid_argument& ia) {

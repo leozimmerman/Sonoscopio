@@ -23,14 +23,16 @@ ofApp* mMainAppPtr;
 
 #pragma mark - core funcs
 //-------------------------------------------------
-void MainPanel::setup(int x, int y, int width, int height, ofBaseApp* appPtr){
+void MainPanel::setup(int x, int y, int width, int height){
     
     _x = x;
     _y = y;
     _w = width;
     _h = height;
     
-    mMainAppPtr = dynamic_cast<ofApp*>(appPtr);
+    
+    mMainAppPtr = (ofApp*)ofGetAppPtr();
+    
     
     //colors
     setBackgroundColor(ofColor(25));
@@ -83,7 +85,7 @@ void MainPanel::drawFileInfo(){
     
     ofPushStyle();
     
-    string infoStr = "File name: "+ fileName + " | " + fileInfoStr + " | buffer size: " + ofToString(mMainAppPtr->getBufferSize()) + " | proj: "+ mMainAppPtr->getProjectDir();
+    string infoStr = "File name: "+ fileName + " | " + fileInfoStr + " | buffer size: " + ofToString(mMainAppPtr->config.getBufferSize()) + " | proj: "+ mMainAppPtr->config.getProjectDir();
     
     //draw boundbox
     
@@ -136,7 +138,7 @@ void MainPanel::loadSettings(string rootDir){
     //-----------
     state = xml.getValue("PANEL:SEND-OSC", 0) > 0;
     gSendOsc->setEnabled(state);
-    mMainAppPtr->setIsSendingOsc(state);
+    mMainAppPtr->config.setIsSendingOsc(state);
     //-----------
     state = xml.getValue("PANEL:BPM-GRID", 0) > 0;
     gShowBpm->setEnabled(state);
@@ -155,7 +157,7 @@ void MainPanel::loadSettings(string rootDir){
     //-----------
     string text = xml.getValue("PANEL:PORT", "");
     //gPort->setText(text);
-    mMainAppPtr->setOscSenderPort( std::stoi(text) );
+    mMainAppPtr->oscSender.setPort( std::stoi(text) );
     //-----------
     text = xml.getValue("PANEL:BPM", "");
     //gBpm->setText(text);
@@ -163,7 +165,7 @@ void MainPanel::loadSettings(string rootDir){
     //-----------
     text = xml.getValue("PANEL:HOST", "");
     //gHost->setText(text);
-    mMainAppPtr->setOscSenderHost(text);
+    mMainAppPtr->oscSender.setHost(text);
     //-----------
     text = xml.getValue("PANEL:FRAMERATE", "");
     //gFps->setText(text);
@@ -684,7 +686,7 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
     
     }else if(e.target->getLabel()== "SEND OSC"){
         
-        mMainAppPtr->setIsSendingOsc(e.enabled);
+        mMainAppPtr->config.setIsSendingOsc(e.enabled);
         
     }else if(e.target->getLabel()== "BPM GRID"){
         
@@ -741,11 +743,11 @@ void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
         }
     }else if (e.target->getLabel()=="HOST"){
         
-        mMainAppPtr->setOscSenderHost(e.text);
+        mMainAppPtr->oscSender.setHost(e.text);
         
     }else if (e.target->getLabel()=="PORT"){
         try{
-            mMainAppPtr->setOscSenderPort( std::stoi(e.text) );
+            mMainAppPtr->oscSender.setPort( std::stoi(e.text) );
         }
         catch (const std::invalid_argument& ia) {
             e.target->setText("ERROR");

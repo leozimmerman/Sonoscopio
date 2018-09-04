@@ -26,7 +26,7 @@
 #include "ofxDatGui.h"
 
 #include "Macros.h"
-#include "Panel.h"
+#include "BasePanel.h"
 
 #define PAGE_AUDIO_NAME "PageAudio"
 #define PAGE_TRACKS_NAME "PageTracks"
@@ -41,11 +41,11 @@ enum trackType {
 };
 
 
-class TimelinePanel : public Panel{
+class TimelinePanel : public BasePanel {
     
 public:
     
-    void setup(int x, int y, int width, int height, ofBaseApp* appPtr);
+    void setup(int x, int y, int width, int height, string audiofile);
     void update();
     void draw();
     void exit(){};
