@@ -19,20 +19,14 @@
 #include "MainPanel.h"
 #include "ofApp.h" 
 
-ofApp* mMainAppPtr;
+ofApp* mMainAppPtr; //re
 
 #pragma mark - core funcs
 //-------------------------------------------------
 void MainPanel::setup(int x, int y, int width, int height){
-    
-    _x = x;
-    _y = y;
-    _w = width;
-    _h = height;
-    
+    BasePanel::setup(x, y, width, height);
     
     mMainAppPtr = (ofApp*)ofGetAppPtr();
-    
     
     //colors
     setBackgroundColor(ofColor(25));
@@ -60,7 +54,6 @@ void MainPanel::setup(int x, int y, int width, int height){
     
     _panelDir = MAIN_SETTINGS_DIR;
   
-    
 }
 //-------------------------------------------------
 void MainPanel::update(){
@@ -68,18 +61,14 @@ void MainPanel::update(){
 }
 //-------------------------------------------------
 void MainPanel::draw(){
-    
-    drawBackground();
+    if (_isHidden){ return; }
+    View::draw();
     
     for(int i=0; i<components.size(); i++) components[i]->draw();
     drawFileInfo();
-    
 }
 //-------------------------------------------------
-void MainPanel::exit(){
-
-}
-
+void MainPanel::exit(){}
 //-------------------------------------------------
 void MainPanel::drawFileInfo(){
     
@@ -473,15 +462,13 @@ void MainPanel::setupGui(){
 
 }
 //-------------------------------------------------
-void MainPanel::resize(int w, int h){
+void MainPanel::resize(int x, int y, int w, int h){
+    View::resize(x, y, w, h);
     adjustGui(w,h);
 }
+
 //-------------------------------------------------
 void MainPanel::adjustGui(int w, int h){
-    
-    //necessary?
-    _w = w;
-    _h = h;
     
     _guiCompWidth = _w / _columns;
     int guiCompWidth = _guiCompWidth;

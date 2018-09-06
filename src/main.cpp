@@ -21,6 +21,12 @@
 
 //========================================================================
 int main( ){
-    ofSetupOpenGL(1024,768,OF_WINDOW);
-	ofRunApp(new ofApp());
+    //ofSetupOpenGL(1024,768,OF_WINDOW);
+    //ofRunApp(new ofApp());
+    ofGLFWWindowSettings settings;
+    settings.setSize(1024, 768);
+    //settings.resizable = false;
+    ofCreateWindow(settings);
+    return ofRunApp(new ofApp);
+
 }

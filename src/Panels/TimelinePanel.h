@@ -46,22 +46,22 @@ class TimelinePanel : public BasePanel {
 public:
     
     void setup(int x, int y, int width, int height, string audiofile);
-    void update();
-    void draw();
-    void exit(){};
+    virtual void update() override;
+    virtual void draw() override;
+    virtual void exit() override;
     
+    virtual bool getFocused() override;
+    virtual void setupGui() override;
+    virtual void resize(int x, int y, int w, int h) override;
+    virtual void saveSettings(string rootDir="") override;
+    virtual void loadSettings(string rootDir="") override;
+    
+    void setupTimeline(string audiofile);
     void keyPressed(int key);
     
     void setFrameRate(int fps);
     
-    void loadSettings(string rootDir="");
-    void saveSettings(string rootDir="");
-    
-    void setupGui();
     void adjustGuiSize(int y, int w, int h);
-    
-    void resize(int y, int w, int h);
-    void resizeHeight(int tl_h);
     
     void addMarker();
     void addMarker(float millis);
@@ -70,12 +70,9 @@ public:
     void openAudioFile(string filename);
     string getFileInfo();
     
-    
-    
     bool getIfIsDragging(){return _footerIsDragging;}
-    bool getIsHidden(){return _isHidden;}
     
-    void checkIfHeightChanged();
+    //void checkIfHeightChanged();
     void checkIfWaveformPreviewChanged();
     
     void addTrack(string name, trackType type);
@@ -98,36 +95,25 @@ public:
     
     ofEvent<int> heightResizedEvent;
     
-    bool getFocused();
-    void setHidden(bool h);
     
 private:
     
     int _frameRate;
     
-    int _guiCompHeight;
     string currentTrackName;
     trackType currentTrackType;
     
     bool _isThereBang = false;
     ofxTLTrack* _bangedTrack;
-    
     ofColor waveformCol;
-    
-    ofColor bordCol;
-    int bordWidth;
-    
     bool _footerIsDragging;
     
     vector<float> _markers;
     
-    vector<ofxDatGuiComponent*> components;
     ofxDatGuiTextInput* gTrackName;
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
     void onDropdownEvent(ofxDatGuiDropdownEvent e);
-    
-    bool _isHidden = false;
     
     //margins related to ofxTimeline height auto adjust func.
     float _strangeMargin1 = 66.0;

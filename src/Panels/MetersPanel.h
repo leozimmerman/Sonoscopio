@@ -20,8 +20,6 @@
 
 #include "ofMain.h"
 
-#include "ofxDatGui.h"
-
 #include"ofxAudioAnalyzerUnit.h"
 
 #include "Macros.h"
@@ -34,33 +32,31 @@ class MetersPanel : public BasePanel {
     
 public:
     
-    void setup(int x, int y, int width, int height, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    void update();
-    void draw();
-    void exit();
+    void setup(int x, int y, int width, int height);
+    virtual void update() override;
+    virtual void draw() override;
+    virtual void exit() override;
     
-    void saveSettings(string rootDir="");
-    void loadSettings(string rootDir="");
+    virtual bool getFocused() override;
+    virtual void setupGui() override;
+    virtual void resize(int x, int y, int w, int h) override;
+    virtual void saveSettings(string rootDir="") override;
+    virtual void loadSettings(string rootDir="") override;
     
+    void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void toggleFullDisplay(){setFullDisplay(!_bDrawFullDisplay);}
     void setFullDisplay(bool b);
-    bool getIsHidden(){return _isHidden;}
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    
-    void resize(int y, int w, int h);
     void adjustPosAndHeight(int y, int h);
     
     vector<std::map<string, float>>& getMetersValues();
     vector<std::map<string, vector<float>>>& getMetersVectorValues();
     
     bool getIsFullDisplay(){return _bDrawFullDisplay;}
-    
-    void setupGui();
     void adjustGuiSize(int y, int w, int h);
     
-    bool getFocused();
-    void setHidden(bool h) {_isHidden = h;}
+
 
 private:
     
@@ -72,17 +68,12 @@ private:
     ofColor panelColor1, panelColor2;
     
     int panelsNum;
-    
-    string _panelDir;
     bool _bDrawFullDisplay;
     
     vector < std::map<string, float> > singleValuesForOsc;
     vector < std::map<string, vector<float> > > vectorValuesForOsc;
     
-    ofColor bordCol;
-    int bordWidth;
-    int _guiCompHeight;
-    vector<ofxDatGuiComponent*> components;
+   
     ofxDatGuiTextInput* gMaxFreq;
     ofxDatGuiTextInput* gMaxHfc;
     ofxDatGuiTextInput* gMaxCentroid;
@@ -93,6 +84,6 @@ private:
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
 
-    bool _isHidden = false;
+    
     
 };

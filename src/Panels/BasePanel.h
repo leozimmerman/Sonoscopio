@@ -19,43 +19,34 @@
 #pragma once
 
 #include "ofMain.h"
+#include "View.h"
+#include "ofxDatGui.h"
 
-class BasePanel {
+class BasePanel : public View {
     
-    public:
+public:
     
-        virtual void setup(int x, int y, int width, int height, ofBaseApp* appPtr){};
-        virtual void update() =0;
-        virtual void draw() =0;
-        virtual void exit() =0;
+    virtual void setup(int x, int y, int width, int height);
+    virtual void update() =0;
+    virtual void exit() =0;
     
-        void drawBackground(){
-            ofPushStyle();
-            ofSetColor(getBackgroundColor());
-            ofDrawRectangle(_x, _y, _w, _h);
-            ofPopStyle();
-        }
+    virtual bool getFocused() =0;
+    virtual void setupGui() =0;
+    virtual void resize(int x, int y, int w, int h) =0;
+    virtual void saveSettings(string rootDir="") =0;
+    virtual void loadSettings(string rootDir="") =0;
     
-        void setPosition(ofVec2f pos){_x = pos.x; _y = pos.y;}
-        void setWidth(int w){_w = w ;}
-        void setHeight(int h){_h = h;}
-        void setBackgroundColor(ofColor col){_bckgColor = col;}
-        
-        ofVec2f getPosition(){return ofVec2f(_x, _y);}
-        int getWidth(){return _w;}
-        int getHeight(){return _h;}
-
-        ofColor getBackgroundColor(){return _bckgColor;}
+    bool getIsHidden(){return _isHidden;}
+    virtual void setHidden(bool h) {_isHidden = h;}
     
+protected:
+    vector<ofxDatGuiComponent*> components;
     
-    
-    
-    protected:
-    
-        int _x, _y;
-        int _w, _h;
-        ofColor _bckgColor;
-        
-    
+    bool _isHidden = false;
+    ofColor bordCol;
+    int bordWidth;
+    int _guiCompHeight;
+    int  _guiCompWidth;
+    string _panelDir;
     
 };

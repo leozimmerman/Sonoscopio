@@ -20,7 +20,6 @@
 
 #include "ofApp.h"
 
-ofApp* tMainApp;
 ofxDatGuiDropdown* dropdown;
 
 #pragma mark - Core funcs
@@ -29,23 +28,25 @@ ofxDatGuiDropdown* dropdown;
 
 void TimelinePanel::setup(int x, int y, int width, int height, string audiofile){
     
-    tMainApp = (ofApp*)ofGetAppPtr();
-    
-    _x = x;
-    _y = y;
-    _w = width;
-    _h = height;
-    
+    BasePanel::setup(x, y, width, height);
+    setBackgroundColor(ofColor(40));
     _frameRate = INIT_FPS;
     
-    _bckgColor = ofColor(40);
-
     waveformCol.set(120);
     
     currentTrackType = CURVES;
     currentTrackName = "";
     
-    //-------------------------
+    _guiCompHeight = TL_GUI_COMP_HEIGHT;
+    bordCol = ofColor::grey;
+    bordWidth = 1;
+    setupGui();
+    
+    setupTimeline(audiofile);
+    
+}
+void TimelinePanel::setupTimeline(string audiofile) {
+    
     ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
     timeline.setWorkingFolder(TIMELINE_SETTINGS_DIR);
     
@@ -54,14 +55,12 @@ void TimelinePanel::setup(int x, int y, int width, int height, string audiofile)
     timeline.setFrameRate(_frameRate);
     timeline.setAutosave(false);
     timeline.setOffset(ofVec2f(_x, _y));
-    
-    timeline.setWidth(_w);
-    timeline.setHeight(_h);
+
     
     timeline.setLoopType(OF_LOOP_NONE);
     timeline.setBPM(120.f);
     timeline.setShowBPMGrid(false);
-
+    
     timeline.addAudioTrack("Audio", audiofile);
     
     //this means that calls to play/stop etc will be  routed to the waveform anofd that timing will be 100% accurate
@@ -73,25 +72,18 @@ void TimelinePanel::setup(int x, int y, int width, int height, string audiofile)
     timeline.addPage(PAGE_TRACKS_NAME);
     addTrack("DEFAULT", CURVES);
     
-
     timeline.setCurrentPage(PAGE_AUDIO_NAME);
     timeline.setShowPageTabs(false); //->modify if more pages are needed
-    timeline.setFootersHidden(false);
+    timeline.setFootersHidden(true);
     
     //timeline.resetInOutTrack();//for using in_out xml file
     timeline.setInOutRange(ofRange(0.0, 1.0));//always start with in/out at the sides, ignores xml file
-
+    timeline.setWidth(_w);
+    timeline.setHeight(_h - _guiCompHeight - 20);
     
     ofAddListener(timeline.events().bangFired, this, &TimelinePanel::bangFired);
-    
-    //--------------------------
-    _guiCompHeight = TL_GUI_COMP_HEIGHT;
-    bordCol = ofColor::grey;
-    bordWidth = 1;
-    setupGui();
-    
-    
 }
+
 //-------------------------------------------------
 void TimelinePanel::update(){
     
@@ -106,10 +98,9 @@ void TimelinePanel::update(){
 }
 //-------------------------------------------------
 void TimelinePanel::draw(){
+    if (_isHidden){ return; }
+    View::draw();
     
-    drawBackground();
-    
-
     TS_START("waveforms");
     if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME && !_isHidden){
         audioTrack->drawWaveforms();
@@ -122,17 +113,12 @@ void TimelinePanel::draw(){
     
     
     TS_START("gui");
-    if (!_isHidden) {
-        for(int i=0; i<components.size(); i++){
-            components[i]->draw();
-        }
+    
+    for(int i=0; i<components.size(); i++){
+        components[i]->draw();
     }
-    TS_STOP("gui");
-    
-    
 
-    
-    
+    TS_STOP("gui");
 
 }
 //--------------------------------------------------------------
@@ -167,12 +153,13 @@ bool TimelinePanel::getFocused(){
     
     
 }
+void TimelinePanel::exit(){}
 //--------------------------------------------------------------
 #pragma mark - Settings
 //--------------------------------------------------------------
 void TimelinePanel::loadSettings(string rootDir){
    
-    //----------------------------------
+    
     //-:Load Xml file
     
     string filenamePanel = rootDir + TIMELINE_SETTINGS_DIR "/timePanel_settings.xml";
@@ -237,13 +224,9 @@ void TimelinePanel::loadSettings(string rootDir){
 //--------------------------------------------------------------
 void TimelinePanel::saveSettings(string rootDir){
     
-    //----------------------------------
     //-:Save Timeline Settings
     timeline.saveTracksToFolder(rootDir + TIMELINE_SETTINGS_DIR);
     
-
-    
-    //----------------------------------
     //-:Save Tracks Names and Types
     
     auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
@@ -268,7 +251,7 @@ void TimelinePanel::saveSettings(string rootDir){
     }
     savedSettings.popTag();
     
-    //----------------------------------
+
     //-:Save Markers
     
     savedSettings.addTag("MARKERS");
@@ -378,34 +361,28 @@ void TimelinePanel::hideTracks(){
 void TimelinePanel::toggleShowTracks(){
     
     if(timeline.getCurrentPageName() == PAGE_AUDIO_NAME){
-
         timeline.setCurrentPage(PAGE_TRACKS_NAME);
-        timeline.setFootersHidden(TRUE);
+        //timeline.setFootersHidden(TRUE);
         adjustTracksHeight();
-        
     }else if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME) {
-    
         timeline.setCurrentPage(PAGE_AUDIO_NAME);
-        timeline.setFootersHidden(false);
+        //timeline.setFootersHidden(false);
         adjustTracksHeight();
-        
     }
     
 }
 //--------------------------------------------------------------
 void TimelinePanel::adjustTracksHeight(){
-    
+
     if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
-        
         int audioH = timeline.getPage(PAGE_AUDIO_NAME)->getComputedHeight();
         int tracksNum = timeline.getPage(PAGE_TRACKS_NAME)->getTracksNum();
-        
-        timeline.setHeight(audioH + _strangeMargin1 - 17.68*tracksNum);
+        //timeline.setHeight(audioH + _strangeMargin1 - 17.68*tracksNum);
         
     }
-    
-    checkIfHeightChanged();
-    
+    //timeline.setHeight(_h - _guiCompHeight - 50);
+    //checkIfHeightChanged();
+
 }
 //--------------------------------------------------------------
 void TimelinePanel::expandFocusedTrack(){
@@ -483,69 +460,63 @@ std::map<string, float> TimelinePanel::getTracksValues(){
 //--------------------------------------------------------------
 #pragma mark - Size
 //--------------------------------------------------------------
-void TimelinePanel::checkIfHeightChanged(){
-    
-    int tl_h = timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height + _strangeMargin1;
-    
-    if(tl_h != _h - _guiCompHeight){
-        resizeHeight(tl_h);
-    }
-    
-}
+//void TimelinePanel::checkIfHeightChanged(){
+//    //FIXME: Esto vuela??
+//    int tl_h = timeline.getPage(PAGE_AUDIO_NAME)->getDrawRect().height + _strangeMargin1;
+//
+//    if(tl_h != _h - _guiCompHeight){
+//     ///   resizeHeight(tl_h);
+//    }
+//
+//}
 //--------------------------------------------------------------
 ///adjust waveform when zooming in tracks page
 void TimelinePanel::checkIfWaveformPreviewChanged(){
     
-   
     if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
         ofLogVerbose()<<"TimePanel: recomputing audioPreview";
         audioTrack->recomputePreview();
     }
-    
 }
 //--------------------------------------------------------------
-void TimelinePanel::resize(int y, int w, int h){
-    
-    _y = y;
-    _w = w;
-    _h = h;
+void TimelinePanel::resize(int x, int y, int w, int h){
+    View::resize(x, y, w, h);
     
     //Adjust Timeline
     timeline.setOffset(ofVec2f(_x, _y));
     timeline.setWidth(_w);
-    
-    timeline.setHeight(_h - _guiCompHeight - _strangeMargin2);
     adjustGuiSize(_y, _w, _h);
-    
-    adjustTracksHeight();
+    timeline.setHeight(_h - _guiCompHeight - 20);
+
+    ///adjustTracksHeight();
    
 }
 //--------------------------------------------------------------
-void TimelinePanel::resizeHeight(int tl_h){
-    
-    _h = tl_h + _guiCompHeight;
-    
-    for(int i=0; i<components.size(); i++){
-        int gui_y = _y + tl_h;
-        components[i]->setPosition(components[i]->getX(), gui_y);
-    }
-    
-    ofNotifyEvent(heightResizedEvent, _h, this);
-}
+//void TimelinePanel::resizeHeight(int tl_h){
+//
+//    _h = tl_h + _guiCompHeight;
+//
+//    for(int i=0; i<components.size(); i++){
+//        int gui_y = _y + tl_h;
+//        components[i]->setPosition(components[i]->getX(), gui_y);
+//    }
+//
+//    ofNotifyEvent(heightResizedEvent, _h, this);
+//}
 //--------------------------------------------------------------
-void TimelinePanel::setHidden(bool h){
-    
-    _isHidden = h;
-    
-    if (_isHidden) {
-        _guiCompHeight = 1;
-        resize(_y, _w, _strangeMargin1);
-        ofNotifyEvent(heightResizedEvent, _h, this);
-    } else {
-        _guiCompHeight = TL_GUI_COMP_HEIGHT;
-        resize(_y, _w, TIME_PANEL_HEIGHT * ofGetHeight());
-    }
-}
+//void TimelinePanel::setHidden(bool h){
+//    
+//    _isHidden = h;
+//    
+//    if (_isHidden) {
+//        _guiCompHeight = 1;
+//        resize(_y, _w, _strangeMargin1);
+//        ofNotifyEvent(heightResizedEvent, _h, this);
+//    } else {
+//        _guiCompHeight = TL_GUI_COMP_HEIGHT;
+//        resize(_y, _w, TIME_PANEL_HEIGHT * ofGetHeight());
+//    }
+//}
 //--------------------------------------------------------------
 #pragma mark - Markers
 //--------------------------------------------------------------
@@ -629,20 +600,16 @@ void TimelinePanel::setupGui(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    
-    
     //-:Set components Positions and Widths
     adjustGuiSize(_y, _w, _h);
-    
     
 }
 //--------------------------------------------------------------
 void TimelinePanel::adjustGuiSize(int y, int w, int h){
     
     int guiCompWidth = _w / 7;
-    int gui_y = _y + timeline.getHeight();
+    int gui_y = ofGetHeight() - _guiCompHeight;
     int gui_x = _x;
-    
     
     ofxDatGuiComponent* component;
     //TRACK NAME
@@ -673,8 +640,6 @@ void TimelinePanel::adjustGuiSize(int y, int w, int h){
     component = components[4];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
-    
-    
     
     //ADJUST TRACKS
     gui_x += guiCompWidth;

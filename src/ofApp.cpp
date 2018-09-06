@@ -40,7 +40,7 @@ void ofApp::setup(){
     verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
     
     //adjust timePanel Height
-    timePanel.checkIfHeightChanged(); //TODO: Vuela cuando se cambia el layout
+    //timePanel.checkIfHeightChanged(); //TODO: Vuela cuando se cambia el layout
 }
 
 void ofApp::setupOFContext() {
@@ -66,22 +66,20 @@ void ofApp::setupTimeMeasurment() {
 }
 
 void ofApp::setupPanels() {
+    int w = ofGetWidth();
+    int h = ofGetHeight();
+    updatePanelsDimensions(w, h);
     
-    //TODO: Todo esto vuela cuando se cambie el layout....
-    int mainH = MAIN_PANEL_HEIGHT * ofGetHeight();
-    int timeH = TIME_PANEL_HEIGHT * ofGetHeight();
-    int metersH = METER_PANEL_HEIGHT * ofGetHeight();
-    _timePanelHeightPercent   = TIME_PANEL_HEIGHT;
-    _metersPanelHeightPercent = METER_PANEL_HEIGHT;
-    
-    mainPanel.setup(0, 0, ofGetWidth(), mainH);
-    timePanel.setup(0, mainH, ofGetWidth(), timeH, INIT_AUDIO_FILE);
+    mainPanel.setup(0, 0, w, _main_height);
+    metersPanel.setup(0, mainPanel.maxY(), _meters_width, (h - mainPanel.maxY()));
+    timePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()), INIT_AUDIO_FILE);
+   
     mainPanel.setFileInfoString(timePanel.getFileInfo());//FIXME:Esto esta raro...
-    
     setupConfiguration();
-    
     mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
-    metersPanel.setup(0, mainH + timeH, ofGetWidth(), metersH, mainAnalyzer.getChannelAnalyzersPtrs());
+    metersPanel.setChannelAnalyzers(mainAnalyzer.getChannelAnalyzersPtrs());//FIXME. separar el setup de los analyzers!
+    
+    metersPanel.setBackgroundColor(ofColor::green);
 }
 
 void ofApp::setupConfiguration() {
@@ -163,29 +161,25 @@ void ofApp::draw(){
         return;
     }
     
-    TS_START("METERS-PANEL");
-    metersPanel.draw();
-    TS_STOP("METERS-PANEL");
-
     TS_START("TIMELINE-PANEL");
     timePanel.draw();
     TS_STOP("TIMELINE-PANEL");
+    
+    TS_START("METERS-PANEL");
+    metersPanel.draw();
+    TS_STOP("METERS-PANEL");
     
     TS_START("MAIN-PANEL");
     mainPanel.draw();
     TS_STOP("MAIN-PANEL");
     
- 
-    
+
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
-    
     mainAnalyzer.exit();
     metersPanel.exit();
-    
     dataSaver.stop();
-   
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -235,13 +229,13 @@ void ofApp::keyPressed(int key){
     if (ofGetModifierShortcutKeyPressed()) {
         switch (key) {
             case '1':
-                setViewMode(ALL);
+                //setViewMode(ALL);
                 break;
             case '2':
-                setViewMode(TIMEPANEL_ONLY);
+                //setViewMode(TIMEPANEL_ONLY);
                 break;
             case '3':
-                setViewMode(METERSPANEL_ONLY);
+                //setViewMode(METERSPANEL_ONLY);
                 break;
                 
             case 'm':
@@ -444,9 +438,7 @@ void ofApp::loadSettings(){
 //-------------------------------------------------------------
 //??? Add dataSaver.stop() func?
 void ofApp::saveAnalysisDataToFile(){
-    
     stop();
-    
     dataSaver.start();
 }
 //-------------------------------------------------------------
@@ -480,68 +472,78 @@ void ofApp::onTimelinePanelResize(int &h){
     metersPanel.adjustPosAndHeight(new_y, new_h);
     
     ofLogVerbose()<<"-- timelinePanel resized: "<< h;
+}//------------------------------------------------------------
+void ofApp::updatePanelsDimensions(int w, int h) {
+    _main_height   = MAIN_PANEL_HEIGHT * h;
+    _meters_width = METER_PANEL_WIDTH * w;
+    
 }
 //------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-    
-    
-    int mainH   = MAIN_PANEL_HEIGHT * h;
-    int timeH   = _timePanelHeightPercent * h;
-    int metersH = _metersPanelHeightPercent * h;
-    
-    mainPanel.resize(w, mainH);
-    metersPanel.resize(mainH+timeH, w, metersH);
-    timePanel.resize(mainH, w, timeH);
+    //TODO: Disable dragging.
+    updatePanelsDimensions(w, h);
+    mainPanel.resize(mainPanel.getPosition().x,
+                     mainPanel.getPosition().y,
+                     w,
+                     _main_height);
+    metersPanel.resize(metersPanel.getPosition().x,
+                       mainPanel.maxY(),
+                       _meters_width,
+                       (h - mainPanel.maxY()));
+    timePanel.resize(metersPanel.maxX(),
+                     mainPanel.maxY(),
+                     (w - metersPanel.maxX()),
+                     (h - mainPanel.maxY()));
     
     ofLogVerbose()<<"-- Window resized: "<< w <<"x"<< h;
-    
+    ofLogVerbose()<<"-- main height: "<< _main_height <<"- _meters_width: "<< h;
 }
 //--------------------------------------------------------------
 //This function belongs to ofApp instead of metersPanel because panels sizes are timelinePanel dependant.
-void ofApp::hideMetersPanel(bool hide){
-    
-    int w = ofGetWidth();
-    int h = ofGetHeight();
-    
-    metersPanel.setHidden(hide);
-    
-    if (hide){
-        _timePanelHeightPercent   = 1.0 - MAIN_PANEL_HEIGHT;
-        _metersPanelHeightPercent = 0.0;
-    } else {
-        _timePanelHeightPercent = TIME_PANEL_HEIGHT;
-        _metersPanelHeightPercent = METER_PANEL_HEIGHT;
-    }
-    windowResized(w, h);
-    
-}
+//void ofApp::hideMetersPanel(bool hide){
+//
+//    int w = ofGetWidth();
+//    int h = ofGetHeight();
+//
+//    metersPanel.setHidden(hide);
+//
+//    if (hide){
+//        _timePanelHeightPercent   = 1.0 - MAIN_PANEL_HEIGHT;
+//        _metersPanelHeightPercent = 0.0;
+//    } else {
+//        _timePanelHeightPercent = TIME_PANEL_HEIGHT;
+//        _metersPanelHeightPercent = METER_PANEL_HEIGHT;
+//    }
+//    windowResized(w, h);
+//
+//}
 //--------------------------------------------------------------
-void ofApp::setViewMode(ViewMode mode){
-    config.setViewMode(mode);
-    timePanel.hideTracks();
-    
-    switch (mode) {
-            
-        case ALL:
-            hideMetersPanel(false);
-            timePanel.setHidden(false);
-            break;
-            
-        case TIMEPANEL_ONLY:
-            timePanel.setHidden(false);
-            hideMetersPanel(true);
-            break;
-            
-        case METERSPANEL_ONLY:
-            hideMetersPanel(false);
-            timePanel.setHidden(true);
-            break;
-            
-
-        default:
-            break;
-    }
-}
+//void ofApp::setViewMode(ViewMode mode){
+//    config.setViewMode(mode);
+//    timePanel.hideTracks();
+//
+//    switch (mode) {
+//
+//        case ALL:
+//            hideMetersPanel(false);
+//            timePanel.setHidden(false);
+//            break;
+//
+//        case TIMEPANEL_ONLY:
+//            timePanel.setHidden(false);
+//            hideMetersPanel(true);
+//            break;
+//
+//        case METERSPANEL_ONLY:
+//            hideMetersPanel(false);
+//            timePanel.setHidden(true);
+//            break;
+//
+//
+//        default:
+//            break;
+//    }
+//}
 //--------------------------------------------------------------
 #pragma mark - Other
 //--------------------------------------------------------------
@@ -587,8 +589,8 @@ void ofApp::mouseReleased(int x, int y, int button){
     //for testing...
     //cout<<"Mouse Released: "<<x<<"-"<<y<<"-"<<button<<endl;
     
-    timePanel.checkIfHeightChanged();
-    timePanel.checkIfWaveformPreviewChanged();
+    //timePanel.checkIfHeightChanged();
+    //timePanel.checkIfWaveformPreviewChanged();
 }
 //-----------------------------------------------------------
 void ofApp::keyReleased(int key){

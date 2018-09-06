@@ -41,9 +41,7 @@
 #include "OscSender.h"
 
 #define MAIN_PANEL_HEIGHT 0.15
-#define TIME_PANEL_HEIGHT 0.40
-#define METER_PANEL_HEIGHT 0.45
-
+#define METER_PANEL_WIDTH 0.2
 
 
 class ofApp : public ofBaseApp{
@@ -82,15 +80,13 @@ class ofApp : public ofBaseApp{
     void openAudioFile(string filename);
     void onTimelinePanelResize(int & h);
     
-    void hideMetersPanel(bool hide);
-    
+    //void hideMetersPanel(bool hide);
     void setFrameRate(int fps);
     void setAnalysisMode(AnalysisMode mode);
-    void setViewMode(ViewMode mode);
+    //void setViewMode(ViewMode mode);
     void resetAnalysisEngine();
     void setBufferSize(int bs);
-    
-    
+    void updatePanelsDimensions(int w, int h);
     
     int getTotalFramesNum(){return timePanel.timeline.getDurationInFrames();}
     string getSoundfilePath(){return timePanel.audioTrack->getSoundfilePath();}
@@ -129,8 +125,9 @@ private:
     ofMutex audioMutex;
     ofTrueTypeFont	verdana; //Esto??
     
-    float _timePanelHeightPercent;
-    float _metersPanelHeightPercent;
+    int _main_height;
+    int _meters_width;
+    
     
     
 };

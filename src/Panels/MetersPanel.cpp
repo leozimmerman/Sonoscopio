@@ -17,56 +17,44 @@
  */
 
 #include "MetersPanel.h"
-#include "ofApp.h"
-
-
-ofApp* meMainAppPtr;
 
 //----------------------------------------------
 #pragma mark - Core Funcs
 //----------------------------------------------
-void MetersPanel::setup(int x, int y, int width, int height, vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
+void MetersPanel::setup(int x, int y, int width, int height){
     
-    meMainAppPtr = (ofApp*)ofGetAppPtr();
-    
-    _x = x;
-    _y = y;
-    _w = width;
-    _h = height;
-    
-    
-    channelAnalyzers = chanAnalyzerPtrs;
-    
-    //-------------------------
+    BasePanel::setup(x, y, width, height);
+
     _guiCompHeight = MT_GUI_COMP_HEIGHT;
     bordCol = ofColor::grey;
     bordWidth = 1;
-    setupGui();
-    //------------------------
+    
     
     setBackgroundColor(ofColor::darkBlue);
     
     panelColor1 = COLOR_MAIN_A;
     panelColor2 = COLOR_MAIN_B;
+    _panelDir = METERS_SETTINGS_DIR;
+    _bDrawFullDisplay = TRUE;
     
+}
+//----------------------------------------------
+void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
+    channelAnalyzers = chanAnalyzerPtrs;
     panelsNum = channelAnalyzers.size();
-    
     int panelHeight = (_h - _guiCompHeight) / panelsNum;
     
     for (int i=0; i<panelsNum; i++){
-        
         int y_pos = _y + panelHeight*i;
         int panelId = i;
         ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
-       
+        
         if(i%2) p->setMainColor(panelColor2);
         else p->setMainColor(panelColor1);
         
         channelPanels.push_back(p);
     }
-   
-    _panelDir = METERS_SETTINGS_DIR;
-    _bDrawFullDisplay = TRUE;
+    setupGui();
     
 }
 //----------------------------------------------
@@ -86,11 +74,12 @@ void MetersPanel::update(){
 
 //----------------------------------------------
 void MetersPanel::draw(){
-    
-    //for testing
-    //drawBackground();
-    
     if (_isHidden){ return; }
+    
+    View::draw();
+    return;
+    
+    
     
     for(ofxAAChannelMetersPanel* p : channelPanels){
         p->draw();
@@ -211,28 +200,25 @@ void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
         
         channelPanels.push_back(p);
     }
-    //------------------------------
+    
  
 }
 
 //----------------------------------------------
-void MetersPanel::resize(int y, int w, int h){
+
+void MetersPanel::resize(int x, int y, int w, int h){
     
-    _w = w;
+    View::resize(x, y, w, h);
     
     for(int i=0; i<channelPanels.size(); i++){
         channelPanels[i]->setWidth(_w);
     }
     
     adjustPosAndHeight(y, h);
-    
     adjustGuiSize(_y, _w, _h);
 }
 //----------------------------------------------
 void MetersPanel::adjustPosAndHeight(int y, int h){
-    
-    _y = y;
-    _h = h;
     
     int panelHeight = (_h - _guiCompHeight) / panelsNum;
     

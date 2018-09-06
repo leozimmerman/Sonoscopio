@@ -29,70 +29,62 @@
 #define FILE_INFO_HEIGHT 20
 
 class MainPanel : public BasePanel{
-
-    public:
     
-        void setup(int x, int y, int width, int height);
-        void update();
-        void draw();
-        void exit();
+public:
     
-        void drawFileInfo();
+    virtual void setup(int x, int y, int width, int height) override;
+    virtual void update() override;
+    virtual void draw() override;
+    virtual void exit() override;
     
-        void setFileInfoString(string str){fileInfoStr = str;}
-        void openOpenFileDialog();
-        void processOpenFileSelection(ofFileDialogResult openFileResult);
+    virtual bool getFocused() override;
+    virtual void setupGui() override;
+    virtual void resize(int x, int y, int w, int h) override;
+    virtual void saveSettings(string rootDir="") override;
+    virtual void loadSettings(string rootDir="") override;
     
-        void resize(int w, int h);
+    void drawFileInfo();
     
-        void setupGui();
-        void adjustGui(int w, int h);
+    void setFileInfoString(string str){fileInfoStr = str;}
+    void openOpenFileDialog();
+    void processOpenFileSelection(ofFileDialogResult openFileResult);
     
-        vector<ofxDatGuiComponent*> components;
-        void onButtonEvent(ofxDatGuiButtonEvent e);
-        void onTextInputEvent(ofxDatGuiTextInputEvent e);
-        void onSliderEvent(ofxDatGuiSliderEvent e);
-        void onProjectDropdownEvent(ofxDatGuiDropdownEvent e);
-        void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
+    void adjustGui(int w, int h);
     
-        void loadSettings(string rootDir="");
-        void saveSettings(string rootDir="");
+    void onButtonEvent(ofxDatGuiButtonEvent e);
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    void onSliderEvent(ofxDatGuiSliderEvent e);
+    void onProjectDropdownEvent(ofxDatGuiDropdownEvent e);
+    void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     
-        bool getFocused();
+private:
     
-    private:
+    string fileInfoStr;
+    string fileName;
+    ofTrueTypeFont	verdana;
     
-        string fileInfoStr;
-        string fileName;
-        ofTrueTypeFont	verdana;
-        int  _guiCompWidth;
+    ofColor fileinfoFontCol;
     
-        ofColor bordCol;
-        int bordWidth;
+    ofxDatGuiSlider* gVolume;
+    ofxDatGuiToggle* gSplit;
+    ofxDatGuiToggle* gLoop;
+    ofxDatGuiToggle* gSendOsc;
+    ofxDatGuiToggle* gShowBpm;
+    ofxDatGuiToggle* gSnapBpm;
+    ofxDatGuiToggle* gFramebased;
+    ofxDatGuiFRM* gFpsMonitor;
+    //REMOVE
+    //ofxDatGuiTextInput* gHost;
+    //ofxDatGuiTextInput* gPort;
+    //ofxDatGuiTextInput* gBpm;
+    //ofxDatGuiTextInput* gFps;
+    //ofxDatGuiDropdown* gBufferSize;
     
-        ofColor fileinfoFontCol;
     
-        ofxDatGuiSlider* gVolume;
-        ofxDatGuiToggle* gSplit;
-        ofxDatGuiToggle* gLoop;
-        ofxDatGuiToggle* gSendOsc;
-        ofxDatGuiToggle* gShowBpm;
-        ofxDatGuiToggle* gSnapBpm;
-        ofxDatGuiToggle* gFramebased;
-        ofxDatGuiFRM* gFpsMonitor;
-        //REMOVE
-        //ofxDatGuiTextInput* gHost;
-        //ofxDatGuiTextInput* gPort;
-        //ofxDatGuiTextInput* gBpm;
-        //ofxDatGuiTextInput* gFps;
-        //ofxDatGuiDropdown* gBufferSize;
+    ofDirectory projects_dir;
     
-        string _panelDir;
+    int _rows;
+    int _columns;
     
-        ofDirectory projects_dir;
     
-        int _rows;
-        int _columns;
-    
-
 };
