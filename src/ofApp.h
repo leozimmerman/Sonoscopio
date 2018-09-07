@@ -88,10 +88,11 @@ class ofApp : public ofBaseApp{
     void setBufferSize(int bs);
     void updatePanelsDimensions(int w, int h);
     
-    int getTotalFramesNum(){return timePanel.timeline.getDurationInFrames();}
-    string getSoundfilePath(){return timePanel.audioTrack->getSoundfilePath();}
-    float getDurationInSeconds(){return timePanel.timeline.getDurationInSeconds();}
-    float getBpm(){return timePanel.timeline.getBPM();}
+    //TODO: Fix this...
+    int getTotalFramesNum(){return timePanel.timelineView.timeline.getDurationInFrames();}
+    string getSoundfilePath(){return timePanel.timelineView.audioTrack->getSoundfilePath();}
+    float getDurationInSeconds(){return timePanel.timelineView.timeline.getDurationInSeconds();}
+    float getBpm(){return timePanel.timelineView.timeline.getBPM();}
     
     void saveSettings();
     void loadSettings();

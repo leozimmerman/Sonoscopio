@@ -1,12 +1,21 @@
 # ToDo list
 
-## NOW
+## Now
+- Add Subview functionality in TimePanel ??
+- Move main pannel btns to TimePanel GUI ?
+- Make timepanel.timelineView private !
+- TimePanel sin tracks? solo waveform?
 
-- Add view modes select from main panel.
-- Save project view mode for open closing.
+
+
+
+
+
+**********************************************************************************************
+**********************************************************************************************
+## Backlog
 
 - Testear TLNotes get values.
-- Modal window: audio analysis config / timeilne config / keyboard shortcuts.
 
 
 ## VERSION 1.0

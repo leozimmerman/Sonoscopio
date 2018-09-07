@@ -23,101 +23,45 @@
 
 #include "ofxTimeline.h"
 #include "ofxTLAudioTrack.h"
+
+
 #include "ofxDatGui.h"
 
 #include "Macros.h"
 #include "BasePanel.h"
+#include "GuiView.h"
+#include "TimelineView.h"
 
-#define PAGE_AUDIO_NAME "PageAudio"
-#define PAGE_TRACKS_NAME "PageTracks"
 
-#define TL_GUI_COMP_HEIGHT 26
 
-enum trackType {
-    CURVES,
-    BANGS,
-    SWITCHES,
-    NOTES
-};
+#define TL_GUI_COMP_HEIGHT 26 //TODO: Borrar
+
 
 
 class TimelinePanel : public BasePanel {
     
 public:
     
-    void setup(int x, int y, int width, int height, string audiofile);
+    void setup(int x, int y, int w, int h, string audiofile);
     virtual void update() override;
     virtual void draw() override;
     virtual void exit() override;
     
     virtual bool getFocused() override;
-    virtual void setupGui() override;
+    
     virtual void resize(int x, int y, int w, int h) override;
     virtual void saveSettings(string rootDir="") override;
     virtual void loadSettings(string rootDir="") override;
     
-    void setupTimeline(string audiofile);
+    
     void keyPressed(int key);
     
-    void setFrameRate(int fps);
     
-    void adjustGuiSize(int y, int w, int h);
-    
-    void addMarker();
-    void addMarker(float millis);
-    void clearMarkers();
-    
-    void openAudioFile(string filename);
-    string getFileInfo();
-    
-    bool getIfIsDragging(){return _footerIsDragging;}
-    
-    //void checkIfHeightChanged();
-    void checkIfWaveformPreviewChanged();
-    
-    void addTrack(string name, trackType type);
-    void removeTrack(string name);
-    void toggleShowTracks();
-    void adjustTracksHeight();
-    void toggleEnableDisableFocusedTrack();
-    void expandFocusedTrack();
-    
-    void addKeyframeInFocusedTrack();
-    
-    void hideTracks();
-    
-    std::map<string, float> getTracksValues();
-
-    void bangFired(ofxTLBangEventArgs& args);
-    
-    ofxTimeline timeline;
-    ofxTLAudioTrack* audioTrack;
-    
-    ofEvent<int> heightResizedEvent;
-    
+    TimelineView timelineView;//TODO: Make it private
     
 private:
+    GuiView guiView;
     
-    int _frameRate;
-    
-    string currentTrackName;
-    trackType currentTrackType;
-    
-    bool _isThereBang = false;
-    ofxTLTrack* _bangedTrack;
-    ofColor waveformCol;
-    bool _footerIsDragging;
-    
-    vector<float> _markers;
-    
-    ofxDatGuiTextInput* gTrackName;
-    void onButtonEvent(ofxDatGuiButtonEvent e);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    void onDropdownEvent(ofxDatGuiDropdownEvent e);
-    
-    //margins related to ofxTimeline height auto adjust func.
-    float _strangeMargin1 = 66.0;
-    float _strangeMargin2 = 36.5;
     
 };
 

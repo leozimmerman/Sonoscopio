@@ -74,7 +74,7 @@ void ofApp::setupPanels() {
     metersPanel.setup(0, mainPanel.maxY(), _meters_width, (h - mainPanel.maxY()));
     timePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()), INIT_AUDIO_FILE);
    
-    mainPanel.setFileInfoString(timePanel.getFileInfo());//FIXME:Esto esta raro...
+    mainPanel.setFileInfoString(timePanel.timelineView.getFileInfo());//FIXME:Esto esta raro...
     setupConfiguration();
     mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
     metersPanel.setChannelAnalyzers(mainAnalyzer.getChannelAnalyzersPtrs());//FIXME. separar el setup de los analyzers!
@@ -83,8 +83,8 @@ void ofApp::setupPanels() {
 }
 
 void ofApp::setupConfiguration() {
-    config.setChannelsNum(timePanel.audioTrack->getNumChannels());
-    config.setSampleRate(timePanel.audioTrack->getSampleRate());
+    config.setChannelsNum(timePanel.timelineView.audioTrack->getNumChannels());
+    config.setSampleRate(timePanel.timelineView.audioTrack->getSampleRate());
     config.setAnalysisMode(INIT_ANALYSIS_MODE);
     config.setBufferSize(INIT_BUFFER_SIZE);
     config.setProjectDir(INIT_PROJECT_DIR);
@@ -100,7 +100,7 @@ void ofApp::setupModals() {
 }
 
 void ofApp::setupListeners() {
-    ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
+    //ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
     ofAddListener(ofxAAOnsetMeter::onsetEventGlobal, this, &ofApp::onsetFired);
 }
 
@@ -120,15 +120,15 @@ void ofApp::update(){
     
     TS_START("GET-AUDIO-BUFFERS");
     if(config.getAnalysisMode()==SPLIT){
-        soundBuffer = timePanel.audioTrack->getCurrentSoundBuffer(config.getBufferSize());//multichannel soundbuffer
+        soundBuffer = timePanel.timelineView.audioTrack->getCurrentSoundBuffer(config.getBufferSize());//multichannel soundbuffer
     }else if(config.getAnalysisMode()==MONO){
-        soundBuffer = timePanel.audioTrack->getCurrentSoundBufferMono(config.getBufferSize());//mono soundbuffer
+        soundBuffer = timePanel.timelineView.audioTrack->getCurrentSoundBufferMono(config.getBufferSize());//mono soundbuffer
     }
     TS_STOP("GET-AUDIO-BUFFERS");
     
     
     TS_START("AUDIO-ANALYSIS");
-    if(timePanel.timeline.getIsPlaying()){
+    if(timePanel.timelineView.timeline.getIsPlaying()){
       mainAnalyzer.analyze(soundBuffer);
     }
     TS_STOP("AUDIO-ANALYSIS");
@@ -139,13 +139,13 @@ void ofApp::update(){
     TS_START("PANELS-UPDATE");
     mainPanel.update();
     timePanel.update();
-    if(timePanel.getIfIsDragging() == false) metersPanel.update();
+    metersPanel.update();
     TS_STOP("PANELS-UPDATE");
     
     //send OSC-----------------------
     TS_START("SEND-OSC");
     if(config.osc().bSend) {
-        oscSender.sendOscData(metersPanel.getMetersValues(), metersPanel.getMetersVectorValues(), timePanel.getTracksValues(), config.osc().bSendVectorValues);
+        oscSender.sendOscData(metersPanel.getMetersValues(), metersPanel.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
     }
     TS_STOP("SEND-OSC");
 
@@ -239,7 +239,7 @@ void ofApp::keyPressed(int key){
                 break;
                 
             case 'm':
-                timePanel.addMarker();
+                timePanel.timelineView.addMarker();
                 break;
                 
             case 't':
@@ -259,10 +259,10 @@ void ofApp::keyPressed(int key){
 void ofApp::openAudioFile(string filename){
     
     audioMutex.lock();
-    timePanel.openAudioFile(filename);
-    mainPanel.setFileInfoString(timePanel.getFileInfo());
-    config.setChannelsNum(timePanel.audioTrack->getNumChannels());
-    config.setSampleRate(timePanel.audioTrack->getSampleRate());
+    timePanel.timelineView.openAudioFile(filename);
+    mainPanel.setFileInfoString(timePanel.timelineView.getFileInfo());
+    config.setChannelsNum(timePanel.timelineView.audioTrack->getNumChannels());
+    config.setSampleRate(timePanel.timelineView.audioTrack->getSampleRate());
     resetAnalysisEngine();
     dataSaver.reset();
     audioMutex.unlock();
@@ -312,10 +312,10 @@ void ofApp::setFrameRate(int fps){
     
     config.setFrameRate(fps);
     ofSetFrameRate(fps);
-    timePanel.setFrameRate(fps);
+    timePanel.timelineView.setFrameRate(fps);
     
     //update file info frames num info:
-    mainPanel.setFileInfoString(timePanel.getFileInfo());
+    mainPanel.setFileInfoString(timePanel.timelineView.getFileInfo());
     
     dataSaver.updateFrameRate();
     
@@ -327,15 +327,15 @@ void ofApp::setFrameRate(int fps){
 #pragma mark - Playback Controls
 //--------------------------------------------------------------
 void ofApp::togglePlay(){
-    timePanel.timeline.togglePlay();
+    timePanel.timelineView.timeline.togglePlay();
 }
 //--------------------------------------------------------------
 void ofApp::stop(){
-    timePanel.timeline.stop();
+    timePanel.timelineView.timeline.stop();
 }
 //--------------------------------------------------------------
 void ofApp::rewind(){
-    timePanel.timeline.setCurrentTimeToInPoint();
+    timePanel.timelineView.timeline.setCurrentTimeToInPoint();
 }
 //--------------------------------------------------------------
 #pragma mark - Settings funcs
@@ -552,7 +552,7 @@ void ofApp::onsetFired(int & panelId){
 }
 //--------------------------------------------------------------
 void ofApp::addKeyframeInFocusedTrack(){
-    timePanel.addKeyframeInFocusedTrack();
+    timePanel.timelineView.addKeyframeInFocusedTrack();
 }
 //--------------------------------------------------------------
 void ofApp::onModalEvent(ofxModalEvent e) {

@@ -38,7 +38,7 @@ public:
     virtual void exit() override;
     
     virtual bool getFocused() override;
-    virtual void setupGui() override;
+    void setupGui();
     virtual void resize(int x, int y, int w, int h) override;
     virtual void saveSettings(string rootDir="") override;
     virtual void loadSettings(string rootDir="") override;

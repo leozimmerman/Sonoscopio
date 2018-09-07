@@ -130,9 +130,9 @@ void AnalysisDataSaver::threadedFunction(){
                 //analyze buffer for frame:
                 
                 if(currentAnalysisMode==SPLIT){
-                    frameSoundBuffer = sMainApp->timePanel.audioTrack->getSoundBufferForFrame(frameNum, bufferSize);//multichannel soundbuffer
+                    frameSoundBuffer = sMainApp->timePanel.timelineView.audioTrack->getSoundBufferForFrame(frameNum, bufferSize);//multichannel soundbuffer
                 }else if(currentAnalysisMode==MONO){
-                    frameSoundBuffer = sMainApp->timePanel.audioTrack->getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
+                    frameSoundBuffer = sMainApp->timePanel.timelineView.audioTrack->getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
                 }
                 
                 sMainApp->mainAnalyzer.analyze(frameSoundBuffer);
@@ -247,8 +247,8 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.addTag("TIMELINE");
                 savedSettings.pushTag("TIMELINE");
                 
-                sMainApp->timePanel.timeline.setCurrentFrame(frameNum);
-                std::map<string, float> timelineValues = sMainApp->timePanel.getTracksValues();
+                sMainApp->timePanel.timelineView.timeline.setCurrentFrame(frameNum);
+                std::map<string, float> timelineValues = sMainApp->timePanel.timelineView.getTracksValues();
                 
                 for (auto& kv : timelineValues){
                     //cout<<"timeline send osc :: "<<kv.first<<" -- "<<kv.second<<endl;
@@ -265,7 +265,7 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.popTag();//pop from frameTag back into ANALYSIS-DATA
             }
             
-            sMainApp->timePanel.timeline.setCurrentFrame(0);
+            sMainApp->timePanel.timelineView.timeline.setCurrentFrame(0);
         
             
             //save and stop----------------------------------

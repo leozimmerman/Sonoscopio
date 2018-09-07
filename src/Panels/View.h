@@ -11,8 +11,8 @@
 class View {
 
 public:
-    virtual void setup(int x, int y, int width, int height);
-    virtual void resize(int x, int y, int width, int height);
+    virtual void setup(int x, int y, int w, int h);
+    virtual void resize(int x, int y, int w, int h);
     virtual void draw();
     
     int maxX() {return _x + _w;}

@@ -8,6 +8,6 @@
 #include "BasePanel.h"
 
 
-void BasePanel::setup(int x, int y, int width, int height) {
-    View::setup(x, y, width, height);
+void BasePanel::setup(int x, int y, int w, int h) {
+    View::setup(x, y, w, h);
 }

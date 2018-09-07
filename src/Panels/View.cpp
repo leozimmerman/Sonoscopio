@@ -7,11 +7,11 @@
 
 #include "View.h"
 
-void View::setup(int x, int y, int width, int height){
+void View::setup(int x, int y, int w, int h){
     _x = x;
     _y = y;
-    _w = width;
-    _h = height;
+    _w = w;
+    _h = h;
     backgroundColor = ofColor::white;
 }
 
@@ -21,14 +21,14 @@ void View::draw(){
     ofDrawRectangle(_x, _y, _w, _h);
     ofPopStyle();
     
-    for (auto v : subviews) {
-        v->draw();
-    }
+//    for (auto v : subviews) {
+//        v->draw();
+//    }
 }
 
-void View::resize(int x, int y, int width, int height) {
+void View::resize(int x, int y, int w, int h) {
     _x = x;
     _y = y;
-    _w = width;
-    _h = height;
+    _w = w;
+    _h = h;
 }

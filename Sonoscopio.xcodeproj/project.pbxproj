@@ -25,6 +25,7 @@
 		9D72A0B4BAED5487D5CD7538 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D1B275EC347E41C380E1179 /* OpenAL.framework */; };
 		ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADD194746185E2DA11468377 /* IpEndpointName.cpp */; };
 		B3354C912141B300003F8F91 /* GuiView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C8F2141B300003F8F91 /* GuiView.cpp */; };
+		B3354C942141BB14003F8F91 /* TimelineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C922141BB14003F8F91 /* TimelineView.cpp */; };
 		B363C7801FE4398F0014F7F7 /* CustomModals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B363C77E1FE4398F0014F7F7 /* CustomModals.cpp */; };
 		B3712ED82135DDB9007BA046 /* ofxSmartFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3712ED62135DDB9007BA046 /* ofxSmartFont.cpp */; };
 		B3712EE62135DDFE007BA046 /* ofxModalWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3712EE22135DDFE007BA046 /* ofxModalWindow.cpp */; };
@@ -169,6 +170,9 @@
 		B31C608870ECEB2490A93736 /* ofxOscParameterSync.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscParameterSync.h; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.h; sourceTree = SOURCE_ROOT; };
 		B3354C8F2141B300003F8F91 /* GuiView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GuiView.cpp; path = Panels/GuiView.cpp; sourceTree = "<group>"; };
 		B3354C902141B300003F8F91 /* GuiView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GuiView.h; path = Panels/GuiView.h; sourceTree = "<group>"; };
+		B3354C922141BB14003F8F91 /* TimelineView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimelineView.cpp; path = Panels/TimelineView.cpp; sourceTree = "<group>"; };
+		B3354C932141BB14003F8F91 /* TimelineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TimelineView.h; path = Panels/TimelineView.h; sourceTree = "<group>"; };
+		B3354C972141D517003F8F91 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = Notes/TODO.md; sourceTree = "<group>"; };
 		B363C77E1FE4398F0014F7F7 /* CustomModals.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CustomModals.cpp; path = CustomModals/CustomModals.cpp; sourceTree = "<group>"; };
 		B363C77F1FE4398F0014F7F7 /* CustomModals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomModals.h; path = CustomModals/CustomModals.h; sourceTree = "<group>"; };
 		B3712ED62135DDB9007BA046 /* ofxSmartFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxSmartFont.cpp; path = local_addons/GUI/ofxSmartFont/src/ofxSmartFont.cpp; sourceTree = "<group>"; };
@@ -1011,6 +1015,8 @@
 				B3A475C71DD4FBF000B1371C /* TimelinePanel.h */,
 				B3354C8F2141B300003F8F91 /* GuiView.cpp */,
 				B3354C902141B300003F8F91 /* GuiView.h */,
+				B3354C922141BB14003F8F91 /* TimelineView.cpp */,
+				B3354C932141BB14003F8F91 /* TimelineView.h */,
 			);
 			name = TimelinePanel;
 			sourceTree = "<group>";
@@ -1579,6 +1585,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				B3354C972141D517003F8F91 /* TODO.md */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -1788,6 +1795,7 @@
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
 				67FE4C7B15C2F0478C8126C2 /* NetworkingUtils.cpp in Sources */,
+				B3354C942141BB14003F8F91 /* TimelineView.cpp in Sources */,
 				B3712F9D2136F733007BA046 /* ofxHotKeys_impl_mac.mm in Sources */,
 				B3712F922136F733007BA046 /* ofxTLKeyframes.cpp in Sources */,
 				510CAFE035E576A4E1502D52 /* UdpSocket.cpp in Sources */,
