@@ -141,8 +141,8 @@ void AnalysisDataSaver::threadedFunction(){
                 
                 
                 //-:Get Meters values--------------------------------
-                vector<std::map<string, float>> metersValues = sMainApp->metersPanel.getMetersValues();
-                vector<std::map<string, vector<float>>> metersVectorValues = sMainApp->metersPanel.getMetersVectorValues();
+                vector<std::map<string, float>> metersValues = sMainApp->metersPanel.metersView.getMetersValues();
+                vector<std::map<string, vector<float>>> metersVectorValues = sMainApp->metersPanel.metersView.getMetersVectorValues();
 
                 if(metersVectorValues.size() != metersValues.size()){
                     ofLogError("datasSaver threaded function:")<<"metersValues and metersVectorValues sizes not matching.";

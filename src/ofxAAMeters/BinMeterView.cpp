@@ -16,11 +16,9 @@
  *
  */
 
-#include "ofxAABinMeter.h"
+#include "BinMeterView.h"
 
-ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h, int panelId) :  ofxAAMeter(name, x,  y,  w,  h, panelId){
-    
-    _meterOrient = HORIZONTAL;
+BinMeterView::BinMeterView(string name, int x, int y, int w, int h, int panelId) :  MeterView(name, x,  y,  w,  h, panelId){
     
     smoothSlider->setHeight(_line_h*0.75);
     onOffToggle->setHeight(_line_h*0.75);
@@ -41,19 +39,18 @@ ofxAABinMeter::ofxAABinMeter(string name, int x, int y, int w, int h, int panelI
 }
 
 //-------------------------------------------------------
-void ofxAABinMeter::draw(){
-
-    
-   
-    
+void BinMeterView::draw(){
     //bounds-box
     ofPushStyle();
     ofNoFill();
     ofSetColor(_mainColor);
     ofDrawRectangle(_drawRect);
     ofPopStyle();
+
+    return;
     
     drawLabel();
+    
     
     if(_enabled) drawMeter();
     
@@ -66,7 +63,7 @@ void ofxAABinMeter::draw(){
 
 }
 //-------------------------------------------------------
-void ofxAABinMeter::drawMeter(){
+void BinMeterView::drawMeter(){
     
     if(getEnabled()==false) return;
     //-----------------------------
@@ -95,7 +92,7 @@ void ofxAABinMeter::drawMeter(){
 
 }
 //-------------------------------------------------------
-void ofxAABinMeter::drawLabel(){
+void BinMeterView::drawLabel(){
     
     ofPushMatrix();
     
@@ -111,7 +108,7 @@ void ofxAABinMeter::drawLabel(){
 
 
 //-------------------------------------------------------
-void ofxAABinMeter::setPosAndSize(int x, int y, int w, int h){
+void BinMeterView::resize(int x, int y, int w, int h){
     
     _x = x;
     _y = y;
@@ -126,14 +123,14 @@ void ofxAABinMeter::setPosAndSize(int x, int y, int w, int h){
     
 }
 //-------------------------------------------------------
-void ofxAABinMeter::updateComponentsPositions(){
+void BinMeterView::updateComponentsPositions(){
    
     smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
     onOffToggle->setPosition(_x, _y);
     
 }
 //-------------------------------------------------------
-void ofxAABinMeter::updateComponentsWidth(){
+void BinMeterView::updateComponentsWidth(){
     
     //-:LABEL
     //constraing width

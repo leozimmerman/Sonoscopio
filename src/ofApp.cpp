@@ -101,7 +101,7 @@ void ofApp::setupModals() {
 
 void ofApp::setupListeners() {
     //ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
-    ofAddListener(ofxAAOnsetMeter::onsetEventGlobal, this, &ofApp::onsetFired);
+    ofAddListener(OnsetMeterView::onsetEventGlobal, this, &ofApp::onsetFired);
 }
 
 //--------------------------------------------------------------
@@ -145,7 +145,7 @@ void ofApp::update(){
     //send OSC-----------------------
     TS_START("SEND-OSC");
     if(config.osc().bSend) {
-        oscSender.sendOscData(metersPanel.getMetersValues(), metersPanel.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
+        oscSender.sendOscData(metersPanel.metersView.getMetersValues(), metersPanel.metersView.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
     }
     TS_STOP("SEND-OSC");
 

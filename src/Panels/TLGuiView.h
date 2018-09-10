@@ -11,7 +11,7 @@
 #include "TimelineView.h"
 
 
-class GuiView : public View {
+class TLGuiView : public View {
 public:
     void setup(int x, int y, int width, int height, TimelineView* tv_ptr);
     void update();

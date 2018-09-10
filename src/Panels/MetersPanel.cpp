@@ -21,49 +21,51 @@
 //----------------------------------------------
 #pragma mark - Core Funcs
 //----------------------------------------------
-void MetersPanel::setup(int x, int y, int width, int height){
+void MetersPanel::setup(int x, int y, int w, int h){
     
-    BasePanel::setup(x, y, width, height);
-
+    BasePanel::setup(x, y, w, h);
+    metersView.setup(x, y + 25, w, h-25);
+    metersView.setBackgroundColor(ofColor::orange);
+    
+    ///Borrar----------------
     _guiCompHeight = MT_GUI_COMP_HEIGHT;
     bordCol = ofColor::grey;
     bordWidth = 1;
     
-    
     setBackgroundColor(ofColor::darkBlue);
     
-    panelColor1 = COLOR_MAIN_A;
-    panelColor2 = COLOR_MAIN_B;
     _panelDir = METERS_SETTINGS_DIR;
-    _bDrawFullDisplay = TRUE;
+    
     
 }
 //----------------------------------------------
 void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     channelAnalyzers = chanAnalyzerPtrs;
-    panelsNum = channelAnalyzers.size();
-    int panelHeight = (_h - _guiCompHeight) / panelsNum;
+    metersView.setupChannelMeters(chanAnalyzerPtrs);
     
-    for (int i=0; i<panelsNum; i++){
-        int y_pos = _y + panelHeight*i;
-        int panelId = i;
-        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
-        
-        if(i%2) p->setMainColor(panelColor2);
-        else p->setMainColor(panelColor1);
-        
-        channelPanels.push_back(p);
-    }
+//    panelsNum = channelAnalyzers.size(); //Hace falta??
+   
+//    int panelHeight = (_h - _guiCompHeight) / panelsNum;
+//
+//    for (int i=0; i<panelsNum; i++){
+//        int y_pos = _y + panelHeight*i;
+//        int panelId = i;
+//        ChannelMetersView * p = new ChannelMetersView(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
+//
+//        if(i%2) p->setMainColor(panelColor2);
+//        else p->setMainColor(panelColor1);
+//
+//        channelPanels.push_back(p);
+//    }
     setupGui();
     
 }
 //----------------------------------------------
 void MetersPanel::update(){
     
-    //set meters values from ofxAudioAnalyzerUnit
-    for(ofxAAChannelMetersPanel* p : channelPanels){
-        p->update();
-    }
+
+    metersView.update();
+
     
     //update gui components
     for(int i=0; i<components.size(); i++){
@@ -77,14 +79,9 @@ void MetersPanel::draw(){
     if (_isHidden){ return; }
     
     View::draw();
+    metersView.draw();
     return;
-    
-    
-    
-    for(ofxAAChannelMetersPanel* p : channelPanels){
-        p->draw();
-    }
-    
+
     for(int i=0; i<components.size(); i++){
         components[i]->draw();
     }
@@ -92,10 +89,11 @@ void MetersPanel::draw(){
 }
 //----------------------------------------------
 void MetersPanel::exit(){
-    for (ofxAAChannelMetersPanel* p : channelPanels){
-        p->exit();
-    }
-    channelPanels.clear();
+    metersView.exit();
+//    for (ChannelMetersView* p : channelPanels){
+//        p->exit();
+//    }
+//    channelPanels.clear();
 
 }
 //----------------------------------------------
@@ -142,12 +140,10 @@ void MetersPanel::loadSettings(string rootDir){
     setAnalyzerMaxEstimatedValue(ODD_TO_EVEN, std::stof (text));
     //-----------------
     
-    
-    
     //-:Load channelPannels settings---------------------
-    for(int i=0; i<channelPanels.size(); i++){
+    for(int i=0; i<metersView.channelPanels.size(); i++){
         string filenameChannelPanel = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
-        channelPanels[i]->loadSettingsFromFile(filenameChannelPanel);
+        metersView.channelPanels[i]->loadSettingsFromFile(filenameChannelPanel);
     }
 }
 //----------------------------------------------
@@ -168,40 +164,17 @@ void MetersPanel::saveSettings(string rootDir){
     
     savedSettings.saveFile(filenamePanel);
     
-    
     //-:Save channelPannels settings---------------
-    for(int i=0; i<channelPanels.size(); i++){
+    for(int i=0; i<metersView.channelPanels.size(); i++){
         string filenameChannelPanel = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
-        channelPanels[i]->saveSettingsToFile(filenameChannelPanel);
+        metersView.channelPanels[i]->saveSettingsToFile(filenameChannelPanel);
     }
 }
 //----------------------------------------------
 #pragma mark - Other funcs
 //----------------------------------------------
 void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
-    
-    for (ofxAAChannelMetersPanel* p : channelPanels){
-        p->exit();
-    }
-    channelPanels.clear();
-    
-    //--------------------------
-    channelAnalyzers = chanAnalyzerPtrs;
-    panelsNum = channelAnalyzers.size();
-    
-    int panelHeight = (_h - _guiCompHeight) / panelsNum;
-    
-    for (int i=0; i<panelsNum; i++){
-        int y_pos = _y + panelHeight*i;
-        int panelId = i;
-        ofxAAChannelMetersPanel * p = new ofxAAChannelMetersPanel(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
-        if(i%2) p->setMainColor(panelColor2);
-        else p->setMainColor(panelColor1);
-        
-        channelPanels.push_back(p);
-    }
-    
- 
+    metersView.reset(chanAnalyzerPtrs);
 }
 
 //----------------------------------------------
@@ -210,9 +183,7 @@ void MetersPanel::resize(int x, int y, int w, int h){
     
     View::resize(x, y, w, h);
     
-    for(int i=0; i<channelPanels.size(); i++){
-        channelPanels[i]->setWidth(_w);
-    }
+    metersView.resize(x, y, w, h);
     
     adjustPosAndHeight(y, h);
     adjustGuiSize(_y, _w, _h);
@@ -220,23 +191,15 @@ void MetersPanel::resize(int x, int y, int w, int h){
 //----------------------------------------------
 void MetersPanel::adjustPosAndHeight(int y, int h){
     
-    int panelHeight = (_h - _guiCompHeight) / panelsNum;
-    
-    for(int i=0; i<channelPanels.size(); i++){
-        int y_pos = _y + panelHeight*i;
-        channelPanels[i]->adjustPosAndHeight(y_pos, panelHeight);
-    }
-    
-}
-//----------------------------------------------
-void MetersPanel::setFullDisplay(bool b){
-    
-    _bDrawFullDisplay = b;
-    for (auto chPan : channelPanels){
-        chPan->setFullDisplay(_bDrawFullDisplay);
-    }
+//    int panelHeight = (_h - _guiCompHeight) / panelsNum;
+//
+//    for(int i=0; i<channelPanels.size(); i++){
+//        int y_pos = _y + panelHeight*i;
+//        channelPanels[i]->adjustPosAndHeight(y_pos, panelHeight);
+//    }
     
 }
+
 //----------------------------------------------
 void MetersPanel::setupGui(){
     
@@ -392,57 +355,9 @@ bool MetersPanel::getFocused(){
         return false;
     }
 }
-//----------------------------------------------
-vector<std::map<string, float>>& MetersPanel::getMetersValues(){
-    
-    singleValuesForOsc.clear();
-    
-    for (int i=0; i<channelPanels.size(); i++){
-        
-        std::map<string, float> channelMap;
-        
-        for(ofxAAMeter* m : channelPanels[i]->meters){
-           
-           if (m->getName()==MTR_NAME_ONSETS){
-               
-                string key =  m->getName();
-                ofxAAOnsetMeter* om = dynamic_cast<ofxAAOnsetMeter*>(m);
-                channelMap[key] = om->getValue();
-                
-            }else if(m->getName()!= MTR_NAME_MFCC && m->getName()!= MTR_NAME_SPECTRUM &&
-                     m->getName()!= MTR_NAME_HPCP && m->getName()!= MTR_NAME_MEL_BANDS &&
-                     m->getName()!= MTR_NAME_TRISTIMULUS){
-                string key = m->getName();
-                channelMap[key]= m->getValue();
-            }
-            
-        }
-        singleValuesForOsc.push_back(channelMap);
-    }
-    return singleValuesForOsc;
-}
-//--------------------------------------------------------------
-vector<std::map<string, vector<float>>>& MetersPanel::getMetersVectorValues(){
-    
-    vectorValuesForOsc.clear();
-    
-    for (int i=0; i<channelPanels.size(); i++){
-        
-        std::map<string, vector<float>> channelMap;
-        
-        channelMap[MTR_NAME_MEL_BANDS] = channelPanels[i]->getMelBandsValues();
-        channelMap[MTR_NAME_MFCC] = channelPanels[i]->getMfccValues();
-        channelMap[MTR_NAME_HPCP] = channelPanels[i]->getHpcpValues();
-        channelMap[MTR_NAME_TRISTIMULUS] = channelPanels[i]->getTristimulusValues();
-        
-        vectorValuesForOsc.push_back(channelMap);
-    }
-    
-    return vectorValuesForOsc;
-}
 
 //--------------------------------------------------------------
-void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithm algorithm, float value){
+void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value){
     
     for (ofxAudioAnalyzerUnit* anUnit : channelAnalyzers){
         anUnit->setMaxEstimatedValue(algorithm, value);
@@ -456,7 +371,7 @@ void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithm algorithm, float v
 void MetersPanel::onButtonEvent(ofxDatGuiButtonEvent e)
 {
     if(e.target->getLabel()=="FULL DISPLAY"){
-        toggleFullDisplay();
+        metersView.toggleFullDisplay();
     }
 }
 

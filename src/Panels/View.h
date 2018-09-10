@@ -27,6 +27,9 @@ public:
     int getHeight(){return _h;}
     ofColor getBackgroundColor(){return backgroundColor;}
     
+    bool getIsHidden(){return _isHidden;}
+    virtual void setHidden(bool h) {_isHidden = h;}
+    
     std::shared_ptr<View> parent;
     std::vector<std::shared_ptr<View>> subviews;
     
@@ -35,5 +38,5 @@ protected:
     int _x, _y;
     int _w, _h;
     ofColor backgroundColor;
-    
+    bool _isHidden = false;
 };

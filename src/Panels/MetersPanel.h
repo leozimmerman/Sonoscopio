@@ -24,7 +24,8 @@
 
 #include "Macros.h"
 #include "BasePanel.h"
-#include "ofxAAChannelMetersPanel.h"
+//#include "ChannelMetersView.h"
+#include "MetersView.h"
 
 #define MT_GUI_COMP_HEIGHT 26
 
@@ -32,58 +33,45 @@ class MetersPanel : public BasePanel {
     
 public:
     
-    void setup(int x, int y, int width, int height);
+    void setup(int x, int y, int w, int h) override;
     virtual void update() override;
     virtual void draw() override;
     virtual void exit() override;
     
     virtual bool getFocused() override;
-    void setupGui();
+    
     virtual void resize(int x, int y, int w, int h) override;
     virtual void saveSettings(string rootDir="") override;
     virtual void loadSettings(string rootDir="") override;
     
     void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    void toggleFullDisplay(){setFullDisplay(!_bDrawFullDisplay);}
-    void setFullDisplay(bool b);
+    
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void adjustPosAndHeight(int y, int h);
     
-    vector<std::map<string, float>>& getMetersValues();
-    vector<std::map<string, vector<float>>>& getMetersVectorValues();
+    MetersView metersView;//TODO: Make private
     
-    bool getIsFullDisplay(){return _bDrawFullDisplay;}
+    ///Para la GuiView:
+    void setupGui();
+    
     void adjustGuiSize(int y, int w, int h);
-    
-
-
-private:
-    
-    void setAnalyzerMaxEstimatedValue(ofxAAAlgorithm algorithm, float value);
-    
-    vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
-    vector <ofxAAChannelMetersPanel*> channelPanels;
-    
-    ofColor panelColor1, panelColor2;
-    
-    int panelsNum;
-    bool _bDrawFullDisplay;
-    
-    vector < std::map<string, float> > singleValuesForOsc;
-    vector < std::map<string, vector<float> > > vectorValuesForOsc;
-    
-   
     ofxDatGuiTextInput* gMaxFreq;
     ofxDatGuiTextInput* gMaxHfc;
     ofxDatGuiTextInput* gMaxCentroid;
     ofxDatGuiTextInput* gMaxSpecComp;
     ofxDatGuiTextInput* gMaxRollOff;
     ofxDatGuiTextInput* gMaxOddEven;
-    
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
-
+    ///--------------------
     
+private:
+    
+    void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
+    
+    vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
+    
+
     
 };

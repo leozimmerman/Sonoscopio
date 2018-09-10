@@ -16,15 +16,15 @@
  *
  */
 
-#include "ofxAAMeter.h"
+#include "MeterView.h"
 
 // the static event, or any static variable, must be initialized outside of the class definition.
-ofEvent<OnOffEventData> ofxAAMeter::onOffEventGlobal = ofEvent<OnOffEventData>();
+ofEvent<OnOffEventData> MeterView::onOffEventGlobal = ofEvent<OnOffEventData>();
 
 //------------------------------------------------
 #pragma mark - Core funcs
 //------------------------------------------------
-ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h, int panelId){
+MeterView::MeterView(string name, int x, int y, int w, int h, int panelId){
     
     _name = name;
     
@@ -75,7 +75,7 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h, int panelId){
     
 //    onOffToggle = new ofxDatGuiToggle(MTR_ON_OFF, TRUE);
     onOffToggle = new OnOffToggle(MTR_ON_OFF, TRUE);
-    onOffToggle->onButtonEvent(this, &ofxAAMeter::onButtonEvent);
+    onOffToggle->onButtonEvent(this, &MeterView::onButtonEvent);
     
     onOffToggle->setHeight(_line_h*0.85);
     onOffToggle->setLabelMargin(0.0);
@@ -83,25 +83,23 @@ ofxAAMeter::ofxAAMeter(string name, int x, int y, int w, int h, int panelId){
     onOffToggle->setBackgroundColor(ofColor::black);
     
     smoothSlider = new CustomSlider(MTR_SMOOTHING, 0.0, 1.0, _smoothAmnt);
-    smoothSlider->onSliderEvent(this, &ofxAAMeter::onSliderEvent);
+    smoothSlider->onSliderEvent(this, &MeterView::onSliderEvent);
     smoothSlider->setHeight(_line_h);
     smoothSlider->setLabelMargin(1.0);
     smoothSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
     peakButton = new PeakMeterButton(MTR_PEAK);
-    peakButton->onButtonEvent(this, &ofxAAMeter::onButtonEvent);
+    peakButton->onButtonEvent(this, &MeterView::onButtonEvent);
     peakButton->setHeight(_line_h*0.85);
     peakButton->setLabelMargin(0.0);
     peakButton->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    
-    _meterOrient = VERTICAL;
     
     updateComponentsWidth();
     updateComponentsPositions();
 
 }
 //------------------------------------------------
-ofxAAMeter::~ofxAAMeter(){
+MeterView::~MeterView(){
     
     delete smoothSlider;
     delete onOffToggle;
@@ -109,7 +107,7 @@ ofxAAMeter::~ofxAAMeter(){
     
 }
 //------------------------------------------------
-void ofxAAMeter::update(){
+void MeterView::update(){
     
      if(_bDrawFullDisplay==false) return;
     //-----------------------------
@@ -125,7 +123,7 @@ void ofxAAMeter::update(){
     }
 }
 //------------------------------------------------
-void ofxAAMeter::draw(){
+void MeterView::draw(){
     
     ofPushStyle();
     
@@ -134,6 +132,11 @@ void ofxAAMeter::draw(){
     ofSetColor(_mainColor);
     
     ofDrawRectangle(_drawRect);
+    
+    ofPopStyle();
+    return;
+    ///------------------
+    
     drawLabel();
     
     if(_enabled){
@@ -141,7 +144,6 @@ void ofxAAMeter::draw(){
         drawMeter();
     }
     
-    ofPopStyle();
 
     if(_bDrawFullDisplay){
         if(_enabled){
@@ -153,7 +155,7 @@ void ofxAAMeter::draw(){
     
 }
 //------------------------------------------------
-void ofxAAMeter::drawMeter(){
+void MeterView::drawMeter(){
     
     ofPushMatrix();
     
@@ -181,7 +183,7 @@ void ofxAAMeter::drawMeter(){
 }
 
 //------------------------------------------------
-void ofxAAMeter::drawValueDisplay(){
+void MeterView::drawValueDisplay(){
     
     ofPushMatrix();
     ofTranslate(_x, _y);
@@ -204,7 +206,7 @@ void ofxAAMeter::drawValueDisplay(){
     ofPopMatrix();
 }
 //------------------------------------------------
-void ofxAAMeter::drawLabel(){
+void MeterView::drawLabel(){
     
     ofPushMatrix();
     
@@ -222,7 +224,7 @@ void ofxAAMeter::drawLabel(){
 }
 
 //------------------------------------------------
-void ofxAAMeter::resetPeak(){
+void MeterView::resetPeak(){
     _maxValueRegistered = 0.0;
     peakButton->setLabel(ofToString(_maxValueRegistered, 2));
 
@@ -230,7 +232,7 @@ void ofxAAMeter::resetPeak(){
 //------------------------------------------------
 #pragma mark - Setters
 //------------------------------------------------
-void ofxAAMeter::setPosAndSize(int x, int y, int w, int h){
+void MeterView::resize(int x, int y, int w, int h){
     _x = x;
     _y = y;
     _w = w;
@@ -243,7 +245,7 @@ void ofxAAMeter::setPosAndSize(int x, int y, int w, int h){
     
 }
 //------------------------------------------------
-void ofxAAMeter::updateComponentsWidth(){
+void MeterView::updateComponentsWidth(){
     
     //-:LABEL
     //constraing width
@@ -266,7 +268,7 @@ void ofxAAMeter::updateComponentsWidth(){
 }
 //------------------------------------------------
 //add sizes
-void ofxAAMeter::updateComponentsPositions(){
+void MeterView::updateComponentsPositions(){
     
     peakButton->setPosition  (_x + _w * 0.1, _y + _line_h * 2.2);
     smoothSlider->setPosition(_x + _w * 0.1, _y + _line_h * 3.2);
@@ -280,34 +282,34 @@ void ofxAAMeter::updateComponentsPositions(){
     
 }
 //------------------------------------------------
-void ofxAAMeter::setValue(float val){
+void MeterView::setValue(float val){
     _value = val;
 }
 //------------------------------------------------
-void ofxAAMeter::setNormalizedValue(float val){
+void MeterView::setNormalizedValue(float val){
     _valueNorm = val;
 }
 //------------------------------------------------
-void ofxAAMeter::setYandHeight(int y, int h){
-    setPosAndSize(_x, y, _w, h);
+void MeterView::setYandHeight(int y, int h){
+    resize(_x, y, _w, h);
 }
 //------------------------------------------------
-void ofxAAMeter::setHeight(float h){
+void MeterView::setHeight(float h){
     _h = h;
     _drawRect.setHeight(h);
 }
 //------------------------------------------------
-void ofxAAMeter::setSmoothAmnt(float val){
+void MeterView::setSmoothAmnt(float val){
     _smoothAmnt = val;
     smoothSlider->setValue(val);
 }
 //------------------------------------------------
-void ofxAAMeter::setEnabled(bool state){
+void MeterView::setEnabled(bool state){
     onOffToggle->setEnabled(state);
     _enabled = state;
 }
 //------------------------------------------------
-void ofxAAMeter::setMainColor(ofColor col){
+void MeterView::setMainColor(ofColor col){
     _mainColor = col;
     //colors
     peakButton->setColor(COLOR_PEAKS);
@@ -319,12 +321,12 @@ void ofxAAMeter::setMainColor(ofColor col){
 //------------------------------------------------
 #pragma mark - Gui listeners
 //------------------------------------------------
-void ofxAAMeter::onSliderEvent(ofxDatGuiSliderEvent e){
+void MeterView::onSliderEvent(ofxDatGuiSliderEvent e){
     //cout << _name <<"::slider: " <<e.value << endl;
     _smoothAmnt = e.value;
 }
 //------------------------------------------------
-void ofxAAMeter::onButtonEvent(ofxDatGuiButtonEvent e){
+void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
     
     if(e.target->getLabel()==MTR_ON_OFF){
         OnOffEventData data;

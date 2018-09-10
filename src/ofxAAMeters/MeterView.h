@@ -22,11 +22,7 @@
 #include "ofxDatGui.h"
 #include "ExtendedDatGuiComponents.h"
 #include "Macros.h"
-
-enum meterOrientation{
-    VERTICAL,
-    HORIZONTAL
-};
+#include "View.h"
 
 class OnOffEventData{
 public:
@@ -55,11 +51,11 @@ public:
 #define COLOR_RECT_METER_ALPHA 40
 
 
-class ofxAAMeter{
+class MeterView : public View {
 public:
     
-    ofxAAMeter(string name, int x, int y, int w, int h, int panelId);
-    virtual ~ofxAAMeter();
+    MeterView(string name, int x, int y, int w, int h, int panelId);
+    virtual ~MeterView();
 
 
     //void setup();
@@ -71,6 +67,7 @@ public:
     virtual void drawValueDisplay();
     
     void resetPeak();
+    virtual void resize(int x, int y, int w, int h);
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
@@ -82,7 +79,7 @@ public:
     int getHeight(){return _h;}
     float getMinEstimatedValue(){return _minEstimatedValue;}
     float getMaxEstimatedValue(){return _maxEstimatedValue;}
-    meterOrientation getMeterOrient(){return _meterOrient;}
+    
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return _enabled;}
     bool getIsFullDisplay(){return _bDrawFullDisplay;}
@@ -92,7 +89,7 @@ public:
     void setBackgroundColor(ofColor col){_backgroundColor = col;}
     void setValue(float val);
     void setNormalizedValue(float val);
-    virtual void setPosAndSize(int x, int y, int w, int h);
+    
     virtual void updateComponentsPositions();
     virtual void setYandHeight(int y, int h);
     virtual void updateComponentsWidth();
@@ -131,7 +128,6 @@ protected:
     
     ofTrueTypeFont*	verdana;
     
-    meterOrientation _meterOrient;
     bool _bDrawFullDisplay;
     
     string  _name;
@@ -147,9 +143,6 @@ private:
     float _maxValueRegistered;//peak
     float _smoothAmnt;
 
-    
-    
-   
     
 
 };

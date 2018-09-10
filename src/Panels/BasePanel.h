@@ -26,22 +26,18 @@ class BasePanel : public View {
     
 public:
     
-    virtual void setup(int x, int y, int w, int h);
     virtual void update() =0;
-    virtual void exit() =0;
+    virtual void exit() =0; //??
     
     virtual bool getFocused() =0; //???
-    virtual void resize(int x, int y, int w, int h) =0;
+    
     virtual void saveSettings(string rootDir="") =0;
     virtual void loadSettings(string rootDir="") =0;
     
-    bool getIsHidden(){return _isHidden;}
-    virtual void setHidden(bool h) {_isHidden = h;}
     
 protected:
     //TODO: Remove this from here!
     vector<ofxDatGuiComponent*> components;
-    bool _isHidden = false;
     ofColor bordCol;
     int bordWidth;
     int _guiCompHeight;

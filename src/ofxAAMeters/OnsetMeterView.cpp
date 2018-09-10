@@ -16,20 +16,20 @@
  *
  */
 
-#include "ofxAAOnsetMeter.h"
+#include "OnsetMeterView.h"
 
 // the static event, or any static variable, must be initialized outside of the class definition.
-ofEvent<int> ofxAAOnsetMeter::onsetEventGlobal = ofEvent<int>();
+ofEvent<int> OnsetMeterView::onsetEventGlobal = ofEvent<int>();
 
 //------------------------------------
-ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAudioAnalyzerUnit* analyzerPtr) : ofxAAMeter(MTR_NAME_ONSETS, x, y, w, h, panelId){
+OnsetMeterView::OnsetMeterView(int x, int y, int w, int h, int panelId, ofxAudioAnalyzerUnit* analyzerPtr) : MeterView(MTR_NAME_ONSETS, x, y, w, h, panelId){
 
     //audioAnalyzer = analyzerPtr;
     onsets = analyzerPtr->getOnsetsAlgorithmPtr();
     
     _alpha = onsets->getOnsetAlpha();
     alphaSlider = new CustomSlider(MTR_ALPHA, 0.0, 1.0, _alpha);
-    alphaSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
+    alphaSlider->onSliderEvent(this, &OnsetMeterView::onSliderEvent);
     
     alphaSlider->setHeight(_line_h);
     alphaSlider->setLabelMargin(0.0);
@@ -37,7 +37,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
     
     _silenceThreshold = onsets->getOnsetSilenceThreshold();
     silenceThresholdSlider = new CustomSlider(MTR_SIL_TH, 0.0, 1.0, _silenceThreshold);
-    silenceThresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
+    silenceThresholdSlider->onSliderEvent(this, &OnsetMeterView::onSliderEvent);
     
     silenceThresholdSlider->setHeight(_line_h);
     silenceThresholdSlider->setLabelMargin(0.0);
@@ -45,7 +45,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
     
     _timeThreshold = onsets->getOnsetTimeThreshold();//ms
     timeThresholdSlider = new CustomSlider(MTR_TI_TH, 0.0, 1000.0, _timeThreshold);
-    timeThresholdSlider->onSliderEvent(this, &ofxAAOnsetMeter::onSliderEvent);
+    timeThresholdSlider->onSliderEvent(this, &OnsetMeterView::onSliderEvent);
     
     timeThresholdSlider->setHeight(_line_h);
     timeThresholdSlider->setLabelMargin(0.0);
@@ -53,7 +53,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
     
     _isArmed = false;
     armToggle = new OnOffToggle(MTR_ARM, _isArmed);
-    armToggle->onButtonEvent(this, &ofxAAOnsetMeter::onButtonEvent);
+    armToggle->onButtonEvent(this, &OnsetMeterView::onButtonEvent);
     armToggle->setLabels("ARM", "ARM");
     armToggle->setHeight(_line_h*0.85);
     armToggle->setLabelMargin(0.0);
@@ -65,7 +65,7 @@ ofxAAOnsetMeter::ofxAAOnsetMeter(int x, int y, int w, int h, int panelId, ofxAud
 }
 
 //------------------------------------
-void ofxAAOnsetMeter::update(){
+void OnsetMeterView::update(){
     
     if(_bDrawFullDisplay==false) return;
     //-----------------------------
@@ -78,7 +78,7 @@ void ofxAAOnsetMeter::update(){
 
 }
 //------------------------------------
-void ofxAAOnsetMeter::draw(){
+void OnsetMeterView::draw(){
     
     ofPushStyle();
     
@@ -86,7 +86,9 @@ void ofxAAOnsetMeter::draw(){
     ofNoFill();
     ofSetColor(_mainColor);
     ofDrawRectangle(_drawRect);
+    ofPopStyle();
     
+    return;
     //meter----------
     
     drawLabel();
@@ -94,7 +96,7 @@ void ofxAAOnsetMeter::draw(){
     if(_enabled)
         drawMeter();
     
-    ofPopStyle();
+    
     
     if(_bDrawFullDisplay){
         
@@ -109,7 +111,7 @@ void ofxAAOnsetMeter::draw(){
 
 }
 //------------------------------------
-void ofxAAOnsetMeter::drawMeter(){
+void OnsetMeterView::drawMeter(){
     
     if(getEnabled()==false) return;
     //-----------------------------
@@ -125,18 +127,18 @@ void ofxAAOnsetMeter::drawMeter(){
     
 }
 //------------------------------------
-void ofxAAOnsetMeter::setPosAndSize(int x, int y, int w, int h){
+void OnsetMeterView::resize(int x, int y, int w, int h){
     
-    ofxAAMeter::setPosAndSize(x, y, w, h);
+    MeterView::resize(x, y, w, h);
     
     updateComponentsWidth();
     updateComponentsPositions();
     
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::updateComponentsPositions(){
+void OnsetMeterView::updateComponentsPositions(){
     
-    ofxAAMeter::updateComponentsPositions();
+    MeterView::updateComponentsPositions();
     
     alphaSlider->setPosition             (_x + _w * 0.1, _y + _line_h * 2.0);
     silenceThresholdSlider->setPosition  (_x + _w * 0.1, _y + _line_h * 3.5);
@@ -145,9 +147,9 @@ void ofxAAOnsetMeter::updateComponentsPositions(){
 
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::updateComponentsWidth(){
+void OnsetMeterView::updateComponentsWidth(){
     
-    ofxAAMeter::updateComponentsWidth();
+    MeterView::updateComponentsWidth();
     
     alphaSlider->setWidth(_w*0.8, 0.0);
     silenceThresholdSlider->setWidth(_w*0.8, 0.0);
@@ -156,7 +158,7 @@ void ofxAAOnsetMeter::updateComponentsWidth(){
    
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::updateComponentsColors(){
+void OnsetMeterView::updateComponentsColors(){
     
     alphaSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
     silenceThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
@@ -165,34 +167,34 @@ void ofxAAOnsetMeter::updateComponentsColors(){
     
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::setValue(bool val){
+void OnsetMeterView::setValue(bool val){
     _onsetValue = val;
     if (_onsetValue && _isArmed) {
         sendOnsetEvent();
     }
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::sendOnsetEvent(){
+void OnsetMeterView::sendOnsetEvent(){
     int value = _panelId;
     
     ofNotifyEvent(onsetEventGlobal, value);
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::setAlpha(float alpha){
+void OnsetMeterView::setAlpha(float alpha){
     _alpha = alpha;
     alphaSlider->setValue(alpha);
     if(onsets!=NULL)
         onsets->setOnsetAlpha(alpha);
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::setSilenceThreshold(float tres){
+void OnsetMeterView::setSilenceThreshold(float tres){
     _silenceThreshold = tres;
     silenceThresholdSlider->setValue(tres);
     if(onsets!=NULL)
         onsets->setOnsetSilenceThreshold(tres);
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::setTimeThreshold(float tres){
+void OnsetMeterView::setTimeThreshold(float tres){
     _timeThreshold = tres;
     timeThresholdSlider->setValue(tres);
     if(onsets!=NULL){
@@ -200,7 +202,7 @@ void ofxAAOnsetMeter::setTimeThreshold(float tres){
     }
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::onSliderEvent(ofxDatGuiSliderEvent e){
+void OnsetMeterView::onSliderEvent(ofxDatGuiSliderEvent e){
     if(e.target->getLabel() == MTR_ALPHA){
         _alpha = e.value;
         onsets->setOnsetAlpha(_alpha);
@@ -215,8 +217,8 @@ void ofxAAOnsetMeter::onSliderEvent(ofxDatGuiSliderEvent e){
     }
 }
 //------------------------------------------------
-void ofxAAOnsetMeter::onButtonEvent(ofxDatGuiButtonEvent e) {
-    ofxAAMeter::onButtonEvent(e);
+void OnsetMeterView::onButtonEvent(ofxDatGuiButtonEvent e) {
+    MeterView::onButtonEvent(e);
     if(e.target->getLabel()==MTR_ARM){
         _isArmed = e.enabled;
     }

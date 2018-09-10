@@ -5,11 +5,11 @@
 //  Created by Leo on 06/09/2018.
 //
 
-#include "GuiView.h"
+#include "TLGuiView.h"
 
 ofxDatGuiDropdown* g_dropdown; //TODO: Move to header?
 
-void GuiView::setup(int x, int y, int width, int height, TimelineView* tv_ptr) {
+void TLGuiView::setup(int x, int y, int width, int height, TimelineView* tv_ptr) {
     View::setup(x, y, width, height);
     setBackgroundColor(ofColor::orange);
     bordCol = ofColor::grey;
@@ -24,22 +24,22 @@ void GuiView::setup(int x, int y, int width, int height, TimelineView* tv_ptr) {
     timelineView_ptr = tv_ptr;
 }
 
-void GuiView::update(){
+void TLGuiView::update(){
     for(int i=0; i<components.size(); i++){
         components[i]->update();
     }
 }
-void GuiView::draw(){
+void TLGuiView::draw(){
     View::draw();
     for(int i=0; i<components.size(); i++){
         components[i]->draw();
     }
 }
-void GuiView::resize(int x, int y, int width, int height){
+void TLGuiView::resize(int x, int y, int width, int height){
     View::resize(x, y, width, height);
     adjustGuiSize();
 }
-void GuiView::setupGui(){
+void TLGuiView::setupGui(){
     
     ofxDatGuiComponent* component;
     
@@ -47,7 +47,7 @@ void GuiView::setupGui(){
     component = gTrackName;
     
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &GuiView::onTextInputEvent);
+    component->onTextInputEvent(this, &TLGuiView::onTextInputEvent);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
@@ -56,7 +56,7 @@ void GuiView::setupGui(){
     vector<string> options = {"curves", "bangs", "switches", "notes"};
     g_dropdown = new ofxDatGuiDropdown("TRACK TYPE", options);
     //dropdown->expand();
-    g_dropdown->onDropdownEvent(this, &GuiView::onDropdownEvent);
+    g_dropdown->onDropdownEvent(this, &TLGuiView::onDropdownEvent);
     component = g_dropdown;
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
@@ -66,7 +66,7 @@ void GuiView::setupGui(){
     
     
     component = new ofxDatGuiButton("ADD TRACK");
-    component->onButtonEvent(this, &GuiView::onButtonEvent);
+    component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
@@ -74,7 +74,7 @@ void GuiView::setupGui(){
     components.push_back(component);
     
     component = new ofxDatGuiButton("REMOVE TRACK");
-    component->onButtonEvent(this, &GuiView::onButtonEvent);
+    component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
@@ -82,7 +82,7 @@ void GuiView::setupGui(){
     components.push_back(component);
     
     component = new ofxDatGuiButton("SHOW TRACKS");
-    component->onButtonEvent(this, &GuiView::onButtonEvent);
+    component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
@@ -90,7 +90,7 @@ void GuiView::setupGui(){
     components.push_back(component);
     
     component = new ofxDatGuiButton("ADJUST TRACKS");
-    component->onButtonEvent(this, &GuiView::onButtonEvent);
+    component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
@@ -102,7 +102,7 @@ void GuiView::setupGui(){
     
 }
 //--------------------------------------------------------------
-void GuiView::adjustGuiSize(){
+void TLGuiView::adjustGuiSize(){
     
     int guiCompWidth = _w / 7;
     int gui_y = _y;
@@ -146,7 +146,7 @@ void GuiView::adjustGuiSize(){
     
 }
 
-void GuiView::onButtonEvent(ofxDatGuiButtonEvent e){
+void TLGuiView::onButtonEvent(ofxDatGuiButtonEvent e){
     //ofLogVerbose() << "onButtonEvent: " << e.target->getLabel() << "::" << e.enabled ;
     
     string label = e.target->getLabel();
@@ -162,7 +162,7 @@ void GuiView::onButtonEvent(ofxDatGuiButtonEvent e){
     
 }
 
-void GuiView::onDropdownEvent(ofxDatGuiDropdownEvent e){
+void TLGuiView::onDropdownEvent(ofxDatGuiDropdownEvent e){
     //ofLogVerbose() << "onDropdownEvent: " << e.child ;
     
     switch (e.child) {
@@ -187,7 +187,7 @@ void GuiView::onDropdownEvent(ofxDatGuiDropdownEvent e){
 }
 
 
-void GuiView::onTextInputEvent(ofxDatGuiTextInputEvent e){
+void TLGuiView::onTextInputEvent(ofxDatGuiTextInputEvent e){
     // ofLogVerbose() << "onButtonEvent: " << e.text;
     currentTrackName = e.text;
 }

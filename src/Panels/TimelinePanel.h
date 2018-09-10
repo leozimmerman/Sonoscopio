@@ -29,7 +29,7 @@
 
 #include "Macros.h"
 #include "BasePanel.h"
-#include "GuiView.h"
+#include "TLGuiView.h"
 #include "TimelineView.h"
 
 
@@ -60,7 +60,7 @@ public:
     TimelineView timelineView;//TODO: Make it private
     
 private:
-    GuiView guiView;
+    TLGuiView guiView;
     
     
 };

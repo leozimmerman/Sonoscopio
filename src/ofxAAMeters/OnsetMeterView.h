@@ -20,7 +20,7 @@
 
 #include "ofMain.h"
 
-#include "ofxAAMeter.h"
+#include "MeterView.h"
 #include "ofxAudioAnalyzerUnit.h"
 
 #define MTR_ALPHA "ALPHA"
@@ -30,18 +30,18 @@
 
 
 
-class ofxAAOnsetMeter : public ofxAAMeter{
+class OnsetMeterView : public MeterView{
     
 public:
     
-    ofxAAOnsetMeter(int x, int y, int w, int h, int panelId,  ofxAudioAnalyzerUnit* analyzerPtr);
+    OnsetMeterView(int x, int y, int w, int h, int panelId,  ofxAudioAnalyzerUnit* analyzerPtr);
     
     virtual void update();
     virtual void draw();
     
     virtual void drawMeter();
     
-    virtual void setPosAndSize(int x, int y, int w, int h);
+    virtual void resize(int x, int y, int w, int h);
     
     
     void updateComponentsColors();

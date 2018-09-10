@@ -20,14 +20,14 @@
 
 #include "ofMain.h"
 
-#include "ofxAAMeter.h"
+#include "MeterView.h"
 
 
-class ofxAABinMeter : public ofxAAMeter{
+class BinMeterView : public MeterView{
 
  public:
 
-    ofxAABinMeter(string name, int x, int y, int w, int h, int panelId);
+    BinMeterView(string name, int x, int y, int w, int h, int panelId);
     
     void draw();
     
@@ -41,7 +41,7 @@ class ofxAABinMeter : public ofxAAMeter{
     void updateComponentsPositions();
     void updateComponentsWidth();
     
-    void setPosAndSize(int x, int y, int w, int h);
+    void resize(int x, int y, int w, int h);
     
     vector<float>& getValues(){return _values;}
     
