@@ -22,10 +22,11 @@
 ofEvent<int> OnsetMeterView::onsetEventGlobal = ofEvent<int>();
 
 //------------------------------------
-OnsetMeterView::OnsetMeterView(int x, int y, int w, int h, int panelId, ofxAudioAnalyzerUnit* analyzerPtr) : MeterView(MTR_NAME_ONSETS, x, y, w, h, panelId){
-
+OnsetMeterView::OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) : MeterView(algorithmType, panelId, aaPtr){
+    setBackgroundColor(ofColor::purple);
+    
     //audioAnalyzer = analyzerPtr;
-    onsets = analyzerPtr->getOnsetsAlgorithmPtr();
+    onsets = aaPtr->getOnsetsAlgorithmPtr();
     
     _alpha = onsets->getOnsetAlpha();
     alphaSlider = new CustomSlider(MTR_ALPHA, 0.0, 1.0, _alpha);
@@ -66,48 +67,40 @@ OnsetMeterView::OnsetMeterView(int x, int y, int w, int h, int panelId, ofxAudio
 
 //------------------------------------
 void OnsetMeterView::update(){
-    
-    if(_bDrawFullDisplay==false) return;
-    //-----------------------------
-        
+
     onOffToggle->update();
     alphaSlider->update();
     silenceThresholdSlider->update();
     timeThresholdSlider->update();
     armToggle->update();
 
+    setValue(_audioAnalyzer->getValue(_algorithmType));
 }
 //------------------------------------
 void OnsetMeterView::draw(){
+    View::draw();
     
     ofPushStyle();
     
     //bounds-box
     ofNoFill();
     ofSetColor(_mainColor);
-    ofDrawRectangle(_drawRect);
+    
     ofPopStyle();
     
     return;
     //meter----------
     
     drawLabel();
+    onOffToggle->drawTransparent();
     
-    if(_enabled)
+    if(_enabled){
         drawMeter();
-    
-    
-    
-    if(_bDrawFullDisplay){
-        
-        onOffToggle->drawTransparent();
-        if(_enabled){
-            alphaSlider->drawSimplified();
-            silenceThresholdSlider->drawSimplified();
-            timeThresholdSlider->drawSimplified();
-            armToggle->drawTransparent();
-        }
-    }
+        alphaSlider->drawSimplified();
+        silenceThresholdSlider->drawSimplified();
+        timeThresholdSlider->drawSimplified();
+        armToggle->drawTransparent();
+    }    
 
 }
 //------------------------------------
@@ -121,7 +114,7 @@ void OnsetMeterView::drawMeter(){
         ofPushStyle();
         ofFill();
         ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA * 2.0);
-        ofDrawRectangle(_drawRect);
+        //ofDrawRectangle(_drawRect);
         ofPopStyle();
     }
     

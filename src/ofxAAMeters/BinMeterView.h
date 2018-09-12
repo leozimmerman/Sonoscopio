@@ -27,7 +27,7 @@ class BinMeterView : public MeterView{
 
  public:
 
-    BinMeterView(string name, int x, int y, int w, int h, int panelId);
+    BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
     void draw();
     
@@ -36,6 +36,7 @@ class BinMeterView : public MeterView{
     
     void setBinsNum(int bins){_nBins = bins;}
     void setValues(vector<float>& vals){_values = vals;}
+    void setMinMaxEstimatedValues();
     
     //void updateColors();
     void updateComponentsPositions();

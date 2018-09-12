@@ -145,7 +145,8 @@ void ofApp::update(){
     //send OSC-----------------------
     TS_START("SEND-OSC");
     if(config.osc().bSend) {
-        oscSender.sendOscData(metersPanel.metersView.getMetersValues(), metersPanel.metersView.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
+    //FIXME: No anda
+        ///oscSender.sendOscData(metersPanel.metersView.getMetersValues(), metersPanel.metersView.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
     }
     TS_STOP("SEND-OSC");
 

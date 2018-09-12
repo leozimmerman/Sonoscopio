@@ -17,63 +17,47 @@
  */
 
 #include "MeterView.h"
-
+#include "BinMeterView.h"
+#include "OnsetMeterView.h"
+#include "ofxAAUtils.h"
 // the static event, or any static variable, must be initialized outside of the class definition.
 ofEvent<OnOffEventData> MeterView::onOffEventGlobal = ofEvent<OnOffEventData>();
+
+//FIXME: Move this to somewhere else. Same plase as availableTypes
+
 
 //------------------------------------------------
 #pragma mark - Core funcs
 //------------------------------------------------
-MeterView::MeterView(string name, int x, int y, int w, int h, int panelId){
-    
-    _name = name;
-    
-    _x = x;
-    _y = y;
-    _w = w;
-    _h = h;
+MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) {
+    _audioAnalyzer = aaPtr;
+    _algorithmType = algorithmType;
+    _name = ofxaa::algorithmTypeToString(algorithmType);
     _panelId = panelId;
     
-    _drawRect.set(x, y, w, h);
-    
-    _backgroundColor.set(ofColor::black);
-    _mainColor.set(ofColor::white);
+    _mainColor.set(ofColor::cyan);
+    setBackgroundColor(ofColor::black);
     
     _value = 0.0;
     _valueNorm = -1.0;
     _minEstimatedValue = 0.0;
     _maxEstimatedValue = 1.0;
     _maxValueRegistered = 0.0;
-    
     _smoothAmnt = 0.0;
-    
-    _bDrawFullDisplay = TRUE;
     _enabled = TRUE;
     
     ofColor bordCol = ofColor::grey;
     int bordWidth = 1;
     
-    //Font-Label----------
-    verdana  = new ofTrueTypeFont();
-    verdana->load("gui_assets/fonts/verdana.ttf", 10, false, false);
-    verdana->setLineHeight(14.0f);
-    verdana->setLetterSpacing(1.037);
-    _line_h = verdana->getLineHeight();
-    
-    //constraing width
-    float label_w = verdana->stringWidth(_name);
-    float widthForLabel = _w * 0.95;
-    if(label_w >= widthForLabel){
-        float space_ratio = 1 / (label_w / widthForLabel);
-        verdana->setLetterSpacing(space_ratio);
-    }
-    //align center
-    label_w = verdana->stringWidth(_name);
-    _label_x =  _w * .5 - label_w *.5;
+    //Setup Font
+    font  = new ofTrueTypeFont();
+    font->load("gui_assets/fonts/verdana.ttf", 10, false, false);
+    font->setLineHeight(14.0f);
+    font->setLetterSpacing(1.037);
+    _line_h = font->getLineHeight();
     
     //-----------------
     
-//    onOffToggle = new ofxDatGuiToggle(MTR_ON_OFF, TRUE);
     onOffToggle = new OnOffToggle(MTR_ON_OFF, TRUE);
     onOffToggle->onButtonEvent(this, &MeterView::onButtonEvent);
     
@@ -99,6 +83,20 @@ MeterView::MeterView(string name, int x, int y, int w, int h, int panelId){
 
 }
 //------------------------------------------------
+MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
+    switch (algorithmType) {
+        case ONSETS: return new OnsetMeterView(algorithmType, panelId, aaPtr);
+        case MEL_BANDS: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case SPECTRUM: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case HPCP: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case TRISTIMULUS: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case MFCC: return new BinMeterView(algorithmType, panelId, aaPtr);
+            
+        default:
+            return new MeterView(algorithmType, panelId, aaPtr);
+    }
+}
+//------------------------------------------------
 MeterView::~MeterView(){
     
     delete smoothSlider;
@@ -109,9 +107,6 @@ MeterView::~MeterView(){
 //------------------------------------------------
 void MeterView::update(){
     
-     if(_bDrawFullDisplay==false) return;
-    //-----------------------------
-    
     smoothSlider->update();
     onOffToggle->update();
     peakButton->update();
@@ -121,113 +116,73 @@ void MeterView::update(){
         _maxValueRegistered = _value;
         peakButton->setLabel(ofToString(_maxValueRegistered, 2));
     }
+    
+    setValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt));
+    setNormalizedValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt, TRUE));
 }
 //------------------------------------------------
 void MeterView::draw(){
-    
+    View::draw();
     ofPushStyle();
-    
-    //bounds-box
-    ofNoFill();
-    ofSetColor(_mainColor);
-    
-    ofDrawRectangle(_drawRect);
-    
-    ofPopStyle();
-    return;
-    ///------------------
+    drawBounds();
     
     drawLabel();
-    
+    onOffToggle->drawTransparent();
     if(_enabled){
         drawValueDisplay();
         drawMeter();
+        peakButton->draw();
+        smoothSlider->drawSimplified();
     }
-    
-
-    if(_bDrawFullDisplay){
-        if(_enabled){
-            peakButton->draw();
-            smoothSlider->drawSimplified();
-        }
-        onOffToggle->drawTransparent();
-    }
-    
+    ofPopStyle();
+}
+//------------------------------------------------
+void MeterView::drawBounds(){
+    ofNoFill();
+    ofSetColor(_mainColor);
+    ofDrawRectangle(_x, _y, _w, _h);
 }
 //------------------------------------------------
 void MeterView::drawMeter(){
-    
     ofPushMatrix();
-    
     ofTranslate(_x, _y);
-    
     ofFill();
     ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA);//change
-    
-    float scaledValue;
-    
-    if (_valueNorm >= 0){
-        scaledValue = _valueNorm;
-    }else{
-        scaledValue = ofMap(_value, _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
-    }
-    
-    float meter_h = -1 * (_h * scaledValue);
-
-//    ofDrawRectangle( _w * .25 , _h, _w * 0.5, meter_h);
-    ofDrawRectangle( 0 , _h, _w, meter_h);
-    
+    float scaledValue = (_valueNorm >= 0) ? _valueNorm : ofMap(_value, _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
+    ofDrawRectangle(0 , 0, _w * scaledValue, _h);
     ofPopMatrix();
-    
-    
 }
 
 //------------------------------------------------
 void MeterView::drawValueDisplay(){
-    
     ofPushMatrix();
     ofTranslate(_x, _y);
-    
     ofPushStyle();
-    
-    //current Value
-    ofSetColor(_mainColor);
-    string strValue = ofToString(_value, 2);
-    
-    //align center
-    int str_w = verdana->stringWidth(strValue);
-    int strVal_x =  _w * 0.5 - str_w * 0.5;
-
-    verdana->drawString(strValue, strVal_x, _line_h * 2.0);
-    
-    
+        ofSetColor(_mainColor);
+        string strValue = ofToString(_value, 2);
+        //align center
+        //int str_w = font->stringWidth(strValue);
+        //int strVal_x =  _w * 0.5 - str_w * 0.5;
+        int strVal_x = _x + 5;
+        font->drawString(strValue, strVal_x, _line_h * 2.0);
     ofPopStyle();
-    
     ofPopMatrix();
 }
 //------------------------------------------------
 void MeterView::drawLabel(){
-    
     ofPushMatrix();
-    
     ofTranslate(_x, _y);
-    
-    if(_enabled) ofSetColor(_mainColor);
-    else ofSetColor(COLOR_ONOFF_OFF);
-        
-    verdana->drawString(_name, _label_x, _line_h);
-    
-    //ofDrawBitmapString(_name, _label_x, line_h);
-    
+        if(_enabled) ofSetColor(_mainColor);
+        else ofSetColor(COLOR_ONOFF_OFF);
+        font->drawString(_name, _label_x, _line_h);
+        //ofDrawBitmapString(_name, _label_x, _line_h);
     ofPopMatrix();
-
 }
 
 //------------------------------------------------
 void MeterView::resetPeak(){
     _maxValueRegistered = 0.0;
     peakButton->setLabel(ofToString(_maxValueRegistered, 2));
-
 }
 //------------------------------------------------
 #pragma mark - Setters
@@ -237,49 +192,48 @@ void MeterView::resize(int x, int y, int w, int h){
     _y = y;
     _w = w;
     _h = h;
-    
-    _drawRect.set(x, y, w, h);
-    
+    //_drawRect.set(x, y, w, h);
     updateComponentsWidth();
     updateComponentsPositions();
-    
 }
 //------------------------------------------------
 void MeterView::updateComponentsWidth(){
     
     //-:LABEL
     //constraing width
-    float label_w = verdana->stringWidth(_name);
-    float widthForLabel = _w * 0.95;
+    float label_w = font->stringWidth(_name);
+    float widthForLabel = _w * 0.5;
     if(label_w >= widthForLabel){
         float space_ratio = 1 / (label_w / widthForLabel);
-        verdana->setLetterSpacing(space_ratio);
+        font->setLetterSpacing(space_ratio);
+    } else {
+        
+        font->setLetterSpacing(1.37);
     }
     //align center
-    label_w = verdana->stringWidth(_name);
-    _label_x =  _w * .5 - label_w *.5;
-    
+    //label_w = font->stringWidth(_name);
+    //_label_x =  _w * .5 - label_w *.5;
+    _label_x = _x + 5;
     
     //-:COMPONENTS
-    onOffToggle->setWidth(_w*0.8, 0.0);
-    smoothSlider->setWidth(_w*0.8, 0.0);//1.3
-    peakButton->setWidth(_w*0.8, 0.0);
+    onOffToggle->setWidth(20, 0.0);
+    smoothSlider->setWidth(_w*0.5, 0.0);
+    peakButton->setWidth(_w*0.5, 0.0);
 
 }
 //------------------------------------------------
 //add sizes
 void MeterView::updateComponentsPositions(){
-    
-    peakButton->setPosition  (_x + _w * 0.1, _y + _line_h * 2.2);
-    smoothSlider->setPosition(_x + _w * 0.1, _y + _line_h * 3.2);
-    if(_name != MTR_NAME_ONSETS){
+
+    peakButton->setPosition  (_x + 5, _y + _line_h * 2.2);
+    smoothSlider->setPosition(_x + 5, _y + _line_h * 3.2);
+    //FIXME: !
+    if(_algorithmType != ONSETS){
         onOffToggle->setPosition (_x + _w * 0.1, _y + _line_h * 4.75);
     }else{
         //onsets On-Off goes lower
         onOffToggle->setPosition (_x + _w * 0.1, _y + _line_h * 6.5);
     }
-    
-    
 }
 //------------------------------------------------
 void MeterView::setValue(float val){
@@ -289,15 +243,7 @@ void MeterView::setValue(float val){
 void MeterView::setNormalizedValue(float val){
     _valueNorm = val;
 }
-//------------------------------------------------
-void MeterView::setYandHeight(int y, int h){
-    resize(_x, y, _w, h);
-}
-//------------------------------------------------
-void MeterView::setHeight(float h){
-    _h = h;
-    _drawRect.setHeight(h);
-}
+
 //------------------------------------------------
 void MeterView::setSmoothAmnt(float val){
     _smoothAmnt = val;
@@ -330,7 +276,7 @@ void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
     
     if(e.target->getLabel()==MTR_ON_OFF){
         OnOffEventData data;
-        data.name = _name;
+        data.type = _algorithmType;
         data.state = e.enabled;
         data.panelId = _panelId;
         ofNotifyEvent(onOffEventGlobal, data);

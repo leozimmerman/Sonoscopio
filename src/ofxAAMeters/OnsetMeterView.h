@@ -34,7 +34,7 @@ class OnsetMeterView : public MeterView{
     
 public:
     
-    OnsetMeterView(int x, int y, int w, int h, int panelId,  ofxAudioAnalyzerUnit* analyzerPtr);
+    OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
     virtual void update();
     virtual void draw();

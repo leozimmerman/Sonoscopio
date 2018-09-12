@@ -18,7 +18,9 @@
 
 #include "BinMeterView.h"
 
-BinMeterView::BinMeterView(string name, int x, int y, int w, int h, int panelId) :  MeterView(name, x,  y,  w,  h, panelId){
+BinMeterView::BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(algorithmType, panelId, aaPtr){
+    
+    setBackgroundColor(ofColor::pink);
     
     smoothSlider->setHeight(_line_h*0.75);
     onOffToggle->setHeight(_line_h*0.75);
@@ -26,16 +28,15 @@ BinMeterView::BinMeterView(string name, int x, int y, int w, int h, int panelId)
     updateComponentsPositions();
     updateComponentsWidth();
     
-    
     //spectrum cant be turned off
     //mfcc cant work if melBands is turn off
-    if(_name == MTR_NAME_SPECTRUM ||
-       _name == MTR_NAME_MFCC){
-        
+    if(_name == MTR_NAME_SPECTRUM || _name == MTR_NAME_MFCC){
         onOffToggle->setVisible(false);
         onOffToggle->ofxDatGuiComponent::setEnabled(false);
-        
     }
+    
+    setBinsNum(_audioAnalyzer->getBinsNum(_algorithmType));
+    setMinMaxEstimatedValues();
 }
 
 //-------------------------------------------------------
@@ -44,7 +45,7 @@ void BinMeterView::draw(){
     ofPushStyle();
     ofNoFill();
     ofSetColor(_mainColor);
-    ofDrawRectangle(_drawRect);
+    
     ofPopStyle();
 
     return;
@@ -54,13 +55,31 @@ void BinMeterView::draw(){
     
     if(_enabled) drawMeter();
     
-    if(_bDrawFullDisplay){
-       
-        onOffToggle->drawTransparent();
-        if(_enabled) smoothSlider->drawSimplified();
-    }
+    
+    onOffToggle->drawTransparent();
+    if(_enabled) smoothSlider->drawSimplified();
+    
     
 
+}
+//-------------------------------------------------------
+void BinMeterView::setMinMaxEstimatedValues() {
+    switch (_algorithmType) {
+        case SPECTRUM:
+            setMinEstimatedValue(DB_MIN);
+            setMaxEstimatedValue(DB_MAX);
+            break;
+        case MEL_BANDS:
+            setMinEstimatedValue(DB_MIN);
+            setMaxEstimatedValue(DB_MAX);
+            break;
+        case MFCC:
+            setMinEstimatedValue(0.0);
+            setMaxEstimatedValue(MFCC_MAX_ESTIMATED_VALUE);
+            break;
+        default:
+            break;
+    }
 }
 //-------------------------------------------------------
 void BinMeterView::drawMeter(){
@@ -93,16 +112,11 @@ void BinMeterView::drawMeter(){
 }
 //-------------------------------------------------------
 void BinMeterView::drawLabel(){
-    
     ofPushMatrix();
-    
     ofTranslate(_x, _y);
-    
     if(_enabled) ofSetColor(_mainColor);
     else ofSetColor(COLOR_ONOFF_OFF);
-    
-    verdana->drawString(_name, _label_x, _line_h * 0.75);
-    
+    font->drawString(_name, _label_x, _line_h * 0.75);
     ofPopMatrix();
 }
 
@@ -115,7 +129,7 @@ void BinMeterView::resize(int x, int y, int w, int h){
     _w = w;
     _h = h;
     
-    _drawRect.set(x, y, w, h);
+    ///_drawRect.set(x, y, w, h);
     
     updateComponentsPositions();
     updateComponentsWidth();
@@ -134,14 +148,14 @@ void BinMeterView::updateComponentsWidth(){
     
     //-:LABEL
     //constraing width
-    float label_w = verdana->stringWidth(_name);
+    float label_w = font->stringWidth(_name);
     float widthForLabel = _w * 0.95;
     if(label_w >= widthForLabel){
         float space_ratio = 1 / (label_w / widthForLabel);
-        verdana->setLetterSpacing(space_ratio);
+        font->setLetterSpacing(space_ratio);
     }
     //align center
-    label_w = verdana->stringWidth(_name);
+    label_w = font->stringWidth(_name);
     _label_x =  _w * .5 - label_w *.5;
     
     smoothSlider->setWidth(_w * 0.25 , 0.0);

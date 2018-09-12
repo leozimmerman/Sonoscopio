@@ -52,14 +52,7 @@ public:
     
     void resize(int x, int y, int w, int h);
     
-    void setupMeters();
-    
-//    void adjustPosAndHeight(int y, int h);
-    
-    
-    //void setPosition(ofVec2f pos){_x = pos.x; _y = pos.y;}
-    //void setWidth(int w);
-    //void setHeight(int h){_h = h;}
+    void initMeters();
     
     void setMainColor(ofColor col);
     void setFullDisplay(bool b);
@@ -78,10 +71,31 @@ public:
     void saveSettingsToFile(string filename);
     
     //for osc and data saving
-    vector<float>& getMelBandsValues(){return mMelBands->getValues();}
-    vector<float>& getMfccValues(){return mMfcc->getValues();}
-    vector<float>& getHpcpValues(){return mHpcp->getValues();}
-    vector<float>& getTristimulusValues(){return mTristimulus->getValues();}
+    MeterView* meterForType(ofxAAAlgorithmType type) {
+        for (auto m: meters) {
+            if (m->getType() == type) {
+                return m;
+            }
+        }
+        return nil;
+    }
+    //TODO: Remove this eventually....
+    vector<float>& getMelBandsValues(){
+        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
+        return binMeter->getValues();
+    }
+    vector<float>& getMfccValues(){
+        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MFCC));
+        return binMeter->getValues();
+    }
+    vector<float>& getHpcpValues(){
+        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(HPCP));
+        return binMeter->getValues();
+    }
+    vector<float>& getTristimulusValues(){
+        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
+        return binMeter->getValues();
+    }
     
     
 protected:
@@ -94,30 +108,7 @@ protected:
     
     int metersNum;
     int metersWidth, metersHeight;
-    //int VMetersNum, HMetersNum ;
-    //int HMetersWidthTotal, VMetersWidthTotal;
-    //int HMeterWidth, HMeterHeight;
-    //int VMeterWidth, VMeterHeight;
-    
-    MeterView * mPower;
-    MeterView * mPitchFreq;
-    MeterView * mPitchConf;
-    MeterView * mSalience;
-    MeterView * mHfc;
-    MeterView * mCentroid;
-    MeterView * mSpecComp;
-    MeterView * mInharm;
-    MeterView * mDissonance;
-    MeterView * mRollOff;
-    MeterView * mOddToEven;
-    
-    OnsetMeterView * mOnsets;
-    
-    BinMeterView * mSpectrum;
-    BinMeterView * mMelBands;
-    BinMeterView * mMfcc;//dct
-    BinMeterView * mHpcp;
-    BinMeterView * mTristimulus;
+
     
     bool _bDrawFullDisplay;
     

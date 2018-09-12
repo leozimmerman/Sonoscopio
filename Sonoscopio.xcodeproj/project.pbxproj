@@ -98,6 +98,7 @@
 		B3A475C81DD4FBF000B1371C /* MainPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C01DD4FBF000B1371C /* MainPanel.cpp */; };
 		B3A475C91DD4FBF000B1371C /* MetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C21DD4FBF000B1371C /* MetersPanel.cpp */; };
 		B3A475CB1DD4FBF000B1371C /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */; };
+		B3DD5B7521486AEE00B3D08F /* ofxAAUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */; };
 		B3FD348A213DD25300B30C17 /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FD3488213DD25300B30C17 /* OscSender.cpp */; };
 		B3FD3493213EE77700B30C17 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FD3491213EE77700B30C17 /* View.cpp */; };
 		C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8881B3C8C0A1C45F042E7A /* OscPrintReceivedElements.cpp */; };
@@ -526,6 +527,8 @@
 		B3A475C51DD4FBF000B1371C /* BasePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePanel.h; path = Panels/BasePanel.h; sourceTree = "<group>"; };
 		B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimelinePanel.cpp; path = Panels/TimelinePanel.cpp; sourceTree = "<group>"; };
 		B3A475C71DD4FBF000B1371C /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimelinePanel.h; path = Panels/TimelinePanel.h; sourceTree = "<group>"; };
+		B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAUtils.cpp; sourceTree = "<group>"; };
+		B3DD5B7421486AEE00B3D08F /* ofxAAUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAAUtils.h; sourceTree = "<group>"; };
 		B3FD3487213DBA3300B30C17 /* Configurations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configurations.h; sourceTree = "<group>"; };
 		B3FD3488213DD25300B30C17 /* OscSender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OscSender.cpp; sourceTree = "<group>"; };
 		B3FD3489213DD25300B30C17 /* OscSender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscSender.h; sourceTree = "<group>"; };
@@ -1622,6 +1625,8 @@
 				B3FD3487213DBA3300B30C17 /* Configurations.h */,
 				B3FD3488213DD25300B30C17 /* OscSender.cpp */,
 				B3FD3489213DD25300B30C17 /* OscSender.h */,
+				B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */,
+				B3DD5B7421486AEE00B3D08F /* ofxAAUtils.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1813,6 +1818,7 @@
 				B3A475C91DD4FBF000B1371C /* MetersPanel.cpp in Sources */,
 				62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */,
 				B3712F982136F733007BA046 /* ofxTLBangs.cpp in Sources */,
+				B3DD5B7521486AEE00B3D08F /* ofxAAUtils.cpp in Sources */,
 				C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */,
 				B3712F942136F733007BA046 /* ofxTLPageTabs.cpp in Sources */,
 				0546D1A38E13BD319CC9755B /* OscReceivedElements.cpp in Sources */,

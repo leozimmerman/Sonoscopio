@@ -23,10 +23,13 @@
 #include "ExtendedDatGuiComponents.h"
 #include "Macros.h"
 #include "View.h"
+//#include "ofxAudioAnalyzerAlgorithms.h"
+#include "ofxAudioAnalyzerUnit.h"
 
 class OnOffEventData{
 public:
-    string name;
+    //string name;
+    ofxAAAlgorithmType type;
     bool state;
     int panelId;
 };
@@ -54,24 +57,28 @@ public:
 class MeterView : public View {
 public:
     
-    MeterView(string name, int x, int y, int w, int h, int panelId);
+    MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     virtual ~MeterView();
-
 
     //void setup();
     virtual void update();
     virtual void draw();
 
+    void drawBounds();
     virtual void drawLabel();
     virtual void drawMeter();
     virtual void drawValueDisplay();
     
-    void resetPeak();
     virtual void resize(int x, int y, int w, int h);
+    virtual void updateComponentsPositions();
+    //virtual void setYandHeight(int y, int h);
+    virtual void updateComponentsWidth();
+    
+    void resetPeak();
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
-    ofColor getBackgroundColor(){return _backgroundColor;}
+
     float getValue(){return _value;}
     int getPositionX(){return _x;}
     int getPositionY(){return _y;}
@@ -82,25 +89,21 @@ public:
     
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return _enabled;}
-    bool getIsFullDisplay(){return _bDrawFullDisplay;}
-
+    //bool getIsFullDisplay(){return _bDrawFullDisplay;}
+    ofxAAAlgorithmType getType(){return _algorithmType;}
     void setName(string name){_name = name;}
     void setMainColor(ofColor col);
-    void setBackgroundColor(ofColor col){_backgroundColor = col;}
     void setValue(float val);
     void setNormalizedValue(float val);
     
-    virtual void updateComponentsPositions();
-    virtual void setYandHeight(int y, int h);
-    virtual void updateComponentsWidth();
-    void setHeight(float h);
+    
+    //void setHeight(float h);
     void setMinEstimatedValue(float val){_minEstimatedValue = val;}
     void setMaxEstimatedValue(float val){_maxEstimatedValue = val;}
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
-    void setFullDisplay(bool b){_bDrawFullDisplay = b;}
+    //void setFullDisplay(bool b){_bDrawFullDisplay = b;}
 
-    ofRectangle getDrawRect(){return _drawRect;}
     
     virtual void onSliderEvent(ofxDatGuiSliderEvent e);
     virtual void onButtonEvent(ofxDatGuiButtonEvent e);
@@ -111,28 +114,22 @@ public:
     OnOffToggle* onOffToggle;
     PeakMeterButton* peakButton;
     
+    //TODO: Esto aca?? 
+    static MeterView* createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
+    
     
 protected:
-    
+    ofxAudioAnalyzerUnit* _audioAnalyzer;
+    ofxAAAlgorithmType _algorithmType;
     float _minEstimatedValue, _maxEstimatedValue;
-    
-    int _x, _y;
-    int _w, _h;
-    
     int _panelId; //for OnOff Event Listeners
-    
-    ofRectangle _drawRect;
-    
+    //ofRectangle _drawRect;
     ofColor _mainColor;
-    ofColor _backgroundColor;
+    ofTrueTypeFont*	font;
     
-    ofTrueTypeFont*	verdana;
-    
-    bool _bDrawFullDisplay;
-    
+    //bool _bDrawFullDisplay;
     string  _name;
     bool    _enabled;
-    
     float   _line_h;
     int     _label_x;
     
