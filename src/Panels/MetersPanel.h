@@ -24,9 +24,8 @@
 
 #include "Macros.h"
 #include "BasePanel.h"
-//#include "ChannelMetersView.h"
 #include "MetersView.h"
-#include "GuiView.h"
+#include "MTGuiView.h"
 
 #define MT_GUI_COMP_HEIGHT 26
 
@@ -69,7 +68,7 @@ public:
     ///--------------------
     
 private:
-    GuiView guiView;
+    MTGuiView guiView;
     void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
     
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;

@@ -6,44 +6,31 @@
 //
 
 #pragma once
-#include "ofMain.h"
-#include "ofxDatGui.h"
+
 #include "GuiView.h"
 #include "TimelineView.h"
 
 
 class TLGuiView : public GuiView {
 public:
-    void setup(int x, int y, int width, int height, TimelineView* tv_ptr);
-    void update();
-    void draw() override;
+    void setup(int x, int y, int w, int h, TimelineView* tv_ptr);
     
-    void resize(int x, int y, int width, int height) override;
-    void setupGui();
-    void adjustGuiSize();
-    
-    
-    int componentHeight;
-    
-    vector<ofxDatGuiComponent*> components;
-    bool _isHidden = false;
-    ofColor bordCol;
-    int bordWidth;
-    int _guiCompHeight;
-    int  _guiCompWidth;
-    
-    ofxDatGuiTextInput* gTrackName;
-    void onButtonEvent(ofxDatGuiButtonEvent e);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    void onDropdownEvent(ofxDatGuiDropdownEvent e);
+    void createComponents() override;
+    void adjustComponentsSize() override;
     
     string currentTrackName;
     trackType currentTrackType;
+    ofxDatGuiTextInput* gTrackName;
     
     
 private:
     
+    void onButtonEvent(ofxDatGuiButtonEvent e) override;
+    void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
+    void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
+    
     TimelineView* timelineView_ptr;
+    
     std::function<void(TimelineView*)> callback_showTracks = &TimelineView::toggleShowTracks;
     std::function<void(TimelineView*)> callback_updateHeight = &TimelineView::updateHeight;
     std::function<void(TimelineView*, string)> callback_removeTrack = &TimelineView::removeTrack;

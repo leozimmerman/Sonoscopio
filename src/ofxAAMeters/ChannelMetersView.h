@@ -95,10 +95,11 @@ public:
         return binMeter->getValues();
     }
     int getHeightForMeter(MeterView* meter);
+    int getContentHeight(){return _contentHeight;}
     
     
 protected:
-    
+    int _contentHeight;
     ofxAudioAnalyzerUnit* audioAnalyzer;
 
     ofColor _mainColor;

@@ -9,37 +9,17 @@
 
 ofxDatGuiDropdown* g_dropdown; //TODO: Move to header?
 
-void TLGuiView::setup(int x, int y, int width, int height, TimelineView* tv_ptr) {
-    View::setup(x, y, width, height);
-    setBackgroundColor(ofColor::orange);
-    bordCol = ofColor::grey;
-    bordWidth = 1;
-    _guiCompHeight = height;
-    
+void TLGuiView::setup(int x, int y, int w, int h, TimelineView* tv_ptr) {
+
+    GuiView::setup(x, y, w, h);
+    timelineView_ptr = tv_ptr;
+
     currentTrackType = CURVES;
     currentTrackName = "";
-    
-    setupGui();
-    
-    timelineView_ptr = tv_ptr;
 }
 
-void TLGuiView::update(){
-    for(int i=0; i<components.size(); i++){
-        components[i]->update();
-    }
-}
-void TLGuiView::draw(){
-    View::draw();
-    for(int i=0; i<components.size(); i++){
-        components[i]->draw();
-    }
-}
-void TLGuiView::resize(int x, int y, int width, int height){
-    View::resize(x, y, width, height);
-    adjustGuiSize();
-}
-void TLGuiView::setupGui(){
+
+void TLGuiView::createComponents(){
     
     ofxDatGuiComponent* component;
     
@@ -97,12 +77,10 @@ void TLGuiView::setupGui(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    //-:Set components Positions and Widths
-    adjustGuiSize();
     
 }
 //--------------------------------------------------------------
-void TLGuiView::adjustGuiSize(){
+void TLGuiView::adjustComponentsSize(){
     
     int guiCompWidth = _w / 7;
     int gui_y = _y;

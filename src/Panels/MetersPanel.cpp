@@ -26,7 +26,7 @@ void MetersPanel::setup(int x, int y, int w, int h){
     
     setBackgroundColor(ofColor::green);
     
-    guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT);
+    guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT, &metersView);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     metersView.setBackgroundColor(ofColor::orange);//FIXME: borrar
     
@@ -63,10 +63,8 @@ void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyze
 //----------------------------------------------
 void MetersPanel::update(){
     metersView.update();
-    
-    for(int i=0; i<components.size(); i++){
-        components[i]->update();
-    }
+    guiView.update();
+
 }
 
 
@@ -77,11 +75,6 @@ void MetersPanel::draw(){
     View::draw();
     metersView.draw();
     guiView.draw();
-    return;
-
-    for(int i=0; i<components.size(); i++){
-        components[i]->draw();
-    }
 
 }
 //----------------------------------------------
@@ -189,8 +182,8 @@ void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
 
 void MetersPanel::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
-    guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT);
-    metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
+    guiView.resize(x, y, w, MT_GUI_COMP_HEIGHT);
+    metersView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
     ///adjustGuiSize(_y, _w, _h);
 }
 

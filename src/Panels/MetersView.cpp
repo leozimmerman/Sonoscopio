@@ -52,15 +52,23 @@ void MetersView::exit(){
     channelPanels.clear();
 }
 //----------------------------------------------
+//TODO: Move scroll funcs to ChannelPannelMV
 void MetersView::scrollUp(){
-    cout<<"UP"<<endl;
-    scrollOffset += 20;
+    scrollOffset += 40;
+    if (scrollOffset > 0) {scrollOffset = 0;}
+    cout<<"UP"<<scrollOffset<<endl;
     resize(_x , _y, _w, _h);
 }
 //----------------------------------------------
 void MetersView::scrollDown(){
-    cout<<"DOWN"<<endl;
-    scrollOffset -= 20;
+    
+    scrollOffset -= 40;
+    int contentHeight = channelPanels[0]->getContentHeight();
+    
+    if (scrollOffset < (contentHeight-_h) * (-1)) {
+        scrollOffset = (contentHeight-_h) * (-1);
+    }
+    cout<<"DOWN:"<<scrollOffset<<endl;
     resize(_x , _y, _w, _h);
 }
 //----------------------------------------------

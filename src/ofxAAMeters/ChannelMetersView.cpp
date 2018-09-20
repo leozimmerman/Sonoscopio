@@ -115,6 +115,7 @@ void ChannelMetersView::resize(int x, int y, int w, int h) {
         m->resize(_x, _y + y_pos, metersWidth, h);
         y_pos += h;
     }
+    _contentHeight = y_pos;
 }
 
 //--------------------------------------------------------------
