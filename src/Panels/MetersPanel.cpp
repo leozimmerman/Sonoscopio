@@ -22,20 +22,20 @@
 #pragma mark - Core Funcs
 //----------------------------------------------
 void MetersPanel::setup(int x, int y, int w, int h){
-    
     BasePanel::setup(x, y, w, h);
-    metersView.setup(x, y + 25, w, h-25);
-    metersView.setBackgroundColor(ofColor::orange);
+    
+    setBackgroundColor(ofColor::green);
+    
+    guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT);
+    metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
+    metersView.setBackgroundColor(ofColor::orange);//FIXME: borrar
     
     ///Borrar----------------
     _guiCompHeight = MT_GUI_COMP_HEIGHT;
     bordCol = ofColor::grey;
     bordWidth = 1;
     
-    setBackgroundColor(ofColor::darkBlue);
-    
     _panelDir = METERS_SETTINGS_DIR;
-    
     
 }
 //----------------------------------------------
@@ -62,12 +62,8 @@ void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyze
 }
 //----------------------------------------------
 void MetersPanel::update(){
-    
-
     metersView.update();
-
     
-    //update gui components
     for(int i=0; i<components.size(); i++){
         components[i]->update();
     }
@@ -80,6 +76,7 @@ void MetersPanel::draw(){
     
     View::draw();
     metersView.draw();
+    guiView.draw();
     return;
 
     for(int i=0; i<components.size(); i++){
@@ -95,6 +92,17 @@ void MetersPanel::exit(){
 //    }
 //    channelPanels.clear();
 
+}
+//----------------------------------------------
+void MetersPanel::keyPressed(int key){
+    switch (key) {
+        case '1':
+            metersView.scrollUp();
+            break;
+        case '2':
+            metersView.scrollDown();
+            break;
+    }
 }
 //----------------------------------------------
 #pragma mark - Settings
@@ -180,24 +188,10 @@ void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
 //----------------------------------------------
 
 void MetersPanel::resize(int x, int y, int w, int h){
-    
     View::resize(x, y, w, h);
-    
-    metersView.resize(x, y, w, h);
-    
-    adjustPosAndHeight(y, h);
-    adjustGuiSize(_y, _w, _h);
-}
-//----------------------------------------------
-void MetersPanel::adjustPosAndHeight(int y, int h){
-    
-//    int panelHeight = (_h - _guiCompHeight) / panelsNum;
-//
-//    for(int i=0; i<channelPanels.size(); i++){
-//        int y_pos = _y + panelHeight*i;
-//        channelPanels[i]->adjustPosAndHeight(y_pos, panelHeight);
-//    }
-    
+    guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT);
+    metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
+    ///adjustGuiSize(_y, _w, _h);
 }
 
 //----------------------------------------------

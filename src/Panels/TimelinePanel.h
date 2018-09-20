@@ -53,9 +53,7 @@ public:
     virtual void saveSettings(string rootDir="") override;
     virtual void loadSettings(string rootDir="") override;
     
-    
-    void keyPressed(int key);
-    
+    void keyPressed(int key) override;
     
     TimelineView timelineView;//TODO: Make it private
     

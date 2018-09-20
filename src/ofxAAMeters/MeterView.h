@@ -94,10 +94,8 @@ public:
     
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return _enabled;}
-    //bool getIsFullDisplay(){return _bDrawFullDisplay;}
     ofxAAAlgorithmType getType(){return _algorithmType;}
     
-    //void setName(string name){_name = name;}
     void setMainColor(ofColor col);
     void setValue(float val);
     void setNormalizedValue(float val);

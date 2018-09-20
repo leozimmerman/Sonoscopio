@@ -31,36 +31,48 @@ void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerP
         channelPanels.push_back(p);
     }
 }
-
+//----------------------------------------------
 void MetersView::update(){
     for(ChannelMetersView* p : channelPanels){
         p->update();
     }
 }
-
+//----------------------------------------------
 void MetersView::draw(){
     View::draw();
     for(ChannelMetersView* p : channelPanels){
         p->draw();
     }
 }
+//----------------------------------------------
 void MetersView::exit(){
     for (ChannelMetersView* p : channelPanels){
         p->exit();
     }
     channelPanels.clear();
 }
-
-
+//----------------------------------------------
+void MetersView::scrollUp(){
+    cout<<"UP"<<endl;
+    scrollOffset += 20;
+    resize(_x , _y, _w, _h);
+}
+//----------------------------------------------
+void MetersView::scrollDown(){
+    cout<<"DOWN"<<endl;
+    scrollOffset -= 20;
+    resize(_x , _y, _w, _h);
+}
+//----------------------------------------------
 void MetersView::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
     for(int i=0; i<channelPanels.size(); i++){
         int width = w / channelPanels.size();
         int xpos = i * width;
-        channelPanels[i]->resize(xpos, y, width, h);
+        channelPanels[i]->resize(xpos, y + scrollOffset, width, h);
     }
 }
-
+//----------------------------------------------
 void MetersView::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     for (ChannelMetersView* p : channelPanels){
         p->exit();
@@ -83,6 +95,7 @@ void MetersView::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     }
     
 }
+
 //----------------------------------------------
 vector<std::map<string, float>>& MetersView::getMetersValues(){
     
@@ -112,6 +125,7 @@ vector<std::map<string, float>>& MetersView::getMetersValues(){
     }
     return singleValuesForOsc;
 }
+//----------------------------------------------
 vector<std::map<string, vector<float>>>& MetersView::getMetersVectorValues(){
     
     vectorValuesForOsc.clear();

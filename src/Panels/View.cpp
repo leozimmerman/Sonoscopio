@@ -20,10 +20,6 @@ void View::draw(){
     ofSetColor(getBackgroundColor());
     ofDrawRectangle(_x, _y, _w, _h);
     ofPopStyle();
-    
-//    for (auto v : subviews) {
-//        v->draw();
-//    }
 }
 
 void View::resize(int x, int y, int w, int h) {

@@ -8,10 +8,11 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxDatGui.h"
+#include "GuiView.h"
 #include "TimelineView.h"
 
 
-class TLGuiView : public View {
+class TLGuiView : public GuiView {
 public:
     void setup(int x, int y, int width, int height, TimelineView* tv_ptr);
     void update();

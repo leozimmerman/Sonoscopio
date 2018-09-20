@@ -98,6 +98,8 @@
 		B3A475C81DD4FBF000B1371C /* MainPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C01DD4FBF000B1371C /* MainPanel.cpp */; };
 		B3A475C91DD4FBF000B1371C /* MetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C21DD4FBF000B1371C /* MetersPanel.cpp */; };
 		B3A475CB1DD4FBF000B1371C /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */; };
+		B3B69B6521542EFB00CB9179 /* GuiView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B69B6321542EFB00CB9179 /* GuiView.cpp */; };
+		B3B69B692154327300CB9179 /* MTGuiView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B69B672154327300CB9179 /* MTGuiView.cpp */; };
 		B3DD5B7521486AEE00B3D08F /* ofxAAUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */; };
 		B3FD348A213DD25300B30C17 /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FD3488213DD25300B30C17 /* OscSender.cpp */; };
 		B3FD3493213EE77700B30C17 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FD3491213EE77700B30C17 /* View.cpp */; };
@@ -527,6 +529,10 @@
 		B3A475C51DD4FBF000B1371C /* BasePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePanel.h; path = Panels/BasePanel.h; sourceTree = "<group>"; };
 		B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimelinePanel.cpp; path = Panels/TimelinePanel.cpp; sourceTree = "<group>"; };
 		B3A475C71DD4FBF000B1371C /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimelinePanel.h; path = Panels/TimelinePanel.h; sourceTree = "<group>"; };
+		B3B69B6321542EFB00CB9179 /* GuiView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GuiView.cpp; path = Panels/GuiView.cpp; sourceTree = "<group>"; };
+		B3B69B6421542EFB00CB9179 /* GuiView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GuiView.h; path = Panels/GuiView.h; sourceTree = "<group>"; };
+		B3B69B672154327300CB9179 /* MTGuiView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MTGuiView.cpp; path = Panels/MTGuiView.cpp; sourceTree = "<group>"; };
+		B3B69B682154327300CB9179 /* MTGuiView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MTGuiView.h; path = Panels/MTGuiView.h; sourceTree = "<group>"; };
 		B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAUtils.cpp; sourceTree = "<group>"; };
 		B3DD5B7421486AEE00B3D08F /* ofxAAUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAAUtils.h; sourceTree = "<group>"; };
 		B3FD3487213DBA3300B30C17 /* Configurations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configurations.h; sourceTree = "<group>"; };
@@ -1017,8 +1023,6 @@
 			children = (
 				B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */,
 				B3A475C71DD4FBF000B1371C /* TimelinePanel.h */,
-				B3354C8F2141B300003F8F91 /* TLGuiView.cpp */,
-				B3354C902141B300003F8F91 /* TLGuiView.h */,
 				B3354C922141BB14003F8F91 /* TimelineView.cpp */,
 				B3354C932141BB14003F8F91 /* TimelineView.h */,
 			);
@@ -1433,6 +1437,7 @@
 		B3A475B11DD4FBBB00B1371C /* Panels */ = {
 			isa = PBXGroup;
 			children = (
+				B3B69B662154325500CB9179 /* GuiViews */,
 				B3354C9921430711003F8F91 /* MetersPanel */,
 				B3354C8E2141B2DE003F8F91 /* TimelinePanel */,
 				B3A475C01DD4FBF000B1371C /* MainPanel.cpp */,
@@ -1459,6 +1464,19 @@
 				B3354C9E21430DC2003F8F91 /* MetersView.h */,
 			);
 			name = ofxAAMeters;
+			sourceTree = "<group>";
+		};
+		B3B69B662154325500CB9179 /* GuiViews */ = {
+			isa = PBXGroup;
+			children = (
+				B3354C8F2141B300003F8F91 /* TLGuiView.cpp */,
+				B3354C902141B300003F8F91 /* TLGuiView.h */,
+				B3B69B6321542EFB00CB9179 /* GuiView.cpp */,
+				B3B69B6421542EFB00CB9179 /* GuiView.h */,
+				B3B69B672154327300CB9179 /* MTGuiView.cpp */,
+				B3B69B682154327300CB9179 /* MTGuiView.h */,
+			);
+			name = GuiViews;
 			sourceTree = "<group>";
 		};
 		BB4B014C10F69532006C3DED /* addons */ = {
@@ -1820,6 +1838,7 @@
 				B3712F982136F733007BA046 /* ofxTLBangs.cpp in Sources */,
 				B3DD5B7521486AEE00B3D08F /* ofxAAUtils.cpp in Sources */,
 				C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */,
+				B3B69B692154327300CB9179 /* MTGuiView.cpp in Sources */,
 				B3712F942136F733007BA046 /* ofxTLPageTabs.cpp in Sources */,
 				0546D1A38E13BD319CC9755B /* OscReceivedElements.cpp in Sources */,
 				B3FD3493213EE77700B30C17 /* View.cpp in Sources */,
@@ -1860,6 +1879,7 @@
 				B3712F302135E8E3007BA046 /* ofxEasingExpo.cpp in Sources */,
 				B3712FA22136F733007BA046 /* ofxRemoveCocoaMenu.mm in Sources */,
 				B3712F2D2135E8E3007BA046 /* ofxEasingQuint.cpp in Sources */,
+				B3B69B6521542EFB00CB9179 /* GuiView.cpp in Sources */,
 				B3712F8F2136F733007BA046 /* ofxTLImageSequence.cpp in Sources */,
 				B371303E21373A89007BA046 /* audiodecoderbase.cpp in Sources */,
 				B3712F9B2136F733007BA046 /* ofxTimeline.cpp in Sources */,

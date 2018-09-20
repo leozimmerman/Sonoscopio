@@ -79,7 +79,6 @@ void ofApp::setupPanels() {
     mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
     metersPanel.setChannelAnalyzers(mainAnalyzer.getChannelAnalyzersPtrs());//FIXME. separar el setup de los analyzers!
     
-    metersPanel.setBackgroundColor(ofColor::green);
 }
 
 void ofApp::setupConfiguration() {
@@ -197,6 +196,12 @@ void ofApp::keyPressed(int key){
      * 'a' adjust tracks height shorcut
      */
     timePanel.keyPressed(key);
+    //---------------------------
+    /* TODO: REMOVE
+     * '1' scrollUp
+     * '2' scrollDown
+     */
+    metersPanel.keyPressed(key);
     
     //--------------------------------
     /*
@@ -465,12 +470,10 @@ void ofApp::drawSavingAnalysisSign(){
 //------------------------------------------------------------
 #pragma mark - Sizes
 //--------------------------------------------------------------
+//TODO: borrar
 void ofApp::onTimelinePanelResize(int &h){
-    
     int new_y = mainPanel.getHeight() + h;
     int new_h = ofGetHeight() - new_y;
-    
-    metersPanel.adjustPosAndHeight(new_y, new_h);
     
     ofLogVerbose()<<"-- timelinePanel resized: "<< h;
 }//------------------------------------------------------------

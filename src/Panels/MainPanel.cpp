@@ -459,7 +459,6 @@ void MainPanel::setupGui(){
     //-:SET POSITION, WIDTH AND HEIGHT OF COMPONENTS
     adjustGui(_w, _h);
    
-
 }
 //-------------------------------------------------
 void MainPanel::resize(int x, int y, int w, int h){

@@ -59,8 +59,7 @@ public:
     ofVec2f getPosition(){return ofVec2f(_x, _y);}
     int getWidth(){return _w;}
     int getHeight(){return _h;}
-    
-    bool getIsFullDisplay(){return _bDrawFullDisplay;}
+
     
     void onMeterStateChanged(OnOffEventData & data);
     
@@ -108,9 +107,6 @@ protected:
     
     int metersNum;
     int metersWidth;
-
-    
-    bool _bDrawFullDisplay;
     
 
 };

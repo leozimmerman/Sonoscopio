@@ -45,6 +45,8 @@ public:
     
     void drawFileInfo();
     
+    void keyPressed(int key)override{}
+    
     void setFileInfoString(string str){fileInfoStr = str;}
     void openOpenFileDialog();
     void processOpenFileSelection(ofFileDialogResult openFileResult);

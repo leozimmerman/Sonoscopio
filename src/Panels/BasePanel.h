@@ -34,6 +34,7 @@ public:
     virtual void saveSettings(string rootDir="") =0;
     virtual void loadSettings(string rootDir="") =0;
     
+    virtual void keyPressed(int key) =0;
     
 protected:
     //TODO: Remove this from here!

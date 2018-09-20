@@ -26,6 +26,7 @@
 #include "BasePanel.h"
 //#include "ChannelMetersView.h"
 #include "MetersView.h"
+#include "GuiView.h"
 
 #define MT_GUI_COMP_HEIGHT 26
 
@@ -46,9 +47,10 @@ public:
     
     void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     
-    
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    void adjustPosAndHeight(int y, int h);
+    
+    
+    void keyPressed(int key) override;
     
     MetersView metersView;//TODO: Make private
     
@@ -67,7 +69,7 @@ public:
     ///--------------------
     
 private:
-    
+    GuiView guiView;
     void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
     
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;

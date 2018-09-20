@@ -20,23 +20,21 @@
 #include "ofxAAUtils.h"
 
 //TODO: Make it static-global
-/*
+
 vector<ofxAAAlgorithmType> availableTypes = {RMS, PITCH_FREQ, PITCH_CONFIDENCE, PITCH_SALIENCE, HFC, CENTROID, SPECTRAL_COMPLEXITY, INHARMONICITY, DISSONANCE, ROLL_OFF, ODD_TO_EVEN, ONSETS, SPECTRUM, MEL_BANDS, MFCC, HPCP, TRISTIMULUS};
-*/
-vector<ofxAAAlgorithmType> availableTypes = {RMS, ONSETS, SPECTRUM, HPCP};
+
+
 //------------------------------------------------
 #pragma mark - Core funcs
 //------------------------------------------------
 ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr){
     View::setup(x, y ,width, height);
-    setBackgroundColor(ofColor::orange);
+    
+    setBackgroundColor(ofColor::yellow);
    
     _panelId = panelId;
     audioAnalyzer = aaPtr;
-
     _mainColor = ofColor::yellow;
-
-    _bDrawFullDisplay = TRUE;
 
     initMeters();
 
@@ -59,7 +57,7 @@ void ChannelMetersView::update(){
 }
 //------------------------------------------------
 void ChannelMetersView::draw(){
-    //View::draw();
+    View::draw();
     for(int i=0; i<meters.size(); i++){
         meters[i]->draw();
     }
