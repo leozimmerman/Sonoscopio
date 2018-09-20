@@ -20,8 +20,10 @@
 #include "ofxAAUtils.h"
 
 //TODO: Make it static-global
-vector<ofxAAAlgorithmType> availableTypes = {RMS, PITCH_FREQ, PITCH_CONFIDENCE, PITCH_SALIENCE, HFC, CENTROID, SPECTRAL_COMPLEXITY, INHARMONICITY, DISSONANCE, ROLL_OFF, ODD_TO_EVEN/*, ONSETS, SPECTRUM, MEL_BANDS, MFCC, HPCP, TRISTIMULUS*/};
-
+/*
+vector<ofxAAAlgorithmType> availableTypes = {RMS, PITCH_FREQ, PITCH_CONFIDENCE, PITCH_SALIENCE, HFC, CENTROID, SPECTRAL_COMPLEXITY, INHARMONICITY, DISSONANCE, ROLL_OFF, ODD_TO_EVEN, ONSETS, SPECTRUM, MEL_BANDS, MFCC, HPCP, TRISTIMULUS};
+*/
+vector<ofxAAAlgorithmType> availableTypes = {RMS, ONSETS, SPECTRUM, HPCP};
 //------------------------------------------------
 #pragma mark - Core funcs
 //------------------------------------------------
@@ -87,32 +89,33 @@ void ChannelMetersView::setMainColor(ofColor col){
     setBackgroundColor(lightCol);
     for (auto m : meters){
         m->setMainColor(_mainColor);
-        //update onsets sliders colors
         if(m->getType()==ONSETS){
             OnsetMeterView* om = dynamic_cast<OnsetMeterView*>(m);
-            om->updateComponentsColors();
+            om->updateComponentsColors();//update sliders colors
         }
     }
 }
 //------------------------------------------------
-//TODO: Borrar esto
-void ChannelMetersView::setFullDisplay(bool b){
-    _bDrawFullDisplay = b;
-//    for (auto m : meters){
-//        //m->setFullDisplay(_bDrawFullDisplay);
-//    }
+int ChannelMetersView::getHeightForMeter(MeterView *meter) {
+    if (dynamic_cast<BinMeterView*>(meter)) {
+        return BinMeterView::height;
+    } else if (dynamic_cast<OnsetMeterView*>(meter))  {
+        return OnsetMeterView::height;
+    } else {
+        return MeterView::height;
+    }
 }
 //------------------------------------------------
 void ChannelMetersView::resize(int x, int y, int w, int h) {
     View::resize(x, y, w, h);
     metersNum = availableTypes.size();
     metersWidth = _w;
-    //metersHeight = _h / metersNum;
-    metersHeight = 100;//TODO: Macro
+    
     int y_pos = 0;
     for (auto m : meters) {
-        m->resize(_x, _y + y_pos, metersWidth, metersHeight);
-        y_pos += metersHeight;
+        int h = getHeightForMeter(m);
+        m->resize(_x, _y + y_pos, metersWidth, h);
+        y_pos += h;
     }
 }
 

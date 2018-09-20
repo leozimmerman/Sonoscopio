@@ -83,13 +83,6 @@ void MetersView::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     }
     
 }
-
-void MetersView::setFullDisplay(bool b){
-    _bDrawFullDisplay = b;
-    for (auto chPan : channelPanels){
-        chPan->setFullDisplay(_bDrawFullDisplay);
-    }
-}
 //----------------------------------------------
 vector<std::map<string, float>>& MetersView::getMetersValues(){
     

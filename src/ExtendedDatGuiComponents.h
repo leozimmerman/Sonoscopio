@@ -169,7 +169,8 @@ public:
             // anything that extends ofxDatGuiButton has the same rollover effect //
             ofPushStyle();
             
-            if (mStyle.border.visible) drawBorder();
+            //if (mStyle.border.visible) drawBorder();
+            drawBorder();
             ofNoFill();
             ofSetColor(gralColor);
             mFont->draw(mLabel.text , x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);

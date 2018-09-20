@@ -25,19 +25,44 @@ ofEvent<OnOffEventData> MeterView::onOffEventGlobal = ofEvent<OnOffEventData>();
 
 //FIXME: Move this to somewhere else. Same plase as availableTypes
 
-
+int MeterView::height = 85;
 //------------------------------------------------
-#pragma mark - Core funcs
+MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
+    switch (algorithmType) {
+        case ONSETS: return new OnsetMeterView(algorithmType, panelId, aaPtr);
+        case MEL_BANDS: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case SPECTRUM: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case HPCP: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case TRISTIMULUS: return new BinMeterView(algorithmType, panelId, aaPtr);
+        case MFCC: return new BinMeterView(algorithmType, panelId, aaPtr);
+            
+        default:
+            return new MeterView(algorithmType, panelId, aaPtr);
+    }
+}
+//------------------------------------------------
+
+#pragma mark Inits
 //------------------------------------------------
 MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) {
+    
     _audioAnalyzer = aaPtr;
     _algorithmType = algorithmType;
     _name = ofxaa::algorithmTypeToString(algorithmType);
     _panelId = panelId;
-    
     _mainColor.set(ofColor::cyan);
-    setBackgroundColor(ofColor::black);
     
+    setBackgroundColor(ofColor::darkBlue);//FIXME: Borrar
+    
+    initDefaultValues();
+    initComponents();
+    
+    setComponentsWidth();
+    setComponentsPositions();
+
+}
+//------------------------------------------------
+void MeterView::initDefaultValues(){
     _value = 0.0;
     _valueNorm = -1.0;
     _minEstimatedValue = 0.0;
@@ -45,19 +70,17 @@ MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAna
     _maxValueRegistered = 0.0;
     _smoothAmnt = 0.0;
     _enabled = TRUE;
-    
     ofColor bordCol = ofColor::grey;
     int bordWidth = 1;
-    
-    //Setup Font
+}
+//------------------------------------------------
+void MeterView::initComponents(){
     font  = new ofTrueTypeFont();
     font->load("gui_assets/fonts/verdana.ttf", 10, false, false);
     font->setLineHeight(14.0f);
     font->setLetterSpacing(1.037);
     _line_h = font->getLineHeight();
-    
-    //-----------------
-    
+
     onOffToggle = new OnOffToggle(MTR_ON_OFF, TRUE);
     onOffToggle->onButtonEvent(this, &MeterView::onButtonEvent);
     
@@ -77,49 +100,39 @@ MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAna
     peakButton->setHeight(_line_h*0.85);
     peakButton->setLabelMargin(0.0);
     peakButton->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    
-    updateComponentsWidth();
-    updateComponentsPositions();
-
-}
-//------------------------------------------------
-MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
-    switch (algorithmType) {
-        case ONSETS: return new OnsetMeterView(algorithmType, panelId, aaPtr);
-        case MEL_BANDS: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case SPECTRUM: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case HPCP: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case TRISTIMULUS: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case MFCC: return new BinMeterView(algorithmType, panelId, aaPtr);
-            
-        default:
-            return new MeterView(algorithmType, panelId, aaPtr);
-    }
 }
 //------------------------------------------------
 MeterView::~MeterView(){
-    
     delete smoothSlider;
     delete onOffToggle;
     delete peakButton;
-    
 }
+#pragma mark Update
 //------------------------------------------------
 void MeterView::update(){
-    
+    updateComponents();
+    updatePeak();
+    updateValues();
+}
+//------------------------------------------------
+void MeterView::updateComponents(){
     smoothSlider->update();
     onOffToggle->update();
     peakButton->update();
-    
-    //Check for peak
+}
+//------------------------------------------------
+void MeterView::updatePeak(){
     if(_value > _maxValueRegistered){
         _maxValueRegistered = _value;
         peakButton->setLabel(ofToString(_maxValueRegistered, 2));
     }
-    
+}
+//------------------------------------------------
+void MeterView::updateValues(){
     setValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt));
     setNormalizedValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt, TRUE));
 }
+#pragma mark Draw
 //------------------------------------------------
 void MeterView::draw(){
     View::draw();
@@ -160,9 +173,6 @@ void MeterView::drawValueDisplay(){
     ofPushStyle();
         ofSetColor(_mainColor);
         string strValue = ofToString(_value, 2);
-        //align center
-        //int str_w = font->stringWidth(strValue);
-        //int strVal_x =  _w * 0.5 - str_w * 0.5;
         int strVal_x = _x + 5;
         font->drawString(strValue, strVal_x, _line_h * 2.0);
     ofPopStyle();
@@ -188,17 +198,12 @@ void MeterView::resetPeak(){
 #pragma mark - Setters
 //------------------------------------------------
 void MeterView::resize(int x, int y, int w, int h){
-    _x = x;
-    _y = y;
-    _w = w;
-    _h = h;
-    //_drawRect.set(x, y, w, h);
-    updateComponentsWidth();
-    updateComponentsPositions();
+    View::resize(x, y, w, h);
+    setComponentsWidth();
+    setComponentsPositions();
 }
 //------------------------------------------------
-void MeterView::updateComponentsWidth(){
-    
+void MeterView::setComponentsWidth(){
     //-:LABEL
     //constraing width
     float label_w = font->stringWidth(_name);
@@ -207,23 +212,18 @@ void MeterView::updateComponentsWidth(){
         float space_ratio = 1 / (label_w / widthForLabel);
         font->setLetterSpacing(space_ratio);
     } else {
-        
         font->setLetterSpacing(1.37);
     }
-    //align center
-    //label_w = font->stringWidth(_name);
-    //_label_x =  _w * .5 - label_w *.5;
     _label_x = _x + 5;
     
     //-:COMPONENTS
+    peakButton->setWidth(_w*0.5, 0.0);
     onOffToggle->setWidth(20, 0.0);
     smoothSlider->setWidth(_w*0.5, 0.0);
-    peakButton->setWidth(_w*0.5, 0.0);
-
 }
 //------------------------------------------------
 //add sizes
-void MeterView::updateComponentsPositions(){
+void MeterView::setComponentsPositions(){
 
     peakButton->setPosition  (_x + 5, _y + _line_h * 2.2);
     smoothSlider->setPosition(_x + 5, _y + _line_h * 3.2);
@@ -243,7 +243,6 @@ void MeterView::setValue(float val){
 void MeterView::setNormalizedValue(float val){
     _valueNorm = val;
 }
-
 //------------------------------------------------
 void MeterView::setSmoothAmnt(float val){
     _smoothAmnt = val;
@@ -287,7 +286,6 @@ void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
         resetPeak();
     }
 
-    
 }
 
 

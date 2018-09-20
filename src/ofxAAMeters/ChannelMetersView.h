@@ -45,7 +45,7 @@ public:
 //    }
     ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr);
     ~ChannelMetersView(){}
-    ///virtual void setup(int x, int y, int width, int height, ofxAudioAnalyzerUnit * aaPtr);
+    
     virtual void update();
     virtual void draw();
     virtual void exit();
@@ -55,7 +55,6 @@ public:
     void initMeters();
     
     void setMainColor(ofColor col);
-    void setFullDisplay(bool b);
     
     ofVec2f getPosition(){return ofVec2f(_x, _y);}
     int getWidth(){return _w;}
@@ -96,6 +95,7 @@ public:
         BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
         return binMeter->getValues();
     }
+    int getHeightForMeter(MeterView* meter);
     
     
 protected:
@@ -107,7 +107,7 @@ protected:
     int _panelId;
     
     int metersNum;
-    int metersWidth, metersHeight;
+    int metersWidth;
 
     
     bool _bDrawFullDisplay;

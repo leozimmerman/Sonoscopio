@@ -29,22 +29,20 @@ class BinMeterView : public MeterView{
 
     BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
-    void draw();
-    
-    void drawMeter();
-    void drawLabel();
+    void draw() override;
+
+    void updateValues() override;
+    void drawMeter() override;
     
     void setBinsNum(int bins){_nBins = bins;}
     void setValues(vector<float>& vals){_values = vals;}
     void setMinMaxEstimatedValues();
     
-    //void updateColors();
-    void updateComponentsPositions();
-    void updateComponentsWidth();
-    
-    void resize(int x, int y, int w, int h);
+    void setComponentsPositions() override;
+    void setComponentsWidth() override;
     
     vector<float>& getValues(){return _values;}
+    static int height;
     
  protected:
     

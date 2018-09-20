@@ -21,11 +21,11 @@
 // the static event, or any static variable, must be initialized outside of the class definition.
 ofEvent<int> OnsetMeterView::onsetEventGlobal = ofEvent<int>();
 
+int OnsetMeterView::height = 130;
 //------------------------------------
 OnsetMeterView::OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) : MeterView(algorithmType, panelId, aaPtr){
-    setBackgroundColor(ofColor::purple);
+    setBackgroundColor(ofColor::darkViolet);
     
-    //audioAnalyzer = analyzerPtr;
     onsets = aaPtr->getOnsetsAlgorithmPtr();
     
     _alpha = onsets->getOnsetAlpha();
@@ -61,8 +61,8 @@ OnsetMeterView::OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  o
     armToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     armToggle->setBackgroundColor(ofColor::black);
     
-    updateComponentsWidth();
-    updateComponentsPositions();
+    setComponentsWidth();
+    setComponentsPositions();
 }
 
 //------------------------------------
@@ -74,22 +74,15 @@ void OnsetMeterView::update(){
     timeThresholdSlider->update();
     armToggle->update();
 
-    setValue(_audioAnalyzer->getValue(_algorithmType));
+    setValue(_audioAnalyzer->getOnsetValue());
 }
 //------------------------------------
 void OnsetMeterView::draw(){
-    View::draw();
     
     ofPushStyle();
-    
-    //bounds-box
-    ofNoFill();
-    ofSetColor(_mainColor);
-    
-    ofPopStyle();
-    
-    return;
-    //meter----------
+    View::draw();
+   
+    drawBounds();
     
     drawLabel();
     onOffToggle->drawTransparent();
@@ -100,64 +93,46 @@ void OnsetMeterView::draw(){
         silenceThresholdSlider->drawSimplified();
         timeThresholdSlider->drawSimplified();
         armToggle->drawTransparent();
-    }    
-
+    }
+    
+    ofPopStyle();
 }
 //------------------------------------
 void OnsetMeterView::drawMeter(){
-    
-    if(getEnabled()==false) return;
-    //-----------------------------
- 
     if(_onsetValue){
-        
         ofPushStyle();
         ofFill();
         ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA * 2.0);
-        //ofDrawRectangle(_drawRect);
+        ofDrawRectangle(_x , _w, _w, _h);
         ofPopStyle();
     }
-    
-}
-//------------------------------------
-void OnsetMeterView::resize(int x, int y, int w, int h){
-    
-    MeterView::resize(x, y, w, h);
-    
-    updateComponentsWidth();
-    updateComponentsPositions();
-    
 }
 //------------------------------------------------
-void OnsetMeterView::updateComponentsPositions(){
+void OnsetMeterView::setComponentsPositions(){
     
-    MeterView::updateComponentsPositions();
+    MeterView::setComponentsPositions();
     
-    alphaSlider->setPosition             (_x + _w * 0.1, _y + _line_h * 2.0);
-    silenceThresholdSlider->setPosition  (_x + _w * 0.1, _y + _line_h * 3.5);
-    timeThresholdSlider->setPosition     (_x + _w * 0.1, _y + _line_h * 5.0);
-    armToggle->setPosition               (_x + _w * 0.1, _y + _line_h * 8.0);//On-off at 6.5
+    alphaSlider->setPosition             (_x + 5, _y + _line_h * 2.0);
+    silenceThresholdSlider->setPosition  (_x + 5, _y + _line_h * 3.5);
+    timeThresholdSlider->setPosition     (_x + 5, _y + _line_h * 5.0);
+    armToggle->setPosition               (_x + 5, _y + _line_h * 8.0);//On-off at 6.5
 
 }
 //------------------------------------------------
-void OnsetMeterView::updateComponentsWidth(){
-    
-    MeterView::updateComponentsWidth();
+void OnsetMeterView::setComponentsWidth(){
+    MeterView::setComponentsWidth();
     
     alphaSlider->setWidth(_w*0.8, 0.0);
     silenceThresholdSlider->setWidth(_w*0.8, 0.0);
     timeThresholdSlider->setWidth(_w*0.8, 0.0);
     armToggle->setWidth(_w*0.8, 0.0);
-   
 }
 //------------------------------------------------
 void OnsetMeterView::updateComponentsColors(){
-    
     alphaSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
     silenceThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
     timeThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
     armToggle->setColors(ofColor::red, COLOR_ONOFF_OFF);
-    
 }
 //------------------------------------------------
 void OnsetMeterView::setValue(bool val){

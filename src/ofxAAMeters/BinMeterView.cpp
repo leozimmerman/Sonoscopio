@@ -17,16 +17,11 @@
  */
 
 #include "BinMeterView.h"
+int BinMeterView::height = 70;
 
 BinMeterView::BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(algorithmType, panelId, aaPtr){
     
-    setBackgroundColor(ofColor::pink);
-    
-    smoothSlider->setHeight(_line_h*0.75);
-    onOffToggle->setHeight(_line_h*0.75);
-    
-    updateComponentsPositions();
-    updateComponentsWidth();
+    setBackgroundColor(ofColor::darkRed); //FIXME: Borrar
     
     //spectrum cant be turned off
     //mfcc cant work if melBands is turn off
@@ -34,33 +29,26 @@ BinMeterView::BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAu
         onOffToggle->setVisible(false);
         onOffToggle->ofxDatGuiComponent::setEnabled(false);
     }
-    
-    setBinsNum(_audioAnalyzer->getBinsNum(_algorithmType));
+    int binNums = _audioAnalyzer->getBinsNum(_algorithmType);
+    setBinsNum(binNums);
     setMinMaxEstimatedValues();
 }
-
+//-------------------------------------------------------
+void BinMeterView::updateValues(){
+    setValues(_audioAnalyzer->getValues(_algorithmType, _smoothAmnt));
+}
 //-------------------------------------------------------
 void BinMeterView::draw(){
-    //bounds-box
+    View::draw();
     ofPushStyle();
-    ofNoFill();
-    ofSetColor(_mainColor);
-    
-    ofPopStyle();
-
-    return;
-    
-    drawLabel();
-    
-    
-    if(_enabled) drawMeter();
-    
-    
+    MeterView::drawBounds();
+    MeterView::drawLabel();
     onOffToggle->drawTransparent();
-    if(_enabled) smoothSlider->drawSimplified();
-    
-    
-
+    ofPopStyle();
+    if (_enabled) {
+        drawMeter();
+        smoothSlider->drawSimplified();
+    }
 }
 //-------------------------------------------------------
 void BinMeterView::setMinMaxEstimatedValues() {
@@ -84,67 +72,29 @@ void BinMeterView::setMinMaxEstimatedValues() {
 //-------------------------------------------------------
 void BinMeterView::drawMeter(){
     
-    if(getEnabled()==false) return;
-    //-----------------------------
-    
-    ofFill();
     
     ofPushMatrix();
     ofTranslate(_x, _y);
-    
-    ofPushStyle();
+    //ofPushStyle();
+    ofFill();
     ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA);
-    
-    
     float bin_w = (float) _w / _nBins;
-    
     for (int i = 0;i < _values.size(); i++){
         float scaledValue = ofMap(_values[i], _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
         float bin_h = -1 * (scaledValue * _h);
         ofDrawRectangle(i*bin_w, _h, bin_w, bin_h);
     }
-    
-    ofPopStyle();
-    
-    ofPopMatrix();
-
-
-}
-//-------------------------------------------------------
-void BinMeterView::drawLabel(){
-    ofPushMatrix();
-    ofTranslate(_x, _y);
-    if(_enabled) ofSetColor(_mainColor);
-    else ofSetColor(COLOR_ONOFF_OFF);
-    font->drawString(_name, _label_x, _line_h * 0.75);
+    //ofPopStyle();
     ofPopMatrix();
 }
 
-
 //-------------------------------------------------------
-void BinMeterView::resize(int x, int y, int w, int h){
-    
-    _x = x;
-    _y = y;
-    _w = w;
-    _h = h;
-    
-    ///_drawRect.set(x, y, w, h);
-    
-    updateComponentsPositions();
-    updateComponentsWidth();
-    //updateColors();
-    
-}
-//-------------------------------------------------------
-void BinMeterView::updateComponentsPositions(){
-   
+void BinMeterView::setComponentsPositions(){
     smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
     onOffToggle->setPosition(_x, _y);
-    
 }
 //-------------------------------------------------------
-void BinMeterView::updateComponentsWidth(){
+void BinMeterView::setComponentsWidth(){
     
     //-:LABEL
     //constraing width
@@ -153,6 +103,8 @@ void BinMeterView::updateComponentsWidth(){
     if(label_w >= widthForLabel){
         float space_ratio = 1 / (label_w / widthForLabel);
         font->setLetterSpacing(space_ratio);
+    } else {
+        font->setLetterSpacing(1.37);
     }
     //align center
     label_w = font->stringWidth(_name);

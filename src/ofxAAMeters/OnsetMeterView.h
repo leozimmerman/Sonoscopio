@@ -36,17 +36,17 @@ public:
     
     OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
-    virtual void update();
-    virtual void draw();
+    void update() override;
+    void draw() override;
     
-    virtual void drawMeter();
+    void drawMeter() override;
     
-    virtual void resize(int x, int y, int w, int h);
+    //virtual void resize(int x, int y, int w, int h);
     
     
     void updateComponentsColors();
-    void updateComponentsWidth();
-    void updateComponentsPositions();
+    void setComponentsWidth() override;
+    void setComponentsPositions() override;
     
     void setValue(bool val);
     void setAlpha(float alpha);
@@ -61,11 +61,12 @@ public:
     float getSilenceThreshold(){return _silenceThreshold;}
     float getTimeThreshold(){return _timeThreshold;}
     
-    void onSliderEvent(ofxDatGuiSliderEvent e);
-    void onButtonEvent(ofxDatGuiButtonEvent e);
+    void onSliderEvent(ofxDatGuiSliderEvent e) override;
+    void onButtonEvent(ofxDatGuiButtonEvent e) override;
     
     /*Ver onOffEventGlobal si hace falta mandar mas data*/
     static ofEvent<int> onsetEventGlobal;
+    static int height;
     
 protected:
     void sendOnsetEvent();

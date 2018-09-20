@@ -22,7 +22,7 @@ public:
     void resize(int x, int y, int w, int h) override;
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    void setFullDisplay(bool b);
+    
     
     vector<std::map<string, float>>& getMetersValues();
     vector<std::map<string, vector<float>>>& getMetersVectorValues();
@@ -32,9 +32,7 @@ public:
     int panelsNum;
     bool _bDrawFullDisplay;
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
-    
-    void toggleFullDisplay(){setFullDisplay(!_bDrawFullDisplay);}
-    bool getIsFullDisplay(){return _bDrawFullDisplay;}
+
     
 private:
     vector < std::map<string, float> > singleValuesForOsc;

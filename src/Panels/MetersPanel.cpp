@@ -371,7 +371,7 @@ void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, flo
 void MetersPanel::onButtonEvent(ofxDatGuiButtonEvent e)
 {
     if(e.target->getLabel()=="FULL DISPLAY"){
-        metersView.toggleFullDisplay();
+        //metersView.toggleFullDisplay();
     }
 }
 

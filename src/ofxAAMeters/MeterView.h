@@ -60,19 +60,24 @@ public:
     MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     virtual ~MeterView();
 
-    //void setup();
     virtual void update();
     virtual void draw();
 
+    void initDefaultValues();
+    void initComponents();
+    
+    virtual void updateComponents();
+    virtual void updateValues();
+    virtual void updatePeak();
+    
     void drawBounds();
     virtual void drawLabel();
     virtual void drawMeter();
     virtual void drawValueDisplay();
     
     virtual void resize(int x, int y, int w, int h);
-    virtual void updateComponentsPositions();
-    //virtual void setYandHeight(int y, int h);
-    virtual void updateComponentsWidth();
+    virtual void setComponentsPositions();
+    virtual void setComponentsWidth();
     
     void resetPeak();
     
@@ -91,19 +96,15 @@ public:
     bool getEnabled(){return _enabled;}
     //bool getIsFullDisplay(){return _bDrawFullDisplay;}
     ofxAAAlgorithmType getType(){return _algorithmType;}
-    void setName(string name){_name = name;}
+    
+    //void setName(string name){_name = name;}
     void setMainColor(ofColor col);
     void setValue(float val);
     void setNormalizedValue(float val);
-    
-    
-    //void setHeight(float h);
     void setMinEstimatedValue(float val){_minEstimatedValue = val;}
     void setMaxEstimatedValue(float val){_maxEstimatedValue = val;}
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
-    //void setFullDisplay(bool b){_bDrawFullDisplay = b;}
-
     
     virtual void onSliderEvent(ofxDatGuiSliderEvent e);
     virtual void onButtonEvent(ofxDatGuiButtonEvent e);
@@ -117,29 +118,25 @@ public:
     //TODO: Esto aca?? 
     static MeterView* createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
+    static int height;
+    
     
 protected:
     ofxAudioAnalyzerUnit* _audioAnalyzer;
     ofxAAAlgorithmType _algorithmType;
     float _minEstimatedValue, _maxEstimatedValue;
     int _panelId; //for OnOff Event Listeners
-    //ofRectangle _drawRect;
     ofColor _mainColor;
     ofTrueTypeFont*	font;
     
-    //bool _bDrawFullDisplay;
+    float _smoothAmnt;
     string  _name;
     bool    _enabled;
     float   _line_h;
     int     _label_x;
     
 private:
-    
     float _value;
     float _valueNorm;
     float _maxValueRegistered;//peak
-    float _smoothAmnt;
-
-    
-
 };
