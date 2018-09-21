@@ -36,19 +36,6 @@ void BinMeterView::updateValues(){
     setValues(_audioAnalyzer->getValues(_algorithmType, _smoothAmnt));
 }
 //-------------------------------------------------------
-//void BinMeterView::draw(){
-//    View::draw();
-//    ofPushStyle();
-//    
-//    
-//    ofPopStyle();
-//    if (_enabled) {
-//        drawMeter();
-//        smoothSlider->drawSimplified();
-//    }
-//    ofPopStyle();
-//}
-//-------------------------------------------------------
 void BinMeterView::drawStaticElements(){
     MeterView::drawLabel();
     onOffToggle->drawTransparent();

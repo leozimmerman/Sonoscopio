@@ -31,7 +31,8 @@
 #define MT_PANEL_FPS 30
 #define GUI_STATIC_FPS 30
 
-#define INIT_AUDIO_FILE "audio_files/mix-stereo.wav"
+//#define INIT_AUDIO_FILE "audio_files/mix-stereo.wav"
+#define INIT_AUDIO_FILE "audio_files/flowLoop.wav"
 #define INIT_BUFFER_SIZE 512
 #define INIT_ANALYSIS_MODE MONO
 #define INIT_PROJECT_DIR ""
