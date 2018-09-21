@@ -17,76 +17,53 @@
  */
 
 #include "MetersPanel.h"
+#include "ofApp.h"
 
-//----------------------------------------------
+
 #pragma mark - Core Funcs
-//----------------------------------------------
+
 void MetersPanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
     
-    setBackgroundColor(ofColor::green);
-    
     guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT, &metersView);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
-    metersView.setBackgroundColor(ofColor::orange);//FIXME: borrar
-    
-    ///Borrar----------------
-    _guiCompHeight = MT_GUI_COMP_HEIGHT;
-    bordCol = ofColor::grey;
-    bordWidth = 1;
-    
-    _panelDir = METERS_SETTINGS_DIR;
     
 }
-//----------------------------------------------
+
 void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     channelAnalyzers = chanAnalyzerPtrs;
     metersView.setupChannelMeters(chanAnalyzerPtrs);
-    
-//    panelsNum = channelAnalyzers.size(); //Hace falta??
-   
-//    int panelHeight = (_h - _guiCompHeight) / panelsNum;
-//
-//    for (int i=0; i<panelsNum; i++){
-//        int y_pos = _y + panelHeight*i;
-//        int panelId = i;
-//        ChannelMetersView * p = new ChannelMetersView(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
-//
-//        if(i%2) p->setMainColor(panelColor2);
-//        else p->setMainColor(panelColor1);
-//
-//        channelPanels.push_back(p);
-//    }
-    setupGui();
-    
 }
-//----------------------------------------------
+
 void MetersPanel::update(){
     metersView.update();
     guiView.update();
-
 }
 
 
-//----------------------------------------------
 void MetersPanel::draw(){
-    if (_isHidden){ return; }
+    if (!View::mustDrawNewFrame()){
+        View::drawLoadedTexture();
+        return;
+    }
     
+    if (_isHidden){ return; }
     View::draw();
+    TS_START("meters");
     metersView.draw();
+    TS_STOP("meters");
+    
+    TS_START("gui-meters");
     guiView.draw();
-
+    TS_STOP("gui-meters");
+    
+    View::loadViewInTexture();
 }
-//----------------------------------------------
+
 void MetersPanel::exit(){
     metersView.exit();
-//    for (ChannelMetersView* p : channelPanels){
-//        p->exit();
-//    }
-//    channelPanels.clear();
-
 }
-//----------------------------------------------
+
 void MetersPanel::keyPressed(int key){
     switch (key) {
         case '1':
@@ -96,6 +73,12 @@ void MetersPanel::keyPressed(int key){
             metersView.scrollDown();
             break;
     }
+}
+//----------------------------------------------
+void MetersPanel::resize(int x, int y, int w, int h){
+    View::resize(x, y, w, h);
+    guiView.resize(x, y, w, MT_GUI_COMP_HEIGHT);
+    metersView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
 //----------------------------------------------
 #pragma mark - Settings
@@ -117,27 +100,27 @@ void MetersPanel::loadSettings(string rootDir){
     }
     //-----------
     string text = xml.getValue("PANEL:MAX-FREQ", "");
-    gMaxFreq->setText(text);
+    ///gMaxFreq->setText(text);
     setAnalyzerMaxEstimatedValue(PITCH_FREQ, std::stof (text));
     //-----------------
     text = xml.getValue("PANEL:MAX-HFC", "");
-    gMaxHfc->setText(text);
+    ///gMaxHfc->setText(text);
     setAnalyzerMaxEstimatedValue(HFC, std::stof (text));
     //-----------------
     text = xml.getValue("PANEL:MAX-CENTROID", "");
-    gMaxCentroid->setText(text);
+    ///gMaxCentroid->setText(text);
     setAnalyzerMaxEstimatedValue(CENTROID, std::stof (text));
     //-----------------
     text = xml.getValue("PANEL:MAX-SPEC-COMP", "");
-    gMaxSpecComp->setText(text);
+    ///gMaxSpecComp->setText(text);
     setAnalyzerMaxEstimatedValue(SPECTRAL_COMPLEXITY, std::stof (text));
     //-----------------
     text = xml.getValue("PANEL:MAX-ROLLOFF", "");
-    gMaxRollOff->setText(text);
+    ///gMaxRollOff->setText(text);
     setAnalyzerMaxEstimatedValue(ROLL_OFF, std::stof (text));
     //-----------------
     text = xml.getValue("PANEL:MAX-ODD-EVEN", "");
-    gMaxOddEven->setText(text);
+    ///gMaxOddEven->setText(text);
     setAnalyzerMaxEstimatedValue(ODD_TO_EVEN, std::stof (text));
     //-----------------
     
@@ -156,13 +139,14 @@ void MetersPanel::saveSettings(string rootDir){
     
     savedSettings.addTag("PANEL");
     savedSettings.pushTag("PANEL");
+    /**
     savedSettings.addValue("MAX-FREQ",      gMaxFreq->getText());
     savedSettings.addValue("MAX-HFC",       gMaxHfc->getText());
     savedSettings.addValue("MAX-CENTROID",  gMaxCentroid->getText());
     savedSettings.addValue("MAX-SPEC-COMP", gMaxSpecComp->getText());
     savedSettings.addValue("MAX-ROLLOFF",   gMaxRollOff->getText());
     savedSettings.addValue("MAX-ODD-EVEN",  gMaxOddEven->getText());
-    
+    */
     savedSettings.saveFile(filenamePanel);
     
     //-:Save channelPannels settings---------------
@@ -177,159 +161,9 @@ void MetersPanel::saveSettings(string rootDir){
 void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     metersView.reset(chanAnalyzerPtrs);
 }
-
-//----------------------------------------------
-
-void MetersPanel::resize(int x, int y, int w, int h){
-    View::resize(x, y, w, h);
-    guiView.resize(x, y, w, MT_GUI_COMP_HEIGHT);
-    metersView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
-    ///adjustGuiSize(_y, _w, _h);
-}
-
-//----------------------------------------------
-void MetersPanel::setupGui(){
-    
-    if(channelAnalyzers[0] == NULL){
-        ofLogError()<<"Meters Panel: Channel Analyzer is null, cant setupGui.";
-        return;
-    }
-    
-    ofxDatGuiComponent* component;
-    
-    component = new ofxDatGuiButton("FULL DISPLAY");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MetersPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    
-    gMaxFreq = new ofxDatGuiTextInput("MAX FREQ",
-                                      ofToString(channelAnalyzers[0]->getMaxEstimatedValue(PITCH_FREQ)));
-    component = gMaxFreq;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    component->setLabelMargin(10.0);
-    components.push_back(component);
-    
-    
-    gMaxHfc = new ofxDatGuiTextInput("MAX HFC",
-                                     ofToString(channelAnalyzers[0]->getMaxEstimatedValue(HFC)));
-    component = gMaxHfc;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    component->setLabelMargin(10.0);
-    components.push_back(component);
-    
-    gMaxCentroid = new ofxDatGuiTextInput("MAX CENTROID",
-                                          ofToString(channelAnalyzers[0]->getMaxEstimatedValue(CENTROID)));
-    component = gMaxCentroid;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    component->setLabelMargin(10.0);
-    components.push_back(component);
-    
-    gMaxSpecComp = new ofxDatGuiTextInput("MAX SPEC-COMP",
-                                          ofToString(channelAnalyzers[0]->getMaxEstimatedValue(SPECTRAL_COMPLEXITY)));
-    component = gMaxSpecComp;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    component->setLabelMargin(10.0);
-    components.push_back(component);
-    
-    gMaxRollOff = new ofxDatGuiTextInput("MAX ROLL-OFF",
-                                         ofToString(channelAnalyzers[0]->getMaxEstimatedValue(ROLL_OFF)));
-    component = gMaxRollOff;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    component->setLabelMargin(10.0);
-    components.push_back(component);
-    
-    gMaxOddEven = new ofxDatGuiTextInput("MAX ODD-EVEN",
-                                         ofToString(channelAnalyzers[0]->getMaxEstimatedValue(ODD_TO_EVEN)));
-    component = gMaxOddEven;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MetersPanel::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    component->setLabelMargin(10.0);
-    components.push_back(component);
-
-    adjustGuiSize(_y, _w, _h);
-    
-}
-//----------------------------------------------
-void MetersPanel::adjustGuiSize(int y, int w, int h){
-    
-    int guiCompWidth = _w / 7;
-    
-    int gui_y = _y + _h - _guiCompHeight;
-    int gui_x = _x;
-    
-    ofxDatGuiComponent* component;
-    //FULL DISPLAY
-    component = components[0];
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.35);//width x2
-    
-    //MAX PITCH FREQ
-    gui_x += guiCompWidth;
-    component = components[1];
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.6);
-    
-    //MAX HFC
-    gui_x += guiCompWidth;
-    component = components[2];
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.6);
-    
-    //MAX CENTROID
-    gui_x += guiCompWidth;
-    component = components[3];
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.6);
-    
-    //MAX SPEC COMP
-    gui_x += guiCompWidth;
-    component = components[4];
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.6);
-    
-    //MAX ROLL-OFF
-    gui_x += guiCompWidth;
-    component = components[5];
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.6);
-    
-    //MAX ODD TO EVEN
-    gui_x += guiCompWidth;
-    component = components[6];
-    component->setPosition(gui_x, gui_y);
-    component->setWidth(guiCompWidth, 0.6);
-
-    
-}
 //----------------------------------------------
 bool MetersPanel::getFocused(){
+    /**
     if(gMaxFreq->getFocused() ||
        gMaxHfc->getFocused() ||
        gMaxCentroid->getFocused()  ||
@@ -341,57 +175,14 @@ bool MetersPanel::getFocused(){
     }else{
         return false;
     }
+    */
 }
 
 //--------------------------------------------------------------
 void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value){
-    
     for (ofxAudioAnalyzerUnit* anUnit : channelAnalyzers){
         anUnit->setMaxEstimatedValue(algorithm, value);
     }
-    
-}
-//--------------------------------------------------------------
-#pragma mark - Gui listeners
-//--------------------------------------------------------------
-
-void MetersPanel::onButtonEvent(ofxDatGuiButtonEvent e)
-{
-    if(e.target->getLabel()=="FULL DISPLAY"){
-        //metersView.toggleFullDisplay();
-    }
 }
 
-//--------------------------------------------------------------
-void MetersPanel::onTextInputEvent(ofxDatGuiTextInputEvent e)
-{
-    //cout << "onButtonEvent: " << e.text << endl;
-    //cout << "onTextInput: " << e.text << endl;
-    float inputValue = 0.0;
-    try{
-        inputValue = std::stof (e.text) ;
-    }
-    catch (const std::invalid_argument& ia) {
-        e.target->setText("ERROR");
-        std::cerr << "Invalid Value: " << ia.what() << '\n';
-        return;
-    }
-    
-    if (e.target->getLabel()=="MAX FREQ"){
-        setAnalyzerMaxEstimatedValue(PITCH_FREQ, inputValue);
-    }else if (e.target->getLabel()=="MAX HFC"){
-        setAnalyzerMaxEstimatedValue(HFC, inputValue);
-    }else if (e.target->getLabel()=="MAX CENTROID"){
-        setAnalyzerMaxEstimatedValue(CENTROID, inputValue);
-    }else if (e.target->getLabel()=="MAX SPEC-COMP"){
-        setAnalyzerMaxEstimatedValue(SPECTRAL_COMPLEXITY, inputValue);
-    }else if (e.target->getLabel()=="MAX ROLL-OFF"){
-        setAnalyzerMaxEstimatedValue(ROLL_OFF, inputValue);
-    }else if (e.target->getLabel()=="MAX ODD-EVEN"){
-        setAnalyzerMaxEstimatedValue(ODD_TO_EVEN, inputValue);
-    }
-    
-    ofLogVerbose()<<"Max value Set: "<<e.target->getLabel()<<" = " << inputValue;
-        
-}
 

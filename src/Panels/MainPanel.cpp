@@ -61,11 +61,18 @@ void MainPanel::update(){
 }
 //-------------------------------------------------
 void MainPanel::draw(){
+    if (!View::mustDrawNewFrame()){
+        View::drawLoadedTexture();
+        return;
+    }
+    
     if (_isHidden){ return; }
     View::draw();
     
     for(int i=0; i<components.size(); i++) components[i]->draw();
     drawFileInfo();
+    
+    View::loadViewInTexture();
 }
 //-------------------------------------------------
 void MainPanel::exit(){}

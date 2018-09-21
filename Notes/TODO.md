@@ -2,7 +2,6 @@
 
 ## Now
 
-- Panel FPS
 - shared_ptr en Meters.
 - habilitar y deshabilitar algoritmos.
 

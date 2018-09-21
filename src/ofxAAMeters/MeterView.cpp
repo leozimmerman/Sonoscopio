@@ -58,6 +58,7 @@ MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAna
     
     setComponentsWidth();
     setComponentsPositions();
+    _framerate = GUI_STATIC_FPS;
 }
 //------------------------------------------------
 void MeterView::initDefaultValues(){
@@ -133,18 +134,39 @@ void MeterView::updateValues(){
 #pragma mark Draw
 //------------------------------------------------
 void MeterView::draw(){
+    if (!View::mustDrawNewFrame()){
+        View::drawLoadedTexture();
+        drawValueElements();
+        return;
+    }
+    renderDraw();
+}
+//------------------------------------------------
+void MeterView::renderDraw(){
     View::draw();
     ofPushStyle();
+    drawStaticElements();
+    ofPopStyle();
+    View::loadViewInTexture();
+    
+    drawValueElements();
+}
+//------------------------------------------------
+void MeterView::drawStaticElements(){
     drawLabel();
     onOffToggle->drawTransparent();
     if(_enabled){
-        drawValueDisplay();
-        drawMeter();
         peakButton->draw();
         smoothSlider->drawSimplified();
     }
     drawBounds();
-    ofPopStyle();
+}
+//------------------------------------------------
+void MeterView::drawValueElements(){
+    if(_enabled){
+        drawValueDisplay();
+        drawMeter();
+    }
 }
 //------------------------------------------------
 void MeterView::drawBounds(){

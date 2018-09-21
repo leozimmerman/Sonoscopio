@@ -36,16 +36,31 @@ void BinMeterView::updateValues(){
     setValues(_audioAnalyzer->getValues(_algorithmType, _smoothAmnt));
 }
 //-------------------------------------------------------
-void BinMeterView::draw(){
-    View::draw();
-    ofPushStyle();
-    MeterView::drawBounds();
+//void BinMeterView::draw(){
+//    View::draw();
+//    ofPushStyle();
+//    
+//    
+//    ofPopStyle();
+//    if (_enabled) {
+//        drawMeter();
+//        smoothSlider->drawSimplified();
+//    }
+//    ofPopStyle();
+//}
+//-------------------------------------------------------
+void BinMeterView::drawStaticElements(){
     MeterView::drawLabel();
     onOffToggle->drawTransparent();
-    ofPopStyle();
+    if (_enabled) {
+        smoothSlider->drawSimplified();
+    }
+    MeterView::drawBounds();
+}
+//-------------------------------------------------------
+void BinMeterView::drawValueElements(){
     if (_enabled) {
         drawMeter();
-        smoothSlider->drawSimplified();
     }
 }
 //-------------------------------------------------------
@@ -69,7 +84,6 @@ void BinMeterView::setMinMaxEstimatedValues() {
 }
 //-------------------------------------------------------
 void BinMeterView::drawMeter(){
-    
     
     ofPushMatrix();
     ofTranslate(_x, _y);

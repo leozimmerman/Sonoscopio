@@ -48,31 +48,28 @@ public:
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     
-    
     void keyPressed(int key) override;
     
     MetersView metersView;//TODO: Make private
     
-    ///Para la GuiView:
-    void setupGui();
     
-    void adjustGuiSize(int y, int w, int h);
-    ofxDatGuiTextInput* gMaxFreq;
-    ofxDatGuiTextInput* gMaxHfc;
-    ofxDatGuiTextInput* gMaxCentroid;
-    ofxDatGuiTextInput* gMaxSpecComp;
-    ofxDatGuiTextInput* gMaxRollOff;
-    ofxDatGuiTextInput* gMaxOddEven;
-    void onButtonEvent(ofxDatGuiButtonEvent e);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    ///--------------------
     
 private:
     MTGuiView guiView;
-    void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
-    
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
     
+    void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
+    
+    
+    /*
+     TODO: Mover a Meters Popup
+     ofxDatGuiTextInput* gMaxFreq;
+     ofxDatGuiTextInput* gMaxHfc;
+     ofxDatGuiTextInput* gMaxCentroid;
+     ofxDatGuiTextInput* gMaxSpecComp;
+     ofxDatGuiTextInput* gMaxRollOff;
+     ofxDatGuiTextInput* gMaxOddEven;
+     */
 
     
 };

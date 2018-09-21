@@ -79,6 +79,10 @@ void ofApp::setupPanels() {
     mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
     metersPanel.setChannelAnalyzers(mainAnalyzer.getChannelAnalyzersPtrs());//FIXME. separar el setup de los analyzers!
     
+    mainPanel.setFrameRate(MAIN_PANEL_FPS);
+    timePanel.setFrameRate(TL_PANEL_FPS);
+    metersPanel.setFrameRate(MT_PANEL_FPS);
+    
 }
 
 void ofApp::setupConfiguration() {
@@ -226,6 +230,11 @@ void ofApp::keyPressed(int key){
             
         case 'z':
             showMenu();
+            break;
+            
+        case 't':
+            if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
+            else TIME_SAMPLE_ENABLE();
             break;
             
         default:

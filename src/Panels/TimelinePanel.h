@@ -20,10 +20,8 @@
 
 #include "ofMain.h"
 
-
 #include "ofxTimeline.h"
 #include "ofxTLAudioTrack.h"
-
 
 #include "ofxDatGui.h"
 
@@ -31,7 +29,6 @@
 #include "BasePanel.h"
 #include "TLGuiView.h"
 #include "TimelineView.h"
-
 
 
 #define TL_GUI_COMP_HEIGHT 26 //TODO: Borrar

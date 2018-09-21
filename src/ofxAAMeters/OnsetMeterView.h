@@ -37,12 +37,12 @@ public:
     OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
     void update() override;
-    void draw() override;
+    //void draw() override;
+    
+    void drawStaticElements() override;
+    void drawValueElements() override;
     
     void drawMeter() override;
-    
-    //virtual void resize(int x, int y, int w, int h);
-    
     
     void updateComponentsColors();
     void setComponentsWidth() override;

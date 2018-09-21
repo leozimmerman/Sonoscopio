@@ -29,7 +29,9 @@ class BinMeterView : public MeterView{
 
     BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
-    void draw() override;
+    //void draw() override;
+    void drawStaticElements() override;
+    void drawValueElements() override;
 
     void updateValues() override;
     void drawMeter() override;

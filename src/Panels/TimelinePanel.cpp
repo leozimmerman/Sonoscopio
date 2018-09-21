@@ -17,7 +17,6 @@
  */
 
 #include "TimelinePanel.h"
-
 #include "ofApp.h"
 
 
@@ -40,15 +39,22 @@ void TimelinePanel::update(){
 }
 //-------------------------------------------------
 void TimelinePanel::draw(){
+    if (!View::mustDrawNewFrame()){
+        View::drawLoadedTexture();
+        return;
+    }
+    
     if (_isHidden){ return; }
     View::draw();
     TS_START("timeline");
     timelineView.draw();
     TS_STOP("timeline");
     
-    TS_START("gui");
+    TS_START("gui-tl");
     guiView.draw();
-    TS_STOP("gui");
+    TS_STOP("gui-tl");
+    
+    View::loadViewInTexture();
     
 }
 //--------------------------------------------------------------

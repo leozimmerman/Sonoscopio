@@ -24,7 +24,13 @@
 
 #define ANALYSIS_DATA_DIR "analysis_data"
 
-#define INIT_FPS 30
+#define INIT_FPS 60
+//Prime numbers to avoid simultaneous draws:
+#define MAIN_PANEL_FPS 2
+#define TL_PANEL_FPS 13
+#define MT_PANEL_FPS 23
+#define GUI_STATIC_FPS 7
+
 #define INIT_AUDIO_FILE "audio_files/mix-stereo.wav"
 #define INIT_BUFFER_SIZE 512
 #define INIT_ANALYSIS_MODE MONO

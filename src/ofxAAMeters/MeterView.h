@@ -61,7 +61,7 @@ public:
     virtual ~MeterView();
 
     virtual void update();
-    virtual void draw();
+    void draw() override;
 
     void initDefaultValues();
     void initComponents();
@@ -70,12 +70,16 @@ public:
     virtual void updateValues();
     virtual void updatePeak();
     
+    virtual void renderDraw() override;
+    virtual void drawStaticElements();
+    virtual void drawValueElements();
+    
     void drawBounds();
     virtual void drawLabel();
     virtual void drawMeter();
     virtual void drawValueDisplay();
     
-    virtual void resize(int x, int y, int w, int h);
+    virtual void resize(int x, int y, int w, int h) override;
     virtual void setComponentsPositions();
     virtual void setComponentsWidth();
     

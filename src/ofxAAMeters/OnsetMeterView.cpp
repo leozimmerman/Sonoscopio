@@ -76,25 +76,43 @@ void OnsetMeterView::update(){
     setValue(_audioAnalyzer->getOnsetValue());
 }
 //------------------------------------
-void OnsetMeterView::draw(){
-    
-    ofPushStyle();
-    View::draw();
-   
-    drawBounds();
-    
+//void OnsetMeterView::draw(){
+//
+//    ofPushStyle();
+//    View::draw();
+//
+//    drawBounds();
+//
+//    drawLabel();
+//    onOffToggle->drawTransparent();
+//
+//    if(_enabled){
+//        drawMeter();
+//        alphaSlider->drawSimplified();
+//        silenceThresholdSlider->drawSimplified();
+//        timeThresholdSlider->drawSimplified();
+//        armToggle->drawTransparent();
+//    }
+//
+//    ofPopStyle();
+//}
+//------------------------------------------------
+void OnsetMeterView::drawStaticElements(){
     drawLabel();
     onOffToggle->drawTransparent();
-    
     if(_enabled){
-        drawMeter();
         alphaSlider->drawSimplified();
         silenceThresholdSlider->drawSimplified();
         timeThresholdSlider->drawSimplified();
         armToggle->drawTransparent();
     }
-    
-    ofPopStyle();
+    drawBounds();
+}
+//------------------------------------------------
+void OnsetMeterView::drawValueElements(){
+    if(_enabled){
+        drawMeter();
+    }
 }
 //------------------------------------
 void OnsetMeterView::drawMeter(){
