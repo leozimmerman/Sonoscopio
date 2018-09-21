@@ -29,11 +29,13 @@ public:
     vector<std::map<string, float>>& getMetersValues();
     vector<std::map<string, vector<float>>>& getMetersVectorValues();
 
-    vector <ChannelMetersView*> channelPanels;
+    //vector <ChannelMetersView*> channelPanels;
+    vector <shared_ptr<ChannelMetersView>> channelPanels;
     ofColor panelColor1, panelColor2;
     int panelsNum;
     bool _bDrawFullDisplay;
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
+    
 
     
 private:

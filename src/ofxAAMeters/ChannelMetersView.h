@@ -39,10 +39,7 @@
 
 class ChannelMetersView : public View {
 public:
-    
-//    ofxAAChannelMetersPanel(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr){
-//        setup(x, y, width, height, aaPtr);
-//    }
+
     ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr);
     ~ChannelMetersView(){}
     
@@ -57,7 +54,6 @@ public:
     
     void scrollUp();
     void scrollDown();
-    
     
     void setMainColor(ofColor col);
     

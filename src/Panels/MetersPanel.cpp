@@ -40,7 +40,6 @@ void MetersPanel::update(){
     guiView.update();
 }
 
-
 void MetersPanel::draw(){
     if (!View::mustDrawNewFrame()){
         View::drawLoadedTexture();

@@ -20,10 +20,12 @@ void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerP
     int panelsNum = channelAnalyzers.size();
     int panelHeight = (_h) / panelsNum;
     
+    //FIXME: Codigo repetido
     for (int i=0; i<panelsNum; i++){
         int y_pos = _y + panelHeight*i;
         int panelId = i;
-        ChannelMetersView * p = new ChannelMetersView(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
+        
+        auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
         
         if(i%2) p->setMainColor(panelColor2);
         else p->setMainColor(panelColor1);
@@ -33,20 +35,20 @@ void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerP
 }
 //----------------------------------------------
 void MetersView::update(){
-    for(ChannelMetersView* p : channelPanels){
+    for(auto p : channelPanels){
         p->update();
     }
 }
 //----------------------------------------------
 void MetersView::draw(){
     View::draw();
-    for(ChannelMetersView* p : channelPanels){
+    for(auto p : channelPanels){
         p->draw();
     }
 }
 //----------------------------------------------
 void MetersView::exit(){
-    for (ChannelMetersView* p : channelPanels){
+    for (auto p : channelPanels){
         p->exit();
     }
     channelPanels.clear();
@@ -75,7 +77,7 @@ void MetersView::resize(int x, int y, int w, int h){
 }
 //----------------------------------------------
 void MetersView::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
-    for (ChannelMetersView* p : channelPanels){
+    for (auto p : channelPanels){
         p->exit();
     }
     channelPanels.clear();
@@ -84,11 +86,11 @@ void MetersView::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     panelsNum = channelAnalyzers.size();
     
     int panelHeight = (_h) / panelsNum;
-    
+    //FIXME: Codigo repetido
     for (int i=0; i<panelsNum; i++){
         int y_pos = _y + panelHeight*i;
         int panelId = i;
-        ChannelMetersView * p = new ChannelMetersView(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
+        auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
         if(i%2) p->setMainColor(panelColor2);
         else p->setMainColor(panelColor1);
         

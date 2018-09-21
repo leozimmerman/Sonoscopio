@@ -2,7 +2,7 @@
 
 ## Now
 
-- shared_ptr en Meters.
+- ir sacando "new" por:  shared_ptr
 - habilitar y deshabilitar algoritmos.
 
 ****

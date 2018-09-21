@@ -65,14 +65,11 @@ void ChannelMetersView::draw(){
 }
 //------------------------------------------------
 void ChannelMetersView::exit(){
-    
-    //TODO: Make shared_ptr
+    //TODO: Make shared_ptr?
     for (auto m : meters) {
-        delete m;//FIXME: ! Esto se puede??
+        delete m;
     }
-
     meters.clear();
-    
     ofRemoveListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
     
     ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
