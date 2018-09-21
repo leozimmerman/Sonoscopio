@@ -1,19 +1,16 @@
 # ToDo list
 
 ## Now
-- Cambiar constructor de MeterView: usar ofxAAlgorithmType
-- Finish meter horizontal layout
-- Fix ChannelMeterView and Meters view. Tiene que ser mas generico el setup.
-- Add Scroll de meters. 
-- Add MetersGuiView
+
+- Panel FPS
+- shared_ptr en Meters.
+- habilitar y deshabilitar algoritmos.
 
 ****
 - Add Subview functionality in TimePanel ??
 - Move main pannel btns to TimePanel GUI ?
 - Make timepanel.timelineView private !
 - TimePanel sin tracks? solo waveform?
-
-
 
 
 

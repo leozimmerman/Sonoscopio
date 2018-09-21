@@ -54,22 +54,15 @@ void MetersView::exit(){
 //----------------------------------------------
 //TODO: Move scroll funcs to ChannelPannelMV
 void MetersView::scrollUp(){
-    scrollOffset += 40;
-    if (scrollOffset > 0) {scrollOffset = 0;}
-    cout<<"UP"<<scrollOffset<<endl;
-    resize(_x , _y, _w, _h);
+    for (auto p : channelPanels) {
+        p->scrollUp();
+    }
 }
 //----------------------------------------------
 void MetersView::scrollDown(){
-    
-    scrollOffset -= 40;
-    int contentHeight = channelPanels[0]->getContentHeight();
-    
-    if (scrollOffset < (contentHeight-_h) * (-1)) {
-        scrollOffset = (contentHeight-_h) * (-1);
+    for (auto p : channelPanels) {
+        p->scrollDown();
     }
-    cout<<"DOWN:"<<scrollOffset<<endl;
-    resize(_x , _y, _w, _h);
 }
 //----------------------------------------------
 void MetersView::resize(int x, int y, int w, int h){
@@ -77,7 +70,7 @@ void MetersView::resize(int x, int y, int w, int h){
     for(int i=0; i<channelPanels.size(); i++){
         int width = w / channelPanels.size();
         int xpos = i * width;
-        channelPanels[i]->resize(xpos, y + scrollOffset, width, h);
+        channelPanels[i]->resize(xpos, y, width, h);
     }
 }
 //----------------------------------------------

@@ -23,7 +23,6 @@ public:
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     
-    int scrollOffset = 0;
     void scrollUp();
     void scrollDown();
     

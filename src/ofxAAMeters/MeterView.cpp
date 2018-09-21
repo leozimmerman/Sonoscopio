@@ -25,7 +25,7 @@ ofEvent<OnOffEventData> MeterView::onOffEventGlobal = ofEvent<OnOffEventData>();
 
 //FIXME: Move this to somewhere else. Same plase as availableTypes
 
-int MeterView::height = 85;
+int MeterView::height = 50;
 //------------------------------------------------
 MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
     switch (algorithmType) {
@@ -51,15 +51,13 @@ MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAna
     _name = ofxaa::algorithmTypeToString(algorithmType);
     _panelId = panelId;
     _mainColor.set(ofColor::cyan);
-    
-    setBackgroundColor(ofColor::darkBlue);//FIXME: Borrar
+    setBackgroundColor(ofColor::black);
     
     initDefaultValues();
     initComponents();
     
     setComponentsWidth();
     setComponentsPositions();
-
 }
 //------------------------------------------------
 void MeterView::initDefaultValues(){
@@ -77,14 +75,14 @@ void MeterView::initDefaultValues(){
 void MeterView::initComponents(){
     font  = new ofTrueTypeFont();
     font->load("gui_assets/fonts/verdana.ttf", 10, false, false);
-    font->setLineHeight(14.0f);
+    font->setLineHeight(12.0f);
     font->setLetterSpacing(1.037);
     _line_h = font->getLineHeight();
 
     onOffToggle = new OnOffToggle(MTR_ON_OFF, TRUE);
     onOffToggle->onButtonEvent(this, &MeterView::onButtonEvent);
     
-    onOffToggle->setHeight(_line_h*0.85);
+    onOffToggle->setHeight(_line_h);
     onOffToggle->setLabelMargin(0.0);
     onOffToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     onOffToggle->setBackgroundColor(ofColor::black);
@@ -97,7 +95,7 @@ void MeterView::initComponents(){
     
     peakButton = new PeakMeterButton(MTR_PEAK);
     peakButton->onButtonEvent(this, &MeterView::onButtonEvent);
-    peakButton->setHeight(_line_h*0.85);
+    peakButton->setHeight(_line_h);
     peakButton->setLabelMargin(0.0);
     peakButton->setLabelAlignment(ofxDatGuiAlignment::CENTER);
 }
@@ -137,8 +135,6 @@ void MeterView::updateValues(){
 void MeterView::draw(){
     View::draw();
     ofPushStyle();
-    drawBounds();
-    
     drawLabel();
     onOffToggle->drawTransparent();
     if(_enabled){
@@ -147,6 +143,7 @@ void MeterView::draw(){
         peakButton->draw();
         smoothSlider->drawSimplified();
     }
+    drawBounds();
     ofPopStyle();
 }
 //------------------------------------------------
@@ -173,8 +170,8 @@ void MeterView::drawValueDisplay(){
     ofPushStyle();
         ofSetColor(_mainColor);
         string strValue = ofToString(_value, 2);
-        int strVal_x = _x + 5;
-        font->drawString(strValue, strVal_x, _line_h * 2.0);
+        //int strVal_x = _x + 5;
+        font->drawString(strValue, _label_x, _line_h * 2.0);
     ofPopStyle();
     ofPopMatrix();
 }
@@ -204,35 +201,27 @@ void MeterView::resize(int x, int y, int w, int h){
 }
 //------------------------------------------------
 void MeterView::setComponentsWidth(){
-    //-:LABEL
-    //constraing width
-    float label_w = font->stringWidth(_name);
-    float widthForLabel = _w * 0.5;
-    if(label_w >= widthForLabel){
-        float space_ratio = 1 / (label_w / widthForLabel);
-        font->setLetterSpacing(space_ratio);
-    } else {
-        font->setLetterSpacing(1.37);
-    }
-    _label_x = _x + 5;
-    
-    //-:COMPONENTS
-    peakButton->setWidth(_w*0.5, 0.0);
-    onOffToggle->setWidth(20, 0.0);
-    smoothSlider->setWidth(_w*0.5, 0.0);
+    MeterView::adjustFontLetterSpacing( _w * 0.5);
+    onOffToggle->setWidth(_w * 0.25, 0.0);
+    smoothSlider->setWidth(_w * 0.25, 0.0);
+    peakButton->setWidth(_w * 0.25, 0.0);
 }
 //------------------------------------------------
-//add sizes
 void MeterView::setComponentsPositions(){
-
-    peakButton->setPosition  (_x + 5, _y + _line_h * 2.2);
-    smoothSlider->setPosition(_x + 5, _y + _line_h * 3.2);
-    //FIXME: !
-    if(_algorithmType != ONSETS){
-        onOffToggle->setPosition (_x + _w * 0.1, _y + _line_h * 4.75);
-    }else{
-        //onsets On-Off goes lower
-        onOffToggle->setPosition (_x + _w * 0.1, _y + _line_h * 6.5);
+    _label_x = _w * .5 - _label_w *.5;
+    onOffToggle->setPosition(_x, _y);
+    smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
+    peakButton->setPosition  (_x + _w - _w * 0.25, _y + _line_h);
+}
+//------------------------------------------------
+void MeterView::adjustFontLetterSpacing(int width){
+    float widthForLabel = width;
+    _label_w = font->stringWidth(_name);
+    if(_label_w >= widthForLabel){
+        float space_ratio = 1 / (_label_w / widthForLabel);
+        font->setLetterSpacing(space_ratio);
+    } else {
+        font->setLetterSpacing(1.1);
     }
 }
 //------------------------------------------------

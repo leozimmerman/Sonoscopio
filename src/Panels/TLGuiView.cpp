@@ -79,7 +79,7 @@ void TLGuiView::createComponents(){
     
     
 }
-//--------------------------------------------------------------
+
 void TLGuiView::adjustComponentsSize(){
     
     int guiCompWidth = _w / 7;
@@ -125,8 +125,6 @@ void TLGuiView::adjustComponentsSize(){
 }
 
 void TLGuiView::onButtonEvent(ofxDatGuiButtonEvent e){
-    //ofLogVerbose() << "onButtonEvent: " << e.target->getLabel() << "::" << e.enabled ;
-    
     string label = e.target->getLabel();
     if(label ==  "ADD TRACK"){
         callback_addTrack(timelineView_ptr, currentTrackName, currentTrackType);
@@ -137,7 +135,6 @@ void TLGuiView::onButtonEvent(ofxDatGuiButtonEvent e){
     }else if (label == "ADJUST TRACKS"){
         callback_updateHeight(timelineView_ptr);
     }
-    
 }
 
 void TLGuiView::onDropdownEvent(ofxDatGuiDropdownEvent e){

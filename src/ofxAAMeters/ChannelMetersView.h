@@ -54,12 +54,16 @@ public:
     
     void initMeters();
     
+    
+    void scrollUp();
+    void scrollDown();
+    
+    
     void setMainColor(ofColor col);
     
     ofVec2f getPosition(){return ofVec2f(_x, _y);}
     int getWidth(){return _w;}
     int getHeight(){return _h;}
-
     
     void onMeterStateChanged(OnOffEventData & data);
     
@@ -77,6 +81,7 @@ public:
         }
         return nil;
     }
+    
     //TODO: Remove this eventually....
     vector<float>& getMelBandsValues(){
         BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
@@ -103,11 +108,12 @@ protected:
     ofxAudioAnalyzerUnit* audioAnalyzer;
 
     ofColor _mainColor;
-    
     int _panelId;
+    int _scrollOffset = 0;
     
     int metersNum;
     int metersWidth;
+    
     
 
 };

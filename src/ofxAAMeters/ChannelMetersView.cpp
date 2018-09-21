@@ -39,6 +39,7 @@ ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int pa
     initMeters();
 
     ofAddListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
+    resize(_x, _y, _w, _h);
     
 }
 //------------------------------------------------
@@ -80,6 +81,21 @@ void ChannelMetersView::exit(){
 //------------------------------------------------
 #pragma mark - Gral funcs
 //------------------------------------------------
+void ChannelMetersView::scrollUp(){
+    _scrollOffset += 40;
+    if (_scrollOffset > 0) {_scrollOffset = 0;}
+    resize(_x , _y, _w, _h);
+}
+//------------------------------------------------
+void ChannelMetersView::scrollDown(){
+    _scrollOffset -= 40;
+    
+    if (_scrollOffset < (_contentHeight-_h) * (-1)) {
+        _scrollOffset = (_contentHeight-_h) * (-1);
+    }
+    resize(_x , _y, _w, _h);
+}
+//------------------------------------------------
 void ChannelMetersView::setMainColor(ofColor col){
     _mainColor = col;
     ofColor lightCol = _mainColor;
@@ -112,7 +128,7 @@ void ChannelMetersView::resize(int x, int y, int w, int h) {
     int y_pos = 0;
     for (auto m : meters) {
         int h = getHeightForMeter(m);
-        m->resize(_x, _y + y_pos, metersWidth, h);
+        m->resize(_x, _y + y_pos + _scrollOffset, metersWidth, h);
         y_pos += h;
     }
     _contentHeight = y_pos;

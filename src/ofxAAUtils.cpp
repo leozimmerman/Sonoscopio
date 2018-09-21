@@ -12,11 +12,11 @@ namespace ofxaa{
         switch (algorithmType) {
             case RMS: return "RMS";
             case PITCH_FREQ: return "PITCH_FREQ";
-            case PITCH_CONFIDENCE: return "PITCH_CONFIDENCE";
-            case PITCH_SALIENCE: return "PITCH_SALIENCE";
+            case PITCH_CONFIDENCE: return "PITCH_CONF";
+            case PITCH_SALIENCE: return "PITCH_SLNCE";
             case HFC: return "HFC";
             case CENTROID: return "CENTROID";
-            case SPECTRAL_COMPLEXITY: return "SPECTRAL_COMPLEXITY";
+            case SPECTRAL_COMPLEXITY: return "SPEC_COMP";
             case INHARMONICITY: return "INHARMONICITY";
             case DISSONANCE: return "DISSONANCE";
             case ROLL_OFF: return "ROLL_OFF";

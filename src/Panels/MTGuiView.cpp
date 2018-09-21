@@ -23,7 +23,7 @@ void MTGuiView::createComponents(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    component = new ofxDatGuiButton("UP");
+    component = new ofxDatGuiButton("<");
     component->onButtonEvent(this, &MTGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
@@ -31,15 +31,14 @@ void MTGuiView::createComponents(){
     component->setStripeVisible(false);
     components.push_back(component);
     
-    component = new ofxDatGuiButton("DOWN");
+    component = new ofxDatGuiButton(">");
     component->onButtonEvent(this, &MTGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     components.push_back(component);
-    
-    
+
 }
 
 void MTGuiView::adjustComponentsSize(){
@@ -65,7 +64,17 @@ void MTGuiView::adjustComponentsSize(){
     
 }
 
-void MTGuiView::onButtonEvent(ofxDatGuiButtonEvent e){}
+void MTGuiView::onButtonEvent(ofxDatGuiButtonEvent e){
+    string label = e.target->getLabel();
+    if(label ==  "MENU"){
+        //TODO: Meters menu
+        cout<<"Show meters menu.."<<endl;
+    }else if (label == "<"){
+        callback_scrollUp(metersView_ptr);
+    }else if (label == ">"){
+        callback_scrollDown(metersView_ptr);
+    }
+}
 
 void MTGuiView::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 

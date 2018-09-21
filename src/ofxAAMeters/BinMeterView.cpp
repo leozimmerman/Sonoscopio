@@ -17,11 +17,9 @@
  */
 
 #include "BinMeterView.h"
-int BinMeterView::height = 70;
+int BinMeterView::height = 60;
 
 BinMeterView::BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(algorithmType, panelId, aaPtr){
-    
-    setBackgroundColor(ofColor::darkRed); //FIXME: Borrar
     
     //spectrum cant be turned off
     //mfcc cant work if melBands is turn off
@@ -87,30 +85,16 @@ void BinMeterView::drawMeter(){
     //ofPopStyle();
     ofPopMatrix();
 }
-
-//-------------------------------------------------------
-void BinMeterView::setComponentsPositions(){
-    smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
-    onOffToggle->setPosition(_x, _y);
-}
 //-------------------------------------------------------
 void BinMeterView::setComponentsWidth(){
-    
-    //-:LABEL
-    //constraing width
-    float label_w = font->stringWidth(_name);
-    float widthForLabel = _w * 0.95;
-    if(label_w >= widthForLabel){
-        float space_ratio = 1 / (label_w / widthForLabel);
-        font->setLetterSpacing(space_ratio);
-    } else {
-        font->setLetterSpacing(1.37);
-    }
-    //align center
-    label_w = font->stringWidth(_name);
-    _label_x =  _w * .5 - label_w *.5;
-    
+    MeterView::adjustFontLetterSpacing( _w * 0.5);
     smoothSlider->setWidth(_w * 0.25 , 0.0);
     onOffToggle->setWidth (_w * 0.25, 0.0);
-
 }
+//-------------------------------------------------------
+void BinMeterView::setComponentsPositions(){
+    _label_x =  _w * .5 - _label_w *.5; //align center
+    onOffToggle->setPosition(_x, _y);
+    smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
+}
+

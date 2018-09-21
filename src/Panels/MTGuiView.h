@@ -25,10 +25,8 @@ private:
     
     MetersView* metersView_ptr;
     
-    /*(
-    std::function<void(TimelineView*)> callback_showTracks = &TimelineView::toggleShowTracks;
-    std::function<void(TimelineView*)> callback_updateHeight = &TimelineView::updateHeight;
-    std::function<void(TimelineView*, string)> callback_removeTrack = &TimelineView::removeTrack;
-    std::function<void(TimelineView*, string, trackType)> callback_addTrack = &TimelineView::addTrack;
-    */
+    
+    std::function<void(MetersView*)> callback_scrollUp = &MetersView::scrollUp;
+    std::function<void(MetersView*)> callback_scrollDown = &MetersView::scrollDown;
+    
 };

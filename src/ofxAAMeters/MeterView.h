@@ -120,6 +120,8 @@ public:
     
     
 protected:
+    void adjustFontLetterSpacing(int width);
+    
     ofxAudioAnalyzerUnit* _audioAnalyzer;
     ofxAAAlgorithmType _algorithmType;
     float _minEstimatedValue, _maxEstimatedValue;
@@ -131,7 +133,7 @@ protected:
     string  _name;
     bool    _enabled;
     float   _line_h;
-    int     _label_x;
+    int     _label_x, _label_w;
     
 private:
     float _value;

@@ -21,10 +21,9 @@
 // the static event, or any static variable, must be initialized outside of the class definition.
 ofEvent<int> OnsetMeterView::onsetEventGlobal = ofEvent<int>();
 
-int OnsetMeterView::height = 130;
+int OnsetMeterView::height = 100;
 //------------------------------------
 OnsetMeterView::OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) : MeterView(algorithmType, panelId, aaPtr){
-    setBackgroundColor(ofColor::darkViolet);
     
     onsets = aaPtr->getOnsetsAlgorithmPtr();
     
@@ -56,7 +55,7 @@ OnsetMeterView::OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  o
     armToggle = new OnOffToggle(MTR_ARM, _isArmed);
     armToggle->onButtonEvent(this, &OnsetMeterView::onButtonEvent);
     armToggle->setLabels("ARM", "ARM");
-    armToggle->setHeight(_line_h*0.85);
+    armToggle->setHeight(_line_h);
     armToggle->setLabelMargin(0.0);
     armToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     armToggle->setBackgroundColor(ofColor::black);
@@ -100,28 +99,27 @@ void OnsetMeterView::draw(){
 //------------------------------------
 void OnsetMeterView::drawMeter(){
     if(_onsetValue){
+        ofPushMatrix();
+        ofTranslate(_x, _y);
         ofPushStyle();
         ofFill();
         ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA * 2.0);
-        ofDrawRectangle(_x , _w, _w, _h);
+            ofDrawRectangle(0 , 0, _w, _h);
         ofPopStyle();
+        ofPopMatrix();
     }
 }
 //------------------------------------------------
 void OnsetMeterView::setComponentsPositions(){
-    
     MeterView::setComponentsPositions();
-    
     alphaSlider->setPosition             (_x + 5, _y + _line_h * 2.0);
     silenceThresholdSlider->setPosition  (_x + 5, _y + _line_h * 3.5);
     timeThresholdSlider->setPosition     (_x + 5, _y + _line_h * 5.0);
-    armToggle->setPosition               (_x + 5, _y + _line_h * 8.0);//On-off at 6.5
-
+    armToggle->setPosition               (_x + 5, _y + _line_h * 6.5);
 }
 //------------------------------------------------
 void OnsetMeterView::setComponentsWidth(){
     MeterView::setComponentsWidth();
-    
     alphaSlider->setWidth(_w*0.8, 0.0);
     silenceThresholdSlider->setWidth(_w*0.8, 0.0);
     timeThresholdSlider->setWidth(_w*0.8, 0.0);
