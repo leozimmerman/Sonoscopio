@@ -8,7 +8,7 @@
 #include "MetersView.h"
 void MetersView::setup(int x, int y, int w, int h){
     View::setup(x, y, w, h);
-    setBackgroundColor(ofColor::red);
+    setBackgroundColor(ofColor::black);
     panelColor1 = COLOR_MAIN_A;
     panelColor2 = COLOR_MAIN_B;
     _bDrawFullDisplay = TRUE;

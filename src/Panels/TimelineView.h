@@ -52,11 +52,12 @@ public:
     void checkIfWaveformPreviewChanged();
     void addKeyframeInFocusedTrack();
     void setFrameRate(int fps);
-    string getFileInfo();
     void openAudioFile(string filename);
     void hideTracks();
     
+    string getFileInfo();
     std::map<string, float> getTracksValues();
+    bool isSoundLoaded();
     
     void bangFired(ofxTLBangEventArgs& args);
     ofxTimeline timeline;

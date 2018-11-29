@@ -68,7 +68,7 @@ class ofApp : public ofBaseApp{
     void setupTimeMeasurment();
     void setupPanels();
     void setupListeners();
-    void setupConfiguration();
+    //void setupConfiguration();
     void setupOsc();
     void setupModals();
     
@@ -88,11 +88,10 @@ class ofApp : public ofBaseApp{
     void setBufferSize(int bs);
     void updatePanelsDimensions(int w, int h);
     
-    //TODO: Fix this...
-    int getTotalFramesNum(){return timePanel.timelineView.timeline.getDurationInFrames();}
-    string getSoundfilePath(){return timePanel.timelineView.audioTrack->getSoundfilePath();}
-    float getDurationInSeconds(){return timePanel.timelineView.timeline.getDurationInSeconds();}
-    float getBpm(){return timePanel.timelineView.timeline.getBPM();}
+    int getTotalFramesNum(){return timePanel.getTotalFramesNum();}
+    string getSoundfilePath(){return timePanel.getSoundfilePath();}
+    float getDurationInSeconds(){return timePanel.getDurationInSeconds();}
+    float getBpm(){return timePanel.getBpm();}
     
     void saveSettings();
     void loadSettings();
@@ -110,7 +109,8 @@ class ofApp : public ofBaseApp{
     void onModalEvent(ofxModalEvent e);
     void showKeyboardShortcuts();
     void showMenu();
-
+    
+    //TODO: Make private:
     MainPanel mainPanel;
     TimelinePanel timePanel;
     MetersPanel metersPanel;

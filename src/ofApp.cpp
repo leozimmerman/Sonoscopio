@@ -16,12 +16,6 @@
  *
  */
 
-//**********************************************************************
-
-//TODO: Check Time Measurements of Drawing funcs. Tarda mucho. En 60 fps, no se banca muchos canales.
-
-//**********************************************************************
-
 #include "ofApp.h"
 
 #pragma mark - Core funcs
@@ -38,9 +32,6 @@ void ofApp::setup(){
     dataSaver.setup(ofGetAppPtr());
     
     verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
-    
-    //adjust timePanel Height
-    //timePanel.checkIfHeightChanged(); //TODO: Vuela cuando se cambia el layout
 }
 
 void ofApp::setupOFContext() {
@@ -74,24 +65,22 @@ void ofApp::setupPanels() {
     metersPanel.setup(0, mainPanel.maxY(), _meters_width, (h - mainPanel.maxY()));
     timePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()), INIT_AUDIO_FILE);
    
-    mainPanel.setFileInfoString(timePanel.timelineView.getFileInfo());//FIXME:Esto esta raro...
-    setupConfiguration();
-    mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
-    metersPanel.setChannelAnalyzers(mainAnalyzer.getChannelAnalyzersPtrs());//FIXME. separar el setup de los analyzers!
-    
     mainPanel.setFrameRate(MAIN_PANEL_FPS);
     timePanel.setFrameRate(TL_PANEL_FPS);
     metersPanel.setFrameRate(MT_PANEL_FPS);
     
-}
-
-void ofApp::setupConfiguration() {
-    config.setChannelsNum(timePanel.timelineView.audioTrack->getNumChannels());
-    config.setSampleRate(timePanel.timelineView.audioTrack->getSampleRate());
     config.setAnalysisMode(INIT_ANALYSIS_MODE);
     config.setBufferSize(INIT_BUFFER_SIZE);
     config.setProjectDir(INIT_PROJECT_DIR);
-    config.setOscConfiguration("localhost", 12345,  TRUE, TRUE);
+    config.setOscConfiguration(INIT_OSC_HOST, INIT_OSC_PORT,  TRUE, TRUE);
+    
+    if (timePanel.isFileLoaded()) {
+        mainPanel.setFileInfoString(timePanel.getFileInfo());
+        config.setChannelsNum(timePanel.getNumChannels());
+        config.setSampleRate(timePanel.getSampleRate());
+        mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
+        metersPanel.setChannelAnalyzers(mainAnalyzer.getChannelAnalyzersPtrs());//FIXME. separar el setup de los analyzers!
+    }
 }
 
 void ofApp::setupModals() {
@@ -103,7 +92,6 @@ void ofApp::setupModals() {
 }
 
 void ofApp::setupListeners() {
-    //ofAddListener(timePanel.heightResizedEvent, this, &ofApp::onTimelinePanelResize);
     ofAddListener(OnsetMeterView::onsetEventGlobal, this, &ofApp::onsetFired);
 }
 
@@ -117,27 +105,29 @@ void ofApp::update(){
     ofSetWindowTitle("Sonoscopio");//("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
     
     //analyze soundBuffer----------------
-    ofSoundUpdate();
-    
-    audioMutex.lock();
-    
-    TS_START("GET-AUDIO-BUFFERS");
-    if(config.getAnalysisMode()==SPLIT){
-        soundBuffer = timePanel.timelineView.audioTrack->getCurrentSoundBuffer(config.getBufferSize());//multichannel soundbuffer
-    }else if(config.getAnalysisMode()==MONO){
-        soundBuffer = timePanel.timelineView.audioTrack->getCurrentSoundBufferMono(config.getBufferSize());//mono soundbuffer
+    if (timePanel.isFileLoaded()){
+        ofSoundUpdate();
+        
+        audioMutex.lock();
+        
+        TS_START("GET-AUDIO-BUFFERS");
+        if(config.getAnalysisMode()==SPLIT){
+            soundBuffer = timePanel.getCurrentSoundBuffer(config.getBufferSize());//multichannel soundbuffer
+        }else if(config.getAnalysisMode()==MONO){
+            soundBuffer = timePanel.getCurrentSoundBufferMono(config.getBufferSize());//mono soundbuffer
+        }
+        TS_STOP("GET-AUDIO-BUFFERS");
+        
+        
+        TS_START("AUDIO-ANALYSIS");
+        if(timePanel.isPlaying()){
+            mainAnalyzer.analyze(soundBuffer);
+        }
+        TS_STOP("AUDIO-ANALYSIS");
+        
+        audioMutex.unlock();
     }
-    TS_STOP("GET-AUDIO-BUFFERS");
-    
-    
-    TS_START("AUDIO-ANALYSIS");
-    if(timePanel.timelineView.timeline.getIsPlaying()){
-      mainAnalyzer.analyze(soundBuffer);
-    }
-    TS_STOP("AUDIO-ANALYSIS");
-    
-    audioMutex.unlock();
-    
+
     //update panels-------------------
     TS_START("PANELS-UPDATE");
     mainPanel.update();
@@ -221,7 +211,7 @@ void ofApp::keyPressed(int key){
             break;
             
         case 'k':
-            addKeyframeInFocusedTrack();
+            timePanel.addKeyframeInFocusedTrack();
             break;
             
         case 'q':
@@ -254,7 +244,7 @@ void ofApp::keyPressed(int key){
                 break;
                 
             case 'm':
-                timePanel.timelineView.addMarker();
+                //timePanel.addMarker();
                 break;
                 
             case 't':
@@ -272,19 +262,15 @@ void ofApp::keyPressed(int key){
 #pragma mark - Audio Engine funcs
 //--------------------------------------------------------------
 void ofApp::openAudioFile(string filename){
-    
     audioMutex.lock();
-    timePanel.timelineView.openAudioFile(filename);
-    mainPanel.setFileInfoString(timePanel.timelineView.getFileInfo());
-    config.setChannelsNum(timePanel.timelineView.audioTrack->getNumChannels());
-    config.setSampleRate(timePanel.timelineView.audioTrack->getSampleRate());
+    timePanel.openAudioFile(filename);
+    mainPanel.setFileInfoString(timePanel.getFileInfo());
+    config.setChannelsNum(timePanel.getNumChannels());
+    config.setSampleRate(timePanel.getSampleRate());
     resetAnalysisEngine();
     dataSaver.reset();
     audioMutex.unlock();
-    
 }
-
-
 //--------------------------------------------------------------
 void ofApp::setAnalysisMode(AnalysisMode mode){
     
@@ -327,10 +313,10 @@ void ofApp::setFrameRate(int fps){
     
     config.setFrameRate(fps);
     ofSetFrameRate(fps);
-    timePanel.timelineView.setFrameRate(fps);
+    timePanel.setFrameRate(fps);
     
     //update file info frames num info:
-    mainPanel.setFileInfoString(timePanel.timelineView.getFileInfo());
+    mainPanel.setFileInfoString(timePanel.getFileInfo());
     
     dataSaver.updateFrameRate();
     
@@ -342,15 +328,15 @@ void ofApp::setFrameRate(int fps){
 #pragma mark - Playback Controls
 //--------------------------------------------------------------
 void ofApp::togglePlay(){
-    timePanel.timelineView.timeline.togglePlay();
+    timePanel.togglePlay();
 }
 //--------------------------------------------------------------
 void ofApp::stop(){
-    timePanel.timelineView.timeline.stop();
+    timePanel.stop();
 }
 //--------------------------------------------------------------
 void ofApp::rewind(){
-    timePanel.timelineView.timeline.setCurrentTimeToInPoint();
+    timePanel.rewind();
 }
 //--------------------------------------------------------------
 #pragma mark - Settings funcs
@@ -512,60 +498,10 @@ void ofApp::windowResized(int w, int h){
     ofLogVerbose()<<"-- main height: "<< _main_height <<"- _meters_width: "<< h;
 }
 //--------------------------------------------------------------
-//This function belongs to ofApp instead of metersPanel because panels sizes are timelinePanel dependant.
-//void ofApp::hideMetersPanel(bool hide){
-//
-//    int w = ofGetWidth();
-//    int h = ofGetHeight();
-//
-//    metersPanel.setHidden(hide);
-//
-//    if (hide){
-//        _timePanelHeightPercent   = 1.0 - MAIN_PANEL_HEIGHT;
-//        _metersPanelHeightPercent = 0.0;
-//    } else {
-//        _timePanelHeightPercent = TIME_PANEL_HEIGHT;
-//        _metersPanelHeightPercent = METER_PANEL_HEIGHT;
-//    }
-//    windowResized(w, h);
-//
-//}
-//--------------------------------------------------------------
-//void ofApp::setViewMode(ViewMode mode){
-//    config.setViewMode(mode);
-//    timePanel.hideTracks();
-//
-//    switch (mode) {
-//
-//        case ALL:
-//            hideMetersPanel(false);
-//            timePanel.setHidden(false);
-//            break;
-//
-//        case TIMEPANEL_ONLY:
-//            timePanel.setHidden(false);
-//            hideMetersPanel(true);
-//            break;
-//
-//        case METERSPANEL_ONLY:
-//            hideMetersPanel(false);
-//            timePanel.setHidden(true);
-//            break;
-//
-//
-//        default:
-//            break;
-//    }
-//}
-//--------------------------------------------------------------
 #pragma mark - Other
 //--------------------------------------------------------------
 void ofApp::onsetFired(int & panelId){
-    addKeyframeInFocusedTrack();
-}
-//--------------------------------------------------------------
-void ofApp::addKeyframeInFocusedTrack(){
-    timePanel.timelineView.addKeyframeInFocusedTrack();
+    timePanel.addKeyframeInFocusedTrack();
 }
 //--------------------------------------------------------------
 void ofApp::onModalEvent(ofxModalEvent e) {

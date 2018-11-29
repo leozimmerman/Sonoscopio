@@ -2,15 +2,11 @@
 
 ## Now
 
-- ir sacando "new" por:  shared_ptr
+- Move main pannel btns to TimePanel GUI ?
 - habilitar y deshabilitar algoritmos.
 
 ****
 - Add Subview functionality in TimePanel ??
-- Move main pannel btns to TimePanel GUI ?
-- Make timepanel.timelineView private !
-- TimePanel sin tracks? solo waveform?
-
 
 
 

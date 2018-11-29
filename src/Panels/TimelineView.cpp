@@ -203,18 +203,19 @@ void TimelineView::addKeyframeInFocusedTrack(){
 #pragma mark - Info & Value Getters
 //--------------------------------------------------------------
 string TimelineView::getFileInfo(){
-    
     string s =
     "duration: " + ofToString(audioTrack->getDuration(), 2) + "sec."
     " - sample rate: " + ofToString(audioTrack->getSampleRate()) +
     " - channels: " + ofToString(audioTrack->getNumChannels()) +
     " - frames: " + ofToString(timeline.getDurationInFrames()) + " at " + ofToString(_frameRate) + "fps";
-    
     return s;
-    
 }
-
 //--------------------------------------------------------------
+bool TimelineView::isSoundLoaded(){
+    return audioTrack->isSoundLoaded();
+}
+//--------------------------------------------------------------
+
 std::map<string, float> TimelineView::getTracksValues(){
     
     std::map<string, float> values;

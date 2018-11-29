@@ -31,10 +31,13 @@
 #define MT_PANEL_FPS 60
 #define GUI_STATIC_FPS 60
 
-#define INIT_AUDIO_FILE "audio_files/mix-stereo.wav"
+#define INIT_AUDIO_FILE "audio_files/baby-weird.wav"
+//#define INIT_AUDIO_FILE ""
 #define INIT_BUFFER_SIZE 512
 #define INIT_ANALYSIS_MODE MONO
 #define INIT_PROJECT_DIR ""
+#define INIT_OSC_HOST "localhost"
+#define INIT_OSC_PORT 12345
 
 //-:NAMES
 #define MTR_NAME_POWER "POWER"

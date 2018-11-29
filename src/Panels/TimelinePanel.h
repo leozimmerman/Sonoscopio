@@ -52,10 +52,86 @@ public:
     
     void keyPressed(int key) override;
     
-    TimelineView timelineView;//TODO: Make it private
+    void togglePlay(){ timelineView.timeline.togglePlay(); }
+    void stop(){ timelineView.timeline.stop(); }
+    void rewind(){ timelineView.timeline.setCurrentTimeToInPoint(); }
+    
+    void openAudioFile(string filename){
+        timelineView.openAudioFile(filename);
+    }
+    
+    void addKeyframeInFocusedTrack(){
+        timelineView.addKeyframeInFocusedTrack();
+    }
+    
+    #pragma mark - Setters
+    void setCurrentFrame(int currentFrame){
+        timelineView.timeline.setCurrentFrame(currentFrame);
+    }
+    void setVolume(float volume){
+        if (timelineView.audioTrack != NULL) {
+            timelineView.audioTrack->setVolume(volume);
+        }
+    }
+    void setLoopType(ofLoopType newType){
+        timelineView.timeline.setLoopType(newType);
+    }
+    //TODO: Move to TimelinView with its GUI
+    void setShowBPMGrid(bool enableGrid){
+        timelineView.timeline.setShowBPMGrid(enableGrid);
+    }
+    void enableSnapToBPM(bool enableSnap){
+        timelineView.timeline.enableSnapToBPM(enableSnap);
+    }
+    void setFrameBased(bool frameBased){
+        timelineView.timeline.setFrameBased(frameBased);;
+    }
+    void setNewBPM(float bpm){
+        timelineView.timeline.setNewBPM(bpm);
+    }
+    void setInPointAtPlayhead(){
+        timelineView.timeline.setInPointAtPlayhead();
+    }
+    void setOutPointAtPlayhead(){
+        timelineView.timeline.setOutPointAtPlayhead();
+    }
+    void addMarker(){
+        timelineView.addMarker();
+    }
+    void clearMarkers(){
+        timelineView.clearMarkers();
+    }
+    
+    #pragma mark - Getters
+    bool isFileLoaded(){return timelineView.isSoundLoaded();}
+    bool isPlaying(){return timelineView.timeline.getIsPlaying();}
+    string getFileInfo(){return timelineView.getFileInfo();};
+    int getSampleRate(){return timelineView.audioTrack->getSampleRate();}
+    int getNumChannels(){return timelineView.audioTrack->getNumChannels();}
+    
+    std::map<string, float> getTracksValues(){
+        return timelineView.getTracksValues();
+    }
+    ofSoundBuffer& getSoundBufferForFrame(int frame, int size) {
+        return timelineView.audioTrack->getSoundBufferForFrame(frame, size);
+    }
+    ofSoundBuffer& getSoundBufferMonoForFrame(int frame, int size){
+        return timelineView.audioTrack->getSoundBufferMonoForFrame(frame, size);
+    }
+    ofSoundBuffer& getCurrentSoundBuffer(int size){
+        return timelineView.audioTrack->getCurrentSoundBuffer( size);
+    }
+    ofSoundBuffer& getCurrentSoundBufferMono(int size){
+        return timelineView.audioTrack->getCurrentSoundBufferMono(size);
+    }
+    int getTotalFramesNum(){return timelineView.timeline.getDurationInFrames();}
+    string getSoundfilePath(){return timelineView.audioTrack->getSoundfilePath();}
+    float getDurationInSeconds(){return timelineView.timeline.getDurationInSeconds();}
+    float getBpm(){return timelineView.timeline.getBPM();}
     
 private:
     TLGuiView guiView;
+    TimelineView timelineView;
     
     
 };
