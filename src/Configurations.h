@@ -6,11 +6,6 @@
 //
 
 #pragma once
-enum AnalysisMode{
-    MONO,
-    SPLIT
-};
-
 enum ViewMode{
     ALL,
     TIMEPANEL_ONLY,
@@ -32,7 +27,7 @@ public:
     int getBufferSize(){return bufferSize;}
     int getChannelsNum(){return channelsNum;}
     string getProjectDir(){return projectDir;}
-    AnalysisMode getAnalysisMode(){return analysisMode;}
+    
     ViewMode getViewMode(){return viewMode;}
     OscConfiguration osc(){return oscConf;}
     
@@ -42,7 +37,6 @@ public:
     void setSampleRate(int i){sampleRate = i;}
     void setBufferSize(int i){bufferSize = i;}
     void setChannelsNum(int i){channelsNum = i;}
-    void setAnalysisMode(AnalysisMode m){analysisMode = m;}
     void setViewMode(ViewMode m){viewMode = m;}
     
     
@@ -63,7 +57,6 @@ private:
     int bufferSize;
     int channelsNum;
     
-    AnalysisMode analysisMode;
     ViewMode viewMode;
     
     OscConfiguration oscConf;

@@ -45,32 +45,8 @@
 
 
 class ofApp : public ofBaseApp{
+public:
 
-  public:
- 
-    
-    void setup();
-	void update();
-	void draw();
-    void exit();
-
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void mouseMoved(int x, int y );
-	void mouseDragged(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
-    
-    void setupOFContext();
-    void setupTimeMeasurment();
-    void setupPanels();
-    void setupListeners();
-    //void setupConfiguration();
-    void setupOsc();
-    void setupModals();
     
     void togglePlay();
     void stop();
@@ -78,12 +54,9 @@ class ofApp : public ofBaseApp{
     void addKeyframeInFocusedTrack();
     
     void openAudioFile(string filename);
-    void onTimelinePanelResize(int & h);
     
-    //void hideMetersPanel(bool hide);
     void setFrameRate(int fps);
-    void setAnalysisMode(AnalysisMode mode);
-    //void setViewMode(ViewMode mode);
+    
     void resetAnalysisEngine();
     void setBufferSize(int bs);
     void updatePanelsDimensions(int w, int h);
@@ -110,7 +83,7 @@ class ofApp : public ofBaseApp{
     void showKeyboardShortcuts();
     void showMenu();
     
-    //TODO: Make private:
+    
     MainPanel mainPanel;
     TimelinePanel timePanel;
     MetersPanel metersPanel;
@@ -121,6 +94,21 @@ class ofApp : public ofBaseApp{
     OscSender oscSender;
     
 private:
+    
+    void setup();
+    void update();
+    void draw();
+    void exit();
+    
+    void keyPressed(int key);
+    void windowResized(int w, int h);
+  
+    void setupOsc();
+    void setupModals();
+    void setupOFContext();
+    void setupTimeMeasurment();
+    void setupPanels();
+    void setupListeners();
     
     ofSoundBuffer soundBuffer;
     ofMutex audioMutex;

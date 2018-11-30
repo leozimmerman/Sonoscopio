@@ -21,8 +21,6 @@
 #include "ofApp.h"
 
 ofApp* sMainApp;
-AnalysisMode currentAnalysisMode;
-
 //------------------------------------
 void AnalysisDataSaver::setup(ofBaseApp* appPtr){
     
@@ -50,16 +48,7 @@ void AnalysisDataSaver::reset(){
     sampleRate = sMainApp->config.getSampleRate();
     bufferSize = sMainApp->config.getBufferSize();
 
-    
-    currentAnalysisMode = sMainApp->config.getAnalysisMode();
-    
-    if(currentAnalysisMode==SPLIT){
-        channelsNum = sMainApp->config.getChannelsNum();
-    }
-    else{
-        channelsNum = 1;
-    }
-    
+    channelsNum = 1;
     percentage = 0.0;
 }
 //------------------------------------
@@ -128,12 +117,7 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.pushTag("ANALYZER");
                 
                 //analyze buffer for frame:
-                
-                if(currentAnalysisMode==SPLIT){
-                    frameSoundBuffer = sMainApp->timePanel.getSoundBufferForFrame(frameNum, bufferSize);//multichannel soundbuffer
-                }else if(currentAnalysisMode==MONO){
-                    frameSoundBuffer = sMainApp->timePanel.getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
-                }
+                frameSoundBuffer = sMainApp->timePanel.getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
                 
                 sMainApp->mainAnalyzer.analyze(frameSoundBuffer);
                 

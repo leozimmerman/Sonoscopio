@@ -117,12 +117,9 @@ void MainPanel::loadSettings(string rootDir){
     gVolume->setValue(val);
     mMainAppPtr->timePanel.setVolume(val);
     //-----------
+    //TODO: Remove
     bool state = xml.getValue("PANEL:SPLIT", 0) > 0;
     gSplit->setEnabled(state);
-    if(state)
-        mMainAppPtr->setAnalysisMode(SPLIT);
-    else
-        mMainAppPtr->setAnalysisMode(MONO);
     //-----------
     state = xml.getValue("PANEL:LOOP", 0) > 0;
     gLoop->setEnabled(state);
@@ -646,10 +643,13 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
         else
             mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
     }else if(e.target->getLabel()=="CHANNELS SPLIT"){
+        cout << "Channel Split deprecated for the moment. " << endl;
+        /* Deprecated for the moment...
         if(e.enabled)
             mMainAppPtr->setAnalysisMode(SPLIT);
         else
             mMainAppPtr->setAnalysisMode(MONO);
+        */
     }else if(e.target->getLabel()=="PLAY / STOP"){
         mMainAppPtr->togglePlay();
     }else if(e.target->getLabel()=="SET IN"){

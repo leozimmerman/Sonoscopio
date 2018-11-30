@@ -69,7 +69,6 @@ void ofApp::setupPanels() {
     timePanel.setFrameRate(TL_PANEL_FPS);
     metersPanel.setFrameRate(MT_PANEL_FPS);
     
-    config.setAnalysisMode(INIT_ANALYSIS_MODE);
     config.setBufferSize(INIT_BUFFER_SIZE);
     config.setProjectDir(INIT_PROJECT_DIR);
     config.setOscConfiguration(INIT_OSC_HOST, INIT_OSC_PORT,  TRUE, TRUE);
@@ -111,13 +110,8 @@ void ofApp::update(){
         audioMutex.lock();
         
         TS_START("GET-AUDIO-BUFFERS");
-        if(config.getAnalysisMode()==SPLIT){
-            soundBuffer = timePanel.getCurrentSoundBuffer(config.getBufferSize());//multichannel soundbuffer
-        }else if(config.getAnalysisMode()==MONO){
-            soundBuffer = timePanel.getCurrentSoundBufferMono(config.getBufferSize());//mono soundbuffer
-        }
+        soundBuffer = timePanel.getCurrentSoundBufferMono(config.getBufferSize());
         TS_STOP("GET-AUDIO-BUFFERS");
-        
         
         TS_START("AUDIO-ANALYSIS");
         if(timePanel.isPlaying()){
@@ -272,17 +266,6 @@ void ofApp::openAudioFile(string filename){
     audioMutex.unlock();
 }
 //--------------------------------------------------------------
-void ofApp::setAnalysisMode(AnalysisMode mode){
-    
-    stop();
-    
-    audioMutex.lock();
-    config.setAnalysisMode(mode);
-    resetAnalysisEngine();
-    
-    audioMutex.unlock();
-}
-//--------------------------------------------------------------
 void ofApp::setBufferSize(int bs){
     
     stop();
@@ -293,15 +276,7 @@ void ofApp::setBufferSize(int bs){
 }
 //--------------------------------------------------------------
 void ofApp::resetAnalysisEngine(){
-    
-    int this_channelNum;
-    if(config.getAnalysisMode() == SPLIT){
-        this_channelNum = config.getChannelsNum();
-    }else if(config.getAnalysisMode() == MONO){
-        this_channelNum = 1;
-    }
-
-    mainAnalyzer.reset(config.getSampleRate(), config.getBufferSize(), this_channelNum);
+    mainAnalyzer.reset(config.getSampleRate(), config.getBufferSize(), 1);
     metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
     dataSaver.reset();
 }
@@ -465,17 +440,9 @@ void ofApp::drawSavingAnalysisSign(){
 //------------------------------------------------------------
 #pragma mark - Sizes
 //--------------------------------------------------------------
-//TODO: borrar
-void ofApp::onTimelinePanelResize(int &h){
-    int new_y = mainPanel.getHeight() + h;
-    int new_h = ofGetHeight() - new_y;
-    
-    ofLogVerbose()<<"-- timelinePanel resized: "<< h;
-}//------------------------------------------------------------
 void ofApp::updatePanelsDimensions(int w, int h) {
     _main_height   = MAIN_PANEL_HEIGHT * h;
     _meters_width = METER_PANEL_WIDTH * w;
-    
 }
 //------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
@@ -532,40 +499,3 @@ void ofApp::showMenu(){
     mMenu->display(ofGetHeight());
 }
 
-#pragma mark - OF Native
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-    //for testing...
-    //cout<<"Mouse Released: "<<x<<"-"<<y<<"-"<<button<<endl;
-    
-    //timePanel.checkIfHeightChanged();
-    //timePanel.checkIfWaveformPreviewChanged();
-}
-//-----------------------------------------------------------
-void ofApp::keyReleased(int key){
-}
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-
-}
-
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
-}
