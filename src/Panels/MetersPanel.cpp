@@ -18,7 +18,7 @@
 
 #include "MetersPanel.h"
 #include "ofApp.h"
-
+#include "ofxAAUtils.h"
 
 #pragma mark - Core Funcs
 
@@ -28,11 +28,17 @@ void MetersPanel::setup(int x, int y, int w, int h){
     guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT, &metersView);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
+    _enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
 }
 
 void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     channelAnalyzers = chanAnalyzerPtrs;
-    metersView.setupChannelMeters(chanAnalyzerPtrs);
+    metersView.setupChannelMeters(chanAnalyzerPtrs, _enabledAlgorithmTypes);
+}
+
+void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms) {
+    _enabledAlgorithmTypes = enabledAlgorithms;
+    metersView.setEnabledAlgorithms(enabledAlgorithms);
 }
 
 void MetersPanel::update(){
@@ -73,15 +79,14 @@ void MetersPanel::keyPressed(int key){
             break;
     }
 }
-//----------------------------------------------
+
 void MetersPanel::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
     guiView.resize(x, y, w, MT_GUI_COMP_HEIGHT);
     metersView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
-//----------------------------------------------
+
 #pragma mark - Settings
-//----------------------------------------------
 
 void MetersPanel::loadSettings(string rootDir){
     
@@ -124,10 +129,12 @@ void MetersPanel::loadSettings(string rootDir){
     //-----------------
     
     //-:Load channelPannels settings---------------------
+    /**
     for(int i=0; i<metersView.channelPanels.size(); i++){
         string filenameChannelPanel = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
         metersView.channelPanels[i]->loadSettingsFromFile(filenameChannelPanel);
     }
+    */
 }
 //----------------------------------------------
 void MetersPanel::saveSettings(string rootDir){
@@ -149,10 +156,13 @@ void MetersPanel::saveSettings(string rootDir){
     savedSettings.saveFile(filenamePanel);
     
     //-:Save channelPannels settings---------------
+    /**
     for(int i=0; i<metersView.channelPanels.size(); i++){
         string filenameChannelPanel = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
         metersView.channelPanels[i]->saveSettingsToFile(filenameChannelPanel);
+    
     }
+    */
 }
 //----------------------------------------------
 #pragma mark - Other funcs

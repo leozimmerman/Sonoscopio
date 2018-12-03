@@ -85,9 +85,6 @@ void ofApp::setupPanels() {
 void ofApp::setupModals() {
     mText = make_shared<TextModal>();
     mText->addListener(this, &ofApp::onModalEvent);
-    mMenu = make_shared<MenuModal>();
-    mMenu->addListener(this, &ofApp::onModalEvent);
-    mMenu->setMainAppPtr(ofGetAppPtr());
 }
 
 void ofApp::setupListeners() {
@@ -174,9 +171,11 @@ void ofApp::keyPressed(int key){
     
     //---------------------------
     //If any dat gui text input is in focus return
-    if(mainPanel.getFocused() || timePanel.getFocused() || metersPanel.getFocused() || mMenu->getFocused()){
+    if(mainPanel.getFocused() || timePanel.getFocused() || metersPanel.getFocused()){
         return;
     }
+    //---------------------------
+    mainPanel.keyPressed(key);
     //---------------------------
     /*
      * 'e' expands focused track
@@ -205,15 +204,12 @@ void ofApp::keyPressed(int key){
             break;
             
         case 'k':
+            //TODO: Move to timepanel keyPressed
             timePanel.addKeyframeInFocusedTrack();
             break;
             
         case 'q':
             showKeyboardShortcuts();
-            break;
-            
-        case 'z':
-            showMenu();
             break;
             
         case 't':
@@ -250,8 +246,6 @@ void ofApp::keyPressed(int key){
 
     }
     
-    
-    
 }
 #pragma mark - Audio Engine funcs
 //--------------------------------------------------------------
@@ -267,7 +261,6 @@ void ofApp::openAudioFile(string filename){
 }
 //--------------------------------------------------------------
 void ofApp::setBufferSize(int bs){
-    
     stop();
     audioMutex.lock();
     config.setBufferSize(bs);
@@ -493,9 +486,5 @@ void ofApp::showKeyboardShortcuts(){
     string msg = "'cmd 1,2,3: view modes | 'cmd + t': time measurement on/off  |  'cmd + m': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut";
     
     mText->display(title, msg);
-}
-//--------------------------------------------------------------
-void ofApp::showMenu(){
-    mMenu->display(ofGetHeight());
 }
 

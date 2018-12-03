@@ -5,17 +5,17 @@
 //  Created by Leo on 12/15/17.
 //
 
-#include "CustomModals.h"
+#include "MainMenuModal.h"
 #include "ofApp.h"
 
 ofApp* menuMainAppPtr;
 
-MenuModal::MenuModal(){
+MainMenuModal::MainMenuModal(){
     
     setTitle("CONFIGURATION");
     
     getButton(0)->setLabel("APPLY");
-    getButton(0)->onButtonEvent(this, &MenuModal::onApplyButtonEvent);
+    getButton(0)->onButtonEvent(this, &MainMenuModal::onApplyButtonEvent);
     
     addButton("CANCEL");
     
@@ -24,7 +24,7 @@ MenuModal::MenuModal(){
     gFps = new ofxDatGuiTextInput("SET FPS", ofToString(INIT_FPS));
     component = gFps;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MenuModal::onTextInputEvent);
+    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     //component->setLabelMargin(20.0);
@@ -33,7 +33,7 @@ MenuModal::MenuModal(){
     gBpm = new ofxDatGuiTextInput("BPM", "120");
     component = gBpm;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MenuModal::onTextInputEvent);
+    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
     //component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
@@ -42,7 +42,7 @@ MenuModal::MenuModal(){
     gHost = new ofxDatGuiTextInput("HOST", "localhost");
     component = gHost;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MenuModal::onTextInputEvent);
+    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
     //component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
@@ -51,7 +51,7 @@ MenuModal::MenuModal(){
     gPort = new ofxDatGuiTextInput("PORT", "12345");
     component = gPort;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MenuModal::onTextInputEvent);
+    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
     //component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
@@ -60,7 +60,7 @@ MenuModal::MenuModal(){
     vector<string> buff_sizes = {"256", "512", "1024", "2048"};
     gBufferSize = new ofxDatGuiDropdown("BUFFER SIZE", buff_sizes);
     component = gBufferSize;
-    component->onDropdownEvent(this, &MenuModal::onBufferSizeDropdownEvent);
+    component->onDropdownEvent(this, &MainMenuModal::onBufferSizeDropdownEvent);
     //component->onButtonEvent(this, &MenuModal::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     //component->setBorder(bordCol, bordWidth);
@@ -74,11 +74,11 @@ MenuModal::MenuModal(){
     
 }
 
-void MenuModal::setMainAppPtr(ofBaseApp* appPtr){
+void MainMenuModal::setMainAppPtr(ofBaseApp* appPtr){
     menuMainAppPtr = dynamic_cast<ofApp*>(appPtr);
 }
 
-void MenuModal::display(int height){
+void MainMenuModal::display(int height){
     //TODO: Remove this reference to config
     int fps = menuMainAppPtr->config.getFrameRate();
     string host = menuMainAppPtr->config.osc().host;
@@ -98,7 +98,7 @@ void MenuModal::display(int height){
     
 }
 
-void MenuModal::applyConfiguration(){
+void MainMenuModal::applyConfiguration(){
     
     int fps;
     string host;
@@ -122,21 +122,19 @@ void MenuModal::applyConfiguration(){
         menuMainAppPtr->oscSender.setHost(host);
         menuMainAppPtr->oscSender.setPort(port);
         
-        
     } catch (const std::invalid_argument& ia) {
         //e.target->setText("ERROR");
         std::cerr << "Invalid FPS: " << ia.what() << '\n';
     }
-    
 }
 
 
-void MenuModal::onTextInputEvent(ofxDatGuiTextInputEvent e){
+void MainMenuModal::onTextInputEvent(ofxDatGuiTextInputEvent e){
 
 }
 
 //--------------------------------------------------------------
-bool MenuModal::getFocused(){
+bool MainMenuModal::getFocused(){
     if(gHost->getFocused() ||
        gPort->getFocused() ||
        gBpm->getFocused()  ||
@@ -149,12 +147,12 @@ bool MenuModal::getFocused(){
 }
 
 //--------------------------------------------------------------
-void MenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e) {
+void MainMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e) {
     applyConfiguration();
     hide();
 }
 //--------------------------------------------------------------
-void MenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e)
+void MainMenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e)
 {
     // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
     

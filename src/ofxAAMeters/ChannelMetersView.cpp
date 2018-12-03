@@ -19,59 +19,57 @@
 #include "ChannelMetersView.h"
 #include "ofxAAUtils.h"
 
-//TODO: Make it static-global
-
-vector<ofxAAAlgorithmType> availableTypes = {RMS, PITCH_FREQ, PITCH_CONFIDENCE, PITCH_SALIENCE, HFC, CENTROID, SPECTRAL_COMPLEXITY, INHARMONICITY, DISSONANCE, ROLL_OFF, ODD_TO_EVEN, ONSETS, SPECTRUM, MEL_BANDS, MFCC, HPCP, TRISTIMULUS};
-
-
-//------------------------------------------------
 #pragma mark - Core funcs
-//------------------------------------------------
-ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr){
+
+ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * audioAnalyzer, vector<ofxAAAlgorithmType>& enabledAlgorithms, ofColor mainColor){
+   
     View::setup(x, y ,width, height);
     
-    setBackgroundColor(ofColor::yellow);
+    ofAddListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
    
     _panelId = panelId;
-    audioAnalyzer = aaPtr;
-    _mainColor = ofColor::yellow;
+    _audioAnalyzer = audioAnalyzer;
+    _enabledAlgorithmTypes = enabledAlgorithms;
+    _mainColor = mainColor;
+    
+    createMeters();
+}
 
-    initMeters();
-
-    ofAddListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
+void ChannelMetersView::createMeters(){
+    meters.clear();
+    for (auto type : _enabledAlgorithmTypes) {
+        auto meterView = MeterView::createMeterView(type, _panelId, _audioAnalyzer);
+        meters.push_back(meterView);
+    }
+    setColors();
     resize(_x, _y, _w, _h);
     
 }
-//------------------------------------------------
-void ChannelMetersView::initMeters(){
-    for (auto type : availableTypes) {
-        auto meterView = MeterView::createMeterView(type, _panelId, audioAnalyzer);
-        meters.push_back(meterView);
-    }
-    resize(_x, _y, _w, _h);
+
+void ChannelMetersView::setEnabledAlgorithms(vector<ofxAAAlgorithmType> &enabledAlgorithms){
+    _enabledAlgorithmTypes = enabledAlgorithms;
+    createMeters();
 }
-//------------------------------------------------
+
 void ChannelMetersView::update(){
     for(int i=0; i<meters.size(); i++){
        meters[i]->update();
     }
 }
-//------------------------------------------------
+
 void ChannelMetersView::draw(){
     View::draw();
     for(int i=0; i<meters.size(); i++){
         meters[i]->draw();
     }
 }
-//------------------------------------------------
+
 void ChannelMetersView::exit(){
-    //TODO: Make shared_ptr?
     for (auto m : meters) {
         delete m;
     }
     meters.clear();
     ofRemoveListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
-    
     ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
 }
 
@@ -86,15 +84,13 @@ void ChannelMetersView::scrollUp(){
 //------------------------------------------------
 void ChannelMetersView::scrollDown(){
     _scrollOffset -= 40;
-    
     if (_scrollOffset < (_contentHeight-_h) * (-1)) {
         _scrollOffset = (_contentHeight-_h) * (-1);
     }
-    resize(_x , _y, _w, _h);
+    resize(_x, _y, _w, _h);
 }
 //------------------------------------------------
-void ChannelMetersView::setMainColor(ofColor col){
-    _mainColor = col;
+void ChannelMetersView::setColors(){
     ofColor lightCol = _mainColor;
     lightCol.setBrightness(30);//darker mainColor
     setBackgroundColor(lightCol);
@@ -119,8 +115,7 @@ int ChannelMetersView::getHeightForMeter(MeterView *meter) {
 //------------------------------------------------
 void ChannelMetersView::resize(int x, int y, int w, int h) {
     View::resize(x, y, w, h);
-    metersNum = availableTypes.size();
-    metersWidth = _w;
+    int metersWidth = _w;
     
     int y_pos = 0;
     for (auto m : meters) {
@@ -137,7 +132,7 @@ void ChannelMetersView::onMeterStateChanged(OnOffEventData & data){
     
     if(data.panelId != _panelId) return;
     
-    audioAnalyzer->setActive(data.type, data.state);
+    _audioAnalyzer->setActive(data.type, data.state);
     
     /*
      TODO: Revisar cuando compile...
@@ -174,7 +169,7 @@ void ChannelMetersView::loadSettingsFromFile(string filename){
         m->setEnabled(state);
         //spectrm cant be turned off, no audioAnalyzer->setActive
         //MFcc also turn on-off melBands
-        audioAnalyzer->setActive(type, state);
+        _audioAnalyzer->setActive(type, state);
         if (type == ONSETS) {
             auto onsets_m = dynamic_cast<OnsetMeterView*>(m);
             onsets_m->setAlpha(xml.getValue("PANEL:" + str + ":ALPHA", 0.0));

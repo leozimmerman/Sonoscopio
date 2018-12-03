@@ -40,7 +40,7 @@
 class ChannelMetersView : public View {
 public:
 
-    ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * aaPtr);
+    ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * audioAnalyzer, vector<ofxAAAlgorithmType>& enabledAlgorithms, ofColor mainColor);
     ~ChannelMetersView(){}
     
     virtual void update();
@@ -49,13 +49,12 @@ public:
     
     void resize(int x, int y, int w, int h);
     
-    void initMeters();
-    
+    void createMeters();
     
     void scrollUp();
     void scrollDown();
     
-    void setMainColor(ofColor col);
+    void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
     
     ofVec2f getPosition(){return ofVec2f(_x, _y);}
     int getWidth(){return _w;}
@@ -100,16 +99,13 @@ public:
     
     
 protected:
+    void setColors();
+    
+    vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
+    ofxAudioAnalyzerUnit* _audioAnalyzer;
     int _contentHeight;
-    ofxAudioAnalyzerUnit* audioAnalyzer;
-
     ofColor _mainColor;
     int _panelId;
     int _scrollOffset = 0;
-    
-    int metersNum;
-    int metersWidth;
-    
-    
 
 };

@@ -25,6 +25,8 @@
 
 #include "Macros.h"
 #include "BasePanel.h"
+//#include "ofxModal.h"
+#include "MainMenuModal.h"
 
 #define FILE_INFO_HEIGHT 20
 
@@ -45,7 +47,7 @@ public:
     
     void drawFileInfo();
     
-    void keyPressed(int key)override{}
+    void keyPressed(int key) override;
     
     void setFileInfoString(string str){fileInfoStr = str;}
     void openOpenFileDialog();
@@ -59,7 +61,13 @@ public:
     void onProjectDropdownEvent(ofxDatGuiDropdownEvent e);
     void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     
+    
+    
 private:
+    void setupMenu();
+    void showMenu();
+    
+    shared_ptr<MainMenuModal> menuModal;
     
     string fileInfoStr;
     string fileName;
@@ -68,20 +76,13 @@ private:
     ofColor fileinfoFontCol;
     
     ofxDatGuiSlider* gVolume;
-    ofxDatGuiToggle* gSplit;
+    ofxDatGuiToggle* gSplit; //TODO: Remove
     ofxDatGuiToggle* gLoop;
     ofxDatGuiToggle* gSendOsc;
     ofxDatGuiToggle* gShowBpm;
     ofxDatGuiToggle* gSnapBpm;
     ofxDatGuiToggle* gFramebased;
     ofxDatGuiFRM* gFpsMonitor;
-    //REMOVE
-    //ofxDatGuiTextInput* gHost;
-    //ofxDatGuiTextInput* gPort;
-    //ofxDatGuiTextInput* gBpm;
-    //ofxDatGuiTextInput* gFps;
-    //ofxDatGuiDropdown* gBufferSize;
-    
     
     ofDirectory projects_dir;
     

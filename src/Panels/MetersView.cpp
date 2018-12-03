@@ -6,109 +6,105 @@
 //
 
 #include "MetersView.h"
+
+#pragma mark - Core funcs
+
 void MetersView::setup(int x, int y, int w, int h){
     View::setup(x, y, w, h);
     setBackgroundColor(ofColor::black);
     panelColor1 = COLOR_MAIN_A;
     panelColor2 = COLOR_MAIN_B;
-    _bDrawFullDisplay = TRUE;
 }
 
-void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs) {
-    channelAnalyzers = chanAnalyzerPtrs;
-    
-    int panelsNum = channelAnalyzers.size();
+void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs, vector<ofxAAAlgorithmType> enabledAlgorithms) {
+    _channelAnalyzers = chanAnalyzerPtrs;
+    _enabledAlgorithmTypes = enabledAlgorithms;
+    createChannelMetersViews();
+}
+
+void MetersView::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms){
+    _enabledAlgorithmTypes = enabledAlgorithms;
+    for(auto p : _channelMetersViews){
+        p->setEnabledAlgorithms(enabledAlgorithms);
+    }
+}
+
+void MetersView::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
+    for (auto p : _channelMetersViews){
+        p->exit();
+    }
+    _channelMetersViews.clear();
+    _channelAnalyzers = chanAnalyzerPtrs;
+    createChannelMetersViews();
+}
+
+void MetersView::createChannelMetersViews() {
+    int panelsNum = _channelAnalyzers.size();
     int panelHeight = (_h) / panelsNum;
     
-    //FIXME: Codigo repetido
     for (int i=0; i<panelsNum; i++){
         int y_pos = _y + panelHeight*i;
         int panelId = i;
-        
-        auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
-        
-        if(i%2) p->setMainColor(panelColor2);
-        else p->setMainColor(panelColor1);
-        
-        channelPanels.push_back(p);
+        ofColor mainColor = (i%2) ? panelColor2 : panelColor1;
+        auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, _channelAnalyzers[i], _enabledAlgorithmTypes, mainColor);
+        _channelMetersViews.push_back(p);
     }
 }
+
 //----------------------------------------------
 void MetersView::update(){
-    for(auto p : channelPanels){
+    for(auto p : _channelMetersViews){
         p->update();
     }
 }
 //----------------------------------------------
 void MetersView::draw(){
     View::draw();
-    for(auto p : channelPanels){
+    for(auto p : _channelMetersViews){
         p->draw();
     }
 }
 //----------------------------------------------
 void MetersView::exit(){
-    for (auto p : channelPanels){
+    for (auto p : _channelMetersViews){
         p->exit();
     }
-    channelPanels.clear();
+    _channelMetersViews.clear();
 }
 //----------------------------------------------
 //TODO: Move scroll funcs to ChannelPannelMV
 void MetersView::scrollUp(){
-    for (auto p : channelPanels) {
+    for (auto p : _channelMetersViews) {
         p->scrollUp();
     }
 }
 //----------------------------------------------
 void MetersView::scrollDown(){
-    for (auto p : channelPanels) {
+    for (auto p : _channelMetersViews) {
         p->scrollDown();
     }
 }
 //----------------------------------------------
 void MetersView::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
-    for(int i=0; i<channelPanels.size(); i++){
-        int width = w / channelPanels.size();
+    for(int i=0; i<_channelMetersViews.size(); i++){
+        int width = w / _channelMetersViews.size();
         int xpos = i * width;
-        channelPanels[i]->resize(xpos, y, width, h);
+        _channelMetersViews[i]->resize(xpos, y, width, h);
     }
-}
-//----------------------------------------------
-void MetersView::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
-    for (auto p : channelPanels){
-        p->exit();
-    }
-    channelPanels.clear();
-    
-    channelAnalyzers = chanAnalyzerPtrs;
-    panelsNum = channelAnalyzers.size();
-    
-    int panelHeight = (_h) / panelsNum;
-    //FIXME: Codigo repetido
-    for (int i=0; i<panelsNum; i++){
-        int y_pos = _y + panelHeight*i;
-        int panelId = i;
-        auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, channelAnalyzers[i]);
-        if(i%2) p->setMainColor(panelColor2);
-        else p->setMainColor(panelColor1);
-        
-        channelPanels.push_back(p);
-    }
-    
 }
 
-//----------------------------------------------
+#pragma mark - Meters Values Getters
+
 vector<std::map<string, float>>& MetersView::getMetersValues(){
     
     singleValuesForOsc.clear();
     
-    for (int i=0; i<channelPanels.size(); i++){
+    for (int i=0; i<_channelMetersViews.size(); i++){
         
         std::map<string, float> channelMap;
         
-        for(MeterView* m : channelPanels[i]->meters){
+        for(MeterView* m : _channelMetersViews[i]->meters){
             
             if (m->getName()==MTR_NAME_ONSETS){
                 
@@ -133,14 +129,14 @@ vector<std::map<string, vector<float>>>& MetersView::getMetersVectorValues(){
     
     vectorValuesForOsc.clear();
     
-    for (int i=0; i<channelPanels.size(); i++){
+    for (int i=0; i<_channelMetersViews.size(); i++){
         
         std::map<string, vector<float>> channelMap;
         
-        channelMap[MTR_NAME_MEL_BANDS] = channelPanels[i]->getMelBandsValues();
-        channelMap[MTR_NAME_MFCC] = channelPanels[i]->getMfccValues();
-        channelMap[MTR_NAME_HPCP] = channelPanels[i]->getHpcpValues();
-        channelMap[MTR_NAME_TRISTIMULUS] = channelPanels[i]->getTristimulusValues();
+        channelMap[MTR_NAME_MEL_BANDS] = _channelMetersViews[i]->getMelBandsValues();
+        channelMap[MTR_NAME_MFCC] = _channelMetersViews[i]->getMfccValues();
+        channelMap[MTR_NAME_HPCP] = _channelMetersViews[i]->getHpcpValues();
+        channelMap[MTR_NAME_TRISTIMULUS] = _channelMetersViews[i]->getTristimulusValues();
         
         vectorValuesForOsc.push_back(channelMap);
     }

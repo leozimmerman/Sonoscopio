@@ -20,7 +20,7 @@
 
 #include "ofMain.h"
 
-#include"ofxAudioAnalyzerUnit.h"
+#include "ofxAudioAnalyzerUnit.h"
 
 #include "Macros.h"
 #include "BasePanel.h"
@@ -28,6 +28,15 @@
 #include "MTGuiView.h"
 
 #define MT_GUI_COMP_HEIGHT 26
+
+#ifndef METERSPANEL_H
+#define METERSPANEL_H
+
+class MTGuiView;
+
+//#ifdef _MSC_VER
+//#pragma once
+//#endif  // _MSC_VER
 
 class MetersPanel : public BasePanel {
     
@@ -45,21 +54,33 @@ public:
     virtual void loadSettings(string rootDir="") override;
     
     void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
+    void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     
     void keyPressed(int key) override;
     
-    MetersView metersView;//TODO: Make private
+    void scrollUp(){
+        metersView.scrollUp();
+    }
+    void scrollDown(){
+        metersView.scrollDown();
+    }
     
-    
+    vector<std::map<string, float>>& getMetersValues(){
+        return metersView.getMetersValues();
+    }
+    vector<std::map<string, vector<float>>>& getMetersVectorValues(){
+        return metersView.getMetersVectorValues();
+    }
     
 private:
-    MTGuiView guiView;
-    vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
-    
     void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
     
+    MetersView metersView;
+    MTGuiView guiView;
+    vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
+    vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
     
     /*
      TODO: Mover a Meters Popup
@@ -73,3 +94,4 @@ private:
 
     
 };
+#endif

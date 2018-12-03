@@ -53,6 +53,8 @@ void MainPanel::setup(int x, int y, int width, int height){
     fileInfoStr = "non file loaded";
     
     _panelDir = MAIN_SETTINGS_DIR;
+    
+    setupMenu();
   
 }
 //-------------------------------------------------
@@ -76,6 +78,12 @@ void MainPanel::draw(){
 }
 //-------------------------------------------------
 void MainPanel::exit(){}
+//--------------------------------------------------------------
+void MainPanel::keyPressed(int key){
+    if(menuModal->getFocused()){
+        return;
+    }
+}
 //-------------------------------------------------
 void MainPanel::drawFileInfo(){
     
@@ -208,11 +216,11 @@ void MainPanel::saveSettings(string rootDir){
     savedSettings.addValue("FRAMEBASED", gFramebased->getEnabled());
     
     //Config menu settings:
-    savedSettings.addValue("FRAMERATE", mMainAppPtr->mMenu->getFpsText());
-    savedSettings.addValue("BUFFER-SIZE", mMainAppPtr->mMenu->getBufferSizeText());
-    savedSettings.addValue("BPM",  mMainAppPtr->mMenu->getBpmText());
-    savedSettings.addValue("PORT", mMainAppPtr->mMenu->getPortText());
-    savedSettings.addValue("HOST", mMainAppPtr->mMenu->getHostText());
+    savedSettings.addValue("FRAMERATE", menuModal->getFpsText());
+    savedSettings.addValue("BUFFER-SIZE", menuModal->getBufferSizeText());
+    savedSettings.addValue("BPM",  menuModal->getBpmText());
+    savedSettings.addValue("PORT", menuModal->getPortText());
+    savedSettings.addValue("HOST", menuModal->getHostText());
     
     savedSettings.saveFile(filename);
 
@@ -644,12 +652,6 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
             mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
     }else if(e.target->getLabel()=="CHANNELS SPLIT"){
         cout << "Channel Split deprecated for the moment. " << endl;
-        /* Deprecated for the moment...
-        if(e.enabled)
-            mMainAppPtr->setAnalysisMode(SPLIT);
-        else
-            mMainAppPtr->setAnalysisMode(MONO);
-        */
     }else if(e.target->getLabel()=="PLAY / STOP"){
         mMainAppPtr->togglePlay();
     }else if(e.target->getLabel()=="SET IN"){
@@ -671,7 +673,7 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
     }else if(e.target->getLabel()== "CLEAR MARKERS"){
         mMainAppPtr->timePanel.clearMarkers();
     }else if(e.target->getLabel()== "CONFIG"){
-        mMainAppPtr->showMenu();
+        showMenu();
     }
 }
 
@@ -720,9 +722,8 @@ void MainPanel::onSliderEvent(ofxDatGuiSliderEvent e){
     }
 }
 
-//--------------------------------------------------------------
-void MainPanel::onProjectDropdownEvent(ofxDatGuiDropdownEvent e)
-{
+
+void MainPanel::onProjectDropdownEvent(ofxDatGuiDropdownEvent e){
    // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
     
     string projectDir = projects_dir.getPath(e.child);
@@ -730,9 +731,8 @@ void MainPanel::onProjectDropdownEvent(ofxDatGuiDropdownEvent e)
     
 
 }
-//--------------------------------------------------------------
-void MainPanel::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e)
-{
+
+void MainPanel::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e){
     // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
     
     switch (e.child) {
@@ -753,10 +753,16 @@ void MainPanel::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e)
         default:
             break;
     }
-        
-    
-    
-    
+}
+
+void MainPanel::showMenu(){
+    menuModal->display(ofGetHeight());
+}
+
+void MainPanel::setupMenu(){
+    menuModal = make_shared<MainMenuModal>();
+    menuModal->addListener(mMainAppPtr, &ofApp::onModalEvent);
+    menuModal->setMainAppPtr(ofGetAppPtr());
 }
 
 

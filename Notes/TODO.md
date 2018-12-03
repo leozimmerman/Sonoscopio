@@ -1,21 +1,30 @@
 # ToDo list
 
 ## Now
-- revisar initAudioFile set con openAudioFile en ofApp
+### Tasks
+
 - habilitar y deshabilitar algoritmos en MetersPanel
-- revisar Load/Save Settings and Project. Hace falta diferenciarlos?
-
-****
-- Revisar Configuration Class
+    - Fix colors.
+    - Set callback to MetersPanel
+    - Set AudioAnalyzer part of MetersPanel
+- move timeline gui to timepanel
+- revisar Load/Save Settings and Project. Hace falta diferenciarlos? open Project dropdown??
+- revisar data saving render
 - Save Analysis to Modal Menu
+- Add: Render algorithm analysis to track (!)
 
 
+### Bugs / Code Improvements
+- Definir: va o no el "_" en las variables
+- apply GuiView en MainPanel
+- Sacar "//------" de a poco...
+- Revisar Configuration Class
 
 
 **********************************************************************************************
 **********************************************************************************************
 ## Notes
-
+- En algun momento hay que cortar las new features para la 1.0 porque esto no termina mas -> La version 1.0 = lo que necesito para laburar con los Estudios Audiovisuales. 
 - Desactivar por ahora el channelSplit. v1.0 sin esa opcion. Desarrollar UI app pensando para un archivo mono o un solo analisis por archivo. Los distintos canales son gralmente una cuestion de espacializacion. De ultima, se renderizan varios analisis y despues se superponen. El SonoscopioRT si tiene sentido que sea multicanal.
 
 ## Backlog

@@ -33,8 +33,7 @@
 #include "AnalysisDataSaver.h"
 #include "ofEvents.h"
 
-#include "ofxModal.h"
-#include "CustomModals.h"
+#include "TextModal.h"
 
 #include "ofxHotKeys.h"
 #include "Configurations.h"
@@ -47,7 +46,6 @@
 class ofApp : public ofBaseApp{
 public:
 
-    
     void togglePlay();
     void stop();
     void rewind();
@@ -77,12 +75,10 @@ public:
     void onsetFired(int & panelId);
     
     shared_ptr<TextModal> mText;
-    shared_ptr<MenuModal> mMenu;
+    
     
     void onModalEvent(ofxModalEvent e);
     void showKeyboardShortcuts();
-    void showMenu();
-    
     
     MainPanel mainPanel;
     TimelinePanel timePanel;

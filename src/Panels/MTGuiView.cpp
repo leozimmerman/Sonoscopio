@@ -6,10 +6,19 @@
 //
 
 #include "MTGuiView.h"
+#include "ofApp.h"
 
 void MTGuiView::setup(int x, int y, int w, int h, MetersView* mt_ptr){
     GuiView::setup(x, y, w, h);
-    metersView_ptr = mt_ptr;
+    _metersViewPtr = mt_ptr;
+    setupMenu();
+}
+
+void MTGuiView::setupMenu(){
+    auto ofAppPtr = (ofApp*)ofGetAppPtr();
+    menuModal = make_shared<MetersMenuModal>(_metersViewPtr);
+    menuModal->addListener(ofAppPtr, &ofApp::onModalEvent);
+    menuModal->setMainAppPtr(ofGetAppPtr());
 }
 
 void MTGuiView::createComponents(){
@@ -67,15 +76,22 @@ void MTGuiView::adjustComponentsSize(){
 void MTGuiView::onButtonEvent(ofxDatGuiButtonEvent e){
     string label = e.target->getLabel();
     if(label ==  "MENU"){
-        //TODO: Meters menu
-        cout<<"Show meters menu.."<<endl;
+        showMenu();
+        
     }else if (label == "<"){
-        callback_scrollUp(metersView_ptr);
+        callback_scrollUp(_metersViewPtr);
     }else if (label == ">"){
-        callback_scrollDown(metersView_ptr);
+        callback_scrollDown(_metersViewPtr);
     }
 }
 
 void MTGuiView::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 
 void MTGuiView::onTextInputEvent(ofxDatGuiTextInputEvent e){}
+
+
+
+
+void MTGuiView::showMenu(){
+    menuModal->display(ofGetHeight());
+}
