@@ -431,7 +431,7 @@ void ofApp::drawSavingAnalysisSign(){
 #pragma mark - Sizes
 //--------------------------------------------------------------
 void ofApp::updatePanelsDimensions(int w, int h) {
-    _main_height   = MAIN_PANEL_HEIGHT * h;
+    _main_height   = GUI_COMP_HEIGHT + FILE_INFO_HEIGHT;
     _meters_width = METER_PANEL_WIDTH * w;
 }
 //------------------------------------------------------------

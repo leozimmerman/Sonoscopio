@@ -10,8 +10,8 @@
 
 ofApp* menuMainAppPtr;
 
-MainMenuModal::MainMenuModal(){
-    
+MainMenuModal::MainMenuModal(MainPanel* mainPanel_ptr){
+    _mainPanelPtr = mainPanel_ptr;
     setTitle("CONFIGURATION");
     
     getButton(0)->setLabel("APPLY");
@@ -68,13 +68,10 @@ MainMenuModal::MainMenuModal(){
     
 }
 
-//TODO: Remove this. Modals should be linked with its panel only.
-void MainMenuModal::setMainAppPtr(ofBaseApp* appPtr){
-    menuMainAppPtr = dynamic_cast<ofApp*>(appPtr);
-}
 
 void MainMenuModal::display(int height){
     //TODO: Remove this reference to config
+    /**
     int fps = menuMainAppPtr->config.getFrameRate();
     string host = menuMainAppPtr->config.osc().host;
     int port = menuMainAppPtr->config.osc().port;
@@ -86,7 +83,7 @@ void MainMenuModal::display(int height){
     gPort->setText(std::to_string(port));
     gBpm->setText(std::to_string(bpm));
     selectedBufferSize = bufferSize;
-    
+    */
     setHeight(height);
     
     show();
@@ -111,11 +108,11 @@ void MainMenuModal::applyConfiguration(){
         
         cout << "APPLYING: " << fps <<" " <<  host <<" " <<  port <<" " <<bpm << " " << bufferSize << endl;
         
-        menuMainAppPtr->setFrameRate( fps );
-        menuMainAppPtr->setBufferSize(bufferSize);
+        ///menuMainAppPtr->setFrameRate( fps );
+        ///menuMainAppPtr->setBufferSize(bufferSize);
         ///menuMainAppPtr->timePanel.setNewBPM( bpm );
-        menuMainAppPtr->oscSender.setHost(host);
-        menuMainAppPtr->oscSender.setPort(port);
+        ///menuMainAppPtr->oscSender.setHost(host);
+        ///menuMainAppPtr->oscSender.setPort(port);
         
     } catch (const std::invalid_argument& ia) {
         //e.target->setText("ERROR");

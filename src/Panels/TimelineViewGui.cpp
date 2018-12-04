@@ -51,7 +51,6 @@ void TimelineViewGui::createComponents(){
     //9
     component = GuiFactory::createToggle(FRAMEBASED_LABEL, false, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
-    
     //Second line
     //10
     gTrackNameTextInput = GuiFactory::createTextInput(TRACK_NAME_LABEL, "<track name>", this, &TimelineViewGui::onTextInputEvent);
@@ -76,7 +75,7 @@ void TimelineViewGui::createComponents(){
 }
 
 void TimelineViewGui::adjustComponentsSize(){
-    const int guiCompHeight = TL_GUI_COMP_HEIGHT;
+    const int guiCompHeight = GUI_COMP_HEIGHT;
     int guiCompWidth = _w / 5;
     
     ofxDatGuiComponent* component;
@@ -90,7 +89,7 @@ void TimelineViewGui::adjustComponentsSize(){
         gui_x += guiCompWidth;
     }
     //--SECOND LINE:
-    gui_y = _y + TL_GUI_COMP_HEIGHT;
+    gui_y = _y + guiCompHeight;
     gui_x = _x;
     for (int i=5; i<10; i++) {
         component = _components[i];
@@ -101,7 +100,7 @@ void TimelineViewGui::adjustComponentsSize(){
     
     //--THIRD LINE:
     guiCompWidth = _w / 7;
-    gui_y = _y + TL_GUI_COMP_HEIGHT *2;
+    gui_y = _y + guiCompHeight *2;
     gui_x = _x;
     //TRACK NAME
     component = _components[10];

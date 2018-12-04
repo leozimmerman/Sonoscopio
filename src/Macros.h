@@ -38,6 +38,8 @@
 #define INIT_OSC_HOST "localhost"
 #define INIT_OSC_PORT 12345
 
+#define GUI_COMP_HEIGHT 26
+
 //-:NAMES
 #define MTR_NAME_POWER "POWER"
 #define MTR_NAME_PITCH_FREQ "FREQ"

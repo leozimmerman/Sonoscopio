@@ -28,7 +28,7 @@ void TimelinePanel::setup(int x, int y, int w, int h, string audiofile){
     
     BasePanel::setup(x, y, w, h);
     
-    guiView.setup(x, y, w, TL_GUI_COMP_HEIGHT * 3, &timelineView);
+    guiView.setup(x, y, w, GUI_COMP_HEIGHT * 3, &timelineView);
     timelineView.setup(x, guiView.maxY(), w, h - guiView.getHeight(), audiofile);
     
 }
@@ -60,7 +60,7 @@ void TimelinePanel::draw(){
 //--------------------------------------------------------------
 void TimelinePanel::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
-    guiView.resize(x, y, w, TL_GUI_COMP_HEIGHT);
+    guiView.resize(x, y, w, GUI_COMP_HEIGHT);
     timelineView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
     
 }

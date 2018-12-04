@@ -10,8 +10,6 @@
 #include "GuiView.h"
 #include "TimelineView.h"
 
-#define TL_GUI_COMP_HEIGHT 26
-
 #define FRAMEBASED_LABEL "FRAME BASED"
 #define PLAY_STOP_LABEL "PLAY / STOP"
 #define VOLUME_LABEL "VOLUME"

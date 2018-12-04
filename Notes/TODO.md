@@ -2,17 +2,21 @@
 
 ## Now
 ### Tasks
-- apply GuiView en MainPanel
-- revisar Load/Save Settings and Project. Hace falta diferenciarlos? open Project dropdown??
-- revisar data saving render
-- Save Analysis to Modal Menu
-- Add: Render algorithm analysis to track (!)
+- FIX Load/Save Settings and Project.
+    - Hace falta diferenciarlos?
+    - open Project dropdown-> No
+    - Revisar Configuration Class
+
+- FIX Data Rendering
+    - Save Analysis to Modal Menu
+
+- ADD: Render algorithm analysis to track (!)
 
 
 ### Bugs / Code Improvements
 - Definir: va o no el "_" en las variables
 - Sacar "//------" de a poco...
-- Revisar Configuration Class
+
 
 
 **********************************************************************************************
@@ -33,12 +37,12 @@
 
 - Compilar con Essentia as OSX standalone app, sin necesidad de compilar?
 - Add ICON
+- Test Linux compilation.
 - Add Copyright
 
 
 ## VERSIONES FUTURAS
-- Mute Channels option.
-- Test Linux compilation.
+
 
     
 

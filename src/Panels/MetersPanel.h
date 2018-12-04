@@ -25,8 +25,6 @@
 #include "MetersPanelGui.h"
 #include "ofxAudioAnalyzer.h"
 
-#define MT_GUI_COMP_HEIGHT 26
-
 class MetersPanel : public BasePanel {
     
 public:

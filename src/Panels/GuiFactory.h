@@ -11,8 +11,8 @@
 
 namespace GuiFactory {
     
-    ofColor borderColor = ofColor::grey;
-    int borderWidth = 1;
+    static ofColor borderColor = ofColor::grey;
+    static int borderWidth = 1;
     
     template<typename T, typename args, class ListenerClass>
     ofxDatGuiButton* createButton(string label, T* owner, void (ListenerClass::*listenerMethod)(args)){

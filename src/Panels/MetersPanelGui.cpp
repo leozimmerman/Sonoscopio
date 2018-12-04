@@ -5,9 +5,11 @@
 //  Created by Leo on 20/09/2018.
 //
 
-#include "MetersPanelGui.h"
 #include "ofApp.h"
+#include "MetersPanelGui.h"
 #include "MetersPanel.h"
+#include "GuiFactory.h"
+
 
 std::function<void(MetersPanel*)> callback_scrollUp = &MetersPanel::scrollUp;
 std::function<void(MetersPanel*)> callback_scrollDown = &MetersPanel::scrollDown;
@@ -25,31 +27,20 @@ void MetersPanelGui::setupMenu(){
     menuModal->addListener(ofAppPtr, &ofApp::onModalEvent);
 }
 
+void MetersPanelGui::showMenu(){
+    menuModal->display(ofGetHeight());
+}
+
 void MetersPanelGui::createComponents(){
     ofxDatGuiComponent* component;
     
-    component = new ofxDatGuiButton("MENU");
-    component->onButtonEvent(this, &MetersPanelGui::onButtonEvent);
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setBorder(_bordCol, _bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
+    component = GuiFactory::createButton(MENU_LABEL, this, &MetersPanelGui::onButtonEvent);
     _components.push_back(component);
     
-    component = new ofxDatGuiButton("<");
-    component->onButtonEvent(this, &MetersPanelGui::onButtonEvent);
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setBorder(_bordCol, _bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
+    component = GuiFactory::createButton(SCROLL_UP_LABEL, this, &MetersPanelGui::onButtonEvent);
     _components.push_back(component);
     
-    component = new ofxDatGuiButton(">");
-    component->onButtonEvent(this, &MetersPanelGui::onButtonEvent);
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setBorder(_bordCol, _bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
+    component = GuiFactory::createButton(SCROLL_DOWN_LABEL, this, &MetersPanelGui::onButtonEvent);
     _components.push_back(component);
 
 }
@@ -79,12 +70,12 @@ void MetersPanelGui::adjustComponentsSize(){
 
 void MetersPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     string label = e.target->getLabel();
-    if(label ==  "MENU"){
+    if(label ==  MENU_LABEL){
         showMenu();
         
-    }else if (label == "<"){
+    }else if (label == SCROLL_UP_LABEL){
         callback_scrollUp(_metersPanelPtr);
-    }else if (label == ">"){
+    }else if (label == SCROLL_DOWN_LABEL){
         callback_scrollDown(_metersPanelPtr);
     }
 }
@@ -93,9 +84,3 @@ void MetersPanelGui::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 
 void MetersPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 
-
-
-
-void MetersPanelGui::showMenu(){
-    menuModal->display(ofGetHeight());
-}

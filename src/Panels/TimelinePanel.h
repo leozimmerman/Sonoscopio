@@ -30,9 +30,6 @@
 #include "TimelineViewGui.h"
 #include "TimelineView.h"
 
-
-
-
 class TimelinePanel : public BasePanel {
     
 public:

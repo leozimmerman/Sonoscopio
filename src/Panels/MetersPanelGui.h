@@ -10,6 +10,10 @@
 #include "GuiView.h"
 #include "MetersMenuModal.h"
 
+#define MENU_LABEL "MENU"
+#define SCROLL_UP_LABEL "<"
+#define SCROLL_DOWN_LABEL ">"
+
 class MetersPanel;
 
 class MetersPanelGui : public GuiView {

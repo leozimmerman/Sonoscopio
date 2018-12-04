@@ -25,10 +25,11 @@
 
 #include "Macros.h"
 #include "BasePanel.h"
-//#include "ofxModal.h"
-#include "MainMenuModal.h"
+
+#include "MainPanelGui.h"
 
 #define FILE_INFO_HEIGHT 20
+
 
 class MainPanel : public BasePanel{
     
@@ -40,54 +41,30 @@ public:
     virtual void exit() override;
     
     virtual bool getFocused() override;
-    void setupGui();
+
     virtual void resize(int x, int y, int w, int h) override;
-    virtual void saveSettings(string rootDir="") override;
-    virtual void loadSettings(string rootDir="") override;
-    
-    void drawFileInfo();
     
     void keyPressed(int key) override;
     
     void setFileInfoString(string str){fileInfoStr = str;}
+    
+    virtual void saveSettings(string rootDir="") override;
+    virtual void loadSettings(string rootDir="") override;
+
+    
     void openOpenFileDialog();
     void processOpenFileSelection(ofFileDialogResult openFileResult);
     
-    void adjustGui(int w, int h);
-    
-    void onButtonEvent(ofxDatGuiButtonEvent e);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    void onSliderEvent(ofxDatGuiSliderEvent e);
-    void onProjectDropdownEvent(ofxDatGuiDropdownEvent e);
-    void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
-    
-    
-    
 private:
-    void setupMenu();
-    void showMenu();
+    void drawFileInfo();
     
-    shared_ptr<MainMenuModal> menuModal;
+    MainPanelGui guiView;
     
     string fileInfoStr;
     string fileName;
     ofTrueTypeFont	verdana;
-    
     ofColor fileinfoFontCol;
     
-    ofxDatGuiSlider* gVolume;
-    ofxDatGuiToggle* gSplit; //TODO: Remove
-    ofxDatGuiToggle* gLoop;
-    ofxDatGuiToggle* gSendOsc;
-    ofxDatGuiToggle* gShowBpm;
-    ofxDatGuiToggle* gSnapBpm;
-    ofxDatGuiToggle* gFramebased;
-    ofxDatGuiFRM* gFpsMonitor;
-    
     ofDirectory projects_dir;
-    
-    int _rows;
-    int _columns;
-    
     
 };

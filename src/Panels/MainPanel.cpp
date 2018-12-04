@@ -25,24 +25,21 @@ ofApp* mMainAppPtr; //re
 //-------------------------------------------------
 void MainPanel::setup(int x, int y, int width, int height){
     BasePanel::setup(x, y, width, height);
+    guiView.setup(x, y, width, GUI_COMP_HEIGHT, this);
+    //guiView.setup(x, y, width, GUI_COMP_HEIGHT, this);
     
     mMainAppPtr = (ofApp*)ofGetAppPtr();
     
     //colors
     setBackgroundColor(ofColor(80));
-    bordCol = ofColor::grey;
-    bordWidth = 1;
+
     fileinfoFontCol = ofColor::darkKhaki;
-    
-    _rows = 3;
-    _columns = 5;
     
     projects_dir.listDir("projects/");
     for(int i = 0; i < (int)projects_dir.size(); i++){
         ofLogVerbose()<<"Main Panel: " << projects_dir.getPath(i);
     }
     
-    setupGui();
 
     //fonts for text display
     ofTrueTypeFont::setGlobalDpi(72);
@@ -53,13 +50,12 @@ void MainPanel::setup(int x, int y, int width, int height){
     fileInfoStr = "non file loaded";
     
     _panelDir = MAIN_SETTINGS_DIR;
-    
-    setupMenu();
+
   
 }
 //-------------------------------------------------
 void MainPanel::update(){
-    for(int i=0; i<components.size(); i++) components[i]->update();
+    guiView.update();
 }
 //-------------------------------------------------
 void MainPanel::draw(){
@@ -67,11 +63,10 @@ void MainPanel::draw(){
         View::drawLoadedTexture();
         return;
     }
-    
     if (_isHidden){ return; }
     View::draw();
     
-    for(int i=0; i<components.size(); i++) components[i]->draw();
+    guiView.draw();
     drawFileInfo();
     
     View::loadViewInTexture();
@@ -80,11 +75,30 @@ void MainPanel::draw(){
 void MainPanel::exit(){}
 //--------------------------------------------------------------
 void MainPanel::keyPressed(int key){
-    if(menuModal->getFocused()){
+    if(guiView.getFocused()){
         return;
     }
 }
-//-------------------------------------------------
+
+bool MainPanel::getFocused(){
+    return false;
+    //    if(gHost->getFocused() ||
+    //       gPort->getFocused() ||
+    //       gBpm->getFocused()  ||
+    //       gFps->getFocused()   )
+    //    {
+    //        return true;
+    //    }else{
+    //        return false;
+    //    }
+}
+
+void MainPanel::resize(int x, int y, int w, int h){
+    View::resize(x, y, w, h);
+    guiView.resize(x, y, w, GUI_COMP_HEIGHT);
+}
+
+
 void MainPanel::drawFileInfo(){
     
     ofPushStyle();
@@ -105,9 +119,65 @@ void MainPanel::drawFileInfo(){
 
 
 }
+
+
 //-------------------------------------------------
+#pragma mark - Filesystem funcs
+//--------------------------------------------------------------
+void MainPanel::openOpenFileDialog(){
+    
+    mMainAppPtr->stop();
+    
+    //Open the Open File Dialog
+    ofFileDialogResult openFileResult = ofSystemLoadDialog("Select a wav or mp3");
+    //Check if the user opened a file
+    if (openFileResult.bSuccess){
+        ofLogVerbose("User selected a file");
+        //We have a file, check it and process it
+        processOpenFileSelection(openFileResult);
+        
+    }else {
+        ofLogVerbose("User hit cancel");
+    }
+    
+}
+//--------------------------------------------------------------
+void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
+    
+    ofLogVerbose("getName(): "  + openFileResult.getName());
+    fileName = openFileResult.getName();
+    ofLogVerbose("getPath(): "  + openFileResult.getPath());
+    
+    ofFile file (openFileResult.getPath());
+    
+    if (file.exists()){
+        
+        ofLogVerbose("The file exists - now checking the type via file extension");
+        ofLogVerbose(file.getExtension());
+        
+        string fileExtension = ofToUpper(file.getExtension());
+        
+        //cout<<"upper-"<<fileExtension<<endl;
+        
+        
+        if (fileExtension == "WAV" || fileExtension == "MP3") {
+            ofLogVerbose("if"+fileExtension);
+            mMainAppPtr->openAudioFile(openFileResult.getPath());
+        }else{
+            ofLogVerbose("File extension not compatible");
+        }
+        
+    }
+    
+    
+}
+
+
+
+
+
 #pragma mark - Settings funcs
-//-------------------------------------------------
+
 void MainPanel::loadSettings(string rootDir){
     
     ofxXmlSettings xml;
@@ -120,38 +190,38 @@ void MainPanel::loadSettings(string rootDir){
         return;
     }
     
-    //-----------
-    float val = xml.getValue("PANEL:VOLUME", 0.0);
-    gVolume->setValue(val);
-    ///mMainAppPtr->timePanel.setVolume(val);
-    //-----------
-    //TODO: Remove
-    bool state = xml.getValue("PANEL:SPLIT", 0) > 0;
-    gSplit->setEnabled(state);
-    //-----------
-    state = xml.getValue("PANEL:LOOP", 0) > 0;
-    gLoop->setEnabled(state);
-    ///if(state)
-        ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NORMAL);
-    ///else
-        ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
-    //-----------
-    state = xml.getValue("PANEL:SEND-OSC", 0) > 0;
-    gSendOsc->setEnabled(state);
-    mMainAppPtr->config.setIsSendingOsc(state);
-    //-----------
-    state = xml.getValue("PANEL:BPM-GRID", 0) > 0;
-    gShowBpm->setEnabled(state);
-    ///mMainAppPtr->timePanel.setShowBPMGrid(state);
-    //-----------
-    state = xml.getValue("PANEL:SNAP-BPM", 0) > 0;
-    gSnapBpm->setEnabled(state);
-    ///mMainAppPtr->timePanel.enableSnapToBPM(state);
-    //-----------
-    state = xml.getValue("PANEL:FRAMEBASED", 0) > 0;
-    gFramebased->setEnabled(state);
-    ///mMainAppPtr->timePanel.setFrameBased(state);
-    
+    /**
+     float val = xml.getValue("PANEL:VOLUME", 0.0);
+     gVolume->setValue(val);
+     ///mMainAppPtr->timePanel.setVolume(val);
+     //-----------
+     //TODO: Remove
+     bool state = xml.getValue("PANEL:SPLIT", 0) > 0;
+     gSplit->setEnabled(state);
+     //-----------
+     state = xml.getValue("PANEL:LOOP", 0) > 0;
+     gLoop->setEnabled(state);
+     ///if(state)
+     ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NORMAL);
+     ///else
+     ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
+     //-----------
+     state = xml.getValue("PANEL:SEND-OSC", 0) > 0;
+     gSendOsc->setEnabled(state);
+     mMainAppPtr->config.setIsSendingOsc(state);
+     //-----------
+     state = xml.getValue("PANEL:BPM-GRID", 0) > 0;
+     gShowBpm->setEnabled(state);
+     ///mMainAppPtr->timePanel.setShowBPMGrid(state);
+     //-----------
+     state = xml.getValue("PANEL:SNAP-BPM", 0) > 0;
+     gSnapBpm->setEnabled(state);
+     ///mMainAppPtr->timePanel.enableSnapToBPM(state);
+     //-----------
+     state = xml.getValue("PANEL:FRAMEBASED", 0) > 0;
+     gFramebased->setEnabled(state);
+     ///mMainAppPtr->timePanel.setFrameBased(state);
+     */
     //-----------
     ///CONFIG MENU:
     //-----------
@@ -203,538 +273,42 @@ void MainPanel::loadSettings(string rootDir){
 void MainPanel::saveSettings(string rootDir){
     
     string filename = rootDir + _panelDir + "/main_settings.xml";
-
+    
     ofxXmlSettings savedSettings;
-    savedSettings.addTag("PANEL");
-    savedSettings.pushTag("PANEL");
-    savedSettings.addValue("VOLUME", gVolume->getValue());
-    savedSettings.addValue("SPLIT", gSplit->getEnabled());
-    savedSettings.addValue("LOOP", gLoop->getEnabled());
-    savedSettings.addValue("SEND-OSC", gSendOsc->getEnabled());
-    savedSettings.addValue("BPM-GRID", gShowBpm->getEnabled());
-    savedSettings.addValue("SNAP-BPM", gSnapBpm->getEnabled());
-    savedSettings.addValue("FRAMEBASED", gFramebased->getEnabled());
-    
-    //Config menu settings:
-    savedSettings.addValue("FRAMERATE", menuModal->getFpsText());
-    savedSettings.addValue("BUFFER-SIZE", menuModal->getBufferSizeText());
-    savedSettings.addValue("BPM",  menuModal->getBpmText());
-    savedSettings.addValue("PORT", menuModal->getPortText());
-    savedSettings.addValue("HOST", menuModal->getHostText());
-    
+    /**
+     savedSettings.addTag("PANEL");
+     savedSettings.pushTag("PANEL");
+     savedSettings.addValue("VOLUME", gVolume->getValue());
+     savedSettings.addValue("SPLIT", gSplit->getEnabled());
+     savedSettings.addValue("LOOP", gLoop->getEnabled());
+     savedSettings.addValue("SEND-OSC", gSendOsc->getEnabled());
+     savedSettings.addValue("BPM-GRID", gShowBpm->getEnabled());
+     savedSettings.addValue("SNAP-BPM", gSnapBpm->getEnabled());
+     savedSettings.addValue("FRAMEBASED", gFramebased->getEnabled());
+     
+     //Config menu settings:
+     
+     savedSettings.addValue("FRAMERATE", menuModal->getFpsText());
+     savedSettings.addValue("BUFFER-SIZE", menuModal->getBufferSizeText());
+     savedSettings.addValue("BPM",  menuModal->getBpmText());
+     savedSettings.addValue("PORT", menuModal->getPortText());
+     savedSettings.addValue("HOST", menuModal->getHostText());
+     */
     savedSettings.saveFile(filename);
-
-    
-}
-//-------------------------------------------------
-#pragma mark - Filesystem funcs
-//--------------------------------------------------------------
-void MainPanel::openOpenFileDialog(){
-    
-    mMainAppPtr->stop();
-    
-    //Open the Open File Dialog
-    ofFileDialogResult openFileResult = ofSystemLoadDialog("Select a wav or mp3");
-    //Check if the user opened a file
-    if (openFileResult.bSuccess){
-        ofLogVerbose("User selected a file");
-        //We have a file, check it and process it
-        processOpenFileSelection(openFileResult);
-        
-    }else {
-        ofLogVerbose("User hit cancel");
-    }
-    
-}
-//--------------------------------------------------------------
-void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
-    
-    ofLogVerbose("getName(): "  + openFileResult.getName());
-    fileName = openFileResult.getName();
-    ofLogVerbose("getPath(): "  + openFileResult.getPath());
-    
-    ofFile file (openFileResult.getPath());
-    
-    if (file.exists()){
-        
-        ofLogVerbose("The file exists - now checking the type via file extension");
-        ofLogVerbose(file.getExtension());
-        
-        string fileExtension = ofToUpper(file.getExtension());
-        
-        //cout<<"upper-"<<fileExtension<<endl;
-        
-        
-        if (fileExtension == "WAV" || fileExtension == "MP3") {
-            ofLogVerbose("if"+fileExtension);
-            mMainAppPtr->openAudioFile(openFileResult.getPath());
-        }else{
-            ofLogVerbose("File extension not compatible");
-        }
-        
-    }
     
     
 }
-//-------------------------------------------------
-#pragma mark - GUI funcs
-//-------------------------------------------------
-void MainPanel::setupGui(){
-    
-
-    ofxDatGuiComponent* component;
-    
-    ///1stCol-------
-    
-    component = new ofxDatGuiButton("OPEN FILE");
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    component = new ofxDatGuiButton("LOAD SETTINGS");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    component = new ofxDatGuiButton("SAVE SETTINGS");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    
-    
-    ///2ndCol--------
-    component = new ofxDatGuiButton("CONFIG");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-
-    component = new ofxDatGuiButton("SAVE ANALYSIS");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    //FRAMERATE MONITOR
-    gFpsMonitor = new ofxDatGuiFRM(0.5f);//updates ever 0.5 secs.
-    component = gFpsMonitor;
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    
-   
-
-    vector<string> options;
-    for(int i = 0; i < (int)projects_dir.size(); i++){
-        string option = projects_dir.getPath(i);
-        option.erase(0, 9);//delete "projects/"
-        options.push_back(option);
-    }
-    component = new ofxDatGuiDropdown("OPEN PROJECT", options);
-    component->onDropdownEvent(this, &MainPanel::onProjectDropdownEvent);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-
-    
-
-    ///3rdCol--------
-    gSplit = new ofxDatGuiToggle("CHANNELS SPLIT", false);//FIXME: link with ofApp setup, _currentAnalysisMode
-    component = gSplit;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    gSendOsc = new ofxDatGuiToggle("SEND OSC", TRUE);
-    component = gSendOsc;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    gFramebased = new ofxDatGuiToggle("FRAME BASED", false);
-    component = gFramebased;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-   ///4thCol--------
-    component = new ofxDatGuiButton("PLAY / STOP");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    gVolume = new ofxDatGuiSlider("VOLUME", 0.0, 1.0, 1.0);
-    component = gVolume;
-    component->onSliderEvent(this, &MainPanel::onSliderEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    gLoop = new ofxDatGuiToggle("LOOP ON-OFF", false);
-    component = gLoop;
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    ///5thCol--------
-    
-    component = new ofxDatGuiButton("ADD MARKER");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    component = new ofxDatGuiButton("CLEAR MARKERS");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    gShowBpm = new ofxDatGuiToggle("BPM GRID", false);
-    component = gShowBpm;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setLabelMargin(10);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    gSnapBpm = new ofxDatGuiToggle("SNAP", false);
-    component = gSnapBpm;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    component = new ofxDatGuiButton("SET IN");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-    component = new ofxDatGuiButton("SET OUT");
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->onButtonEvent(this, &MainPanel::onButtonEvent);
-    component->setBorder(bordCol, bordWidth);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    components.push_back(component);
-    
-
-    //---------
-    //-:SET POSITION, WIDTH AND HEIGHT OF COMPONENTS
-    adjustGui(_w, _h);
-   
-}
-//-------------------------------------------------
-void MainPanel::resize(int x, int y, int w, int h){
-    View::resize(x, y, w, h);
-    adjustGui(w,h);
-}
-
-//-------------------------------------------------
-void MainPanel::adjustGui(int w, int h){
-    
-    _guiCompWidth = _w / _columns;
-    int guiCompWidth = _guiCompWidth;
-    int guiCompHeight = (_h - FILE_INFO_HEIGHT) / _rows;
-    
-    if(components.size()==0){
-        ofLogError()<<"Cant resize MainPanel, components size = 0";
-        return;
-    }
-    
-    ofxDatGuiComponent* component;
-    
-    ///1stCol--------
-    //"OPEN FILE"
-    component = components[0];
-    component->setPosition(_x, _y+ guiCompHeight*0);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //LOAD SETTINGS
-    component = components[1];
-    component->setPosition(_x, _y + guiCompHeight * 1);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //SAVE SETTINGS
-    component = components[2];
-    component->setPosition(_x, _y + guiCompHeight * 2);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-
-    
-    ///2ndCol--------
-    //CONFIG
-    component = components[3];
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight * 0);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //SAVE ANALYSIS
-    component = components[4];
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight * 1);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //FRAMERATE MONITOR
-    component = components[5];
-    component->setPosition(_x + guiCompWidth * 1.5, _y + guiCompHeight * 1);
-    component->setWidth(guiCompWidth/2, 0.65);
-    component->setHeight(guiCompHeight);
-    
-    //OPEN PROJECT
-    component = components[6];
-    component->setPosition(_x + guiCompWidth, _y + guiCompHeight * 2);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    ///3rdCol--------
-    
-    //CHANNEL SPLIT
-    component = components[7];
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 0);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //SEND OSC
-    component = components[8];
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 1);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    
-    //FRAME BASED
-    component = components[9];
-    component->setPosition(_x + guiCompWidth * 2, _y + guiCompHeight * 2);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    ///4thCol--------
-    
-    
-    //PLAY-STOP
-    component = components[10];
-    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*0);
-    component->setWidth(guiCompWidth, 0.65);
-    component->setHeight(guiCompHeight);
-    
-    //VOLUME
-    component = components[11];
-    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*1);
-    component->setWidth(guiCompWidth, 0.4);
-    component->setHeight(guiCompHeight);
-    
-    //LOOP ON-OFF
-    component = components[12];
-    component->setPosition(_x + guiCompWidth * 3, _y + guiCompHeight*2);
-    component->setWidth(guiCompWidth, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    ///5thCol--------
-    
-    //ADD MARKER
-    component = components[13];
-    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight*0);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //CLEAR MARKER
-    component = components[14];
-    component->setPosition(_x + guiCompWidth * 4.5, _y + guiCompHeight*0);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //BPM GRID
-    component = components[15];
-    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight*1);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //SNAP TO BPM
-    component = components[16];
-    component->setPosition(_x + guiCompWidth * 4.5, _y + guiCompHeight * 1);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight);
-    
-    //SET-IN
-    component = components[17];
-    component->setPosition(_x + guiCompWidth * 4, _y + guiCompHeight * 2);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight);
-   
-    
-    //SET-OUT
-    component = components[18];
-    component->setPosition(_x + guiCompWidth * 4.5, _y + guiCompHeight * 2);
-    component->setWidth(guiCompWidth/2, 0.9);
-    component->setHeight(guiCompHeight);
-    
-}
-//-------------------------------------------------
-bool MainPanel::getFocused(){
-    return false;
-    //    if(gHost->getFocused() ||
-//       gPort->getFocused() ||
-//       gBpm->getFocused()  ||
-//       gFps->getFocused()   )
-//    {
-//        return true;
-//    }else{
-//        return false;
-//    }
-}
-//-------------------------------------------------
-#pragma mark - Listeners
-//-------------------------------------------------
-void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
-{
-   // cout << "MainPanel-onButtonEvent: " << e.target->getLabel() << "::" << e.enabled << endl;
-    if(e.target->getLabel()=="OPEN FILE"){
-        openOpenFileDialog();
-    }else if(e.target->getLabel()=="LOAD SETTINGS"){
-        mMainAppPtr->loadSettings();
-    }else if(e.target->getLabel()=="SAVE SETTINGS"){
-        mMainAppPtr->saveSettings();
-    }else if(e.target->getLabel()== "CONFIG"){
-        showMenu();
-    }else if(e.target->getLabel()== "SEND OSC"){
-        mMainAppPtr->config.setIsSendingOsc(e.enabled);
-    }else if(e.target->getLabel()== "SAVE ANALYSIS"){
-        mMainAppPtr->saveAnalysisDataToFile();
-    }
-}
 
 
-//--------------------------------------------------------------
-
-void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
-    //cout << "onButtonEvent: " << e.text << endl;
-    //cout << "onTextInput: " << e.text << endl;
-    if (e.target->getLabel()=="BPM"){
-        try{
-            ///mMainAppPtr->timePanel.setNewBPM( std::stof (e.text) );
-        }
-        catch (const std::invalid_argument& ia) {
-            e.target->setText("ERROR");
-            std::cerr << "Invalid BPM: " << ia.what() << '\n';
-        }
-    }else if (e.target->getLabel()=="HOST"){
-        
-        mMainAppPtr->oscSender.setHost(e.text);
-        
-    }else if (e.target->getLabel()=="PORT"){
-        try{
-            mMainAppPtr->oscSender.setPort( std::stoi(e.text) );
-        }
-        catch (const std::invalid_argument& ia) {
-            e.target->setText("ERROR");
-            std::cerr << "Invalid PORT: " << ia.what() << '\n';
-        }
-    }else if (e.target->getLabel()=="SET FPS"){
-        try{
-            mMainAppPtr->setFrameRate( std::stoi(e.text) );
-        }
-        catch (const std::invalid_argument& ia) {
-            e.target->setText("ERROR");
-            std::cerr << "Invalid FPS: " << ia.what() << '\n';
-        }
-    }
-    
-}
-//--------------------------------------------------------------
-void MainPanel::onSliderEvent(ofxDatGuiSliderEvent e){
- 
-}
 
 
-void MainPanel::onProjectDropdownEvent(ofxDatGuiDropdownEvent e){
-   // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
-    
-    string projectDir = projects_dir.getPath(e.child);
-    mMainAppPtr->openProject(projectDir);
-    
 
-}
 
-void MainPanel::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e){
-    // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
-    
-    switch (e.child) {
-            
-        case 0:
-            mMainAppPtr->setBufferSize(256);
-            break;
-        case 1:
-            mMainAppPtr->setBufferSize(512);
-            break;
-        case 2:
-            mMainAppPtr->setBufferSize(1024);
-            break;
-        case 3:
-            mMainAppPtr->setBufferSize(2048);
-            break;
-            
-        default:
-            break;
-    }
-}
 
-void MainPanel::showMenu(){
-    menuModal->display(ofGetHeight());
-}
 
-void MainPanel::setupMenu(){
-    menuModal = make_shared<MainMenuModal>();
-    menuModal->addListener(mMainAppPtr, &ofApp::onModalEvent);
-    menuModal->setMainAppPtr(ofGetAppPtr());
-}
+
+
+
+
 
 

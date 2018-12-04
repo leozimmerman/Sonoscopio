@@ -38,13 +38,7 @@ public:
     virtual void keyPressed(int key) =0;
     
 protected:
-    //TODO: Remove this from here!
-    vector<ofxDatGuiComponent*> components;
-    ofColor bordCol;
-    int bordWidth;
-    int _guiCompHeight;
-    int  _guiCompWidth;
-    //--------------------
+    
     string _panelDir;
     
 };

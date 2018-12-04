@@ -10,12 +10,14 @@
 #include "ofMain.h"
 #include "ofxModal.h"
 
+class MainPanel;
+
 class MainMenuModal : public ofxModalWindow {
 public:
     
-    MainMenuModal();
+    MainMenuModal(MainPanel* mainPanel_ptr);
     
-    void setMainAppPtr(ofBaseApp* appPtr);
+    
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
     void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     void onApplyButtonEvent(ofxDatGuiButtonEvent e);
@@ -31,7 +33,7 @@ public:
     string getBufferSizeText(){ return gBufferSize->getSelected()->getName(); }
     
 private:
-
+    MainPanel* _mainPanelPtr;
     
     ofxDatGuiTextInput* gHost;
     ofxDatGuiTextInput* gPort;
