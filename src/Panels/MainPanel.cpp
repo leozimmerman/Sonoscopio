@@ -123,7 +123,7 @@ void MainPanel::loadSettings(string rootDir){
     //-----------
     float val = xml.getValue("PANEL:VOLUME", 0.0);
     gVolume->setValue(val);
-    mMainAppPtr->timePanel.setVolume(val);
+    ///mMainAppPtr->timePanel.setVolume(val);
     //-----------
     //TODO: Remove
     bool state = xml.getValue("PANEL:SPLIT", 0) > 0;
@@ -131,10 +131,10 @@ void MainPanel::loadSettings(string rootDir){
     //-----------
     state = xml.getValue("PANEL:LOOP", 0) > 0;
     gLoop->setEnabled(state);
-    if(state)
-        mMainAppPtr->timePanel.setLoopType(OF_LOOP_NORMAL);
-    else
-        mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
+    ///if(state)
+        ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NORMAL);
+    ///else
+        ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
     //-----------
     state = xml.getValue("PANEL:SEND-OSC", 0) > 0;
     gSendOsc->setEnabled(state);
@@ -142,15 +142,15 @@ void MainPanel::loadSettings(string rootDir){
     //-----------
     state = xml.getValue("PANEL:BPM-GRID", 0) > 0;
     gShowBpm->setEnabled(state);
-    mMainAppPtr->timePanel.setShowBPMGrid(state);
+    ///mMainAppPtr->timePanel.setShowBPMGrid(state);
     //-----------
     state = xml.getValue("PANEL:SNAP-BPM", 0) > 0;
     gSnapBpm->setEnabled(state);
-    mMainAppPtr->timePanel.enableSnapToBPM(state);
+    ///mMainAppPtr->timePanel.enableSnapToBPM(state);
     //-----------
     state = xml.getValue("PANEL:FRAMEBASED", 0) > 0;
     gFramebased->setEnabled(state);
-    mMainAppPtr->timePanel.setFrameBased(state);
+    ///mMainAppPtr->timePanel.setFrameBased(state);
     
     //-----------
     ///CONFIG MENU:
@@ -161,7 +161,7 @@ void MainPanel::loadSettings(string rootDir){
     //-----------
     text = xml.getValue("PANEL:BPM", "");
     //gBpm->setText(text);
-    mMainAppPtr->timePanel.setNewBPM( std::stof (text) );
+    ///mMainAppPtr->timePanel.setNewBPM( std::stof (text) );
     //-----------
     text = xml.getValue("PANEL:HOST", "");
     //gHost->setText(text);
@@ -643,37 +643,12 @@ void MainPanel::onButtonEvent(ofxDatGuiButtonEvent e)
         mMainAppPtr->loadSettings();
     }else if(e.target->getLabel()=="SAVE SETTINGS"){
         mMainAppPtr->saveSettings();
-    }else if(e.target->getLabel()=="FRAME BASED"){
-        mMainAppPtr->timePanel.setFrameBased(e.enabled);
-    }else if(e.target->getLabel()=="LOOP ON-OFF"){
-        if(e.enabled)
-            mMainAppPtr->timePanel.setLoopType(OF_LOOP_NORMAL);
-        else
-            mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
-    }else if(e.target->getLabel()=="CHANNELS SPLIT"){
-        cout << "Channel Split deprecated for the moment. " << endl;
-    }else if(e.target->getLabel()=="PLAY / STOP"){
-        mMainAppPtr->togglePlay();
-    }else if(e.target->getLabel()=="SET IN"){
-        mMainAppPtr->timePanel.setInPointAtPlayhead();
-    }else if(e.target->getLabel()=="SET OUT"){
-        mMainAppPtr->timePanel.setOutPointAtPlayhead();
-    }else if(e.target->getLabel()== "SEND OSC"){
-        mMainAppPtr->config.setIsSendingOsc(e.enabled);
-    }else if(e.target->getLabel()== "BPM GRID"){
-        mMainAppPtr->timePanel.setShowBPMGrid(e.enabled);
-    }else if(e.target->getLabel()== "SNAP"){
-        mMainAppPtr->timePanel.enableSnapToBPM(e.enabled);
-    }else if(e.target->getLabel()== "SAVE ANALYSIS"){
-        mMainAppPtr->saveAnalysisDataToFile();
-    }else if(e.target->getLabel()== "FULL SCREEN"){
-        ofToggleFullscreen();
-    }else if(e.target->getLabel()== "ADD MARKER"){
-        mMainAppPtr->timePanel.addMarker();
-    }else if(e.target->getLabel()== "CLEAR MARKERS"){
-        mMainAppPtr->timePanel.clearMarkers();
     }else if(e.target->getLabel()== "CONFIG"){
         showMenu();
+    }else if(e.target->getLabel()== "SEND OSC"){
+        mMainAppPtr->config.setIsSendingOsc(e.enabled);
+    }else if(e.target->getLabel()== "SAVE ANALYSIS"){
+        mMainAppPtr->saveAnalysisDataToFile();
     }
 }
 
@@ -685,7 +660,7 @@ void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
     //cout << "onTextInput: " << e.text << endl;
     if (e.target->getLabel()=="BPM"){
         try{
-            mMainAppPtr->timePanel.setNewBPM( std::stof (e.text) );
+            ///mMainAppPtr->timePanel.setNewBPM( std::stof (e.text) );
         }
         catch (const std::invalid_argument& ia) {
             e.target->setText("ERROR");
@@ -716,10 +691,7 @@ void MainPanel::onTextInputEvent(ofxDatGuiTextInputEvent e){
 }
 //--------------------------------------------------------------
 void MainPanel::onSliderEvent(ofxDatGuiSliderEvent e){
-    //cout << "onSliderEvent: " << e.value << "::" << e.scale << endl;
-    if (e.target->getLabel()=="VOLUME"){
-        mMainAppPtr->timePanel.setVolume(e.value);
-    }
+ 
 }
 
 

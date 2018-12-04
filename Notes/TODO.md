@@ -2,11 +2,7 @@
 
 ## Now
 ### Tasks
-
-- habilitar y deshabilitar algoritmos en MetersPanel
-    - desactivar algoritmos en el analyzer cuando se desactivan del panel.
-    
-- move timeline gui to timepanel
+- apply GuiView en MainPanel
 - revisar Load/Save Settings and Project. Hace falta diferenciarlos? open Project dropdown??
 - revisar data saving render
 - Save Analysis to Modal Menu
@@ -15,7 +11,6 @@
 
 ### Bugs / Code Improvements
 - Definir: va o no el "_" en las variables
-- apply GuiView en MainPanel
 - Sacar "//------" de a poco...
 - Revisar Configuration Class
 

@@ -5,7 +5,7 @@
 //  Created by Leo on 20/09/2018.
 //
 
-#include "MetersPanelGuiView.h"
+#include "MetersPanelGui.h"
 #include "ofApp.h"
 #include "MetersPanel.h"
 
@@ -13,23 +13,23 @@ std::function<void(MetersPanel*)> callback_scrollUp = &MetersPanel::scrollUp;
 std::function<void(MetersPanel*)> callback_scrollDown = &MetersPanel::scrollDown;
 
 
-void MetersPanelGuiView::setup(int x, int y, int w, int h, MetersPanel* metersPanel_ptr){
+void MetersPanelGui::setup(int x, int y, int w, int h, MetersPanel* metersPanel_ptr){
     GuiView::setup(x, y, w, h);
     _metersPanelPtr = metersPanel_ptr;
     setupMenu();
 }
 
-void MetersPanelGuiView::setupMenu(){
+void MetersPanelGui::setupMenu(){
     auto ofAppPtr = (ofApp*)ofGetAppPtr();
     menuModal = make_shared<MetersMenuModal>(_metersPanelPtr);
     menuModal->addListener(ofAppPtr, &ofApp::onModalEvent);
 }
 
-void MetersPanelGuiView::createComponents(){
+void MetersPanelGui::createComponents(){
     ofxDatGuiComponent* component;
     
     component = new ofxDatGuiButton("MENU");
-    component->onButtonEvent(this, &MetersPanelGuiView::onButtonEvent);
+    component->onButtonEvent(this, &MetersPanelGui::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
@@ -37,7 +37,7 @@ void MetersPanelGuiView::createComponents(){
     _components.push_back(component);
     
     component = new ofxDatGuiButton("<");
-    component->onButtonEvent(this, &MetersPanelGuiView::onButtonEvent);
+    component->onButtonEvent(this, &MetersPanelGui::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
@@ -45,7 +45,7 @@ void MetersPanelGuiView::createComponents(){
     _components.push_back(component);
     
     component = new ofxDatGuiButton(">");
-    component->onButtonEvent(this, &MetersPanelGuiView::onButtonEvent);
+    component->onButtonEvent(this, &MetersPanelGui::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
@@ -54,7 +54,7 @@ void MetersPanelGuiView::createComponents(){
 
 }
 
-void MetersPanelGuiView::adjustComponentsSize(){
+void MetersPanelGui::adjustComponentsSize(){
     int gui_y = _y;
     int gui_x = _x;
     int guiCompWidth = _w / 4;
@@ -77,7 +77,7 @@ void MetersPanelGuiView::adjustComponentsSize(){
     
 }
 
-void MetersPanelGuiView::onButtonEvent(ofxDatGuiButtonEvent e){
+void MetersPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     string label = e.target->getLabel();
     if(label ==  "MENU"){
         showMenu();
@@ -89,13 +89,13 @@ void MetersPanelGuiView::onButtonEvent(ofxDatGuiButtonEvent e){
     }
 }
 
-void MetersPanelGuiView::onDropdownEvent(ofxDatGuiDropdownEvent e){}
+void MetersPanelGui::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 
-void MetersPanelGuiView::onTextInputEvent(ofxDatGuiTextInputEvent e){}
-
-
+void MetersPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 
 
-void MetersPanelGuiView::showMenu(){
+
+
+void MetersPanelGui::showMenu(){
     menuModal->display(ofGetHeight());
 }

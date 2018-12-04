@@ -257,7 +257,7 @@ void TimelineView::addMarker(){
     _markers.push_back(timeline.getCurrentTimeMillis());
 }
 //--------------------------------------------------------------
-void TimelineView::addMarker(float millis){
+void TimelineView::addMarkerAtTime(float millis){
     
     float ms =  ofClamp(millis, 0.0, timeline.getDurationInMilliseconds());//clamp just in case...
     timeline.getTicker()->addMarker(ms);

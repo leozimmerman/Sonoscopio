@@ -46,9 +46,9 @@
 class ofApp : public ofBaseApp{
 public:
 
-    void togglePlay();
+    
     void stop();
-    void rewind();
+    
     void addKeyframeInFocusedTrack();
     
     void openAudioFile(string filename);

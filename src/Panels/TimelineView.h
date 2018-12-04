@@ -39,8 +39,42 @@ public:
     void setupTimeline(string audiofile);
     void keyPressed(int key);
     
+    void togglePlay(){ timeline.togglePlay(); }
+    void stop(){ timeline.stop(); }
+    void rewind(){ timeline.setCurrentTimeToInPoint(); }
+    
+    
+    void setVolume(float volume){
+        if (audioTrack != NULL) {
+            audioTrack->setVolume(volume);
+        }
+    }
+    
+    void setLoopType(ofLoopType newType){
+        timeline.setLoopType(newType);
+    }
+    
+    void setShowBPMGrid(bool enableGrid){
+        timeline.setShowBPMGrid(enableGrid);
+    }
+    void enableSnapToBPM(bool enableSnap){
+        timeline.enableSnapToBPM(enableSnap);
+    }
+    void setFrameBased(bool frameBased){
+        timeline.setFrameBased(frameBased);;
+    }
+    void setNewBPM(float bpm){
+        timeline.setNewBPM(bpm);
+    }
+    void setInPointAtPlayhead(){
+        timeline.setInPointAtPlayhead();
+    }
+    void setOutPointAtPlayhead(){
+        timeline.setOutPointAtPlayhead();
+    }
+    
     void addMarker();
-    void addMarker(float millis);
+    void addMarkerAtTime(float millis);
     void clearMarkers();
     void addTrack(string name, trackType type);
     void removeTrack(string name);

@@ -28,7 +28,7 @@ void TimelinePanel::setup(int x, int y, int w, int h, string audiofile){
     
     BasePanel::setup(x, y, w, h);
     
-    guiView.setup(x, y, w, TL_GUI_COMP_HEIGHT, &timelineView);
+    guiView.setup(x, y, w, TL_GUI_COMP_HEIGHT * 3, &timelineView);
     timelineView.setup(x, guiView.maxY(), w, h - guiView.getHeight(), audiofile);
     
 }
@@ -71,7 +71,7 @@ void TimelinePanel::keyPressed(int key){
 
 //--------------------------------------------------------------
 bool TimelinePanel::getFocused(){
-    return guiView.gTrackName->getFocused();
+    return guiView.getFocused();
 }
 void TimelinePanel::exit(){}
 //--------------------------------------------------------------
@@ -100,7 +100,7 @@ void TimelinePanel::loadSettings(string rootDir){
     int markersNum = xml.getValue("PANEL:MARKERS:MARKERS-NUM", 0);
     for (int i=0; i<markersNum; i++){
         float markerTimeMillis = xml.getValue("PANEL:MARKERS:MARKER-" + ofToString(i), 0.0);
-        timelineView.addMarker(markerTimeMillis);
+        timelineView.addMarkerAtTime(markerTimeMillis);
     }
     //----------------------------------
     //-:Create tracks from loaded settings.

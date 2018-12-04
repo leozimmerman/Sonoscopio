@@ -198,7 +198,7 @@ void ofApp::keyPressed(int key){
     switch (key) {
         
         case 'w':
-            rewind();
+            ///rewind(); //TODO: Move to timePanel.keyPressed
             break;
             
         case 'k':
@@ -292,23 +292,23 @@ void ofApp::setFrameRate(int fps){
 //--------------------------------------------------------------
 #pragma mark - Playback Controls
 //--------------------------------------------------------------
-void ofApp::togglePlay(){
-    timePanel.togglePlay();
-}
+//void ofApp::togglePlay(){
+//    timePanel.togglePlay();
+//}
 //--------------------------------------------------------------
 void ofApp::stop(){
     timePanel.stop();
 }
 //--------------------------------------------------------------
-void ofApp::rewind(){
-    timePanel.rewind();
-}
+//void ofApp::rewind(){
+//    timePanel.rewind();
+//}
 //--------------------------------------------------------------
 #pragma mark - Settings funcs
 //--------------------------------------------------------------
 void ofApp::openProject(string projectDir ){
    
-    stop();
+    timePanel.stop();
     
     ofLogVerbose()<<"ofApp Opening project in :"<<projectDir<<endl;
     

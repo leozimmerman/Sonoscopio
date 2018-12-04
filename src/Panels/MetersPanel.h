@@ -22,7 +22,7 @@
 #include "Macros.h"
 #include "BasePanel.h"
 #include "MetersView.h"
-#include "MetersPanelGuiView.h"
+#include "MetersPanelGui.h"
 #include "ofxAudioAnalyzer.h"
 
 #define MT_GUI_COMP_HEIGHT 26
@@ -72,7 +72,7 @@ private:
     
     ofxAudioAnalyzer audioAnalyzer;
     MetersView metersView;
-    MetersPanelGuiView guiView;
+    MetersPanelGui guiView;
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
     vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
     

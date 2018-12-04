@@ -27,11 +27,9 @@
 
 #include "Macros.h"
 #include "BasePanel.h"
-#include "TLGuiView.h"
+#include "TimelineViewGui.h"
 #include "TimelineView.h"
 
-
-#define TL_GUI_COMP_HEIGHT 26 //TODO: Borrar
 
 
 
@@ -52,9 +50,9 @@ public:
     
     void keyPressed(int key) override;
     
-    void togglePlay(){ timelineView.timeline.togglePlay(); }
+//    void togglePlay(){ timelineView.timeline.togglePlay(); }
     void stop(){ timelineView.timeline.stop(); }
-    void rewind(){ timelineView.timeline.setCurrentTimeToInPoint(); }
+//    void rewind(){ timelineView.timeline.setCurrentTimeToInPoint(); }
     
     void openAudioFile(string filename){
         timelineView.openAudioFile(filename);
@@ -65,41 +63,9 @@ public:
     }
     
     #pragma mark - Setters
+    //TODO: Remove this.
     void setCurrentFrame(int currentFrame){
         timelineView.timeline.setCurrentFrame(currentFrame);
-    }
-    void setVolume(float volume){
-        if (timelineView.audioTrack != NULL) {
-            timelineView.audioTrack->setVolume(volume);
-        }
-    }
-    void setLoopType(ofLoopType newType){
-        timelineView.timeline.setLoopType(newType);
-    }
-    //TODO: Move to TimelinView with its GUI
-    void setShowBPMGrid(bool enableGrid){
-        timelineView.timeline.setShowBPMGrid(enableGrid);
-    }
-    void enableSnapToBPM(bool enableSnap){
-        timelineView.timeline.enableSnapToBPM(enableSnap);
-    }
-    void setFrameBased(bool frameBased){
-        timelineView.timeline.setFrameBased(frameBased);;
-    }
-    void setNewBPM(float bpm){
-        timelineView.timeline.setNewBPM(bpm);
-    }
-    void setInPointAtPlayhead(){
-        timelineView.timeline.setInPointAtPlayhead();
-    }
-    void setOutPointAtPlayhead(){
-        timelineView.timeline.setOutPointAtPlayhead();
-    }
-    void addMarker(){
-        timelineView.addMarker();
-    }
-    void clearMarkers(){
-        timelineView.clearMarkers();
     }
     
     #pragma mark - Getters
@@ -130,7 +96,7 @@ public:
     float getBpm(){return timelineView.timeline.getBPM();}
     
 private:
-    TLGuiView guiView;
+    TimelineViewGui guiView;
     TimelineView timelineView;
     
     

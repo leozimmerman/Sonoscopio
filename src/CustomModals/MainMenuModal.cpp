@@ -113,7 +113,7 @@ void MainMenuModal::applyConfiguration(){
         
         menuMainAppPtr->setFrameRate( fps );
         menuMainAppPtr->setBufferSize(bufferSize);
-        menuMainAppPtr->timePanel.setNewBPM( bpm );
+        ///menuMainAppPtr->timePanel.setNewBPM( bpm );
         menuMainAppPtr->oscSender.setHost(host);
         menuMainAppPtr->oscSender.setPort(port);
         

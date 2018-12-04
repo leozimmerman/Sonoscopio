@@ -12,7 +12,7 @@
 
 class MetersPanel;
 
-class MetersPanelGuiView : public GuiView {
+class MetersPanelGui : public GuiView {
 public:
     void setup(int x, int y, int w, int h, MetersPanel* metersPanel_ptr);
     
