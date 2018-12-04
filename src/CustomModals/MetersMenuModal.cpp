@@ -7,12 +7,15 @@
 
 #include "MetersMenuModal.h"
 #include "ofxAAUtils.h"
+#include "MetersPanel.h"
 #include "ofApp.h"
 
 ofApp* metersMenuMainAppPtr;
 
-MetersMenuModal::MetersMenuModal(MetersView* mtrView_ptr){
-    _metersViewPtr = mtrView_ptr;
+std::function<void(MetersPanel*, vector<ofxAAAlgorithmType>&)> callback_setEnabledAlgorithms = &MetersPanel::setEnabledAlgorithms;
+
+MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
+    _metersPanelPtr = metersPanel_ptr;
     setTitle("METERS MENU");
     
     getButton(0)->setLabel("APPLY");
@@ -27,7 +30,6 @@ MetersMenuModal::MetersMenuModal(MetersView* mtrView_ptr){
         ofxDatGuiToggle* toggle = new ofxDatGuiToggle(label, TRUE);
         toggle->setLabelAlignment(ofxDatGuiAlignment::LEFT);
         toggle->onButtonEvent(this, &MetersMenuModal::onToggleEvent);
-        //component->setBorder(bordCol, bordWidth);
         toggle->setBorderVisible(TRUE);
         toggle->setStripeVisible(false);
         _algorithmToggles.push_back(toggle);
@@ -57,7 +59,7 @@ void MetersMenuModal::applyConfiguration(){
         }
     }
     
-    callback_setEnabledAlgorithms(_metersViewPtr, enabledAlgorithms);
+    callback_setEnabledAlgorithms(_metersPanelPtr, enabledAlgorithms);
 }
 
 

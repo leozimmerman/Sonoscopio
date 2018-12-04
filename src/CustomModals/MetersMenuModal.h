@@ -8,13 +8,15 @@
 #pragma once
 
 #include "ofMain.h"
-#include "MetersView.h"
+//#include "MetersView.h"
 #include "ofxModal.h"
+
+class MetersPanel;
 
 class MetersMenuModal : public ofxModalWindow {
 public:
     
-    MetersMenuModal(MetersView* mtrView_ptr);
+    MetersMenuModal(MetersPanel* metersPanel_ptr);
     
     void setMainAppPtr(ofBaseApp* appPtr);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
@@ -30,8 +32,5 @@ public:
     
 private:
     vector<ofxDatGuiToggle*> _algorithmToggles;
-    MetersView* _metersViewPtr;
-    
-    std::function<void(MetersView*, vector<ofxAAAlgorithmType>&)> callback_setEnabledAlgorithms = &MetersView::setEnabledAlgorithms;
-    
+    MetersPanel* _metersPanelPtr;    
 };

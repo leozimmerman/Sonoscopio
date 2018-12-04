@@ -25,14 +25,14 @@
 #include "Macros.h"
 #include "BasePanel.h"
 #include "MetersView.h"
-#include "MTGuiView.h"
+#include "MetersPanelGuiView.h"
 
 #define MT_GUI_COMP_HEIGHT 26
 
 #ifndef METERSPANEL_H
 #define METERSPANEL_H
 
-class MTGuiView;
+class MetersPanelGuiView;
 
 //#ifdef _MSC_VER
 //#pragma once
@@ -78,7 +78,7 @@ private:
     void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
     
     MetersView metersView;
-    MTGuiView guiView;
+    MetersPanelGuiView guiView;
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
     vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
     

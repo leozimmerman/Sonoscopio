@@ -9,8 +9,8 @@
 
 void GuiView::setup(int x, int y, int w, int h){
     View::setup(x, y, w, h);
-    bordCol = ofColor::grey;
-    bordWidth = 1;
+    _bordCol = ofColor::grey;
+    _bordWidth = 1;
     _guiCompHeight = h;
     setupGui();
 }
@@ -21,15 +21,15 @@ void GuiView::setupGui() {
 }
 
 void GuiView::update(){
-    for(int i=0; i<components.size(); i++){
-        components[i]->update();
+    for(int i=0; i<_components.size(); i++){
+        _components[i]->update();
     }
 }
 
 void GuiView::draw(){
     View::draw();
-    for(int i=0; i<components.size(); i++){
-        components[i]->draw();
+    for(int i=0; i<_components.size(); i++){
+        _components[i]->draw();
     }
 }
 

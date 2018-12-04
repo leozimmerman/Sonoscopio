@@ -25,7 +25,7 @@
 void MetersPanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
     
-    guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT, &metersView);
+    guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT, this);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
     _enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;

@@ -10,11 +10,12 @@
 
 #include "GuiView.h"
 #include "MetersMenuModal.h"
-#include "MetersView.h"
 
-class MTGuiView : public GuiView {
+class MetersPanel;
+
+class MetersPanelGuiView : public GuiView {
 public:
-    void setup(int x, int y, int w, int h, MetersView* mt_ptr);
+    void setup(int x, int y, int w, int h, MetersPanel* metersPanel_ptr);
     
     void createComponents() override;
     void adjustComponentsSize() override;
@@ -27,11 +28,8 @@ private:
     void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
     void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
     
-    MetersView* _metersViewPtr;
+    MetersPanel* _metersPanelPtr;
     shared_ptr<MetersMenuModal> menuModal;
-    
-    std::function<void(MetersView*)> callback_scrollUp = &MetersView::scrollUp;
-    std::function<void(MetersView*)> callback_scrollDown = &MetersView::scrollDown;
     
 };
 

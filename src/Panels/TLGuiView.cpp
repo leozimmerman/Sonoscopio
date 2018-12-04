@@ -28,54 +28,54 @@ void TLGuiView::createComponents(){
     
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &TLGuiView::onTextInputEvent);
-    component->setBorder(bordCol, bordWidth);
+    component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    components.push_back(component);
+    _components.push_back(component);
     
     vector<string> options = {"curves", "bangs", "switches", "notes"};
     g_dropdown = new ofxDatGuiDropdown("TRACK TYPE", options);
     //dropdown->expand();
     g_dropdown->onDropdownEvent(this, &TLGuiView::onDropdownEvent);
     component = g_dropdown;
-    component->setBorder(bordCol, bordWidth);
+    component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    component->setStripeColor(bordCol);
-    components.push_back(g_dropdown);
+    component->setStripeColor(_bordCol);
+    _components.push_back(g_dropdown);
     
     
     component = new ofxDatGuiButton("ADD TRACK");
     component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setBorder(bordCol, bordWidth);
+    component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    components.push_back(component);
+    _components.push_back(component);
     
     component = new ofxDatGuiButton("REMOVE TRACK");
     component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setBorder(bordCol, bordWidth);
+    component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    components.push_back(component);
+    _components.push_back(component);
     
     component = new ofxDatGuiButton("SHOW TRACKS");
     component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setBorder(bordCol, bordWidth);
+    component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    components.push_back(component);
+    _components.push_back(component);
     
     component = new ofxDatGuiButton("ADJUST TRACKS");
     component->onButtonEvent(this, &TLGuiView::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->setBorder(bordCol, bordWidth);
+    component->setBorder(_bordCol, _bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    components.push_back(component);
+    _components.push_back(component);
     
     
 }
@@ -88,37 +88,37 @@ void TLGuiView::adjustComponentsSize(){
     
     ofxDatGuiComponent* component;
     //TRACK NAME
-    component = components[0];
+    component = _components[0];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth * 2, 0.5);//width x2
     
     //TRACK TYPE
     gui_x += guiCompWidth*2;
-    component = components[1];
+    component = _components[1];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //ADD
     gui_x += guiCompWidth;
-    component = components[2];
+    component = _components[2];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //REMOVE
     gui_x += guiCompWidth;
-    component = components[3];
+    component = _components[3];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //SHOW TRACKS
     gui_x += guiCompWidth;
-    component = components[4];
+    component = _components[4];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //ADJUST TRACKS
     gui_x += guiCompWidth;
-    component = components[5];
+    component = _components[5];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     

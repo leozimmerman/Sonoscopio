@@ -27,14 +27,12 @@ MainMenuModal::MainMenuModal(){
     component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
-    //component->setLabelMargin(20.0);
     addComponent(component);
     
     gBpm = new ofxDatGuiTextInput("BPM", "120");
     component = gBpm;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
-    //component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     addComponent(component);
@@ -43,7 +41,6 @@ MainMenuModal::MainMenuModal(){
     component = gHost;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
-    //component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     addComponent(component);
@@ -52,7 +49,6 @@ MainMenuModal::MainMenuModal(){
     component = gPort;
     component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
-    //component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     addComponent(component);
@@ -61,9 +57,7 @@ MainMenuModal::MainMenuModal(){
     gBufferSize = new ofxDatGuiDropdown("BUFFER SIZE", buff_sizes);
     component = gBufferSize;
     component->onDropdownEvent(this, &MainMenuModal::onBufferSizeDropdownEvent);
-    //component->onButtonEvent(this, &MenuModal::onButtonEvent);
     component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    //component->setBorder(bordCol, bordWidth);
     component->setBorderVisible(TRUE);
     component->setStripeVisible(false);
     addComponent(component);
