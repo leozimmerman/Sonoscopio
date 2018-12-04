@@ -8,9 +8,6 @@
 #include "MetersMenuModal.h"
 #include "ofxAAUtils.h"
 #include "MetersPanel.h"
-#include "ofApp.h"
-
-ofApp* metersMenuMainAppPtr;
 
 std::function<void(MetersPanel*, vector<ofxAAAlgorithmType>&)> callback_setEnabledAlgorithms = &MetersPanel::setEnabledAlgorithms;
 
@@ -37,12 +34,7 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
     }
 }
 
-void MetersMenuModal::setMainAppPtr(ofBaseApp* appPtr){
-    metersMenuMainAppPtr = dynamic_cast<ofApp*>(appPtr);
-}
-
 void MetersMenuModal::display(int height){
-    //TODO: Remove this reference to config
     setHeight(height);
     show();
 }
@@ -62,19 +54,11 @@ void MetersMenuModal::applyConfiguration(){
     callback_setEnabledAlgorithms(_metersPanelPtr, enabledAlgorithms);
 }
 
-
-void MetersMenuModal::onTextInputEvent(ofxDatGuiTextInputEvent e){
-    
-}
-
-//--------------------------------------------------------------
 bool MetersMenuModal::getFocused(){
     return false;
 }
 void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
-    if(e.target->getLabel()==""){
-        cout<<"Hola"<<endl;
-    }
+    //TODO: Implement?
 }
 void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e) {
     applyConfiguration();

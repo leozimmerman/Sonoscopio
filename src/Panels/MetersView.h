@@ -38,5 +38,4 @@ private:
 
     vector < std::map<string, float> > singleValuesForOsc;
     vector < std::map<string, vector<float> > > vectorValuesForOsc;
-    ofColor panelColor1, panelColor2;
 };

@@ -77,8 +77,7 @@ void ofApp::setupPanels() {
         mainPanel.setFileInfoString(timePanel.getFileInfo());
         config.setChannelsNum(timePanel.getNumChannels());
         config.setSampleRate(timePanel.getSampleRate());
-        mainAnalyzer.setup(config.getSampleRate(), config.getBufferSize(), 1);
-        metersPanel.setChannelAnalyzers(mainAnalyzer.getChannelAnalyzersPtrs());//FIXME. separar el setup de los analyzers!
+        metersPanel.setupAnalyzer(config.getSampleRate(), config.getBufferSize(), 1);
     }
 }
 
@@ -112,7 +111,7 @@ void ofApp::update(){
         
         TS_START("AUDIO-ANALYSIS");
         if(timePanel.isPlaying()){
-            mainAnalyzer.analyze(soundBuffer);
+            metersPanel.analyzeBuffer(soundBuffer);
         }
         TS_STOP("AUDIO-ANALYSIS");
         
@@ -162,7 +161,6 @@ void ofApp::draw(){
 }
 //--------------------------------------------------------------
 void ofApp::exit(){
-    mainAnalyzer.exit();
     metersPanel.exit();
     dataSaver.stop();
 }
@@ -269,8 +267,7 @@ void ofApp::setBufferSize(int bs){
 }
 //--------------------------------------------------------------
 void ofApp::resetAnalysisEngine(){
-    mainAnalyzer.reset(config.getSampleRate(), config.getBufferSize(), 1);
-    metersPanel.reset(mainAnalyzer.getChannelAnalyzersPtrs());
+    metersPanel.resetAnalyzer(config.getSampleRate(), config.getBufferSize(), 1);
     dataSaver.reset();
 }
 

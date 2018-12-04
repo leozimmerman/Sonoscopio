@@ -19,24 +19,13 @@
 #pragma once
 
 #include "ofMain.h"
-
-#include "ofxAudioAnalyzerUnit.h"
-
 #include "Macros.h"
 #include "BasePanel.h"
 #include "MetersView.h"
 #include "MetersPanelGuiView.h"
+#include "ofxAudioAnalyzer.h"
 
 #define MT_GUI_COMP_HEIGHT 26
-
-#ifndef METERSPANEL_H
-#define METERSPANEL_H
-
-class MetersPanelGuiView;
-
-//#ifdef _MSC_VER
-//#pragma once
-//#endif  // _MSC_VER
 
 class MetersPanel : public BasePanel {
     
@@ -47,18 +36,19 @@ public:
     virtual void draw() override;
     virtual void exit() override;
     
+    void keyPressed(int key) override;
+    
     virtual bool getFocused() override;
     
     virtual void resize(int x, int y, int w, int h) override;
     virtual void saveSettings(string rootDir="") override;
     virtual void loadSettings(string rootDir="") override;
     
-    void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
+    void setupAnalyzer(int sampleRate, int bufferSize, int channels);
+    void analyzeBuffer(const ofSoundBuffer& inBuffer);
+    void resetAnalyzer(int sampleRate, int bufferSize, int channels);
+    
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
-    
-    void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    
-    void keyPressed(int key) override;
     
     void scrollUp(){
         metersView.scrollUp();
@@ -75,15 +65,19 @@ public:
     }
     
 private:
+    
+    void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
+    void resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
     
+    ofxAudioAnalyzer audioAnalyzer;
     MetersView metersView;
     MetersPanelGuiView guiView;
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
-    vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
+    vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
     
     /*
-     TODO: Mover a Meters Popup
+     TODO: Mover a Meters Modal
      ofxDatGuiTextInput* gMaxFreq;
      ofxDatGuiTextInput* gMaxHfc;
      ofxDatGuiTextInput* gMaxCentroid;
@@ -94,4 +88,4 @@ private:
 
     
 };
-#endif
+

@@ -10,9 +10,6 @@
 #include "ofMain.h"
 #include "ofxModal.h"
 
-
-
-
 class MainMenuModal : public ofxModalWindow {
 public:
     

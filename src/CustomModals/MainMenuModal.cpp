@@ -68,6 +68,7 @@ MainMenuModal::MainMenuModal(){
     
 }
 
+//TODO: Remove this. Modals should be linked with its panel only.
 void MainMenuModal::setMainAppPtr(ofBaseApp* appPtr){
     menuMainAppPtr = dynamic_cast<ofApp*>(appPtr);
 }

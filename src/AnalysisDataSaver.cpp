@@ -119,7 +119,7 @@ void AnalysisDataSaver::threadedFunction(){
                 //analyze buffer for frame:
                 frameSoundBuffer = sMainApp->timePanel.getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
                 
-                sMainApp->mainAnalyzer.analyze(frameSoundBuffer);
+                sMainApp->metersPanel.analyzeBuffer(frameSoundBuffer);
                 
                 sMainApp->metersPanel.update();
                 

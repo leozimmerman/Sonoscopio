@@ -84,7 +84,6 @@ public:
     TimelinePanel timePanel;
     MetersPanel metersPanel;
     
-    ofxAudioAnalyzer mainAnalyzer;
     AnalysisDataSaver dataSaver;
     MainConfiguration config;
     OscSender oscSender;

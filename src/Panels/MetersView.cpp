@@ -11,9 +11,7 @@
 
 void MetersView::setup(int x, int y, int w, int h){
     View::setup(x, y, w, h);
-    setBackgroundColor(ofColor::black);
-    panelColor1 = COLOR_MAIN_A;
-    panelColor2 = COLOR_MAIN_B;
+    setBackgroundColor(ofColor::darkGray);
 }
 
 void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs, vector<ofxAAAlgorithmType> enabledAlgorithms) {
@@ -45,7 +43,7 @@ void MetersView::createChannelMetersViews() {
     for (int i=0; i<panelsNum; i++){
         int y_pos = _y + panelHeight*i;
         int panelId = i;
-        ofColor mainColor = (i%2) ? panelColor2 : panelColor1;
+        ofColor mainColor = (i%2) ? COLOR_MAIN_B : COLOR_MAIN_A;
         auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, _channelAnalyzers[i], _enabledAlgorithmTypes, mainColor);
         _channelMetersViews.push_back(p);
     }
@@ -104,6 +102,7 @@ vector<std::map<string, float>>& MetersView::getMetersValues(){
         
         std::map<string, float> channelMap;
         
+        //TODO: This should be in ChannelMetersView.
         for(MeterView* m : _channelMetersViews[i]->meters){
             
             if (m->getName()==MTR_NAME_ONSETS){

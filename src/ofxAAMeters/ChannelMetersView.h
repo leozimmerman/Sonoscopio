@@ -49,34 +49,17 @@ public:
     
     void resize(int x, int y, int w, int h);
     
-    void createMeters();
-    
     void scrollUp();
     void scrollDown();
     
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
     
-    ofVec2f getPosition(){return ofVec2f(_x, _y);}
-    int getWidth(){return _w;}
-    int getHeight(){return _h;}
-    
     void onMeterStateChanged(OnOffEventData & data);
-    
-    vector<MeterView*> meters;
     
     void loadSettingsFromFile(string filename);
     void saveSettingsToFile(string filename);
     
-    //for osc and data saving
-    MeterView* meterForType(ofxAAAlgorithmType type) {
-        for (auto m: meters) {
-            if (m->getType() == type) {
-                return m;
-            }
-        }
-        return nil;
-    }
-    
+
     //TODO: Remove this eventually....
     vector<float>& getMelBandsValues(){
         BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
@@ -94,15 +77,18 @@ public:
         BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
         return binMeter->getValues();
     }
-    int getHeightForMeter(MeterView* meter);
-    int getContentHeight(){return _contentHeight;}
+    
+    vector<MeterView*> meters;//TODO: Make private
     
     
 protected:
+    void createMeters();
     void setColors();
+    MeterView* meterForType(ofxAAAlgorithmType type);
+    int getHeightForMeter(MeterView* meter);
     
     vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
-    ofxAudioAnalyzerUnit* _audioAnalyzer;
+    ofxAudioAnalyzerUnit* _audioAnalyzerUnit;
     int _contentHeight;
     ofColor _mainColor;
     int _panelId;

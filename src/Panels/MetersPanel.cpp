@@ -28,17 +28,42 @@ void MetersPanel::setup(int x, int y, int w, int h){
     guiView.setup(x, y, w, MT_GUI_COMP_HEIGHT, this);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
-    _enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
+    enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
+}
+
+void MetersPanel::setupAnalyzer(int sampleRate, int bufferSize, int channels){
+    audioAnalyzer.setup(sampleRate, bufferSize, channels);
+    setChannelAnalyzers(audioAnalyzer.getChannelAnalyzersPtrs());
+}
+
+void MetersPanel::resetAnalyzer(int sampleRate, int bufferSize, int channels){
+    audioAnalyzer.reset(sampleRate, bufferSize, channels);
+    resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
 }
 
 void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     channelAnalyzers = chanAnalyzerPtrs;
-    metersView.setupChannelMeters(chanAnalyzerPtrs, _enabledAlgorithmTypes);
+    metersView.setupChannelMeters(chanAnalyzerPtrs, enabledAlgorithmTypes);
 }
 
 void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms) {
-    _enabledAlgorithmTypes = enabledAlgorithms;
+    enabledAlgorithmTypes = enabledAlgorithms;
+    
+    for (int ch=0; ch<audioAnalyzer.getChannelsNum(); ch++){
+        for (auto algorithm : ofxaa::allAvailableAlgorithmTypes){
+            audioAnalyzer.setActive(ch, algorithm, false);
+        }
+        for (auto algorithm : enabledAlgorithms){
+            audioAnalyzer.setActive(ch, algorithm, true);
+        }
+    }
     metersView.setEnabledAlgorithms(enabledAlgorithms);
+}
+
+
+
+void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
+    audioAnalyzer.analyze(inBuffer);
 }
 
 void MetersPanel::update(){
@@ -66,6 +91,7 @@ void MetersPanel::draw(){
 }
 
 void MetersPanel::exit(){
+    audioAnalyzer.exit();
     metersView.exit();
 }
 
@@ -167,7 +193,7 @@ void MetersPanel::saveSettings(string rootDir){
 //----------------------------------------------
 #pragma mark - Other funcs
 //----------------------------------------------
-void MetersPanel::reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
+void MetersPanel::resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     metersView.reset(chanAnalyzerPtrs);
 }
 //----------------------------------------------

@@ -8,7 +8,6 @@
 #pragma once
 
 #include "ofMain.h"
-//#include "MetersView.h"
 #include "ofxModal.h"
 
 class MetersPanel;
@@ -18,9 +17,6 @@ public:
     
     MetersMenuModal(MetersPanel* metersPanel_ptr);
     
-    void setMainAppPtr(ofBaseApp* appPtr);
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    //void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     void onApplyButtonEvent(ofxDatGuiButtonEvent e);
     void onToggleEvent(ofxDatGuiButtonEvent e);
     
@@ -28,9 +24,7 @@ public:
     void applyConfiguration();
     bool getFocused();
     
-    
-    
 private:
     vector<ofxDatGuiToggle*> _algorithmToggles;
-    MetersPanel* _metersPanelPtr;    
+    MetersPanel* _metersPanelPtr;
 };

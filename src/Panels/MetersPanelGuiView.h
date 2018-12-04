@@ -7,7 +7,6 @@
 
 #pragma once
 
-
 #include "GuiView.h"
 #include "MetersMenuModal.h"
 

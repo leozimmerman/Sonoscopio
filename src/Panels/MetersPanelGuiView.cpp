@@ -23,7 +23,6 @@ void MetersPanelGuiView::setupMenu(){
     auto ofAppPtr = (ofApp*)ofGetAppPtr();
     menuModal = make_shared<MetersMenuModal>(_metersPanelPtr);
     menuModal->addListener(ofAppPtr, &ofApp::onModalEvent);
-    menuModal->setMainAppPtr(ofGetAppPtr());
 }
 
 void MetersPanelGuiView::createComponents(){

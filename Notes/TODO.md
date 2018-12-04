@@ -4,8 +4,7 @@
 ### Tasks
 
 - habilitar y deshabilitar algoritmos en MetersPanel
-    - Set AudioAnalyzer part of MetersPanel
-    - Clean and Review: MetersPanel, MetersView, ChannelMetersView, MetersPanelGuiView, MetersModal
+    - desactivar algoritmos en el analyzer cuando se desactivan del panel.
     
 - move timeline gui to timepanel
 - revisar Load/Save Settings and Project. Hace falta diferenciarlos? open Project dropdown??
