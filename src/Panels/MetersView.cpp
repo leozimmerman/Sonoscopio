@@ -142,3 +142,15 @@ vector<std::map<string, vector<float>>>& MetersView::getMetersVectorValues(){
     
     return vectorValuesForOsc;
 }
+
+void MetersView::updateCurrentSettings(){
+    for (auto channelView : _channelMetersViews){
+        channelView->updateCurrentSettings();
+    }
+}
+
+void MetersView::loadSettings(){
+    for (auto channelView : _channelMetersViews){
+        channelView->loadSettings();
+    }
+}

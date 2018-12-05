@@ -31,4 +31,42 @@ namespace ofxaa{
         }
     }
     
+    ofxAAAlgorithmType stringToAlgorithmType(string stringType){
+        if (stringType == algorithmTypeToString(RMS)){
+            return RMS;
+        } else if (stringType == algorithmTypeToString(PITCH_FREQ)){
+            return PITCH_FREQ;
+        } else if (stringType == algorithmTypeToString(PITCH_CONFIDENCE)){
+            return PITCH_CONFIDENCE;
+        } else if (stringType == algorithmTypeToString(PITCH_SALIENCE)){
+            return PITCH_SALIENCE;
+        } else if (stringType == algorithmTypeToString(HFC)){
+            return HFC;
+        } else if (stringType == algorithmTypeToString(CENTROID)){
+            return CENTROID;
+        } else if (stringType == algorithmTypeToString(SPECTRAL_COMPLEXITY)){
+            return SPECTRAL_COMPLEXITY;
+        } else if (stringType == algorithmTypeToString(INHARMONICITY)){
+            return INHARMONICITY;
+        } else if (stringType == algorithmTypeToString(DISSONANCE)){
+            return DISSONANCE;
+        } else if (stringType == algorithmTypeToString(ROLL_OFF)){
+            return ROLL_OFF;
+        } else if (stringType == algorithmTypeToString(ODD_TO_EVEN)){
+            return ODD_TO_EVEN;
+        } else if (stringType == algorithmTypeToString(ONSETS)){
+            return ONSETS;
+        } else if (stringType == algorithmTypeToString(SPECTRUM)){
+            return SPECTRUM;
+        }else if (stringType == algorithmTypeToString(MEL_BANDS)){
+            return MEL_BANDS;
+        }else if (stringType == algorithmTypeToString(MFCC)){
+            return MFCC;
+        }else if (stringType == algorithmTypeToString(HPCP)){
+            return HPCP;
+        }else if (stringType == algorithmTypeToString(TRISTIMULUS)){
+            return TRISTIMULUS;
+        }
+    }
+    
 }

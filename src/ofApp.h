@@ -36,7 +36,6 @@
 #include "TextModal.h"
 
 #include "ofxHotKeys.h"
-#include "Configurations.h"
 #include "OscSender.h"
 
 #define MAIN_PANEL_HEIGHT 0.15
@@ -47,11 +46,11 @@ class ofApp : public ofBaseApp{
 public:
 
     
-    void stop();
+    void stop();//TODO: Remove from here
     
-    void addKeyframeInFocusedTrack();
+    void addKeyframeInFocusedTrack();//TODO: Remove from here
     
-    void openAudioFile(string filename);
+    void openAudioFile(string filename);//TODO: Remove from here
     
     void setFrameRate(int fps);
     
@@ -59,20 +58,18 @@ public:
     void setBufferSize(int bs);
     void updatePanelsDimensions(int w, int h);
     
+    //TODO: Remove from here
     int getTotalFramesNum(){return timePanel.getTotalFramesNum();}
     string getSoundfilePath(){return timePanel.getSoundfilePath();}
     float getDurationInSeconds(){return timePanel.getDurationInSeconds();}
     float getBpm(){return timePanel.getBpm();}
+        
+    void openProject(string projectDir);//TODO: Remove from here
     
-    void saveSettings();
-    void loadSettings();
+    void saveAnalysisDataToFile();//TODO: Remove from here
+    void drawSavingAnalysisSign();//TODO: Remove from here
     
-    void openProject(string projectDir);
-    
-    void saveAnalysisDataToFile();
-    void drawSavingAnalysisSign();
-    
-    void onsetFired(int & panelId);
+    void onsetFired(int & panelId);//TODO: Remove from here
     
     shared_ptr<TextModal> mText;
     
@@ -85,7 +82,7 @@ public:
     MetersPanel metersPanel;
     
     AnalysisDataSaver dataSaver;
-    MainConfiguration config;
+    MainPanelSettings config;//TODO: Remove from here!!!
     OscSender oscSender;
     
 private:
@@ -107,7 +104,7 @@ private:
     
     ofSoundBuffer soundBuffer;
     ofMutex audioMutex;
-    ofTrueTypeFont	verdana; //Esto??
+    ofTrueTypeFont	verdana; //Remove from here.
     
     int _main_height;
     int _meters_width;

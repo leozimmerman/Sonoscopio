@@ -27,7 +27,7 @@ void ofApp::setup(){
     setupPanels();
     setupListeners();
 
-    oscSender.setup(config.osc().host,  config.osc().port);
+    oscSender.setup(config.osc.host,  config.osc.port);
     setupModals();
     dataSaver.setup(ofGetAppPtr());
     
@@ -39,13 +39,13 @@ void ofApp::setupOFContext() {
     ofSetBackgroundColor(ofColor::black);
     ofEnableSmoothing();
     ofEnableAlphaBlending();
-    config.setFrameRate(INIT_FPS);
+    config.frameRate = INIT_FPS;
     ofSetFrameRate(INIT_FPS);
 }
 
 void ofApp::setupTimeMeasurment() {
     
-    TIME_SAMPLE_SET_FRAMERATE(config.getFrameRate()); //set the app's target framerate (MANDATORY)
+    TIME_SAMPLE_SET_FRAMERATE(config.frameRate); //set the app's target framerate (MANDATORY)
     //specify where the widget is to be drawn
     TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_TOP_RIGHT );
     TIME_SAMPLE_SET_AVERAGE_RATE(0.1);    //averaging samples, (0..1],
@@ -69,15 +69,17 @@ void ofApp::setupPanels() {
     timePanel.setFrameRate(TL_PANEL_FPS);
     metersPanel.setFrameRate(MT_PANEL_FPS);
     
-    config.setBufferSize(INIT_BUFFER_SIZE);
-    config.setProjectDir(INIT_PROJECT_DIR);
-    config.setOscConfiguration(INIT_OSC_HOST, INIT_OSC_PORT,  TRUE, TRUE);
+    config.bufferSize = INIT_BUFFER_SIZE;
+    config.projectDir = INIT_PROJECT_DIR;
+    config.osc.host = INIT_OSC_HOST;
+    config.osc.port = INIT_OSC_PORT;
+    config.osc.bSend = TRUE;
+    config.osc.bSendVectorValues = TRUE;
     
     if (timePanel.isFileLoaded()) {
         mainPanel.setFileInfoString(timePanel.getFileInfo());
-        config.setChannelsNum(timePanel.getNumChannels());
-        config.setSampleRate(timePanel.getSampleRate());
-        metersPanel.setupAnalyzer(config.getSampleRate(), config.getBufferSize(), 1);
+        config.sampleRate = timePanel.getSampleRate();
+        metersPanel.setupAnalyzer(config.sampleRate, config.bufferSize, 1);
     }
 }
 
@@ -106,7 +108,7 @@ void ofApp::update(){
         audioMutex.lock();
         
         TS_START("GET-AUDIO-BUFFERS");
-        soundBuffer = timePanel.getCurrentSoundBufferMono(config.getBufferSize());
+        soundBuffer = timePanel.getCurrentSoundBufferMono(config.bufferSize);
         TS_STOP("GET-AUDIO-BUFFERS");
         
         TS_START("AUDIO-ANALYSIS");
@@ -127,7 +129,7 @@ void ofApp::update(){
     
     //send OSC-----------------------
     TS_START("SEND-OSC");
-    if(config.osc().bSend) {
+    if(config.osc.bSend) {
     //FIXME: No anda
         ///oscSender.sendOscData(metersPanel.metersView.getMetersValues(), metersPanel.metersView.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
     }
@@ -251,8 +253,7 @@ void ofApp::openAudioFile(string filename){
     audioMutex.lock();
     timePanel.openAudioFile(filename);
     mainPanel.setFileInfoString(timePanel.getFileInfo());
-    config.setChannelsNum(timePanel.getNumChannels());
-    config.setSampleRate(timePanel.getSampleRate());
+    config.sampleRate = timePanel.getSampleRate();
     resetAnalysisEngine();
     dataSaver.reset();
     audioMutex.unlock();
@@ -261,13 +262,13 @@ void ofApp::openAudioFile(string filename){
 void ofApp::setBufferSize(int bs){
     stop();
     audioMutex.lock();
-    config.setBufferSize(bs);
+    config.bufferSize = bs;
     resetAnalysisEngine();
     audioMutex.unlock();
 }
 //--------------------------------------------------------------
 void ofApp::resetAnalysisEngine(){
-    metersPanel.resetAnalyzer(config.getSampleRate(), config.getBufferSize(), 1);
+    metersPanel.resetAnalyzer(config.sampleRate, config.bufferSize, 1);
     dataSaver.reset();
 }
 
@@ -276,7 +277,7 @@ void ofApp::setFrameRate(int fps){
     
     stop();
     
-    config.setFrameRate(fps);
+    config.frameRate = fps;
     ofSetFrameRate(fps);
     timePanel.setFrameRate(fps);
     
@@ -364,41 +365,12 @@ void ofApp::openProject(string projectDir ){
     
     openAudioFile(audioFileName);
    
-    mainPanel.loadSettings(projDir);
-    timePanel.loadSettings(projDir);
-    metersPanel.loadSettings(projDir);
-    config.setProjectDir(projDir);
+//    mainPanel.loadSettings(projDir);
+//    timePanel.loadSettings(projDir);
+//    metersPanel.loadSettings(projDir);
+    config.projectDir = projDir;
 }
-//--------------------------------------------------------------
-//??? Add closeProject?
-//--------------------------------------------------------------
-void ofApp::saveSettings(){
-    std::string dir = config.getProjectDir();
-    mainPanel.saveSettings(dir);
-    timePanel.saveSettings(dir);
-    metersPanel.saveSettings(dir);
-    
-    if(dir=="")
-        ofLogVerbose() << "ofApp: Settings SAVED to data/";
-    else
-        ofLogVerbose() << "ofApp: Settings SAVED to: "<<dir;
-}
-//--------------------------------------------------------------
-void ofApp::loadSettings(){
-    std::string dir = config.getProjectDir();
-    stop();
-    
-    mainPanel.loadSettings(dir);
-    timePanel.loadSettings(dir);
-    metersPanel.loadSettings(dir);
-    
-    dataSaver.reset();
-    
-    if(dir=="")
-        ofLogVerbose() << "ofApp: Settings LOADED from data/";
-    else
-        ofLogVerbose() << "ofApp: Settings LOADED from: "<<dir;
-}
+
 //--------------------------------------------------------------
 #pragma mark - Save Analysis Data
 //-------------------------------------------------------------

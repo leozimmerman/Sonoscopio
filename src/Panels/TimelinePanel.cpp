@@ -17,6 +17,7 @@
  */
 
 #include "TimelinePanel.h"
+#include "SettingsManager.h"
 #include "ofApp.h"
 
 
@@ -31,6 +32,7 @@ void TimelinePanel::setup(int x, int y, int w, int h, string audiofile){
     guiView.setup(x, y, w, GUI_COMP_HEIGHT * 3, &timelineView);
     timelineView.setup(x, guiView.maxY(), w, h - guiView.getHeight(), audiofile);
     
+    SettingsManager::getInstance().setTimelinePanelPtr(this);
 }
 //-------------------------------------------------
 void TimelinePanel::update(){
@@ -76,125 +78,55 @@ bool TimelinePanel::getFocused(){
 void TimelinePanel::exit(){}
 //--------------------------------------------------------------
 #pragma mark - Settings
-//--------------------------------------------------------------
-void TimelinePanel::loadSettings(string rootDir){
-    //TODO: Revisar esta funcion...
-    
-    //-:Load Xml file
-    
-    string filenamePanel = rootDir + TIMELINE_SETTINGS_DIR "/timePanel_settings.xml";
-    ofxXmlSettings xml;
-    
-    if( xml.loadFile(filenamePanel) ){
-        ofLogVerbose()<<"TimePanel: "<< filenamePanel <<" loaded.";
-    }else{
-        ofLogError()<< "TimePanel: unable to load " << filenamePanel ;
-        return;
-    }
-    
-    //----------------------------------
-    //-:Add markers from loaded settings.
+void TimelinePanel::loadSettings(){
+    //TODO: Update current settings
+    guiView.setStateFromSettings(currentSettings);
     
     timelineView.clearMarkers();
-    
-    int markersNum = xml.getValue("PANEL:MARKERS:MARKERS-NUM", 0);
-    for (int i=0; i<markersNum; i++){
-        float markerTimeMillis = xml.getValue("PANEL:MARKERS:MARKER-" + ofToString(i), 0.0);
-        timelineView.addMarkerAtTime(markerTimeMillis);
+    for (auto m : currentSettings.markers){
+        timelineView.addMarkerAtTime(m);
     }
-    //----------------------------------
-    //-:Create tracks from loaded settings.
-    int tracksNum= xml.getValue("PANEL:TRACKS:TRACKS-NUM", 0);
-    for (int i=0; i<tracksNum; i++){
-        string trackName = xml.getValue("PANEL:TRACKS:TRACK-" + ofToString(i) +":NAME", "");
-        string trackType = xml.getValue("PANEL:TRACKS:TRACK-" + ofToString(i) +":TYPE", "");
-        
-        auto tracksPage = timelineView.timeline.getPage(PAGE_TRACKS_NAME);
-        
-        //If track doesnt exist and its not default -> create it.
-        if(trackName != "DEFAULT" &&
-           tracksPage->getTrack(trackName)==NULL){
-           
-            if(trackType=="Curves"){
-                timelineView.addTrack(trackName, CURVES);
-            } else if(trackType=="Bangs"){
-                timelineView.addTrack(trackName, BANGS);
-            } else if(trackType=="Switches"){
-                timelineView.addTrack(trackName, SWITCHES);
-            } else if(trackType=="Notes"){
-                timelineView.addTrack(trackName, NOTES);
-            }
-            
-        }
-    }
-    //----------------------------------
-    //-:Load Timeline Settings
-    timelineView.timeline.loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR"/");
-    timelineView.updateHeight();
-    
-    //----------------------------------
-    //-:Log
-    
-    ofLogVerbose()<<"TimePanel: settings LOADED";
-    ofLogVerbose()<<"-Tracks Loaded: "<< tracksNum;
-    ofLogVerbose()<<"-Markers Loaded: "<< markersNum;
-    
-
-}
-//--------------------------------------------------------------
-void TimelinePanel::saveSettings(string rootDir){
-    
-    //-:Save Timeline Settings
-    timelineView.timeline.saveTracksToFolder(rootDir + TIMELINE_SETTINGS_DIR);
-    
-    //-:Save Tracks Names and Types
     
     auto tracksPage = timelineView.timeline.getPage(PAGE_TRACKS_NAME);
-
-    string filenamePanel = rootDir + TIMELINE_SETTINGS_DIR "/timePanel_settings.xml";
-    ofxXmlSettings savedSettings;
-    
-    int tracksNum = tracksPage->getTracks().size();
-    
-    savedSettings.addTag("PANEL");
-    savedSettings.pushTag("PANEL");
-    savedSettings.addTag("TRACKS");
-    savedSettings.pushTag("TRACKS");
-    savedSettings.addValue("TRACKS-NUM", tracksNum);
-    
-    for (int i=0; i<tracksNum; i++){
-        savedSettings.addTag("TRACK-"+ofToString(i));
-        savedSettings.pushTag("TRACK-"+ofToString(i));
-        savedSettings.addValue("NAME", tracksPage->getTracks()[i]->getName());
-        savedSettings.addValue("TYPE", tracksPage->getTracks()[i]->getTrackType());
-        savedSettings.popTag();
+    for (auto t : currentSettings.tracks){
+        if(t.name != "DEFAULT" && tracksPage->getTrack(t.name)==NULL) {
+            timelineView.addTrackWithStringType(t.type, t.name);
+        }
     }
-    savedSettings.popTag();
-    
-
-    //-:Save Markers
-    
-    savedSettings.addTag("MARKERS");
-    savedSettings.pushTag("MARKERS");
-    
-    savedSettings.addValue("MARKERS-NUM", (int)timelineView._markers.size());
-    for (int i=0; i<timelineView._markers.size(); i++){
-        savedSettings.addValue("MARKER-"+ofToString(i), timelineView._markers[i]);
-    }
-    
-    savedSettings.saveFile(filenamePanel);
-    
-    //----------------------------------
-    //-:Log
-    
-    ofLogVerbose()<<"TimePanel: settings SAVED";
-    ofLogVerbose()<<"-Tracks Saved: "<< tracksNum;
-    for (auto track : tracksPage->getTracks()){
-        ofLogVerbose()<<"--Name: "<<track->getName() << "- Type: "<< track->getTrackType();
-    }
-    ofLogVerbose()<<"-Markers Saved: "<< timelineView._markers.size();
-    
+    loadTimelineTracksFromFolder();///?
+    timelineView.updateHeight();
 }
+
+//--------------------------------------------------------------
+void TimelinePanel::updateCurrentSettings(){
+    guiView.loadStateIntoSettings(&currentSettings);
+    auto tracksPage = timelineView.timeline.getPage(PAGE_TRACKS_NAME);
+   
+    currentSettings.tracks.clear();
+    for (auto track : tracksPage->getTracks()) {
+        TLTrackSetting ts;
+        ts.name = track->getName();
+        ts.type = track->getTrackType();
+        currentSettings.tracks.push_back(ts);
+    }
+    
+    currentSettings.markers.clear();
+    for (auto marker : timelineView._markers){
+        currentSettings.markers.push_back(marker);
+    }
+}
+
+
+void TimelinePanel::loadTimelineTracksFromFolder(){
+    string rootDir = SettingsManager::getInstance().getRootDir();
+    timelineView.timeline.loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR"/");
+}
+void TimelinePanel::saveTimelineTracksToFolder(){
+    string rootDir = SettingsManager::getInstance().getRootDir();
+    timelineView.timeline.saveTracksToFolder(rootDir + TIMELINE_SETTINGS_DIR);
+}
+
+
 
 
 

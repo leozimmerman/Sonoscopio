@@ -6,144 +6,69 @@
 //
 
 #include "MainMenuModal.h"
-#include "ofApp.h"
+#include "GuiFactory.h"
+#include "MainPanel.h"
 
-ofApp* menuMainAppPtr;
+//std::function<void(MainPanel*, int, int, int, string, int)> callback_applySettings = &MainPanel::applySettings;
 
 MainMenuModal::MainMenuModal(MainPanel* mainPanel_ptr){
     _mainPanelPtr = mainPanel_ptr;
-    setTitle("CONFIGURATION");
     
+    setTitle("CONFIGURATION");
     getButton(0)->setLabel("APPLY");
     getButton(0)->onButtonEvent(this, &MainMenuModal::onApplyButtonEvent);
     
     addButton("CANCEL");
     
-    ofxDatGuiComponent* component;
-    //SET FRAMERATE
-    gFps = new ofxDatGuiTextInput("SET FPS", ofToString(INIT_FPS));
-    component = gFps;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    addComponent(component);
+    //ofxDatGuiComponent* component;
+    gFps = GuiFactory::createTextInput(SET_FPS_LABEL, ofToString(INIT_FPS), this, &MainMenuModal::onTextInputEvent);
+    addComponent(gFps);
     
-    gBpm = new ofxDatGuiTextInput("BPM", "120");
-    component = gBpm;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    addComponent(component);
+    gBpm = GuiFactory::createTextInput(BPM_LABEL, "120", this, &MainMenuModal::onTextInputEvent);
+    addComponent(gBpm);
     
-    gHost = new ofxDatGuiTextInput("HOST", "localhost");
-    component = gHost;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    addComponent(component);
+    gHost = GuiFactory::createTextInput(HOST_LABEL, "localhost", this, &MainMenuModal::onTextInputEvent);
+    addComponent(gHost);
     
-    gPort = new ofxDatGuiTextInput("PORT", "12345");
-    component = gPort;
-    component->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-    component->onTextInputEvent(this, &MainMenuModal::onTextInputEvent);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    addComponent(component);
+    gPort = GuiFactory::createTextInput(PORT_LABEL, "12345", this, &MainMenuModal::onTextInputEvent);
+    addComponent(gPort);
     
-    vector<string> buff_sizes = {"256", "512", "1024", "2048"};
-    gBufferSize = new ofxDatGuiDropdown("BUFFER SIZE", buff_sizes);
-    component = gBufferSize;
-    component->onDropdownEvent(this, &MainMenuModal::onBufferSizeDropdownEvent);
-    component->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    component->setBorderVisible(TRUE);
-    component->setStripeVisible(false);
-    addComponent(component);
-    
-    
-//    autoSize();
-    
+    const vector<string> buff_sizes = {"256", "512", "1024", "2048"};
+    gBufferSize = GuiFactory::createDropDown(BUFFER_SIZE_LABEL, buff_sizes, this, &MainMenuModal::onBufferSizeDropdownEvent);
+    addComponent(gBufferSize);
     
 }
 
 
 void MainMenuModal::display(int height){
-    //TODO: Remove this reference to config
-    /**
-    int fps = menuMainAppPtr->config.getFrameRate();
-    string host = menuMainAppPtr->config.osc().host;
-    int port = menuMainAppPtr->config.osc().port;
-    int bpm = menuMainAppPtr->getBpm();
-    int bufferSize = menuMainAppPtr->config.getBufferSize();
+    auto settings = _mainPanelPtr->getCurrentSettingsPtr();
     
-    gFps->setText(std::to_string(fps));
-    gHost->setText(host);
-    gPort->setText(std::to_string(port));
-    gBpm->setText(std::to_string(bpm));
-    selectedBufferSize = bufferSize;
-    */
+    gFps->setText(std::to_string(settings->frameRate));
+    selectedBufferSize = settings->bufferSize;
+    gBpm->setText(std::to_string(settings->bpm));
+    gHost->setText(settings->osc.host);
+    gPort->setText(std::to_string(settings->osc.port));
+    
     setHeight(height);
     
     show();
     
 }
 
-void MainMenuModal::applyConfiguration(){
-    
-    int fps;
-    string host;
-    int port;
-    float bpm;
-    int bufferSize;
-    
-    try {
-        
-        fps = std::stoi(gFps->getText());
-        host = gHost->getText();
-        port = std::stoi(gPort->getText());
-        bpm = std::stof(gBpm->getText());
-        bufferSize = selectedBufferSize;
-        
-        cout << "APPLYING: " << fps <<" " <<  host <<" " <<  port <<" " <<bpm << " " << bufferSize << endl;
-        
-        ///menuMainAppPtr->setFrameRate( fps );
-        ///menuMainAppPtr->setBufferSize(bufferSize);
-        ///menuMainAppPtr->timePanel.setNewBPM( bpm );
-        ///menuMainAppPtr->oscSender.setHost(host);
-        ///menuMainAppPtr->oscSender.setPort(port);
-        
-    } catch (const std::invalid_argument& ia) {
-        //e.target->setText("ERROR");
-        std::cerr << "Invalid FPS: " << ia.what() << '\n';
-    }
-}
+void MainMenuModal::applySettings(){}
 
 
-void MainMenuModal::onTextInputEvent(ofxDatGuiTextInputEvent e){
+void MainMenuModal::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 
-}
-
-//--------------------------------------------------------------
 bool MainMenuModal::getFocused(){
-    if(gHost->getFocused() ||
-       gPort->getFocused() ||
-       gBpm->getFocused()  ||
-       gFps->getFocused()   )
-    {
-        return true;
-    }else{
-        return false;
-    }
+    return (gHost->getFocused() || gPort->getFocused() || gBpm->getFocused()  || gFps->getFocused());
 }
 
-//--------------------------------------------------------------
 void MainMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e) {
-    applyConfiguration();
+    applySettings();
     hide();
 }
-//--------------------------------------------------------------
+
 void MainMenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e)
 {
     // ofLogVerbose() << "onDropdownEvent: " << e.child << "--"<<e.target->getLabel()<<"--"<<e.parent;
@@ -167,4 +92,34 @@ void MainMenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e)
             break;
     }
     
+}
+
+void MainMenuModal::loadStateIntoSettings(MainPanelSettings* settings){
+    try {
+        int fps = std::stoi(gFps->getText());
+        int bufferSize = selectedBufferSize;
+        float bpm = std::stof(gBpm->getText());
+        string host = gHost->getText();
+        int port = std::stoi(gPort->getText());
+    
+        settings->frameRate = fps;
+        settings->bufferSize = bufferSize;
+        settings->bpm = bpm;
+        settings->osc.host = host;
+        settings->osc.port = port;
+        
+    } catch (const std::invalid_argument& ia) {
+        //TODO: Show error modal
+        std::cerr << "Main Menu Modal Invalid arguments: " << ia.what() << '\n';
+    }
+  
+
+}
+
+void MainMenuModal::setStateFromSettings(MainPanelSettings& settings){
+    //    gVolumeSlider->setValue(settings.volume);
+    //    gLoopToggle->setEnabled(settings.bLoop);
+    //    gBpmGridToggle->setEnabled(settings.bBpmGrid);
+    //    gSnapToggle->setEnabled(settings.bSnap);
+    //    gFramebasedToggle->setEnabled(settings.bFrambased);
 }

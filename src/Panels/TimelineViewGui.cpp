@@ -25,11 +25,11 @@ void TimelineViewGui::createComponents(){
     component = GuiFactory::createButton(PLAY_STOP_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
     
-    component = GuiFactory::createSlider(VOLUME_LABEL, 0.0, 1.0, 1.0, this, &TimelineViewGui::onSliderEvent);
-    _components.push_back(component);
+    gVolumeSlider = GuiFactory::createSlider(VOLUME_LABEL, 0.0, 1.0, 1.0, this, &TimelineViewGui::onSliderEvent);
+    _components.push_back(gVolumeSlider);
     
-    component = GuiFactory::createToggle(LOOP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
+    gLoopToggle = GuiFactory::createToggle(LOOP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(gLoopToggle);
     
     component = GuiFactory::createButton(SET_IN_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
@@ -43,14 +43,14 @@ void TimelineViewGui::createComponents(){
     component = GuiFactory::createButton(CLEAR_MARKERS_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
     
-    component = GuiFactory::createToggle(BPM_GRID_LABEL, false, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
+    gBpmGridToggle = GuiFactory::createToggle(BPM_GRID_LABEL, false, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(gBpmGridToggle);
     
-    component = GuiFactory::createToggle(SNAP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
+    gSnapToggle = GuiFactory::createToggle(SNAP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(gSnapToggle);
     //9
-    component = GuiFactory::createToggle(FRAMEBASED_LABEL, false, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
+    gFramebasedToggle = GuiFactory::createToggle(FRAMEBASED_LABEL, false, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(gFramebasedToggle);
     //Second line
     //10
     gTrackNameTextInput = GuiFactory::createTextInput(TRACK_NAME_LABEL, "<track name>", this, &TimelineViewGui::onTextInputEvent);
@@ -200,3 +200,22 @@ void TimelineViewGui::onSliderEvent(ofxDatGuiSliderEvent e){
         callback_setVolume(timelineViewPtr, e.value);
     }
 }
+
+void TimelineViewGui::loadStateIntoSettings(TimelinePanelSettings* settings){
+    settings->volume = gVolumeSlider->getValue();
+    settings->bLoop = gLoopToggle->getEnabled();
+    settings->bBpmGrid = gBpmGridToggle->getEnabled();
+    settings->bSnap = gSnapToggle->getEnabled();
+    settings->bFrambased = gFramebasedToggle->getEnabled();
+}
+
+void TimelineViewGui::setStateFromSettings(TimelinePanelSettings& settings){
+    gVolumeSlider->setValue(settings.volume);
+    gLoopToggle->setEnabled(settings.bLoop);
+    gBpmGridToggle->setEnabled(settings.bBpmGrid);
+    gSnapToggle->setEnabled(settings.bSnap);
+    gFramebasedToggle->setEnabled(settings.bFrambased);
+}
+
+
+

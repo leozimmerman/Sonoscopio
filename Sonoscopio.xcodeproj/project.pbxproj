@@ -26,6 +26,7 @@
 		ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADD194746185E2DA11468377 /* IpEndpointName.cpp */; };
 		B32D93A521B1DC1000E14271 /* MetersMenuModal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B32D93A321B1DC1000E14271 /* MetersMenuModal.cpp */; };
 		B32D93B721B71D0400E14271 /* MainPanelGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B32D93B521B71D0400E14271 /* MainPanelGui.cpp */; };
+		B32D93BF21B8250F00E14271 /* SettingsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B32D93BD21B8250E00E14271 /* SettingsManager.cpp */; };
 		B3354C912141B300003F8F91 /* TimelineViewGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C8F2141B300003F8F91 /* TimelineViewGui.cpp */; };
 		B3354C942141BB14003F8F91 /* TimelineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C922141BB14003F8F91 /* TimelineView.cpp */; };
 		B3354C9F21430DC2003F8F91 /* MetersView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C9D21430DC2003F8F91 /* MetersView.cpp */; };
@@ -179,6 +180,9 @@
 		B32D93B321B6FDC900E14271 /* GuiFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GuiFactory.h; path = Panels/GuiFactory.h; sourceTree = "<group>"; };
 		B32D93B521B71D0400E14271 /* MainPanelGui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MainPanelGui.cpp; path = Panels/MainPanelGui.cpp; sourceTree = "<group>"; };
 		B32D93B621B71D0400E14271 /* MainPanelGui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainPanelGui.h; path = Panels/MainPanelGui.h; sourceTree = "<group>"; };
+		B32D93BB21B820FE00E14271 /* Settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Settings.h; path = Panels/Settings.h; sourceTree = "<group>"; };
+		B32D93BD21B8250E00E14271 /* SettingsManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SettingsManager.cpp; sourceTree = "<group>"; };
+		B32D93BE21B8250F00E14271 /* SettingsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsManager.h; sourceTree = "<group>"; };
 		B3354C8F2141B300003F8F91 /* TimelineViewGui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimelineViewGui.cpp; path = Panels/TimelineViewGui.cpp; sourceTree = "<group>"; };
 		B3354C902141B300003F8F91 /* TimelineViewGui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TimelineViewGui.h; path = Panels/TimelineViewGui.h; sourceTree = "<group>"; };
 		B3354C922141BB14003F8F91 /* TimelineView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimelineView.cpp; path = Panels/TimelineView.cpp; sourceTree = "<group>"; };
@@ -1026,6 +1030,17 @@
 			name = AL;
 			sourceTree = "<group>";
 		};
+		B32D93BA21B820E300E14271 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				B3FD3487213DBA3300B30C17 /* Configurations.h */,
+				B32D93BB21B820FE00E14271 /* Settings.h */,
+				B32D93BD21B8250E00E14271 /* SettingsManager.cpp */,
+				B32D93BE21B8250F00E14271 /* SettingsManager.h */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		B3354C8E2141B2DE003F8F91 /* TimelinePanel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1644,6 +1659,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B32D93BA21B820E300E14271 /* Settings */,
 				B363C77D1FE439610014F7F7 /* CustomModals */,
 				B3A475B21DD4FBC300B1371C /* ofxAAMeters */,
 				B3A475B11DD4FBBB00B1371C /* Panels */,
@@ -1654,7 +1670,6 @@
 				AE803632C8979292003FC2CF /* AnalysisDataSaver.cpp */,
 				3EC1427CE6C0D0441861140B /* AnalysisDataSaver.h */,
 				7413FA8F1E9A9D785B1C2E16 /* ExtendedDatGuiComponents.h */,
-				B3FD3487213DBA3300B30C17 /* Configurations.h */,
 				B3FD3488213DD25300B30C17 /* OscSender.cpp */,
 				B3FD3489213DD25300B30C17 /* OscSender.h */,
 				B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */,
@@ -1879,6 +1894,7 @@
 				B3712F4C2135EB08007BA046 /* ofxTimeMeasurements.cpp in Sources */,
 				B3712F8D2136F733007BA046 /* ofxTLVideoTrack.cpp in Sources */,
 				B3712FA42136F733007BA046 /* ofxTLFlags.cpp in Sources */,
+				B32D93BF21B8250F00E14271 /* SettingsManager.cpp in Sources */,
 				B3712F362135E8E3007BA046 /* ofxEasingElastic.cpp in Sources */,
 				B3712F9C2136F733007BA046 /* ofxTLImageSequenceFrame.cpp in Sources */,
 				B3354C912141B300003F8F91 /* TimelineViewGui.cpp in Sources */,

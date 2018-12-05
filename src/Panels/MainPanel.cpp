@@ -17,41 +17,36 @@
  */
 
 #include "MainPanel.h"
-#include "ofApp.h" 
+#include "ofApp.h"
+#include "SettingsManager.h"
 
-ofApp* mMainAppPtr; //re
+ofApp* mMainAppPtr; //remove
+
+
 
 #pragma mark - core funcs
 //-------------------------------------------------
 void MainPanel::setup(int x, int y, int width, int height){
     BasePanel::setup(x, y, width, height);
     guiView.setup(x, y, width, GUI_COMP_HEIGHT, this);
-    //guiView.setup(x, y, width, GUI_COMP_HEIGHT, this);
     
     mMainAppPtr = (ofApp*)ofGetAppPtr();
     
     //colors
     setBackgroundColor(ofColor(80));
-
-    fileinfoFontCol = ofColor::darkKhaki;
     
     projects_dir.listDir("projects/");
     for(int i = 0; i < (int)projects_dir.size(); i++){
         ofLogVerbose()<<"Main Panel: " << projects_dir.getPath(i);
     }
-    
-
     //fonts for text display
     ofTrueTypeFont::setGlobalDpi(72);
     verdana.load("gui_assets/fonts/verdana.ttf", 12, true, true);
     verdana.setLineHeight(13.0f);
     verdana.setLetterSpacing(1.037);
-    
     fileInfoStr = "non file loaded";
     
-    _panelDir = MAIN_SETTINGS_DIR;
-
-  
+    SettingsManager::getInstance().setMainPanelPtr(this);
 }
 //-------------------------------------------------
 void MainPanel::update(){
@@ -81,16 +76,7 @@ void MainPanel::keyPressed(int key){
 }
 
 bool MainPanel::getFocused(){
-    return false;
-    //    if(gHost->getFocused() ||
-    //       gPort->getFocused() ||
-    //       gBpm->getFocused()  ||
-    //       gFps->getFocused()   )
-    //    {
-    //        return true;
-    //    }else{
-    //        return false;
-    //    }
+    return (guiView.getFocused());
 }
 
 void MainPanel::resize(int x, int y, int w, int h){
@@ -103,21 +89,13 @@ void MainPanel::drawFileInfo(){
     
     ofPushStyle();
     
-    string infoStr = "File name: "+ fileName + " | " + fileInfoStr + " | buffer size: " + ofToString(mMainAppPtr->config.getBufferSize()) + " | proj: "+ mMainAppPtr->config.getProjectDir();
-    
-    //draw boundbox
-    
-//    ofRectangle boundBox = verdana.getStringBoundingBox(infoStr,  _w-guiCompWidth, _h * 0.15);
-//    ofSetColor(40);
-//    ofDrawRectangle(boundBox);
+    string infoStr = "File name: "+ fileName + " | " + fileInfoStr + " | buffer size: " + ofToString(mMainAppPtr->config.bufferSize) + " | proj: "+ mMainAppPtr->config.projectDir;
     
     //draw string
-    ofSetColor(fileinfoFontCol);
+    ofSetColor(ofColor::darkKhaki);
     verdana.drawString(infoStr,  10, _h - 7);
     
     ofPopStyle();
-
-
 }
 
 
@@ -166,10 +144,7 @@ void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
         }else{
             ofLogVerbose("File extension not compatible");
         }
-        
     }
-    
-    
 }
 
 
@@ -177,126 +152,25 @@ void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
 
 
 #pragma mark - Settings funcs
-
-void MainPanel::loadSettings(string rootDir){
-    
-    ofxXmlSettings xml;
-    string filename = rootDir + _panelDir + "/main_settings.xml";
-    
-    if( xml.loadFile(filename) ){
-        ofLogVerbose()<<"MainPanel: "<< filename <<" loaded.";
-    }else{
-        ofLogError()<< "MainPanel: unable to load " << filename ;
-        return;
-    }
-    
-    /**
-     float val = xml.getValue("PANEL:VOLUME", 0.0);
-     gVolume->setValue(val);
-     ///mMainAppPtr->timePanel.setVolume(val);
-     //-----------
-     //TODO: Remove
-     bool state = xml.getValue("PANEL:SPLIT", 0) > 0;
-     gSplit->setEnabled(state);
-     //-----------
-     state = xml.getValue("PANEL:LOOP", 0) > 0;
-     gLoop->setEnabled(state);
-     ///if(state)
-     ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NORMAL);
-     ///else
-     ///mMainAppPtr->timePanel.setLoopType(OF_LOOP_NONE);
-     //-----------
-     state = xml.getValue("PANEL:SEND-OSC", 0) > 0;
-     gSendOsc->setEnabled(state);
-     mMainAppPtr->config.setIsSendingOsc(state);
-     //-----------
-     state = xml.getValue("PANEL:BPM-GRID", 0) > 0;
-     gShowBpm->setEnabled(state);
-     ///mMainAppPtr->timePanel.setShowBPMGrid(state);
-     //-----------
-     state = xml.getValue("PANEL:SNAP-BPM", 0) > 0;
-     gSnapBpm->setEnabled(state);
-     ///mMainAppPtr->timePanel.enableSnapToBPM(state);
-     //-----------
-     state = xml.getValue("PANEL:FRAMEBASED", 0) > 0;
-     gFramebased->setEnabled(state);
-     ///mMainAppPtr->timePanel.setFrameBased(state);
-     */
-    //-----------
-    ///CONFIG MENU:
-    //-----------
-    string text = xml.getValue("PANEL:PORT", "");
-    //gPort->setText(text);
-    mMainAppPtr->oscSender.setPort( std::stoi(text) );
-    //-----------
-    text = xml.getValue("PANEL:BPM", "");
-    //gBpm->setText(text);
-    ///mMainAppPtr->timePanel.setNewBPM( std::stof (text) );
-    //-----------
-    text = xml.getValue("PANEL:HOST", "");
-    //gHost->setText(text);
-    mMainAppPtr->oscSender.setHost(text);
-    //-----------
-    text = xml.getValue("PANEL:FRAMERATE", "");
-    //gFps->setText(text);
-    mMainAppPtr->setFrameRate( std::stoi(text) );
-    //-----------
-    text = xml.getValue("PANEL:BUFFER-SIZE", "");
-    int bs = std::stoi(text);
-    switch (bs) {
-        case 256:
-            //gBufferSize->select(0);
-            mMainAppPtr->setBufferSize(256);
-            break;
-        case 512:
-            //gBufferSize->select(1);
-            mMainAppPtr->setBufferSize(512);
-            break;
-        case 1024:
-            //gBufferSize->select(2);
-            mMainAppPtr->setBufferSize(1024);
-            break;
-        case 2048:
-            //gBufferSize->select(3);
-            mMainAppPtr->setBufferSize(2048);
-            break;
-            
-        default:
-            break;
-    }
-    
-    //-----------
-    
+void MainPanel::applySettings(int fps, int buffersize, float bpm, string host, int port){
+//    currentSettings.frameRate = fps;
+//    currentSettings.bufferSize = buffersize;
+//    currentSettings.bpm = bpm;
+//    currentSettings.osc.host = host;
+//    currentSettings.osc.port = port;
     
 }
-//-------------------------------------------------
-void MainPanel::saveSettings(string rootDir){
-    
-    string filename = rootDir + _panelDir + "/main_settings.xml";
-    
-    ofxXmlSettings savedSettings;
-    /**
-     savedSettings.addTag("PANEL");
-     savedSettings.pushTag("PANEL");
-     savedSettings.addValue("VOLUME", gVolume->getValue());
-     savedSettings.addValue("SPLIT", gSplit->getEnabled());
-     savedSettings.addValue("LOOP", gLoop->getEnabled());
-     savedSettings.addValue("SEND-OSC", gSendOsc->getEnabled());
-     savedSettings.addValue("BPM-GRID", gShowBpm->getEnabled());
-     savedSettings.addValue("SNAP-BPM", gSnapBpm->getEnabled());
-     savedSettings.addValue("FRAMEBASED", gFramebased->getEnabled());
-     
-     //Config menu settings:
-     
-     savedSettings.addValue("FRAMERATE", menuModal->getFpsText());
-     savedSettings.addValue("BUFFER-SIZE", menuModal->getBufferSizeText());
-     savedSettings.addValue("BPM",  menuModal->getBpmText());
-     savedSettings.addValue("PORT", menuModal->getPortText());
-     savedSettings.addValue("HOST", menuModal->getHostText());
-     */
-    savedSettings.saveFile(filename);
-    
-    
+
+void MainPanel::updateCurrentSettings(){
+    guiView.loadStateIntoSettings(&currentSettings);
+}
+
+void MainPanel::saveSettings(){
+    SettingsManager::getInstance().saveSettings();
+}
+
+void MainPanel::loadSettings(){
+    SettingsManager::getInstance().loadSettings();
 }
 
 

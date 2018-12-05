@@ -147,65 +147,58 @@ void ChannelMetersView::onMeterStateChanged(OnOffEventData & data){
 //--------------------------------------------------------------
 #pragma mark - Settings funcs
 //--------------------------------------------------------------
-void ChannelMetersView::loadSettingsFromFile(string filename){
+void ChannelMetersView::loadSettings(){
     
-    ofxXmlSettings xml;
+    //TODO: update current settings
     
-    if( xml.loadFile(filename) ){
-        ofLogVerbose()<<"ofxAAChannelMetersPanel: "<< filename <<" loaded.";
-    }else{
-        ofLogError()<< "ofxAAChannelMetersPanel: unable to load " << filename ;
-        return;
-    }
-    //int numDragTags = XML.getNumTags("PANEL");
-    //cout<<""<<xml.getValue("PANEL:POWER:SMOOTH", 0.0)<<endl;
+    for (auto ms : currentSettings.meters) {
+        //auto type = m->getType();
+        string stringType = ms.type;
+        ofxAAAlgorithmType type = ofxaa::stringToAlgorithmType(stringType);
+        
+        auto meter = meterForType(type);
+        
+        meter->setEnabled(ms.bState);
+        if (type == ONSETS) {
+            auto onsets_m = dynamic_cast<OnsetMeterView*>(meter);
+            onsets_m->setAlpha(ms.alpha);
+            onsets_m->setSilenceThreshold(ms.silenceTreshold);
+            onsets_m->setTimeThreshold(ms.timeTreshold);
+        } else {
+            meter->setSmoothAmnt(ms.smooth);
+        }
     
-    for (auto m : meters) {
-        auto type = m->getType();
-        auto str = ofxaa::algorithmTypeToString(type);
-    
-        m->setSmoothAmnt(xml.getValue("PANEL:" + str + ":SMOOTH", 0.0));
-        bool state = xml.getValue("PANEL:" + str + ":STATE", 0) > 0;
-        m->setEnabled(state);
         //spectrm cant be turned off, no audioAnalyzer->setActive
         //MFcc also turn on-off melBands
-        _audioAnalyzerUnit->setActive(type, state);
-        if (type == ONSETS) {
-            auto onsets_m = dynamic_cast<OnsetMeterView*>(m);
-            onsets_m->setAlpha(xml.getValue("PANEL:" + str + ":ALPHA", 0.0));
-            onsets_m->setSilenceThreshold(xml.getValue("PANEL:" + str + ":SILENCEThreshold", 0.0));
-            onsets_m->setTimeThreshold(xml.getValue("PANEL:" + str + ":TIMEThreshold", 0.0));
-        }
+        _audioAnalyzerUnit->setActive(type, ms.bState);
+        
     }
 }
 //--------------------------------------------------------------
-void ChannelMetersView::saveSettingsToFile(string filename){
+void ChannelMetersView::updateCurrentSettings(){
     
-    ofxXmlSettings savedSettings;
-    savedSettings.addTag("PANEL");
-    savedSettings.pushTag("PANEL");
-    
+    currentSettings.meters.clear();
     for (auto m : meters) {
+        MeterSettings setting;
+        
         auto type = m->getType();
-        auto str = ofxaa::algorithmTypeToString(type);
+        auto typeString = ofxaa::algorithmTypeToString(type);
+        
+        setting.type = typeString;
+        
         if (type == ONSETS) {
             auto onsets_m = dynamic_cast<OnsetMeterView*>(m);
-            savedSettings.addTag(str);
-            savedSettings.pushTag(str);
-            savedSettings.addValue("ALPHA", onsets_m->getAlpha());
-            savedSettings.addValue("SILENCEThreshold",onsets_m->getSilenceThreshold());
-            savedSettings.addValue("TIMEThreshold", onsets_m->getTimeThreshold());
-            savedSettings.addValue("STATE", onsets_m->getEnabled());
-            savedSettings.popTag();
+            setting.alpha = onsets_m->getAlpha();
+            setting.silenceTreshold = onsets_m->getSilenceThreshold();
+            setting.timeTreshold = onsets_m->getTimeThreshold();
+            setting.bState = onsets_m->getEnabled();
         } else {
-            savedSettings.addTag(str);
-            savedSettings.pushTag(str);
-            savedSettings.addValue("SMOOTH", m->getSmoothAmnt());
-            savedSettings.addValue("STATE", m->getEnabled());
-            savedSettings.popTag();
+            setting.smooth = m->getSmoothAmnt();
+            setting.bState = m->getEnabled();
         }
+        currentSettings.meters.push_back(setting);
     }
-    savedSettings.saveFile(filename);
+    
 }
 
 //for osc and data saving

@@ -9,6 +9,7 @@
 
 #include "GuiView.h"
 #include "MainMenuModal.h"
+#include "Settings.h"
 
 #define OPEN_FILE_LABEL "OPEN FILE"
 #define OPEN_PROJECT_LABEL "OPEN PROJECT"
@@ -17,6 +18,7 @@
 #define CONFIG_LABEL "CONFIG"
 #define RENDER_ANALYSIS_LABEL "RENDER ANALYSIS"
 #define SEND_OSC_LABEL "SEND OSC"
+#define TIME_MEASUREMENT_LABEL "TIME MEASUREMENT"
 
 class MainPanel;
 
@@ -29,6 +31,9 @@ public:
     bool getFocused() {
         menuModal->getFocused();
     }
+    
+    void loadStateIntoSettings(MainPanelSettings* settings);
+    void setStateFromSettings(MainPanelSettings& settings);
     
 private:
     void setupMenu();

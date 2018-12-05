@@ -19,6 +19,7 @@
 #include "MetersPanel.h"
 #include "ofApp.h"
 #include "ofxAAUtils.h"
+#include "SettingsManager.h"
 
 #pragma mark - Core Funcs
 
@@ -29,6 +30,8 @@ void MetersPanel::setup(int x, int y, int w, int h){
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
     enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
+    
+    SettingsManager::getInstance().setMetersPanelPtr(this);
 }
 
 void MetersPanel::setupAnalyzer(int sampleRate, int bufferSize, int channels){
@@ -114,81 +117,14 @@ void MetersPanel::resize(int x, int y, int w, int h){
 
 #pragma mark - Settings
 
-void MetersPanel::loadSettings(string rootDir){
+void MetersPanel::loadSettings(){
     
-    //string fileName = workingDir+"/"+"metersSettings.xml";
-    
-    //-:Load panel settings (gui)---------------------
-    ofxXmlSettings xml;
-    string filenamePanel = rootDir + _panelDir + "/meters_settings_gui.xml";
-    
-    if( xml.loadFile(filenamePanel) ){
-        ofLogVerbose()<<"MainPanel: "<< filenamePanel <<" loaded.";
-    }else{
-        ofLogError()<< "MainPanel: unable to load " << filenamePanel ;
-        return;
-    }
-    //-----------
-    string text = xml.getValue("PANEL:MAX-FREQ", "");
-    ///gMaxFreq->setText(text);
-    setAnalyzerMaxEstimatedValue(PITCH_FREQ, std::stof (text));
-    //-----------------
-    text = xml.getValue("PANEL:MAX-HFC", "");
-    ///gMaxHfc->setText(text);
-    setAnalyzerMaxEstimatedValue(HFC, std::stof (text));
-    //-----------------
-    text = xml.getValue("PANEL:MAX-CENTROID", "");
-    ///gMaxCentroid->setText(text);
-    setAnalyzerMaxEstimatedValue(CENTROID, std::stof (text));
-    //-----------------
-    text = xml.getValue("PANEL:MAX-SPEC-COMP", "");
-    ///gMaxSpecComp->setText(text);
-    setAnalyzerMaxEstimatedValue(SPECTRAL_COMPLEXITY, std::stof (text));
-    //-----------------
-    text = xml.getValue("PANEL:MAX-ROLLOFF", "");
-    ///gMaxRollOff->setText(text);
-    setAnalyzerMaxEstimatedValue(ROLL_OFF, std::stof (text));
-    //-----------------
-    text = xml.getValue("PANEL:MAX-ODD-EVEN", "");
-    ///gMaxOddEven->setText(text);
-    setAnalyzerMaxEstimatedValue(ODD_TO_EVEN, std::stof (text));
-    //-----------------
-    
-    //-:Load channelPannels settings---------------------
-    /**
-    for(int i=0; i<metersView.channelPanels.size(); i++){
-        string filenameChannelPanel = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
-        metersView.channelPanels[i]->loadSettingsFromFile(filenameChannelPanel);
-    }
-    */
+    metersView.loadSettings();
 }
 //----------------------------------------------
-void MetersPanel::saveSettings(string rootDir){
-    
-    //-:Save panel settings (gui) ------------------
-    string filenamePanel = rootDir + _panelDir + "/meters_settings_gui.xml";
-    ofxXmlSettings savedSettings;
-    
-    savedSettings.addTag("PANEL");
-    savedSettings.pushTag("PANEL");
-    /**
-    savedSettings.addValue("MAX-FREQ",      gMaxFreq->getText());
-    savedSettings.addValue("MAX-HFC",       gMaxHfc->getText());
-    savedSettings.addValue("MAX-CENTROID",  gMaxCentroid->getText());
-    savedSettings.addValue("MAX-SPEC-COMP", gMaxSpecComp->getText());
-    savedSettings.addValue("MAX-ROLLOFF",   gMaxRollOff->getText());
-    savedSettings.addValue("MAX-ODD-EVEN",  gMaxOddEven->getText());
-    */
-    savedSettings.saveFile(filenamePanel);
-    
-    //-:Save channelPannels settings---------------
-    /**
-    for(int i=0; i<metersView.channelPanels.size(); i++){
-        string filenameChannelPanel = rootDir + _panelDir + "/meters_settings" + ofToString(i) + ".xml";
-        metersView.channelPanels[i]->saveSettingsToFile(filenameChannelPanel);
-    
-    }
-    */
+void MetersPanel::updateCurrentSettings(){
+    //TODO: Implement
+    metersView.updateCurrentSettings();
 }
 //----------------------------------------------
 #pragma mark - Other funcs
@@ -211,6 +147,7 @@ bool MetersPanel::getFocused(){
         return false;
     }
     */
+    return false;
 }
 
 //--------------------------------------------------------------

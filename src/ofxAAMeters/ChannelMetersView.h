@@ -28,6 +28,7 @@
 #include "ofxAudioAnalyzerUnit.h"
 #include "ofxXmlSettings.h"
 #include "View.h"
+#include "Settings.h"
 
 #define PITCH_MIN_VALUE_FOR_METER 130.0 //hz
 #define VERT_METERS_WIDTH 0.8//Width percentage for Vertical Meters
@@ -56,8 +57,8 @@ public:
     
     void onMeterStateChanged(OnOffEventData & data);
     
-    void loadSettingsFromFile(string filename);
-    void saveSettingsToFile(string filename);
+    void loadSettings();
+    void updateCurrentSettings();
     
 
     //TODO: Remove this eventually....
@@ -93,5 +94,7 @@ protected:
     ofColor _mainColor;
     int _panelId;
     int _scrollOffset = 0;
+    
+    ChannelMeterSettings currentSettings;
 
 };

@@ -93,6 +93,8 @@ public:
     std::map<string, float> getTracksValues();
     bool isSoundLoaded();
     
+    void addTrackWithStringType(string stringType, string name);
+    
     void bangFired(ofxTLBangEventArgs& args);
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;

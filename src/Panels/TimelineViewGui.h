@@ -9,6 +9,7 @@
 
 #include "GuiView.h"
 #include "TimelineView.h"
+#include "Settings.h"
 
 #define FRAMEBASED_LABEL "FRAME BASED"
 #define PLAY_STOP_LABEL "PLAY / STOP"
@@ -42,8 +43,16 @@ public:
         gTrackNameTextInput->getFocused();
     }
     
+    void loadStateIntoSettings(TimelinePanelSettings* settings);
+    void setStateFromSettings(TimelinePanelSettings& settings);
+    
 private:
     ofxDatGuiTextInput* gTrackNameTextInput;
+    ofxDatGuiSlider* gVolumeSlider;
+    ofxDatGuiToggle* gLoopToggle;
+    ofxDatGuiToggle* gBpmGridToggle;
+    ofxDatGuiToggle* gSnapToggle;
+    ofxDatGuiToggle* gFramebasedToggle;
     
     void onButtonEvent(ofxDatGuiButtonEvent e) override;
     void onTextInputEvent(ofxDatGuiTextInputEvent e) override;

@@ -9,6 +9,13 @@
 
 #include "ofMain.h"
 #include "ofxModal.h"
+#include "Settings.h"
+
+#define SET_FPS_LABEL "SET FPS"
+#define BPM_LABEL "BPM"
+#define HOST_LABEL "HOST"
+#define PORT_LABEL "PORT"
+#define BUFFER_SIZE_LABEL "BUFFER SIZE"
 
 class MainPanel;
 
@@ -17,29 +24,25 @@ public:
     
     MainMenuModal(MainPanel* mainPanel_ptr);
     
-    
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
     void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     void onApplyButtonEvent(ofxDatGuiButtonEvent e);
     
     void display(int height);
-    void applyConfiguration();
+    void applySettings();
     bool getFocused();
     
-    string getHostText(){ return gHost->getText(); }
-    string getPortText(){ return gPort->getText(); }
-    string getBpmText() { return gBpm->getText(); }
-    string getFpsText(){ return gFps->getText(); }
-    string getBufferSizeText(){ return gBufferSize->getSelected()->getName(); }
+    void loadStateIntoSettings(MainPanelSettings* settings);
+    void setStateFromSettings(MainPanelSettings& settings);
     
 private:
     MainPanel* _mainPanelPtr;
     
-    ofxDatGuiTextInput* gHost;
-    ofxDatGuiTextInput* gPort;
-    ofxDatGuiTextInput* gBpm;
     ofxDatGuiTextInput* gFps;
     ofxDatGuiDropdown* gBufferSize;
+    ofxDatGuiTextInput* gBpm;
+    ofxDatGuiTextInput* gHost;
+    ofxDatGuiTextInput* gPort;
     
     int selectedBufferSize;
     

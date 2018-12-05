@@ -29,6 +29,7 @@
 #include "BasePanel.h"
 #include "TimelineViewGui.h"
 #include "TimelineView.h"
+#include "Settings.h"
 
 class TimelinePanel : public BasePanel {
     
@@ -39,17 +40,18 @@ public:
     virtual void draw() override;
     virtual void exit() override;
     
+    void keyPressed(int key) override;
     virtual bool getFocused() override;
     
     virtual void resize(int x, int y, int w, int h) override;
-    virtual void saveSettings(string rootDir="") override;
-    virtual void loadSettings(string rootDir="") override;
+
+    void loadSettings();
+    void updateCurrentSettings();
     
-    void keyPressed(int key) override;
-    
-//    void togglePlay(){ timelineView.timeline.togglePlay(); }
+    void saveTimelineTracksToFolder();
+    void loadTimelineTracksFromFolder();
+
     void stop(){ timelineView.timeline.stop(); }
-//    void rewind(){ timelineView.timeline.setCurrentTimeToInPoint(); }
     
     void openAudioFile(string filename){
         timelineView.openAudioFile(filename);
@@ -57,6 +59,10 @@ public:
     
     void addKeyframeInFocusedTrack(){
         timelineView.addKeyframeInFocusedTrack();
+    }
+    
+    TimelinePanelSettings* getCurrentSettingsPtr(){
+        return &currentSettings;
     }
     
     #pragma mark - Setters
@@ -95,6 +101,7 @@ public:
 private:
     TimelineViewGui guiView;
     TimelineView timelineView;
+    TimelinePanelSettings currentSettings;
     
     
 };

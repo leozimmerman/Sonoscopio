@@ -9,6 +9,10 @@
 #include "MainPanelGui.h"
 #include "MainPanel.h"
 #include "GuiFactory.h"
+#include "SettingsManager.h"
+
+std::function<void(MainPanel*)> callback_saveSettings = &MainPanel::saveSettings;
+std::function<void(MainPanel*)> callback_loadSettings = &MainPanel::loadSettings;
 
 void MainPanelGui::setup(int x, int y, int w, int h, MainPanel* mainPanel_ptr){
     GuiView::setup(x, y, w, h);
@@ -43,6 +47,8 @@ void MainPanelGui::createComponents(){
     _components.push_back(component);
     component = GuiFactory::createToggle(SEND_OSC_LABEL, false, this, &MainPanelGui::onButtonEvent);
     _components.push_back(component);
+    component = GuiFactory::createToggle(TIME_MEASUREMENT_LABEL, false, this, &MainPanelGui::onButtonEvent);
+    _components.push_back(component);
  
 }
 
@@ -65,6 +71,10 @@ void MainPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     cout<<label<<endl;
     if (label == CONFIG_LABEL){
         showMenu();
+    } else if (label == SAVE_SETTINGS_LABEL){
+        callback_saveSettings(_mainPanelPtr);
+    } else if (label == LOAD_SETTINGS_LABEL){
+        callback_loadSettings(_mainPanelPtr);
     }
     
     /*
@@ -85,3 +95,16 @@ void MainPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
 }
 void MainPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 void MainPanelGui::onDropdownEvent(ofxDatGuiDropdownEvent e){}
+
+void MainPanelGui::loadStateIntoSettings(MainPanelSettings* settings){
+    menuModal->loadStateIntoSettings(settings);
+    settings->osc.bSend = TRUE; //fix
+}
+
+void MainPanelGui::setStateFromSettings(MainPanelSettings& settings){
+//    gVolumeSlider->setValue(settings.volume);
+//    gLoopToggle->setEnabled(settings.bLoop);
+//    gBpmGridToggle->setEnabled(settings.bBpmGrid);
+//    gSnapToggle->setEnabled(settings.bSnap);
+//    gFramebasedToggle->setEnabled(settings.bFrambased);
+}

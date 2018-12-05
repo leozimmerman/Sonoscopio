@@ -27,8 +27,10 @@
 #include "BasePanel.h"
 
 #include "MainPanelGui.h"
+#include "Settings.h"
 
 #define FILE_INFO_HEIGHT 20
+
 
 
 class MainPanel : public BasePanel{
@@ -48,14 +50,21 @@ public:
     
     void setFileInfoString(string str){fileInfoStr = str;}
     
-    virtual void saveSettings(string rootDir="") override;
-    virtual void loadSettings(string rootDir="") override;
+    void saveSettings();
+    void loadSettings();
+    void updateCurrentSettings();
 
-    
     void openOpenFileDialog();
     void processOpenFileSelection(ofFileDialogResult openFileResult);
     
+    void applySettings(int fps, int buffersize, float bpm, string host, int port);
+    
+    MainPanelSettings* getCurrentSettingsPtr(){
+        return &currentSettings;
+    }
+    
 private:
+    
     void drawFileInfo();
     
     MainPanelGui guiView;
@@ -63,8 +72,9 @@ private:
     string fileInfoStr;
     string fileName;
     ofTrueTypeFont	verdana;
-    ofColor fileinfoFontCol;
     
     ofDirectory projects_dir;
+    
+    MainPanelSettings currentSettings;
     
 };

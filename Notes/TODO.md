@@ -12,6 +12,8 @@
 
 - ADD: Render algorithm analysis to track (!)
 
+- ADD: TimlinePanel modal: Which tracks to show
+
 
 ### Bugs / Code Improvements
 - Definir: va o no el "_" en las variables

@@ -24,6 +24,7 @@
 #include "MetersView.h"
 #include "MetersPanelGui.h"
 #include "ofxAudioAnalyzer.h"
+#include "Settings.h"
 
 class MetersPanel : public BasePanel {
     
@@ -39,8 +40,13 @@ public:
     virtual bool getFocused() override;
     
     virtual void resize(int x, int y, int w, int h) override;
-    virtual void saveSettings(string rootDir="") override;
-    virtual void loadSettings(string rootDir="") override;
+    
+    void loadSettings();
+    
+    void updateCurrentSettings();
+    MetersPanelSettings* getCurrentSettingsPtr(){
+        return &currentSettings;
+    }
     
     void setupAnalyzer(int sampleRate, int bufferSize, int channels);
     void analyzeBuffer(const ofSoundBuffer& inBuffer);
@@ -73,6 +79,8 @@ private:
     MetersPanelGui guiView;
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
     vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
+    
+    MetersPanelSettings currentSettings;
     
     /*
      TODO: Mover a Meters Modal

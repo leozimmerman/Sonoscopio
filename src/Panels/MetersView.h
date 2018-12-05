@@ -26,6 +26,9 @@ public:
     void scrollUp();
     void scrollDown();
     
+    void loadSettings();
+    void updateCurrentSettings();
+    
     vector<std::map<string, float>>& getMetersValues();
     vector<std::map<string, vector<float>>>& getMetersVectorValues();
     

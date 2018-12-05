@@ -277,3 +277,15 @@ void TimelineView::checkIfWaveformPreviewChanged(){
         audioTrack->recomputePreview();
     }
 }
+
+void TimelineView::addTrackWithStringType(string stringType, string name){
+    if(stringType=="Curves"){
+        addTrack(name, CURVES);
+    } else if(stringType=="Bangs"){
+        addTrack(name, BANGS);
+    } else if(stringType=="Switches"){
+        addTrack(name, SWITCHES);
+    } else if(stringType=="Notes"){
+        addTrack(name, NOTES);
+    }
+}
