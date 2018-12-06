@@ -26,8 +26,11 @@ public:
     void scrollUp();
     void scrollDown();
     
-    void loadSettings();
+    void loadSettings(MetersPanelSettings& settings);
     void updateCurrentSettings();
+    vector<ChannelMeterSettings>& getCurrentChannelSettingsRef(){
+        return currentChannelSettings;
+    }
     
     vector<std::map<string, float>>& getMetersValues();
     vector<std::map<string, vector<float>>>& getMetersVectorValues();
@@ -41,4 +44,6 @@ private:
 
     vector < std::map<string, float> > singleValuesForOsc;
     vector < std::map<string, vector<float> > > vectorValuesForOsc;
+    
+    vector<ChannelMeterSettings> currentChannelSettings;
 };

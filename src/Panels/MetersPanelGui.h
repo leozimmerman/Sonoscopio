@@ -9,7 +9,7 @@
 
 #include "GuiView.h"
 #include "MetersMenuModal.h"
-
+#include "Settings.h"
 #define MENU_LABEL "MENU"
 #define SCROLL_UP_LABEL "<"
 #define SCROLL_DOWN_LABEL ">"
@@ -22,6 +22,9 @@ public:
     
     void createComponents() override;
     void adjustComponentsSize() override;
+    
+    void loadStateIntoSettings(MetersPanelSettings* settings);
+    void setStateFromSettings(MetersPanelSettings& settings);
     
 private:
     void setupMenu();

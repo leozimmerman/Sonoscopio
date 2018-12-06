@@ -28,7 +28,7 @@ ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int pa
     ofAddListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
    
     _panelId = panelId;
-    _audioAnalyzerUnit = audioAnalyzer;
+    audioAnalyzerUnit = audioAnalyzer;
     _enabledAlgorithmTypes = enabledAlgorithms;
     _mainColor = mainColor;
     
@@ -38,7 +38,7 @@ ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int pa
 void ChannelMetersView::createMeters(){
     meters.clear();
     for (auto type : _enabledAlgorithmTypes) {
-        auto meterView = MeterView::createMeterView(type, _panelId, _audioAnalyzerUnit);
+        auto meterView = MeterView::createMeterView(type, _panelId, audioAnalyzerUnit);
         meters.push_back(meterView);
     }
     setColors();
@@ -132,7 +132,7 @@ void ChannelMetersView::onMeterStateChanged(OnOffEventData & data){
     
     if(data.panelId != _panelId) return;
     
-    _audioAnalyzerUnit->setActive(data.type, data.state);
+    audioAnalyzerUnit->setActive(data.type, data.state);
     
     /*
      TODO: Revisar cuando compile...
@@ -144,15 +144,12 @@ void ChannelMetersView::onMeterStateChanged(OnOffEventData & data){
      */
     
 }
-//--------------------------------------------------------------
-#pragma mark - Settings funcs
-//--------------------------------------------------------------
-void ChannelMetersView::loadSettings(){
-    
-    //TODO: update current settings
-    
+
+#pragma mark - Settings
+
+void ChannelMetersView::loadSettings(ChannelMeterSettings& settings){
+    currentSettings = settings;
     for (auto ms : currentSettings.meters) {
-        //auto type = m->getType();
         string stringType = ms.type;
         ofxAAAlgorithmType type = ofxaa::stringToAlgorithmType(stringType);
         
@@ -170,13 +167,11 @@ void ChannelMetersView::loadSettings(){
     
         //spectrm cant be turned off, no audioAnalyzer->setActive
         //MFcc also turn on-off melBands
-        _audioAnalyzerUnit->setActive(type, ms.bState);
-        
+        audioAnalyzerUnit->setActive(type, ms.bState);
     }
 }
-//--------------------------------------------------------------
+
 void ChannelMetersView::updateCurrentSettings(){
-    
     currentSettings.meters.clear();
     for (auto m : meters) {
         MeterSettings setting;
@@ -198,7 +193,6 @@ void ChannelMetersView::updateCurrentSettings(){
         }
         currentSettings.meters.push_back(setting);
     }
-    
 }
 
 //for osc and data saving
@@ -208,5 +202,5 @@ MeterView* ChannelMetersView::meterForType(ofxAAAlgorithmType type) {
             return m;
         }
     }
-    return nil;
+    return NULL;
 }

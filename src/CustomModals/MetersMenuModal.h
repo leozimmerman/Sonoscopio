@@ -9,6 +9,7 @@
 
 #include "ofMain.h"
 #include "ofxModal.h"
+#include "Settings.h"
 
 class MetersPanel;
 
@@ -24,7 +25,16 @@ public:
     void applyConfiguration();
     bool getFocused();
     
+    void loadStateIntoSettings(MetersPanelSettings* settings);
+    void setStateFromSettings(MetersPanelSettings& settings);
+    
+    void updateTogglesFromEnabledAlgorithms();
+    void updateEnabledAlgorithmsFromToggles();
+    
+    bool isAlgorithmEnabled(ofxAAAlgorithmType algorithmType);
+    
 private:
     vector<ofxDatGuiToggle*> _algorithmToggles;
+    vector<ofxAAAlgorithmType> enabledAlgorithms;
     MetersPanel* _metersPanelPtr;
 };

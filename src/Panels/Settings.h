@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "ofxAAUtils.h"
+
 struct OscSetting {
     bool bSend;
     string host;
@@ -63,5 +65,6 @@ public:
 
 class MetersPanelSettings{
 public:
+    vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
     vector<ChannelMeterSettings> channelMeters;
 };

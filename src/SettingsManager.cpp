@@ -6,22 +6,15 @@
 //
 
 #include "SettingsManager.h"
+#include "ofxAAUtils.h"
 
 SettingsManager::SettingsManager(){
-    cout<<"Settings manager shared init1"<<endl;
     rootDir = "";
 }
 void SettingsManager::saveSettings(){
+    updateCurrentSettingsFromPanels();
+    
     xml.clear();
-    
-    mainPanelPtr->updateCurrentSettings();
-    timelinePanelPtr->updateCurrentSettings();
-    metersPanelPtr->updateCurrentSettings();
-    
-    mainPanelSettings = *mainPanelPtr->getCurrentSettingsPtr();
-    timelinePanelSettings = *timelinePanelPtr->getCurrentSettingsPtr();
-    metersPanelSettings = *metersPanelPtr->getCurrentSettingsPtr();
-    
     addMainPanelSettingsToXml();
     addTimelinePanelSettingsToXml();
     addMetersPanelSettingsToXml();
@@ -29,12 +22,42 @@ void SettingsManager::saveSettings(){
     ///dataSaver.reset();
 }
 
+void SettingsManager::updateCurrentSettingsFromPanels(){
+    if (mainPanelPtr != NULL) {
+        mainPanelPtr->updateCurrentSettings();
+        mainPanelSettings = *mainPanelPtr->getCurrentSettingsPtr();
+    }
+    if (timelinePanelPtr != NULL){
+        timelinePanelPtr->updateCurrentSettings();
+        timelinePanelSettings = *timelinePanelPtr->getCurrentSettingsPtr();
+    }
+    if (metersPanelPtr != NULL){
+        metersPanelPtr->updateCurrentSettings();
+        metersPanelSettings = *metersPanelPtr->getCurrentSettingsPtr();
+    }
+}
+
+void SettingsManager::loadSettingsIntoPanels(){
+    if (mainPanelPtr != NULL) {
+        mainPanelPtr->loadSettings(mainPanelSettings);
+    }
+    if (timelinePanelPtr != NULL){
+        timelinePanelPtr->loadSettings(timelinePanelSettings);
+    }
+    if (metersPanelPtr != NULL){
+        metersPanelPtr->loadSettings(metersPanelSettings);
+    }
+    
+}
+
 void SettingsManager::loadSettings(){
-    xml.clear();
     loadSettingsFromFile();
+    loadSettingsIntoPanels();
 }
 
 void SettingsManager::loadSettingsFromFile(){
+    xml.clear();
+    
     string filename = "test_settings.xml";
     if( xml.loadFile(filename) ){
         ofLogVerbose()<<"SettingsManager: "<< filename <<" loaded.";
@@ -45,6 +68,8 @@ void SettingsManager::loadSettingsFromFile(){
     }
     
     loadMainPanelSettingsFromXml();
+    loadTimelinePanelSettingsFromXml();
+    loadMetersPanelSettingsFromXml();
 }
 
 void SettingsManager::saveSettingsToFile(){
@@ -100,7 +125,7 @@ void SettingsManager::loadTimelinePanelSettingsFromXml(){
     timelinePanelSettings.tracks.clear();
     for (int i=0; i<tracksNum; i++){
         const std::string nameTag = std::string(TIMELINE_PANEL_TAG) + ":" + TRACKS_TAG + ":" + TRACK_N_TAG + ofToString(i) + ":" + NAME_TAG;
-        const std::string typeTag = std::string(TIMELINE_PANEL_TAG) + ":" + TRACKS_TAG + ":" + TRACK_N_TAG + ofToString(i) + ":" + typeTag;
+        const std::string typeTag = std::string(TIMELINE_PANEL_TAG) + ":" + TRACKS_TAG + ":" + TRACK_N_TAG + ofToString(i) + ":" + TYPE_TAG;
         
         TLTrackSetting track;
         track.name = xml.getValue(nameTag, "");
@@ -110,22 +135,35 @@ void SettingsManager::loadTimelinePanelSettingsFromXml(){
 }
 
 void SettingsManager::loadMetersPanelSettingsFromXml(){
-    const std::string channelsNumTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_NUM_TAG;
+    
+    const std::string enabledNumTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + ENABLED_NUM_TAG;
+    int enabledNum = xml.getValue(enabledNumTag, 0);
+    
+    metersPanelSettings.enabledAlgorithmTypes.clear();
+    for (int i=0; i<enabledNum; i++){
+        const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + TYPE_N_TAG + ofToString(i);
+        string stringType = xml.getValue(typeTag, "");
+        auto algorithm = ofxaa::stringToAlgorithmType(stringType);
+        metersPanelSettings.enabledAlgorithmTypes.push_back(algorithm);
+    }
+    
+    
+    const std::string channelsNumTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNELS_NUM_TAG;
     int channelsNum = xml.getValue(channelsNumTag, 0);
     
     metersPanelSettings.channelMeters.clear();
     for (int i=0; i<channelsNum; i++){
         ChannelMeterSettings channelSettings;
-        const std::string metersNumTag = std::string(METERS_PANEL_TAG) + ":" + CHANNEL_N_TAG + ofToString(i) + METERS_NUM_TAG;
+        const std::string metersNumTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METERS_NUM_TAG;
         int metersNum = xml.getValue(metersNumTag, 0);
         
-        for (int j; j>metersNum; j++){
-            const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + TYPE_TAG;
-            const std::string stateTag = std::string(METERS_PANEL_TAG) + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + STATE_TAG;
-            const std::string smoothTag = std::string(METERS_PANEL_TAG) + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + SMOOTH_TAG;
-            const std::string alphaTag = std::string(METERS_PANEL_TAG) + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + ALPHA_TAG;
-            const std::string silenceTag = std::string(METERS_PANEL_TAG) + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + SILENCE_THRESHOLD_TAG;
-            const std::string timeTag = std::string(METERS_PANEL_TAG) + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + TIME_THRESHOLD_TAG;
+        for (int j=0; j<metersNum; j++){
+            const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + TYPE_TAG;
+            const std::string stateTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + STATE_TAG;
+            const std::string smoothTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + SMOOTH_TAG;
+            const std::string alphaTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + ALPHA_TAG;
+            const std::string silenceTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + SILENCE_THRESHOLD_TAG;
+            const std::string timeTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + TIME_THRESHOLD_TAG;
 
             MeterSettings ms;
             ms.type = xml.getValue(typeTag, "");
@@ -196,13 +234,25 @@ void SettingsManager::addMetersPanelSettingsToXml(){
     xml.addTag(METERS_PANEL_TAG);
     xml.pushTag(METERS_PANEL_TAG);
     
+    xml.addTag(ENABLED_ALGORITHMS_TAG);
+    xml.pushTag(ENABLED_ALGORITHMS_TAG);
+    xml.addValue(ENABLED_NUM_TAG, int(metersPanelSettings.enabledAlgorithmTypes.size()));
+    for(int i=0; i<metersPanelSettings.enabledAlgorithmTypes.size(); i++){
+        const std::string typeTag = TYPE_N_TAG + ofToString(i);
+        string stringType = ofxaa::algorithmTypeToString(metersPanelSettings.enabledAlgorithmTypes[i]);
+        xml.addValue(typeTag, stringType);
+    }
+    xml.popTag();
+    
+    xml.addTag(CHANNELS_TAG);
+    xml.pushTag(CHANNELS_TAG);
     xml.addValue(CHANNELS_NUM_TAG, int(metersPanelSettings.channelMeters.size()));
     for (int i=0; i<metersPanelSettings.channelMeters.size(); i++){
         std::string channelTag = CHANNEL_N_TAG + ofToString(i);
         xml.addTag(channelTag);
         xml.pushTag(channelTag);
         xml.addValue(METERS_NUM_TAG, int(metersPanelSettings.channelMeters[i].meters.size()));
-        for (int j=0; j>metersPanelSettings.channelMeters[i].meters.size(); j++){
+        for (int j=0; j<metersPanelSettings.channelMeters[i].meters.size(); j++){
             std::string meterTag = METER_N_TAG + ofToString(j);
             xml.addTag(meterTag);
             xml.pushTag(meterTag);
@@ -220,6 +270,7 @@ void SettingsManager::addMetersPanelSettingsToXml(){
         }
         xml.popTag();
     }
+    xml.popTag();//CHANNELS_TAG
     
     xml.popTag();
     

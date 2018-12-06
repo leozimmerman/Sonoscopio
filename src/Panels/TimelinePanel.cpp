@@ -78,8 +78,9 @@ bool TimelinePanel::getFocused(){
 void TimelinePanel::exit(){}
 //--------------------------------------------------------------
 #pragma mark - Settings
-void TimelinePanel::loadSettings(){
-    //TODO: Update current settings
+void TimelinePanel::loadSettings(TimelinePanelSettings& settings){
+    currentSettings = settings;
+    
     guiView.setStateFromSettings(currentSettings);
     
     timelineView.clearMarkers();

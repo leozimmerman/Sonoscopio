@@ -35,22 +35,47 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
 }
 
 void MetersMenuModal::display(int height){
+    
     setHeight(height);
     show();
 }
 
-void MetersMenuModal::applyConfiguration(){
+void MetersMenuModal::updateTogglesFromEnabledAlgorithms(){
     auto availableAlgorithms = ofxaa::allAvailableAlgorithmTypes;
     if (_algorithmToggles.size() != availableAlgorithms.size()){
         return;
     }
-    vector<ofxAAAlgorithmType> enabledAlgorithms;
+    
+    for (int i=0; i<_algorithmToggles.size(); i++){
+        bool enabled = isAlgorithmEnabled(availableAlgorithms[i]);
+        _algorithmToggles[i]->setEnabled(enabled);
+    }
+}
+
+void MetersMenuModal::updateEnabledAlgorithmsFromToggles(){
+    auto availableAlgorithms = ofxaa::allAvailableAlgorithmTypes;
+    if (_algorithmToggles.size() != availableAlgorithms.size()){
+        return;
+    }
+    enabledAlgorithms.clear();
     for (int i=0; i<_algorithmToggles.size(); i++){
         if (_algorithmToggles[i]->getEnabled()) {
             enabledAlgorithms.push_back(availableAlgorithms[i]);
         }
     }
-    
+}
+
+bool MetersMenuModal::isAlgorithmEnabled(ofxAAAlgorithmType algorithmType){
+    for(auto enabledType : enabledAlgorithms){
+        if (enabledType == algorithmType) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void MetersMenuModal::applyConfiguration(){
+    updateEnabledAlgorithmsFromToggles();
     callback_setEnabledAlgorithms(_metersPanelPtr, enabledAlgorithms);
 }
 
@@ -63,4 +88,11 @@ void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
 void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e) {
     applyConfiguration();
     hide();
+}
+
+void MetersMenuModal::loadStateIntoSettings(MetersPanelSettings* settings){}
+
+void MetersMenuModal::setStateFromSettings(MetersPanelSettings& settings){
+    enabledAlgorithms = settings.enabledAlgorithmTypes;
+    updateTogglesFromEnabledAlgorithms();
 }

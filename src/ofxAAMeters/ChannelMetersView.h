@@ -57,9 +57,12 @@ public:
     
     void onMeterStateChanged(OnOffEventData & data);
     
-    void loadSettings();
+    void loadSettings(ChannelMeterSettings& settings);
     void updateCurrentSettings();
     
+    ChannelMeterSettings& getCurrentSettingsRef(){
+        return currentSettings;
+    }
 
     //TODO: Remove this eventually....
     vector<float>& getMelBandsValues(){
@@ -89,7 +92,7 @@ protected:
     int getHeightForMeter(MeterView* meter);
     
     vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
-    ofxAudioAnalyzerUnit* _audioAnalyzerUnit;
+    ofxAudioAnalyzerUnit* audioAnalyzerUnit;
     int _contentHeight;
     ofColor _mainColor;
     int _panelId;

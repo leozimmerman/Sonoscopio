@@ -12,7 +12,7 @@
 #include "SettingsManager.h"
 
 std::function<void(MainPanel*)> callback_saveSettings = &MainPanel::saveSettings;
-std::function<void(MainPanel*)> callback_loadSettings = &MainPanel::loadSettings;
+//std::function<void(MainPanel*)> callback_loadSettings = &MainPanel::loadSettings;
 
 void MainPanelGui::setup(int x, int y, int w, int h, MainPanel* mainPanel_ptr){
     GuiView::setup(x, y, w, h);
@@ -45,8 +45,8 @@ void MainPanelGui::createComponents(){
     _components.push_back(component);
     component = GuiFactory::createButton(RENDER_ANALYSIS_LABEL, this, &MainPanelGui::onButtonEvent);
     _components.push_back(component);
-    component = GuiFactory::createToggle(SEND_OSC_LABEL, false, this, &MainPanelGui::onButtonEvent);
-    _components.push_back(component);
+    gSendOscToggle = GuiFactory::createToggle(SEND_OSC_LABEL, false, this, &MainPanelGui::onButtonEvent);
+    _components.push_back(gSendOscToggle);
     component = GuiFactory::createToggle(TIME_MEASUREMENT_LABEL, false, this, &MainPanelGui::onButtonEvent);
     _components.push_back(component);
  
@@ -74,37 +74,19 @@ void MainPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     } else if (label == SAVE_SETTINGS_LABEL){
         callback_saveSettings(_mainPanelPtr);
     } else if (label == LOAD_SETTINGS_LABEL){
-        callback_loadSettings(_mainPanelPtr);
+        //callback_loadSettings(_mainPanelPtr);
+        _mainPanelPtr->loadSettings();
     }
-    
-    /*
-     if(e.target->getLabel()=="OPEN FILE"){
-     openOpenFileDialog();
-     }else if(e.target->getLabel()=="LOAD SETTINGS"){
-     mMainAppPtr->loadSettings();
-     }else if(e.target->getLabel()=="SAVE SETTINGS"){
-     mMainAppPtr->saveSettings();
-     }else if(e.target->getLabel()== "CONFIG"){
-     ///showMenu();
-     }else if(e.target->getLabel()== "SEND OSC"){
-     mMainAppPtr->config.setIsSendingOsc(e.enabled);
-     }else if(e.target->getLabel()== "SAVE ANALYSIS"){
-     mMainAppPtr->saveAnalysisDataToFile();
-     }
-     */
 }
 void MainPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 void MainPanelGui::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 
 void MainPanelGui::loadStateIntoSettings(MainPanelSettings* settings){
     menuModal->loadStateIntoSettings(settings);
-    settings->osc.bSend = TRUE; //fix
+    settings->osc.bSend = gSendOscToggle->getEnabled();
 }
 
 void MainPanelGui::setStateFromSettings(MainPanelSettings& settings){
-//    gVolumeSlider->setValue(settings.volume);
-//    gLoopToggle->setEnabled(settings.bLoop);
-//    gBpmGridToggle->setEnabled(settings.bBpmGrid);
-//    gSnapToggle->setEnabled(settings.bSnap);
-//    gFramebasedToggle->setEnabled(settings.bFrambased);
+    menuModal->setStateFromSettings(settings);
+    gSendOscToggle->setEnabled(settings.osc.bSend);
 }

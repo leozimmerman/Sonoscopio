@@ -3,9 +3,8 @@
 ## Now
 ### Tasks
 - FIX Load/Save Settings and Project.
-    - Hace falta diferenciarlos?
-    - open Project dropdown-> No
-    - Revisar Configuration Class
+    - Terminar save/load settings en SettingsManager
+    - Revisar open file functionality -> validar si existen settings para el archivo.
 
 - FIX Data Rendering
     - Save Analysis to Modal Menu
@@ -16,7 +15,7 @@
 
 
 ### Bugs / Code Improvements
-- Definir: va o no el "_" en las variables
+- Definir: va o no el "_" en las variables -> NO VA
 - Sacar "//------" de a poco...
 
 

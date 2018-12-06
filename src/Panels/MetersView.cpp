@@ -143,14 +143,27 @@ vector<std::map<string, vector<float>>>& MetersView::getMetersVectorValues(){
     return vectorValuesForOsc;
 }
 
-void MetersView::updateCurrentSettings(){
-    for (auto channelView : _channelMetersViews){
-        channelView->updateCurrentSettings();
+#pragma mark - Settings
+
+void MetersView::loadSettings(MetersPanelSettings& settings){
+    //!
+    //TODO: Implement enabled algorithms...
+    
+    if (_channelMetersViews.size() != settings.channelMeters.size()){
+        return;
+    }
+    
+    for (int i=0; i<_channelMetersViews.size(); i++){
+        _channelMetersViews[i]->loadSettings(settings.channelMeters[i]);
     }
 }
 
-void MetersView::loadSettings(){
+void MetersView::updateCurrentSettings(){
+    currentChannelSettings.clear();
     for (auto channelView : _channelMetersViews){
-        channelView->loadSettings();
+        channelView->updateCurrentSettings();
+        currentChannelSettings.push_back(channelView->getCurrentSettingsRef());
     }
 }
+
+

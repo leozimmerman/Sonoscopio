@@ -45,7 +45,7 @@ public:
     
     virtual void resize(int x, int y, int w, int h) override;
 
-    void loadSettings();
+    void loadSettings(TimelinePanelSettings& settings);
     void updateCurrentSettings();
     
     void saveTimelineTracksToFolder();

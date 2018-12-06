@@ -41,8 +41,7 @@ public:
     
     virtual void resize(int x, int y, int w, int h) override;
     
-    void loadSettings();
-    
+    void loadSettings(MetersPanelSettings& settings);
     void updateCurrentSettings();
     MetersPanelSettings* getCurrentSettingsPtr(){
         return &currentSettings;

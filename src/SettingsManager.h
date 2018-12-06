@@ -40,6 +40,10 @@
 #define MARKER_N_TAG "MARKER-"
 
 #define METERS_PANEL_TAG "METERS-PANEL"
+#define ENABLED_ALGORITHMS_TAG "ENABLED-ALGORITHMS"
+#define ENABLED_NUM_TAG "ENABLED_NUM"
+#define TYPE_N_TAG "TYPE-"
+#define CHANNELS_TAG "CHANNELS"
 #define CHANNELS_NUM_TAG "CHANNELS_NUM"
 #define CHANNEL_N_TAG "CHANNEL-"
 #define METERS_NUM_TAG "METERS_NUM"
@@ -62,14 +66,13 @@ public:
         return instance;
     }
     
+    string getRootDir(){ return rootDir; }
     void setProjectDir(string dir){
         rootDir = dir;
     }
     
     void saveSettings();
     void loadSettings();
-    
-    string getRootDir(){ return rootDir; }
     
     void setMainPanelPtr(MainPanel* panelPtr){
         mainPanelPtr = panelPtr;
@@ -82,9 +85,6 @@ public:
     }
     
 private:
-    
-    
-    
     // Private Constructor
     SettingsManager();
     // Stop the compiler generating methods of copy the object
@@ -94,7 +94,8 @@ private:
     void saveSettingsToFile();
     void loadSettingsFromFile();
     
-    void updateFromCurrentSettingsPtrs();
+    void updateCurrentSettingsFromPanels();
+    void loadSettingsIntoPanels();
     
     void addMainPanelSettingsToXml();
     void loadMainPanelSettingsFromXml();

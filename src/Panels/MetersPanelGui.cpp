@@ -84,3 +84,19 @@ void MetersPanelGui::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 
 void MetersPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 
+void MetersPanelGui::loadStateIntoSettings(MetersPanelSettings* settings){
+//    settings->volume = gVolumeSlider->getValue();
+//    settings->bLoop = gLoopToggle->getEnabled();
+//    settings->bBpmGrid = gBpmGridToggle->getEnabled();
+//    settings->bSnap = gSnapToggle->getEnabled();
+//    settings->bFrambased = gFramebasedToggle->getEnabled();
+}
+
+void MetersPanelGui::setStateFromSettings(MetersPanelSettings& settings){
+    menuModal->setStateFromSettings(settings);
+//    gVolumeSlider->setValue(settings.volume);
+//    gLoopToggle->setEnabled(settings.bLoop);
+//    gBpmGridToggle->setEnabled(settings.bBpmGrid);
+//    gSnapToggle->setEnabled(settings.bSnap);
+//    gFramebasedToggle->setEnabled(settings.bFrambased);
+}

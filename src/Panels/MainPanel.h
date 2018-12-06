@@ -52,6 +52,8 @@ public:
     
     void saveSettings();
     void loadSettings();
+    
+    void loadSettings(MainPanelSettings& settings);
     void updateCurrentSettings();
 
     void openOpenFileDialog();

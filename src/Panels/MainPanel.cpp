@@ -153,13 +153,21 @@ void MainPanel::processOpenFileSelection(ofFileDialogResult openFileResult){
 
 #pragma mark - Settings funcs
 void MainPanel::applySettings(int fps, int buffersize, float bpm, string host, int port){
-//    currentSettings.frameRate = fps;
-//    currentSettings.bufferSize = buffersize;
-//    currentSettings.bpm = bpm;
-//    currentSettings.osc.host = host;
-//    currentSettings.osc.port = port;
+    currentSettings.frameRate = fps;
+    currentSettings.bufferSize = buffersize;
+    currentSettings.bpm = bpm;
+    currentSettings.osc.host = host;
+    currentSettings.osc.port = port;
     
+    //!
+    //TODO: Implement!
 }
+
+void MainPanel::loadSettings(MainPanelSettings& settings){
+    currentSettings = settings;
+    guiView.setStateFromSettings(settings);
+}
+
 
 void MainPanel::updateCurrentSettings(){
     guiView.loadStateIntoSettings(&currentSettings);

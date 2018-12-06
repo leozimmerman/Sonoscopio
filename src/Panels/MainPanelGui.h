@@ -43,6 +43,8 @@ private:
     void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
     void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
     
+    ofxDatGuiToggle* gSendOscToggle;
+    
     MainPanel* _mainPanelPtr;
     shared_ptr<MainMenuModal> menuModal;
 };

@@ -34,41 +34,6 @@ void MetersPanel::setup(int x, int y, int w, int h){
     SettingsManager::getInstance().setMetersPanelPtr(this);
 }
 
-void MetersPanel::setupAnalyzer(int sampleRate, int bufferSize, int channels){
-    audioAnalyzer.setup(sampleRate, bufferSize, channels);
-    setChannelAnalyzers(audioAnalyzer.getChannelAnalyzersPtrs());
-}
-
-void MetersPanel::resetAnalyzer(int sampleRate, int bufferSize, int channels){
-    audioAnalyzer.reset(sampleRate, bufferSize, channels);
-    resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
-}
-
-void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
-    channelAnalyzers = chanAnalyzerPtrs;
-    metersView.setupChannelMeters(chanAnalyzerPtrs, enabledAlgorithmTypes);
-}
-
-void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms) {
-    enabledAlgorithmTypes = enabledAlgorithms;
-    
-    for (int ch=0; ch<audioAnalyzer.getChannelsNum(); ch++){
-        for (auto algorithm : ofxaa::allAvailableAlgorithmTypes){
-            audioAnalyzer.setActive(ch, algorithm, false);
-        }
-        for (auto algorithm : enabledAlgorithms){
-            audioAnalyzer.setActive(ch, algorithm, true);
-        }
-    }
-    metersView.setEnabledAlgorithms(enabledAlgorithms);
-}
-
-
-
-void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
-    audioAnalyzer.analyze(inBuffer);
-}
-
 void MetersPanel::update(){
     metersView.update();
     guiView.update();
@@ -114,25 +79,60 @@ void MetersPanel::resize(int x, int y, int w, int h){
     guiView.resize(x, y, w, GUI_COMP_HEIGHT);
     metersView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
+#pragma mark - Audio Analyzer
 
+void MetersPanel::setupAnalyzer(int sampleRate, int bufferSize, int channels){
+    audioAnalyzer.setup(sampleRate, bufferSize, channels);
+    setChannelAnalyzers(audioAnalyzer.getChannelAnalyzersPtrs());
+}
+
+void MetersPanel::resetAnalyzer(int sampleRate, int bufferSize, int channels){
+    audioAnalyzer.reset(sampleRate, bufferSize, channels);
+    resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
+}
+
+void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
+    channelAnalyzers = chanAnalyzerPtrs;
+    metersView.setupChannelMeters(chanAnalyzerPtrs, enabledAlgorithmTypes);
+}
+
+void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
+    audioAnalyzer.analyze(inBuffer);
+}
 #pragma mark - Settings
 
-void MetersPanel::loadSettings(){
-    
-    metersView.loadSettings();
+void MetersPanel::loadSettings(MetersPanelSettings& settings){
+    guiView.setStateFromSettings(settings);
+    setEnabledAlgorithms(settings.enabledAlgorithmTypes);
+    metersView.loadSettings(settings);
 }
-//----------------------------------------------
+
 void MetersPanel::updateCurrentSettings(){
-    //TODO: Implement
     metersView.updateCurrentSettings();
+    currentSettings.enabledAlgorithmTypes = enabledAlgorithmTypes;
+    currentSettings.channelMeters = metersView.getCurrentChannelSettingsRef();
 }
-//----------------------------------------------
+
 #pragma mark - Other funcs
-//----------------------------------------------
+
+void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms) {
+    enabledAlgorithmTypes = enabledAlgorithms;
+    
+    for (int ch=0; ch<audioAnalyzer.getChannelsNum(); ch++){
+        for (auto algorithm : ofxaa::allAvailableAlgorithmTypes){
+            audioAnalyzer.setActive(ch, algorithm, false);
+        }
+        for (auto algorithm : enabledAlgorithms){
+            audioAnalyzer.setActive(ch, algorithm, true);
+        }
+    }
+    metersView.setEnabledAlgorithms(enabledAlgorithms);
+}
+
 void MetersPanel::resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     metersView.reset(chanAnalyzerPtrs);
 }
-//----------------------------------------------
+
 bool MetersPanel::getFocused(){
     /**
     if(gMaxFreq->getFocused() ||
