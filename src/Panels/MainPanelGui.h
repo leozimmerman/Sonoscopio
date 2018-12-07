@@ -28,8 +28,8 @@ public:
     void loadStateIntoSettings(MainPanelSettings* settings);
     void setStateFromSettings(MainPanelSettings& settings);
     
-    bool getFocused(){ menuModal->getFocused(); }
-    bool getOscEnabled(){ gSendOscToggle->getEnabled(); }
+    bool getFocused(){ return menuModal->getFocused(); }
+    bool getOscEnabled(){ return  gSendOscToggle->getEnabled(); }
     
 private:
     void setupMenu();

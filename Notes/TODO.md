@@ -3,17 +3,15 @@
 ## Now
 ### Tasks
 
-- ADD:
-    Error modal
-
 - ADD: Render algorithm analysis to track (!)
-
+    - Add meter modal.
+    
 - ADD: TimlinePanel modal: Which tracks to show
 
 - FIX: OSC sending
 
 - FIX Data Rendering
-    - Save Analysis to Modal Menu?d
+    - Save Analysis to Modal Menu?
 
 
 
@@ -21,7 +19,6 @@
 ### Bugs / Code Improvements
 - Definir: va o no el "_" en las variables -> NO VA
 - Sacar "//------" de a poco...
-
 
 
 **********************************************************************************************

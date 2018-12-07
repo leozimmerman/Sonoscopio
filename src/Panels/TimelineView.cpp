@@ -263,13 +263,13 @@ void TimelineView::clearMarkers(){
     _markers.clear();
 }
 
-void TimelineView::checkIfWaveformPreviewChanged(){
-    //FIXME: No se esta usando. Revisar que no se ajusta el waveform cuando se muestran los tracks.
-    if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
-        ofLogVerbose()<<"TimePanel: recomputing audioPreview";
-        audioTrack->recomputePreview();
-    }
-}
+//void TimelineView::checkIfWaveformPreviewChanged(){
+//    //FIXME: No se esta usando. Revisar que no se ajusta el waveform cuando se muestran los tracks.
+//    if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
+//        ofLogVerbose()<<"TimePanel: recomputing audioPreview";
+//        audioTrack->recomputePreview();
+//    }
+//}
 
 void TimelineView::addTrackWithStringType(string stringType, string name){
     if(stringType=="Curves"){

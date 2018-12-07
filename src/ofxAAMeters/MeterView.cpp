@@ -20,13 +20,14 @@
 #include "BinMeterView.h"
 #include "OnsetMeterView.h"
 #include "ofxAAUtils.h"
+#include "ofApp.h"
 // the static event, or any static variable, must be initialized outside of the class definition.
 ofEvent<OnOffEventData> MeterView::onOffEventGlobal = ofEvent<OnOffEventData>();
 
 //FIXME: Move this to somewhere else. Same plase as availableTypes
 
 int MeterView::height = 50;
-//------------------------------------------------
+
 MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
     switch (algorithmType) {
         case ONSETS: return new OnsetMeterView(algorithmType, panelId, aaPtr);
@@ -40,10 +41,9 @@ MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int pane
             return new MeterView(algorithmType, panelId, aaPtr);
     }
 }
-//------------------------------------------------
 
 #pragma mark Inits
-//------------------------------------------------
+
 MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) {
     
     _audioAnalyzer = aaPtr;
@@ -59,6 +59,17 @@ MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAna
     setComponentsWidth();
     setComponentsPositions();
     _framerate = GUI_STATIC_FPS;
+    setupMenu();
+}
+
+void MeterView::setupMenu(){
+    auto ofAppPtr = (ofApp*)ofGetAppPtr();
+    menuModal = make_shared<MeterModal>(this);
+    menuModal->addListener(ofAppPtr, &ofApp::onModalEvent);
+}
+
+void MeterView::showMenu(){
+    menuModal->display(ofGetHeight() / 2);
 }
 //------------------------------------------------
 void MeterView::initDefaultValues(){
@@ -295,6 +306,7 @@ void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
      
     } else if(e.target->getType() == ofxDatGuiType::BUTTON){
         resetPeak();
+        showMenu();
     }
 
 }

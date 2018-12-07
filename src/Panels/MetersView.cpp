@@ -49,34 +49,33 @@ void MetersView::createChannelMetersViews() {
     }
 }
 
-//----------------------------------------------
 void MetersView::update(){
     for(auto p : _channelMetersViews){
         p->update();
     }
 }
-//----------------------------------------------
+
 void MetersView::draw(){
     View::draw();
     for(auto p : _channelMetersViews){
         p->draw();
     }
 }
-//----------------------------------------------
+
 void MetersView::exit(){
     for (auto p : _channelMetersViews){
         p->exit();
     }
     _channelMetersViews.clear();
 }
-//----------------------------------------------
+
 //TODO: Move scroll funcs to ChannelPannelMV
 void MetersView::scrollUp(){
     for (auto p : _channelMetersViews) {
         p->scrollUp();
     }
 }
-//----------------------------------------------
+
 void MetersView::scrollDown(){
     for (auto p : _channelMetersViews) {
         p->scrollDown();

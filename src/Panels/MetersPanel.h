@@ -85,15 +85,7 @@ private:
     int _bufferSize;
     int _channels;
     
-    /*
-     TODO: Mover a Meters Modal
-     ofxDatGuiTextInput* gMaxFreq;
-     ofxDatGuiTextInput* gMaxHfc;
-     ofxDatGuiTextInput* gMaxCentroid;
-     ofxDatGuiTextInput* gMaxSpecComp;
-     ofxDatGuiTextInput* gMaxRollOff;
-     ofxDatGuiTextInput* gMaxOddEven;
-     */
+
 
     
 };

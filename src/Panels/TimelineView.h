@@ -83,13 +83,14 @@ public:
     void expandFocusedTrack();
     
     
-    void checkIfWaveformPreviewChanged();
+    //void checkIfWaveformPreviewChanged();
     void addKeyframeInFocusedTrack();
     void setFrameRate(int fps);
     void openAudioFile(string filename);
     void hideTracks();
     
     std::map<string, float> getTracksValues();
+    vector<float>& getMarkers(){return _markers;}
     bool isSoundLoaded();
     
     void addTrackWithStringType(string stringType, string name);
@@ -98,16 +99,16 @@ public:
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;
     
+  
+    
+///!!!
+    //TODO: definir que es private!
+private:
     bool _isThereBang = false;
     ofxTLTrack* _bangedTrack;
     ofColor waveformCol;
     bool _footerIsDragging;
     vector<float> _markers;
     int _frameRate;
-    
-///!!!
-    //TODO: definir que es private!
-private:
-    
     
 };

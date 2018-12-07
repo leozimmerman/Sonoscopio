@@ -42,9 +42,13 @@ void MainPanel::update(){
     guiView.update();
     
     if (guiView.getOscEnabled()) {
-        ///oscSender.sendOscData(metersPanel.metersView.getMetersValues(), metersPanel.metersView.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
+        /**
+        auto metersValues = metersPanel.metersView.getMetersValues();
+        auto metersVectorValues = metersPanel.metersView.getMetersVectorValues();
+        auto trackValues = timePanel.timelineView.getTracksValues();
+        oscSender.sendOscData(metersValues, metersVectorValues, trackValues, config.osc().bSendVectorValues);
+        */
     }
-    
 }
 
 void MainPanel::draw(){

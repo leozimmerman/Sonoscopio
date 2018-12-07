@@ -23,8 +23,8 @@
 #include "ExtendedDatGuiComponents.h"
 #include "Macros.h"
 #include "View.h"
-//#include "ofxAudioAnalyzerAlgorithms.h"
 #include "ofxAudioAnalyzerUnit.h"
+#include "MeterModal.h"
 
 class OnOffEventData{
 public:
@@ -140,7 +140,12 @@ protected:
     int     _label_x, _label_w;
     
 private:
+    void setupMenu();
+    void showMenu();
+    
     float _value;
     float _valueNorm;
     float _maxValueRegistered;//peak
+    
+    shared_ptr<MeterModal> menuModal;
 };

@@ -106,6 +106,8 @@
 		B3B69B6521542EFB00CB9179 /* GuiView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B69B6321542EFB00CB9179 /* GuiView.cpp */; };
 		B3B69B692154327300CB9179 /* MetersPanelGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B69B672154327300CB9179 /* MetersPanelGui.cpp */; };
 		B3DD5B7521486AEE00B3D08F /* ofxAAUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */; };
+		B3EEC34821BB0B1200C2526E /* PanelsBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3EEC34621BB0B1200C2526E /* PanelsBridge.cpp */; };
+		B3EEC34B21BB0E8F00C2526E /* MeterModal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3EEC34921BB0E8F00C2526E /* MeterModal.cpp */; };
 		B3FD348A213DD25300B30C17 /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FD3488213DD25300B30C17 /* OscSender.cpp */; };
 		B3FD3493213EE77700B30C17 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3FD3491213EE77700B30C17 /* View.cpp */; };
 		C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC8881B3C8C0A1C45F042E7A /* OscPrintReceivedElements.cpp */; };
@@ -553,6 +555,10 @@
 		B3B69B682154327300CB9179 /* MetersPanelGui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MetersPanelGui.h; path = Panels/MetersPanelGui.h; sourceTree = "<group>"; };
 		B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAUtils.cpp; sourceTree = "<group>"; };
 		B3DD5B7421486AEE00B3D08F /* ofxAAUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAAUtils.h; sourceTree = "<group>"; };
+		B3EEC34621BB0B1200C2526E /* PanelsBridge.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PanelsBridge.cpp; sourceTree = "<group>"; };
+		B3EEC34721BB0B1200C2526E /* PanelsBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PanelsBridge.h; sourceTree = "<group>"; };
+		B3EEC34921BB0E8F00C2526E /* MeterModal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MeterModal.cpp; sourceTree = "<group>"; };
+		B3EEC34A21BB0E8F00C2526E /* MeterModal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeterModal.h; sourceTree = "<group>"; };
 		B3FD3487213DBA3300B30C17 /* Configurations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Configurations.h; sourceTree = "<group>"; };
 		B3FD3488213DD25300B30C17 /* OscSender.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OscSender.cpp; sourceTree = "<group>"; };
 		B3FD3489213DD25300B30C17 /* OscSender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscSender.h; sourceTree = "<group>"; };
@@ -1075,6 +1081,8 @@
 				B32D93A221B1DB2F00E14271 /* TextModal.h */,
 				B32D93A321B1DC1000E14271 /* MetersMenuModal.cpp */,
 				B32D93A421B1DC1000E14271 /* MetersMenuModal.h */,
+				B3EEC34921BB0E8F00C2526E /* MeterModal.cpp */,
+				B3EEC34A21BB0E8F00C2526E /* MeterModal.h */,
 			);
 			name = CustomModals;
 			sourceTree = "<group>";
@@ -1481,6 +1489,8 @@
 				B3FD3492213EE77700B30C17 /* View.h */,
 				B38987EC21B9C1700076192A /* FileManager.cpp */,
 				B38987ED21B9C1700076192A /* FileManager.h */,
+				B3EEC34621BB0B1200C2526E /* PanelsBridge.cpp */,
+				B3EEC34721BB0B1200C2526E /* PanelsBridge.h */,
 			);
 			name = Panels;
 			sourceTree = "<group>";
@@ -1865,12 +1875,14 @@
 				B38987F121B9CC380076192A /* FileInfoView.cpp in Sources */,
 				B3712F412135E920007BA046 /* ofxTextInputField.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
+				B3EEC34821BB0B1200C2526E /* PanelsBridge.cpp in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
 				67FE4C7B15C2F0478C8126C2 /* NetworkingUtils.cpp in Sources */,
 				B3354C942141BB14003F8F91 /* TimelineView.cpp in Sources */,
 				B3712F9D2136F733007BA046 /* ofxHotKeys_impl_mac.mm in Sources */,
 				B3712F922136F733007BA046 /* ofxTLKeyframes.cpp in Sources */,
+				B3EEC34B21BB0E8F00C2526E /* MeterModal.cpp in Sources */,
 				510CAFE035E576A4E1502D52 /* UdpSocket.cpp in Sources */,
 				B3712F352135E8E3007BA046 /* ofxEasingCubic.cpp in Sources */,
 				B3A475C91DD4FBF000B1371C /* MetersPanel.cpp in Sources */,

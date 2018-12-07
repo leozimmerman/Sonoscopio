@@ -40,14 +40,13 @@
 #define MAIN_PANEL_HEIGHT 0.15
 #define METER_PANEL_WIDTH 0.2
 
-
 class ofApp : public ofBaseApp{
 public:
 
     void setFrameRate(int fps);
 
     void onModalEvent(ofxModalEvent e);
-    void onsetFired(int & panelId);//TODO: Remove from here
+    
     void errorSent(string & errorMessage);
     
     MainPanel mainPanel;

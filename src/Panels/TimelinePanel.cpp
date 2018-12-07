@@ -21,6 +21,7 @@
 #include "SettingsManager.h"
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
+#include "PanelsBridge.h"
 
 #pragma mark - Core funcs
 void TimelinePanel::setup(int x, int y, int w, int h){
@@ -33,6 +34,7 @@ void TimelinePanel::setup(int x, int y, int w, int h){
     SettingsManager::getInstance().setTimelinePanelPtr(this);
     FileManager::getInstance().setTimelinePanelPtr(this);
     AnalysisDataSaver::getInstance().setTimelinePanelPtr(this);
+    PanelsBridge::getInstance().setTimelinePanelPtr(this);
 }
 
 void TimelinePanel::update(){
@@ -111,7 +113,7 @@ void TimelinePanel::updateCurrentSettings(){
     }
     
     currentSettings.markers.clear();
-    for (auto marker : timelineView._markers){
+    for (auto marker : timelineView.getMarkers()){
         currentSettings.markers.push_back(marker);
     }
 }

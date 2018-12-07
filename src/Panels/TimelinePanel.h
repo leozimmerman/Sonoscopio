@@ -95,9 +95,9 @@ public:
         return timelineView.audioTrack->getCurrentSoundBufferMono(size);
     }
     int getTotalFramesNum(){return timelineView.timeline.getDurationInFrames();}
-    string getSoundfilePath(){return timelineView.audioTrack->getSoundfilePath();}
-    float getDurationInSeconds(){return timelineView.timeline.getDurationInSeconds();}
-    float getBpm(){return timelineView.timeline.getBPM();}
+//    string getSoundfilePath(){return timelineView.audioTrack->getSoundfilePath();}
+//    float getDurationInSeconds(){return timelineView.timeline.getDurationInSeconds();}
+//    float getBpm(){return timelineView.timeline.getBPM();}
     
 private:
     TimelineViewGui guiView;

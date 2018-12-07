@@ -78,7 +78,7 @@ void ofApp::setupModals() {
 }
 
 void ofApp::setupListeners() {
-    ofAddListener(OnsetMeterView::onsetEventGlobal, this, &ofApp::onsetFired);
+    
     ofAddListener(ofApp::errorEvent, this, &ofApp::errorSent);
 }
 
@@ -260,9 +260,7 @@ void ofApp::errorSent(string & errorMessage){
     showErrorMessage(errorMessage);
 }
 
-void ofApp::onsetFired(int & panelId){
-    timePanel.addKeyframeInFocusedTrack();
-}
+
 
 void ofApp::onModalEvent(ofxModalEvent e) {
     if (e.type == ofxModalEvent::SHOWN){
@@ -271,10 +269,10 @@ void ofApp::onModalEvent(ofxModalEvent e) {
         // dispatched when the window has finished animating out //
     }    else if (e.type == ofxModalEvent::CONFIRM){
         // dispatched when the button at index 0 is selected //
-        cout << "OK button was selected" << endl;
+        cout << "ofApp: OK button was selected" << endl;
     }    else if (e.type == ofxModalEvent::CANCEL){
         // dispatched when the button at index 1 is selected //
-        cout << "CANCEL button was selected" << endl;
+        cout << "ofApp: CANCEL button was selected" << endl;
     }
     
    

@@ -22,6 +22,7 @@
 #include "SettingsManager.h"
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
+#include "PanelsBridge.h"
 
 #pragma mark - Core Funcs
 
@@ -36,6 +37,7 @@ void MetersPanel::setup(int x, int y, int w, int h){
     SettingsManager::getInstance().setMetersPanelPtr(this);
     FileManager::getInstance().setMetersPanelPtr(this);
     AnalysisDataSaver::getInstance().setMetersPanelPtr(this);
+    PanelsBridge::getInstance().setMetersPanelPtr(this);
 }
 
 void MetersPanel::update(){
