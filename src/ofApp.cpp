@@ -17,6 +17,7 @@
  */
 
 #include "ofApp.h"
+#include "AnalysisDataSaver.h"
 
 #pragma mark - Core funcs
 //--------------------------------------------------------------
@@ -28,9 +29,8 @@ void ofApp::setup(){
     setupListeners();
     setupModals();
 
-    oscSender.setup(INIT_OSC_HOST,  INIT_OSC_PORT);
-    dataSaver.setup(ofGetAppPtr());
-    verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
+    setFrameRate(INIT_FPS);
+    
 }
 
 void ofApp::setupOFContext() {
@@ -38,7 +38,7 @@ void ofApp::setupOFContext() {
     ofSetBackgroundColor(ofColor::black);
     ofEnableSmoothing();
     ofEnableAlphaBlending();
-    ofSetFrameRate(INIT_FPS);
+    //ofSetFrameRate(INIT_FPS);
 }
 
 void ofApp::setupTimeMeasurment() {
@@ -63,7 +63,7 @@ void ofApp::setupPanels() {
     metersPanel.setup(0, mainPanel.maxY(), _meters_width, (h - mainPanel.maxY()));
     timePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()));
    
-    metersPanel.setupAnalyzer(INIT_FRAME_RATE, INIT_BUFFER_SIZE, 1);
+    metersPanel.setupAnalyzer(INIT_SAMPLE_RATE, INIT_BUFFER_SIZE, 1);
     
     mainPanel.setFrameRate(MAIN_PANEL_FPS);
     timePanel.setFrameRate(TL_PANEL_FPS);
@@ -82,17 +82,16 @@ void ofApp::setupListeners() {
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    if(dataSaver.isThreadRunning()){
+    if(AnalysisDataSaver::getInstance().isThreadRunning()){
         return;
     }
 
     ofSetWindowTitle("Sonoscopio");//("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
     
-    //analyze soundBuffer----------------
     if (timePanel.isFileLoaded() && timePanel.isPlaying()){
         ofSoundUpdate();
         
-        soundBuffer = timePanel.getCurrentSoundBufferMono(metersPanel.getBufferSize());
+        ofSoundBuffer soundBuffer = timePanel.getCurrentSoundBufferMono(metersPanel.getBufferSize());
         
         TS_START("AUDIO-ANALYSIS");
         metersPanel.analyzeBuffer(soundBuffer);
@@ -100,29 +99,17 @@ void ofApp::update(){
         
     }
 
-    //update panels-------------------
     TS_START("PANELS-UPDATE");
     mainPanel.update();
     timePanel.update();
     metersPanel.update();
     TS_STOP("PANELS-UPDATE");
-    
-    //send OSC-----------------------
-    TS_START("SEND-OSC");
-    if(TRUE) {
-    //FIXME: No anda
-        ///oscSender.sendOscData(metersPanel.metersView.getMetersValues(), metersPanel.metersView.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
-    }
-    TS_STOP("SEND-OSC");
-
-
 }
 
-//--------------------------------------------------------------
+
 void ofApp::draw(){
-    //If saving thread is running dont draw Panels.
-    if(dataSaver.isThreadRunning()){
-        drawSavingAnalysisSign();
+
+    if(AnalysisDataSaver::getInstance().drawSavingAnalysisSign()){
         return;
     }
     
@@ -138,10 +125,10 @@ void ofApp::draw(){
     mainPanel.draw();
     TS_STOP("MAIN-PANEL");
 }
-//--------------------------------------------------------------
+
 void ofApp::exit(){
     metersPanel.exit();
-    dataSaver.stop();
+    AnalysisDataSaver::getInstance().stop();
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -224,61 +211,28 @@ void ofApp::keyPressed(int key){
     }
     
 }
-#pragma mark - Audio Engine funcs
 
-//--------------------------------------------------------------
 void ofApp::setFrameRate(int fps){
     
     ofSetFrameRate(fps);
     timePanel.setFrameRate(fps);
     
-    //update file info frames num info:
-    //mainPanel.setFileInfoString(timePanel.getFileInfo());
+    //TODO: update file info frames num info:
+    //-> mainPanel.updateFileInfoString(fps, framesNum;
     
-    dataSaver.updateFrameRate();
+    AnalysisDataSaver::getInstance().updateFrameRate(fps, timePanel.getTotalFramesNum());
     
     TIME_SAMPLE_SET_FRAMERATE(fps);
-    
-    ofLogVerbose()<<"Frame Rate changed to: "<<ofToString(fps);
-}
-//--------------------------------------------------------------
-#pragma mark - Save Analysis Data
-//-------------------------------------------------------------
-//??? Add dataSaver.stop() func?
-void ofApp::saveAnalysisDataToFile(){
-    //stop();
-    dataSaver.start();
-}
-//-------------------------------------------------------------
-void ofApp::drawSavingAnalysisSign(){
-    ofPushStyle();
-    
-    ofFill();
-    ofSetColor(0,150);
-    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-    ofSetColor(255);
-    
-    string displayStr = "Saving Analysis Data...  " + ofToString(dataSaver.getPercentage(), 2) + "%";
-    
-    //align center
-    int label_w = verdana.stringWidth(displayStr);
-    int label_x =  ofGetWidth() * .5 - label_w *.5;
-    
-    verdana.drawString(displayStr, label_x , ofGetHeight()/2);
-    
-    ofPopStyle();
 }
 
-//------------------------------------------------------------
 #pragma mark - Sizes
-//--------------------------------------------------------------
 void ofApp::updatePanelsDimensions(int w, int h) {
     _main_height   = GUI_COMP_HEIGHT + FILE_INFO_HEIGHT;
     _meters_width = METER_PANEL_WIDTH * w;
 }
-//------------------------------------------------------------
+
 void ofApp::windowResized(int w, int h){
-    //TODO: Disable dragging.
+    //TODO: Disable dragging ??
     updatePanelsDimensions(w, h);
     mainPanel.resize(mainPanel.getPosition().x,
                      mainPanel.getPosition().y,
@@ -296,13 +250,13 @@ void ofApp::windowResized(int w, int h){
     ofLogVerbose()<<"-- Window resized: "<< w <<"x"<< h;
     ofLogVerbose()<<"-- main height: "<< _main_height <<"- _meters_width: "<< h;
 }
-//--------------------------------------------------------------
+
 #pragma mark - Other
-//--------------------------------------------------------------
+
 void ofApp::onsetFired(int & panelId){
     timePanel.addKeyframeInFocusedTrack();
 }
-//--------------------------------------------------------------
+
 void ofApp::onModalEvent(ofxModalEvent e) {
     if (e.type == ofxModalEvent::SHOWN){
         // dispatched when the window has finished animating in //

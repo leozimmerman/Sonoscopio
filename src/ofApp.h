@@ -30,13 +30,12 @@
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
-#include "AnalysisDataSaver.h"
 #include "ofEvents.h"
 
 #include "TextModal.h"
 
 #include "ofxHotKeys.h"
-#include "OscSender.h"
+
 
 #define MAIN_PANEL_HEIGHT 0.15
 #define METER_PANEL_WIDTH 0.2
@@ -46,37 +45,21 @@ class ofApp : public ofBaseApp{
 public:
 
     
-    void addKeyframeInFocusedTrack();//TODO: Remove from here
+    //void addKeyframeInFocusedTrack();//TODO: Remove from here
     
     void setFrameRate(int fps);
     
-    void setBufferSize(int bs);
     void updatePanelsDimensions(int w, int h);
-    
-    //TODO: Remove from here - Analysis Data saver
-    int getTotalFramesNum(){return timePanel.getTotalFramesNum();}
-    string getSoundfilePath(){return timePanel.getSoundfilePath();}
-    float getDurationInSeconds(){return timePanel.getDurationInSeconds();}
-    float getBpm(){return timePanel.getBpm();}
-    //---------
-
-    void saveAnalysisDataToFile();//TODO: Remove from here
-    void drawSavingAnalysisSign();//TODO: Remove from here
     
     void onsetFired(int & panelId);//TODO: Remove from here
     
-    shared_ptr<TextModal> mText;
-    
+
     void onModalEvent(ofxModalEvent e);
     void showKeyboardShortcuts();
     
     MainPanel mainPanel;
     TimelinePanel timePanel;
     MetersPanel metersPanel;
-    
-    AnalysisDataSaver dataSaver;
-    //MainPanelSettings config;//TODO: Remove from here!!!
-    OscSender oscSender;
     
 private:
     
@@ -95,14 +78,10 @@ private:
     void setupPanels();
     void setupListeners();
     
-    ofSoundBuffer soundBuffer;
-    
-    ofTrueTypeFont	verdana; //Remove from here.
-    
     int _main_height;
     int _meters_width;
     
-    
+    shared_ptr<TextModal> mText;
     
 };
 

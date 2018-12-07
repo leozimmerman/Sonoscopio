@@ -2,15 +2,23 @@
 
 ## Now
 ### Tasks
-- FIX Load/Save Settings and Project.
-    - Clean up ofApp
 
-- FIX Data Rendering
-    - Save Analysis to Modal Menu
+- FIX Guis: 
+    - Main Panel: Remove BPM, Buffersize, 
+
+- ADD:
+    Error modal
 
 - ADD: Render algorithm analysis to track (!)
 
 - ADD: TimlinePanel modal: Which tracks to show
+
+- FIX: OSC sending
+
+- FIX Data Rendering
+    - Save Analysis to Modal Menu?d
+
+
 
 
 ### Bugs / Code Improvements

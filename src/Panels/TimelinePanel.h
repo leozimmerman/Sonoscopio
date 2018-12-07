@@ -74,7 +74,7 @@ public:
     #pragma mark - Getters
     bool isFileLoaded(){return timelineView.isSoundLoaded();}
     bool isPlaying(){return timelineView.timeline.getIsPlaying();}
-    //string getFileInfo(){return timelineView.getFileInfo();};
+    
     int getAudioFileSampleRate(){return timelineView.audioTrack->getSampleRate();}
     int getAudioFileNumChannels(){return timelineView.audioTrack->getNumChannels();}
     float getAudioFileDuration(){return timelineView.audioTrack->getDuration();}

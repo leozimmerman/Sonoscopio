@@ -7,6 +7,7 @@
 
 #include "FileManager.h"
 #include "SettingsManager.h"
+#include "AnalysisDataSaver.h"
 
 FileManager::FileManager(){
     fileName = "";
@@ -51,10 +52,13 @@ void FileManager::openAudioFile(string filename){
         channels = timelinePanelPtr->getAudioFileNumChannels();
         duration = timelinePanelPtr->getAudioFileDuration();
         
-        mainPanelPtr->setAudioFileInfo(filename, directory, duration, samplerate, channels, 0, 0);
+        int durationInFrames = timelinePanelPtr->getTotalFramesNum();
+        int framerate = timelinePanelPtr->getFrameRate();
+        mainPanelPtr->setAudioFileInfo(filename, directory, duration, samplerate, channels, durationInFrames, framerate);
+        
         metersPanelPtr->resetAnalyzer(samplerate);
         SettingsManager::getInstance().loadSettings();
-        ///dataSaver.reset();
+        AnalysisDataSaver::getInstance().reset();
     }
 }
 

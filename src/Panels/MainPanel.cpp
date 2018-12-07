@@ -19,7 +19,7 @@
 #include "MainPanel.h"
 #include "SettingsManager.h"
 #include "FileManager.h"
-
+#include "AnalysisDataSaver.h"
 
 #pragma mark - core funcs
 void MainPanel::setup(int x, int y, int w, int h){
@@ -29,12 +29,19 @@ void MainPanel::setup(int x, int y, int w, int h){
     guiView.setup(x, y, w, GUI_COMP_HEIGHT, this);
     fileInfoView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
+    oscSender.setup(INIT_OSC_HOST,  INIT_OSC_PORT);
+    
     SettingsManager::getInstance().setMainPanelPtr(this);
     FileManager::getInstance().setMainPanelPtr(this);
 }
 
 void MainPanel::update(){
     guiView.update();
+    
+    if (guiView.getOscEnabled()) {
+        ///oscSender.sendOscData(metersPanel.metersView.getMetersValues(), metersPanel.metersView.getMetersVectorValues(), timePanel.timelineView.getTracksValues(), config.osc().bSendVectorValues);
+    }
+    
 }
 
 void MainPanel::draw(){
@@ -76,12 +83,14 @@ void MainPanel::openFileDialog(){
 #pragma mark - Settings funcs
 void MainPanel::applySettings(int fps, int buffersize, float bpm, string host, int port){
     currentSettings.frameRate = fps;
-    currentSettings.bufferSize = buffersize;
-    currentSettings.bpm = bpm;
+    currentSettings.bufferSize = buffersize; //Move to main panel
+    currentSettings.bpm = bpm; //Move To timeline panel
     currentSettings.osc.host = host;
     currentSettings.osc.port = port;
     
     //!
+    oscSender.setHost(host);
+    oscSender.setPort(port);
     //TODO: Implement!
 }
 
@@ -98,11 +107,9 @@ void MainPanel::saveSettings(){
     SettingsManager::getInstance().saveSettings();
 }
 
-void MainPanel::loadSettings(){
-    SettingsManager::getInstance().loadSettings();
+void MainPanel::renderAnalysis(){
+    AnalysisDataSaver::getInstance().start();
 }
-
-
 
 
 

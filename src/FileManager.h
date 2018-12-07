@@ -37,6 +37,9 @@ public:
         metersPanelPtr = panelPtr;
     }
     
+    string getFilePath(){return absolutePath;}
+    float getFileDuration(){return duration;}
+    int getFileSampleRate(){return samplerate;}
     string getSettingsFileName(){return directory + baseName + SETTINGS_SUFFIX;}
     
 private:

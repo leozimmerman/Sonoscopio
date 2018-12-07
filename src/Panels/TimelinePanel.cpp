@@ -20,13 +20,9 @@
 #include "ofApp.h"
 #include "SettingsManager.h"
 #include "FileManager.h"
-
-
+#include "AnalysisDataSaver.h"
 
 #pragma mark - Core funcs
-
-//-------------------------------------------------
-
 void TimelinePanel::setup(int x, int y, int w, int h){
     
     BasePanel::setup(x, y, w, h);
@@ -36,13 +32,14 @@ void TimelinePanel::setup(int x, int y, int w, int h){
     
     SettingsManager::getInstance().setTimelinePanelPtr(this);
     FileManager::getInstance().setTimelinePanelPtr(this);
+    AnalysisDataSaver::getInstance().setTimelinePanelPtr(this);
 }
-//-------------------------------------------------
+
 void TimelinePanel::update(){
     timelineView.update();
     guiView.update();
 }
-//-------------------------------------------------
+
 void TimelinePanel::draw(){
     if (!View::mustDrawNewFrame()){
         View::drawLoadedTexture();
@@ -119,7 +116,6 @@ void TimelinePanel::updateCurrentSettings(){
         currentSettings.markers.push_back(marker);
     }
 }
-
 
 void TimelinePanel::loadTimelineTracksFromFolder(){
     string rootDir = SettingsManager::getInstance().getRootDir();

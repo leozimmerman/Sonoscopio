@@ -20,7 +20,7 @@ void SettingsManager::saveSettings(){
     addTimelinePanelSettingsToXml();
     addMetersPanelSettingsToXml();
     saveSettingsToFile();
-    ///dataSaver.reset();
+    
 }
 
 void SettingsManager::loadSettings(){

@@ -24,28 +24,43 @@
 
 #include "Macros.h"
 
+#include "TimelinePanel.h"
+#include "MetersPanel.h"
+
 class AnalysisDataSaver: public ofThread{
 
 public:
+    static AnalysisDataSaver& getInstance(){
+        static AnalysisDataSaver instance;
+        return instance;
+    }
 
-    void setup(ofBaseApp* appPtr);
-    
     void reset();
-    
+
     void start();
-    
-    /// Signal the thread to stop.  After calling this method,
-    /// isThreadRunning() will return false and the while loop will stop
-    /// next time it has the chance to.
     void stop();
+    bool drawSavingAnalysisSign();
     
     void threadedFunction();
     
     float getPercentage(){return percentage;};
 
-    void updateFrameRate();
+    void updateFrameRate(int fps, int framesNum);
+    
+    void setTimelinePanelPtr(TimelinePanel* panelPtr){
+        timelinePanelPtr = panelPtr;
+    }
+    void setMetersPanelPtr(MetersPanel* panelPtr){
+        metersPanelPtr = panelPtr;
+    }
     
 private:
+    AnalysisDataSaver();
+    AnalysisDataSaver(AnalysisDataSaver const& copy);
+    AnalysisDataSaver& operator=(AnalysisDataSaver const& copy);
+    
+    MetersPanel* metersPanelPtr;
+    TimelinePanel* timelinePanelPtr;
     
     string soundfilePath;
     int frameRate;
@@ -53,12 +68,11 @@ private:
     float durationSecs;
     int sampleRate;
     int bufferSize;
-    int channelsNum;
-    
+    int channels;
     
     float percentage;
-    
     bool bSaveVectorValues;
+    ofTrueTypeFont verdana; //Remove from here.
 
 
 };

@@ -17,46 +17,35 @@
  */
 
 #include "AnalysisDataSaver.h"
+#include "FileManager.h"
 
-#include "ofApp.h"
-
-ofApp* sMainApp;
-//------------------------------------
-void AnalysisDataSaver::setup(ofBaseApp* appPtr){
-    
-    sMainApp = dynamic_cast<ofApp*>(appPtr);
-    
+AnalysisDataSaver::AnalysisDataSaver(){
     bSaveVectorValues = TRUE;
-    
-    reset();
-    
+    verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
 }
-//------------------------------------
+
 void AnalysisDataSaver::reset(){
     
-    if(sMainApp==NULL){
-        ofLogError("AnalysisDataSaver: ") <<"mainApp ptr not assigned. Need to call setup function first.";
-        return;
-    }
-    
-    soundfilePath = sMainApp->getSoundfilePath();
-    //TODO: Remove this reference to config
-    ///frameRate = sMainApp->config.frameRate;
-    totalFramesNum = sMainApp->getTotalFramesNum();
-    durationSecs = sMainApp->getDurationInSeconds();
-    
-    ///sampleRate = sMainApp->config.sampleRate;
-    ///bufferSize = sMainApp->config.bufferSize;
-
-    channelsNum = 1;
     percentage = 0.0;
+    
+    soundfilePath = FileManager::getInstance().getFilePath();
+    durationSecs = FileManager::getInstance().getFileDuration();
+    sampleRate = FileManager::getInstance().getFileSampleRate();
+    
+    if (timelinePanelPtr != NULL){
+        frameRate = timelinePanelPtr->getFrameRate();
+        totalFramesNum = timelinePanelPtr->getTotalFramesNum();
+    }
+
+    if (metersPanelPtr != NULL){
+        bufferSize = metersPanelPtr->getBufferSize();
+        channels = metersPanelPtr->getChannelsNum();
+    }
 }
 //------------------------------------
-void AnalysisDataSaver::updateFrameRate(){
-    //TODO: Remove this reference to config
-    ///frameRate       = sMainApp->config.frameRate;
-    totalFramesNum  = sMainApp->getTotalFramesNum();
-    
+void AnalysisDataSaver::updateFrameRate(int fps, int framesNum){
+    frameRate       = fps;
+    totalFramesNum  = framesNum;
 }
 //------------------------------------
 void AnalysisDataSaver::start(){
@@ -64,12 +53,34 @@ void AnalysisDataSaver::start(){
     // It is rare that one would want to use startThread(false).
     startThread();
     ofLogVerbose("AnalysisDataSaver: ")<<"thread started.";
- 
 }
 //------------------------------------
 void AnalysisDataSaver::stop(){
     stopThread();
     ofLogVerbose("AnalysisDataSaver: ")<<"thread stopped.";
+}
+
+bool AnalysisDataSaver::drawSavingAnalysisSign(){
+    
+    if (!isThreadRunning()){
+        return false;
+    }
+    ofPushStyle();
+    ofFill();
+    ofSetColor(0,150);
+    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+    ofSetColor(255);
+    
+    string displayStr = "Saving Analysis Data...  " + ofToString(percentage, 2) + "%";
+    
+    //align center
+    int label_w = verdana.stringWidth(displayStr);
+    int label_x =  ofGetWidth() * .5 - label_w *.5;
+    
+    verdana.drawString(displayStr, label_x , ofGetHeight()/2);
+    ofPopStyle();
+    
+    return true;
 }
 
 //------------------------------------
@@ -95,7 +106,7 @@ void AnalysisDataSaver::threadedFunction(){
             savedSettings.addValue("durationSeconds", durationSecs);
             savedSettings.addValue("sampleRate", sampleRate);
             savedSettings.addValue("bufferSize", bufferSize);
-            savedSettings.addValue("channelsNum", channelsNum);
+            savedSettings.addValue("channelsNum", channels);
             savedSettings.popTag();//pop from FILE-INFO back into MAIN
             //----------------------------------------
             
@@ -117,16 +128,14 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.pushTag("ANALYZER");
                 
                 //analyze buffer for frame:
-                frameSoundBuffer = sMainApp->timePanel.getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
-                
-                sMainApp->metersPanel.analyzeBuffer(frameSoundBuffer);
-                
-                sMainApp->metersPanel.update();
+                frameSoundBuffer = timelinePanelPtr->getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
+                metersPanelPtr->analyzeBuffer(frameSoundBuffer);
+                metersPanelPtr->update();
                 
                 
                 //-:Get Meters values--------------------------------
-                vector<std::map<string, float>> metersValues = sMainApp->metersPanel.getMetersValues();
-                vector<std::map<string, vector<float>>> metersVectorValues = sMainApp->metersPanel.getMetersVectorValues();
+                vector<std::map<string, float>> metersValues = metersPanelPtr->getMetersValues();
+                vector<std::map<string, vector<float>>> metersVectorValues = metersPanelPtr->getMetersVectorValues();
 
                 if(metersVectorValues.size() != metersValues.size()){
                     ofLogError("datasSaver threaded function:")<<"metersValues and metersVectorValues sizes not matching.";
@@ -135,7 +144,7 @@ void AnalysisDataSaver::threadedFunction(){
                 
                 //--------------
                 
-                if(metersValues.size() != channelsNum){
+                if(metersValues.size() != channels){
                     ofLogError("datasSaver threaded function:")<< "metersPanel channels number incorrect.";
                 }
                 
@@ -231,8 +240,8 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.addTag("TIMELINE");
                 savedSettings.pushTag("TIMELINE");
                 
-                sMainApp->timePanel.setCurrentFrame(frameNum);
-                std::map<string, float> timelineValues = sMainApp->timePanel.getTracksValues();
+                timelinePanelPtr->setCurrentFrame(frameNum);
+                std::map<string, float> timelineValues = timelinePanelPtr->getTracksValues();
                 
                 for (auto& kv : timelineValues){
                     //cout<<"timeline send osc :: "<<kv.first<<" -- "<<kv.second<<endl;
@@ -249,7 +258,7 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.popTag();//pop from frameTag back into ANALYSIS-DATA
             }
             
-            sMainApp->timePanel.setCurrentFrame(0);
+            timelinePanelPtr->setCurrentFrame(0);
         
             
             //save and stop----------------------------------

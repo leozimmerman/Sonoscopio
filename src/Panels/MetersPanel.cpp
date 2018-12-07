@@ -21,6 +21,7 @@
 #include "ofxAAUtils.h"
 #include "SettingsManager.h"
 #include "FileManager.h"
+#include "AnalysisDataSaver.h"
 
 #pragma mark - Core Funcs
 
@@ -34,6 +35,7 @@ void MetersPanel::setup(int x, int y, int w, int h){
     
     SettingsManager::getInstance().setMetersPanelPtr(this);
     FileManager::getInstance().setMetersPanelPtr(this);
+    AnalysisDataSaver::getInstance().setMetersPanelPtr(this);
 }
 
 void MetersPanel::update(){

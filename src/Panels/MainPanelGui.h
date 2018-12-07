@@ -12,13 +12,10 @@
 #include "Settings.h"
 
 #define OPEN_FILE_LABEL "OPEN FILE"
-#define OPEN_PROJECT_LABEL "OPEN PROJECT"
-#define LOAD_SETTINGS_LABEL "LOAD SETTINGS"
 #define SAVE_SETTINGS_LABEL "SAVE SETTINGS"
 #define CONFIG_LABEL "CONFIG"
 #define RENDER_ANALYSIS_LABEL "RENDER ANALYSIS"
 #define SEND_OSC_LABEL "SEND OSC"
-#define TIME_MEASUREMENT_LABEL "TIME MEASUREMENT"
 
 class MainPanel;
 
@@ -28,12 +25,11 @@ public:
     void createComponents() override;
     void adjustComponentsSize() override;
     
-    bool getFocused() {
-        menuModal->getFocused();
-    }
-    
     void loadStateIntoSettings(MainPanelSettings* settings);
     void setStateFromSettings(MainPanelSettings& settings);
+    
+    bool getFocused(){ menuModal->getFocused(); }
+    bool getOscEnabled(){ gSendOscToggle->getEnabled(); }
     
 private:
     void setupMenu();

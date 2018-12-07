@@ -57,6 +57,7 @@ public:
     void scrollDown(){metersView.scrollDown();}
     
     int getBufferSize(){return _bufferSize;}
+    int getChannelsNum(){return _channels;}
     
     vector<std::map<string, float>>& getMetersValues(){
         return metersView.getMetersValues();

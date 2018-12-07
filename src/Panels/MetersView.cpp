@@ -145,10 +145,7 @@ vector<std::map<string, vector<float>>>& MetersView::getMetersVectorValues(){
 
 #pragma mark - Settings
 
-void MetersView::loadSettings(MetersPanelSettings& settings){
-    //!
-    //TODO: Implement enabled algorithms...
-    
+void MetersView::loadSettings(MetersPanelSettings& settings){    
     if (_channelMetersViews.size() != settings.channelMeters.size()){
         return;
     }
