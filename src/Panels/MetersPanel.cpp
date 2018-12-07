@@ -97,6 +97,12 @@ void MetersPanel::resetAnalyzer(int sampleRate){
     resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
 }
 
+void MetersPanel::setBufferSize(int bs){
+    _bufferSize = bs;
+    audioAnalyzer.reset(audioAnalyzer.getSampleRate(), _bufferSize, _channels);
+    resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
+}
+
 void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     channelAnalyzers = chanAnalyzerPtrs;
     metersView.setupChannelMeters(chanAnalyzerPtrs, enabledAlgorithmTypes);
@@ -105,6 +111,7 @@ void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyze
 void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
     audioAnalyzer.analyze(inBuffer);
 }
+
 #pragma mark - Settings
 
 void MetersPanel::loadSettings(MetersPanelSettings& settings){

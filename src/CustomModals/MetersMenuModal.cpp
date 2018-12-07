@@ -8,8 +8,7 @@
 #include "MetersMenuModal.h"
 #include "ofxAAUtils.h"
 #include "MetersPanel.h"
-
-std::function<void(MetersPanel*, vector<ofxAAAlgorithmType>&)> callback_setEnabledAlgorithms = &MetersPanel::setEnabledAlgorithms;
+#include "GuiFactory.h"
 
 MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
     _metersPanelPtr = metersPanel_ptr;
@@ -24,14 +23,15 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
     
     for (int i=0; i<availableAlgorithms.size(); i++){
         auto label = ofxaa::algorithmTypeToString(availableAlgorithms[i]);
-        ofxDatGuiToggle* toggle = new ofxDatGuiToggle(label, TRUE);
-        toggle->setLabelAlignment(ofxDatGuiAlignment::LEFT);
-        toggle->onButtonEvent(this, &MetersMenuModal::onToggleEvent);
-        toggle->setBorderVisible(TRUE);
-        toggle->setStripeVisible(false);
+        ofxDatGuiToggle* toggle = GuiFactory::createToggle(label, TRUE, this, &MetersMenuModal::onToggleEvent);
         _algorithmToggles.push_back(toggle);
         addComponent(toggle);
     }
+    
+    vector<string> options = {ofToString(buffer_sizes[0]), ofToString(buffer_sizes[1]), ofToString(buffer_sizes[2]), ofToString(buffer_sizes[3])};
+    
+    gBufferSize = GuiFactory::createDropDown(BUFFER_SIZE_LABEL, options, this, &MetersMenuModal::onBufferSizeDropdownEvent);
+    addComponent(gBufferSize);
 }
 
 void MetersMenuModal::display(int height){
@@ -76,7 +76,7 @@ bool MetersMenuModal::isAlgorithmEnabled(ofxAAAlgorithmType algorithmType){
 
 void MetersMenuModal::applyConfiguration(){
     updateEnabledAlgorithmsFromToggles();
-    callback_setEnabledAlgorithms(_metersPanelPtr, enabledAlgorithms);
+    _metersPanelPtr->setEnabledAlgorithms(enabledAlgorithms);
 }
 
 bool MetersMenuModal::getFocused(){
@@ -85,14 +85,26 @@ bool MetersMenuModal::getFocused(){
 void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
     //TODO: Implement?
 }
-void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e) {
+void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
     applyConfiguration();
     hide();
 }
 
-void MetersMenuModal::loadStateIntoSettings(MetersPanelSettings* settings){}
+void MetersMenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e){
+    selectedBufferSize = buffer_sizes[e.child];
+    _metersPanelPtr->setBufferSize(selectedBufferSize);
+}
+
+void MetersMenuModal::loadStateIntoSettings(MetersPanelSettings* settings){
+     settings->bufferSize = selectedBufferSize;
+}
 
 void MetersMenuModal::setStateFromSettings(MetersPanelSettings& settings){
     enabledAlgorithms = settings.enabledAlgorithmTypes;
     updateTogglesFromEnabledAlgorithms();
+    
+    ptrdiff_t index = distance(buffer_sizes.begin(), find(buffer_sizes.begin(), buffer_sizes.end(), settings.bufferSize));
+    gBufferSize->select(index);
 }
+
+

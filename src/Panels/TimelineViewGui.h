@@ -17,6 +17,8 @@
 #define LOOP_LABEL "LOOP ON-OFF"
 #define ADD_MARKER_LABEL "ADD MARKER"
 #define CLEAR_MARKERS_LABEL "CLEAR MARKERS"
+
+#define BPM_LABEL "BPM"
 #define BPM_GRID_LABEL "BPM GRID"
 #define SNAP_LABEL "SNAP"
 #define SET_IN_LABEL "SET IN"
@@ -39,15 +41,14 @@ public:
     string currentTrackName;
     trackType currentTrackType;
     
-    bool getFocused() {
-        gTrackNameTextInput->getFocused();
-    }
+    bool getFocused();
     
     void loadStateIntoSettings(TimelinePanelSettings* settings);
     void setStateFromSettings(TimelinePanelSettings& settings);
     
 private:
     ofxDatGuiTextInput* gTrackNameTextInput;
+    ofxDatGuiTextInput* gBpm;
     ofxDatGuiSlider* gVolumeSlider;
     ofxDatGuiToggle* gLoopToggle;
     ofxDatGuiToggle* gBpmGridToggle;

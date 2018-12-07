@@ -12,10 +12,8 @@
 #include "Settings.h"
 
 #define SET_FPS_LABEL "SET FPS"
-#define BPM_LABEL "BPM"
 #define HOST_LABEL "HOST"
 #define PORT_LABEL "PORT"
-#define BUFFER_SIZE_LABEL "BUFFER SIZE"
 
 class MainPanel;
 
@@ -23,10 +21,6 @@ class MainMenuModal : public ofxModalWindow {
 public:
     
     MainMenuModal(MainPanel* mainPanel_ptr);
-    
-    void onTextInputEvent(ofxDatGuiTextInputEvent e);
-    void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
-    void onApplyButtonEvent(ofxDatGuiButtonEvent e);
     
     void display(int height);
     void applySettings();
@@ -36,14 +30,13 @@ public:
     void setStateFromSettings(MainPanelSettings& settings);
     
 private:
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    void onApplyButtonEvent(ofxDatGuiButtonEvent e);
+    
     MainPanel* _mainPanelPtr;
     
     ofxDatGuiTextInput* gFps;
-    ofxDatGuiDropdown* gBufferSize;
-    ofxDatGuiTextInput* gBpm;
     ofxDatGuiTextInput* gHost;
     ofxDatGuiTextInput* gPort;
-    
-    int selectedBufferSize;
     
 };

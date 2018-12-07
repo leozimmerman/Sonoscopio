@@ -83,32 +83,29 @@ void SettingsManager::saveSettingsToFile(){
 
 void SettingsManager::loadMainPanelSettingsFromXml(){
     const std::string frTag = std::string(MAIN_PANEL_TAG) + ":" + FRAMERATE_TAG;
-    const std::string bsTag = std::string(MAIN_PANEL_TAG) + ":" + BUFFER_SIZE_TAG;
-    const std::string bpmTag = std::string(MAIN_PANEL_TAG) + ":" + BPM_TAG;
     const std::string hostTag = std::string(MAIN_PANEL_TAG) + ":" + HOST_TAG;
     const std::string portTag = std::string(MAIN_PANEL_TAG) + ":" + PORT_TAG;
     const std::string sendTag = std::string(MAIN_PANEL_TAG) + ":" + SEND_OSC_TAG;
     
     mainPanelSettings.frameRate = xml.getValue(frTag, 0);
-    mainPanelSettings.bufferSize = xml.getValue(bsTag, 0);
-    mainPanelSettings.bpm = xml.getValue(bpmTag, 0.0);
     mainPanelSettings.osc.host = xml.getValue(hostTag, "");
     mainPanelSettings.osc.port = xml.getValue(portTag, 0);
     mainPanelSettings.osc.bSend = xml.getValue(sendTag, 0) > 0;
-    
 }
 
 void SettingsManager::loadTimelinePanelSettingsFromXml(){
     const std::string volTag = std::string(TIMELINE_PANEL_TAG) + ":" + VOLUME_TAG;
     const std::string loopTag = std::string(TIMELINE_PANEL_TAG) + ":" + LOOP_TAG;
+    const std::string bpmTag = std::string(TIMELINE_PANEL_TAG) + ":" + BPM_TAG;
     const std::string bpmGridTag = std::string(TIMELINE_PANEL_TAG) + ":" + BPM_GRID_TAG;
     const std::string snapTag = std::string(TIMELINE_PANEL_TAG) + ":" + SNAP_TAG;
     const std::string framebasedTag = std::string(TIMELINE_PANEL_TAG) + ":" + FRAMEBASED_TAG;
-       const std::string markersNumTag = std::string(TIMELINE_PANEL_TAG) + ":" + MARKERS_TAG + ":" + MARKERS_NUM_TAG;
-       const std::string tracksNumTag = std::string(TIMELINE_PANEL_TAG) + ":" + TRACKS_TAG + ":" + TRACKS_NUM_TAG;
+    const std::string markersNumTag = std::string(TIMELINE_PANEL_TAG) + ":" + MARKERS_TAG + ":" + MARKERS_NUM_TAG;
+    const std::string tracksNumTag = std::string(TIMELINE_PANEL_TAG) + ":" + TRACKS_TAG + ":" + TRACKS_NUM_TAG;
     
     timelinePanelSettings.volume = xml.getValue(volTag, 0.0);
     timelinePanelSettings.bLoop = xml.getValue(loopTag, 0) > 0;
+    timelinePanelSettings.bpm = xml.getValue(bpmTag, 0.0);
     timelinePanelSettings.bBpmGrid = xml.getValue(bpmGridTag, 0) > 0;
     timelinePanelSettings.bSnap= xml.getValue(snapTag, 0) > 0;
     timelinePanelSettings.bFrambased = xml.getValue(framebasedTag, 0) > 0;
@@ -135,6 +132,10 @@ void SettingsManager::loadTimelinePanelSettingsFromXml(){
 }
 
 void SettingsManager::loadMetersPanelSettingsFromXml(){
+    
+    const std::string bsTag = std::string(METERS_PANEL_TAG) + ":" + BUFFER_SIZE_TAG;
+
+    metersPanelSettings.bufferSize = xml.getValue(bsTag, 0);
     
     const std::string enabledNumTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + ENABLED_NUM_TAG;
     int enabledNum = xml.getValue(enabledNumTag, 0);
@@ -186,8 +187,6 @@ void SettingsManager::addMainPanelSettingsToXml(){
     xml.pushTag(MAIN_PANEL_TAG);
     
     xml.addValue(FRAMERATE_TAG, mainPanelSettings.frameRate);
-    xml.addValue(BUFFER_SIZE_TAG, mainPanelSettings.bufferSize);
-    xml.addValue(BPM_TAG,  mainPanelSettings.bpm);
     xml.addValue(HOST_TAG, mainPanelSettings.osc.host);
     xml.addValue(PORT_TAG, mainPanelSettings.osc.port);
     xml.addValue(SEND_OSC_TAG, mainPanelSettings.osc.bSend);
@@ -200,6 +199,7 @@ void SettingsManager::addTimelinePanelSettingsToXml(){
     
     xml.addValue(VOLUME_TAG, timelinePanelSettings.volume);
     xml.addValue(LOOP_TAG, timelinePanelSettings.bLoop);
+    xml.addValue(BPM_TAG,  timelinePanelSettings.bpm);
     xml.addValue(BPM_GRID_TAG, timelinePanelSettings.bBpmGrid);
     xml.addValue(SNAP_TAG, timelinePanelSettings.bSnap);
     xml.addValue(FRAMEBASED_TAG, timelinePanelSettings.bFrambased);
@@ -233,6 +233,8 @@ void SettingsManager::addTimelinePanelSettingsToXml(){
 void SettingsManager::addMetersPanelSettingsToXml(){
     xml.addTag(METERS_PANEL_TAG);
     xml.pushTag(METERS_PANEL_TAG);
+    
+    xml.addValue(BUFFER_SIZE_TAG, metersPanelSettings.bufferSize);
     
     xml.addTag(ENABLED_ALGORITHMS_TAG);
     xml.pushTag(ENABLED_ALGORITHMS_TAG);

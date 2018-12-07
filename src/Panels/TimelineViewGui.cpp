@@ -43,16 +43,19 @@ void TimelineViewGui::createComponents(){
     component = GuiFactory::createButton(CLEAR_MARKERS_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
     
+    gBpm = GuiFactory::createTextInput(BPM_LABEL, "120", this, &TimelineViewGui::onTextInputEvent);
+    _components.push_back(gBpm);
+    
     gBpmGridToggle = GuiFactory::createToggle(BPM_GRID_LABEL, false, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(gBpmGridToggle);
     
     gSnapToggle = GuiFactory::createToggle(SNAP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(gSnapToggle);
-    //9
+    //10
     gFramebasedToggle = GuiFactory::createToggle(FRAMEBASED_LABEL, false, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(gFramebasedToggle);
     //Second line
-    //10
+    //11
     gTrackNameTextInput = GuiFactory::createTextInput(TRACK_NAME_LABEL, "<track name>", this, &TimelineViewGui::onTextInputEvent);
     _components.push_back(gTrackNameTextInput);
     
@@ -91,7 +94,7 @@ void TimelineViewGui::adjustComponentsSize(){
     //--SECOND LINE:
     gui_y = _y + guiCompHeight;
     gui_x = _x;
-    for (int i=5; i<10; i++) {
+    for (int i=5; i<11; i++) {
         component = _components[i];
         component->setPosition(gui_x, gui_y);
         component->setWidth(guiCompWidth, 0.5);
@@ -103,37 +106,37 @@ void TimelineViewGui::adjustComponentsSize(){
     gui_y = _y + guiCompHeight *2;
     gui_x = _x;
     //TRACK NAME
-    component = _components[10];
+    component = _components[11];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth * 2, 0.5);//width x2
     
     //TRACK TYPE
     gui_x += guiCompWidth*2;
-    component = _components[11];
+    component = _components[12];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //ADD
     gui_x += guiCompWidth;
-    component = _components[12];
+    component = _components[13];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //REMOVE
     gui_x += guiCompWidth;
-    component = _components[13];
+    component = _components[14];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //SHOW TRACKS
     gui_x += guiCompWidth;
-    component = _components[14];
+    component = _components[15];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
     //ADJUST TRACKS
     gui_x += guiCompWidth;
-    component = _components[15];
+    component = _components[16];
     component->setPosition(gui_x, gui_y);
     component->setWidth(guiCompWidth, 0.9);
     
@@ -191,8 +194,12 @@ void TimelineViewGui::onDropdownEvent(ofxDatGuiDropdownEvent e){
 }
 
 void TimelineViewGui::onTextInputEvent(ofxDatGuiTextInputEvent e){
-    // ofLogVerbose() << "onButtonEvent: " << e.text;
-    currentTrackName = e.text;
+    if (e.target == gTrackNameTextInput){
+        currentTrackName = e.text;
+    }else if (e.target == gBpm){
+        float bpm = std::stof(gBpm->getText());
+        timelineViewPtr->setNewBPM(bpm);
+    }
 }
 
 void TimelineViewGui::onSliderEvent(ofxDatGuiSliderEvent e){
@@ -207,6 +214,8 @@ void TimelineViewGui::loadStateIntoSettings(TimelinePanelSettings* settings){
     settings->bBpmGrid = gBpmGridToggle->getEnabled();
     settings->bSnap = gSnapToggle->getEnabled();
     settings->bFrambased = gFramebasedToggle->getEnabled();
+    float bpm = std::stof(gBpm->getText());
+    settings->bpm = bpm;
 }
 
 void TimelineViewGui::setStateFromSettings(TimelinePanelSettings& settings){
@@ -215,7 +224,10 @@ void TimelineViewGui::setStateFromSettings(TimelinePanelSettings& settings){
     gBpmGridToggle->setEnabled(settings.bBpmGrid);
     gSnapToggle->setEnabled(settings.bSnap);
     gFramebasedToggle->setEnabled(settings.bFrambased);
+    gBpm->setText(ofToString(settings.bpm));
 }
 
-
+bool TimelineViewGui::getFocused() {
+    return gTrackNameTextInput->getFocused() || gBpm->getFocused() ;
+}
 

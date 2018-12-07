@@ -13,7 +13,7 @@ struct OscSetting {
     bool bSend;
     string host;
     int port;
-    bool bSendVectorValues; //TODO: delete...
+    bool bSendVectorValues; //TODO: Implement
 };
 
 class MainPanelSettings {
@@ -21,8 +21,6 @@ public:
     std::string projectDir;
     int frameRate;
     int sampleRate;
-    int bufferSize;
-    float bpm;
     
     OscSetting osc;
 };
@@ -37,6 +35,7 @@ struct TLTrackSetting{
 class TimelinePanelSettings {
 public:
     float volume;
+    float bpm;
     bool bLoop;
     bool bBpmGrid;
     bool bSnap;
@@ -65,6 +64,7 @@ public:
 
 class MetersPanelSettings{
 public:
+    int bufferSize;
     vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
     vector<ChannelMeterSettings> channelMeters;
 };

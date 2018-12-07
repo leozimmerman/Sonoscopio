@@ -83,8 +83,6 @@ void MainPanel::openFileDialog(){
 #pragma mark - Settings funcs
 void MainPanel::applySettings(int fps, int buffersize, float bpm, string host, int port){
     currentSettings.frameRate = fps;
-    currentSettings.bufferSize = buffersize; //Move to main panel
-    currentSettings.bpm = bpm; //Move To timeline panel
     currentSettings.osc.host = host;
     currentSettings.osc.port = port;
     

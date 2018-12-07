@@ -3,9 +3,6 @@
 ## Now
 ### Tasks
 
-- FIX Guis: 
-    - Main Panel: Remove BPM, Buffersize, 
-
 - ADD:
     Error modal
 

@@ -48,8 +48,10 @@ public:
     }
     
     void setupAnalyzer(int sampleRate, int bufferSize, int channels);
-    void analyzeBuffer(const ofSoundBuffer& inBuffer);
     void resetAnalyzer(int sampleRate);
+    void setBufferSize(int bs);
+    void analyzeBuffer(const ofSoundBuffer& inBuffer);
+    
     
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
     
