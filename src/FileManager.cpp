@@ -4,7 +4,7 @@
 //
 //  Created by Leonardo Zimmerman on 06/12/2018.
 //
-
+#include "ofApp.h"
 #include "FileManager.h"
 #include "SettingsManager.h"
 #include "AnalysisDataSaver.h"
@@ -39,8 +39,8 @@ void FileManager::processFileSelection(ofFileDialogResult openFileResult){
         if (fileExtension == WAV_EXTENSION || fileExtension == MP3_EXTENSION) {
             openAudioFile(absolutePath);
         }else{
-            //TODO: Show modal
-            ofLogVerbose("File extension not compatible");
+            string message = "File extension not compatible";
+            ofNotifyEvent(ofApp::errorEvent, message);
         }
     }
 }

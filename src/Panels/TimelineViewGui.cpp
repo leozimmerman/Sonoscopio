@@ -145,32 +145,32 @@ void TimelineViewGui::adjustComponentsSize(){
 void TimelineViewGui::onButtonEvent(ofxDatGuiButtonEvent e){
     string label = e.target->getLabel();
     if(label ==  ADD_TRACK_LABEL){
-        callback_addTrack(timelineViewPtr, currentTrackName, currentTrackType);
+        timelineViewPtr->addTrack(currentTrackName, currentTrackType);
     }else if (label == REMOVE_TRACK_LABEL){
-        callback_removeTrack(timelineViewPtr, currentTrackName);
+        timelineViewPtr->removeTrack(currentTrackName);
     }else if (label == SHOW_TRACKS_LABEL){
-        callback_showTracks(timelineViewPtr);
+        timelineViewPtr->toggleShowTracks();
     }else if (label == ADJUST_TRACKS_LABEL){
-        callback_updateHeight(timelineViewPtr);
+        timelineViewPtr->updateHeight();
     }else if(e.target->getLabel() == PLAY_STOP_LABEL){
-        callback_togglePlay(timelineViewPtr);
+        timelineViewPtr->togglePlay();
     }else if(e.target->getLabel() == LOOP_LABEL){
         auto loopType = e.enabled ? OF_LOOP_NORMAL : OF_LOOP_NONE;
-        callback_setLoopType(timelineViewPtr, loopType);
+        timelineViewPtr->setLoopType(loopType);
     }else if(e.target->getLabel() == SET_IN_LABEL){
-        callback_setIn(timelineViewPtr);
+        timelineViewPtr->setInPointAtPlayhead();
     }else if(e.target->getLabel() ==SET_OUT_LABEL){
-        callback_setOut(timelineViewPtr);
+        timelineViewPtr->setOutPointAtPlayhead();
     }else if(e.target->getLabel()== BPM_GRID_LABEL){
-        callback_showBpmGrid(timelineViewPtr, e.enabled);
+        timelineViewPtr->setShowBPMGrid(e.enabled);
     }else if(e.target->getLabel()== SNAP_LABEL){
-        callback_snap(timelineViewPtr, e.enabled);
+        timelineViewPtr->enableSnapToBPM(e.enabled);
     }else if(e.target->getLabel()== ADD_MARKER_LABEL){
-        callback_addMarker(timelineViewPtr);
+        timelineViewPtr->addMarker();
     }else if(e.target->getLabel()== CLEAR_MARKERS_LABEL){
-        callback_clearMarkers(timelineViewPtr);
+        timelineViewPtr->clearMarkers();
     }else if(e.target->getLabel()== FRAMEBASED_LABEL){
-        callback_framebased(timelineViewPtr, e.enabled);
+        timelineViewPtr->setFrameBased(e.enabled);
     }
 }
 
@@ -204,7 +204,7 @@ void TimelineViewGui::onTextInputEvent(ofxDatGuiTextInputEvent e){
 
 void TimelineViewGui::onSliderEvent(ofxDatGuiSliderEvent e){
     if (e.target->getLabel() == VOLUME_LABEL){
-        callback_setVolume(timelineViewPtr, e.value);
+        timelineViewPtr->setVolume(e.value);
     }
 }
 

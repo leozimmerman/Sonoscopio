@@ -62,19 +62,4 @@ private:
     
     TimelineView* timelineViewPtr;
     
-    std::function<void(TimelineView*)> callback_togglePlay = &TimelineView::togglePlay;
-    std::function<void(TimelineView*, float)> callback_setVolume = &TimelineView::setVolume;
-    std::function<void(TimelineView*, ofLoopType)> callback_setLoopType = &TimelineView::setLoopType;
-    std::function<void(TimelineView*)> callback_setIn = &TimelineView::setInPointAtPlayhead;
-    std::function<void(TimelineView*)> callback_setOut = &TimelineView::setOutPointAtPlayhead;
-    std::function<void(TimelineView*)> callback_addMarker = &TimelineView::addMarker;
-    std::function<void(TimelineView*)> callback_clearMarkers = &TimelineView::clearMarkers;
-    std::function<void(TimelineView*, bool)> callback_snap = &TimelineView::enableSnapToBPM;
-    std::function<void(TimelineView*, bool)> callback_showBpmGrid = &TimelineView::setShowBPMGrid;
-    std::function<void(TimelineView*, bool)> callback_framebased = &TimelineView::setFrameBased;
-    
-    std::function<void(TimelineView*)> callback_showTracks = &TimelineView::toggleShowTracks;
-    std::function<void(TimelineView*)> callback_updateHeight = &TimelineView::updateHeight;
-    std::function<void(TimelineView*, string)> callback_removeTrack = &TimelineView::removeTrack;
-    std::function<void(TimelineView*, string, trackType)> callback_addTrack = &TimelineView::addTrack;
 };

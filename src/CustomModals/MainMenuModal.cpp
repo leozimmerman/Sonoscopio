@@ -8,8 +8,7 @@
 #include "MainMenuModal.h"
 #include "GuiFactory.h"
 #include "MainPanel.h"
-
-//std::function<void(MainPanel*, int, int, int, string, int)> callback_applySettings = &MainPanel::applySettings;
+#include "ofApp.h"
 
 MainMenuModal::MainMenuModal(MainPanel* mainPanel_ptr){
     _mainPanelPtr = mainPanel_ptr;
@@ -69,8 +68,9 @@ void MainMenuModal::loadStateIntoSettings(MainPanelSettings* settings){
         settings->osc.port = port;
         
     } catch (const std::invalid_argument& ia) {
-        //TODO: Show error modal
         std::cerr << "Main Menu Modal Invalid arguments: " << ia.what() << '\n';
+        string message = "Invalid values for settings";
+        ofNotifyEvent(ofApp::errorEvent, message);
     }
   
 

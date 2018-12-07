@@ -19,11 +19,15 @@ void TimelineView::update(){}
 void TimelineView::draw(){
     //TODO:Revisar esta separacion entre timeline y audioWaveform...
     View::draw();//background
-    if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
-        audioTrack->drawWaveforms();
+    
+    if (audioTrack->isSoundLoaded()){
+        if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
+            audioTrack->drawWaveforms();
+        }
+        timeline.draw(false, false);//without ticker timeMarks & hidden mode
     }
-    timeline.draw(false, false);//without ticker timeMarks & hidden mode
 }
+
 void TimelineView::resize(int x, int y, int width, int height){
     View::resize(x, y, width, height);
     timeline.setOffset(ofVec2f(_x, _y));

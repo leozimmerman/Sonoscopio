@@ -64,7 +64,6 @@ void TimelinePanel::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
     guiView.resize(x, y, w, GUI_COMP_HEIGHT);
     timelineView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
-    
 }
 //--------------------------------------------------------------
 void TimelinePanel::keyPressed(int key){

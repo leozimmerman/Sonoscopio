@@ -19,6 +19,8 @@
 #include "ofApp.h"
 #include "AnalysisDataSaver.h"
 
+ofEvent<string> ofApp::errorEvent = ofEvent<string>();
+
 #pragma mark - Core funcs
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -77,6 +79,7 @@ void ofApp::setupModals() {
 
 void ofApp::setupListeners() {
     ofAddListener(OnsetMeterView::onsetEventGlobal, this, &ofApp::onsetFired);
+    ofAddListener(ofApp::errorEvent, this, &ofApp::errorSent);
 }
 
 //--------------------------------------------------------------
@@ -253,6 +256,10 @@ void ofApp::windowResized(int w, int h){
 
 #pragma mark - Other
 
+void ofApp::errorSent(string & errorMessage){
+    showErrorMessage(errorMessage);
+}
+
 void ofApp::onsetFired(int & panelId){
     timePanel.addKeyframeInFocusedTrack();
 }
@@ -274,10 +281,13 @@ void ofApp::onModalEvent(ofxModalEvent e) {
 }
 //--------------------------------------------------------------
 void ofApp::showKeyboardShortcuts(){
-    
     string title = "KEYBOARD SHORTCUTS";
-    string msg = "'cmd 1,2,3: view modes | 'cmd + t': time measurement on/off  |  'cmd + m': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut";
-    
+    string msg = KEYBOARD_SHORTCUTS_MSG;
     mText->display(title, msg);
+}
+
+void ofApp::showErrorMessage(string message){
+    string title = "ERROR";
+    mText->display(title, message);
 }
 

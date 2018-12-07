@@ -21,6 +21,9 @@
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
 
+#include "ofApp.h"
+
+
 #pragma mark - core funcs
 void MainPanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
@@ -106,7 +109,10 @@ void MainPanel::saveSettings(){
 }
 
 void MainPanel::renderAnalysis(){
-    AnalysisDataSaver::getInstance().start();
+    ///AnalysisDataSaver::getInstance().start();
+    string message = "This is an error message test";
+    ofNotifyEvent(ofApp::errorEvent, message);
+    
 }
 
 

@@ -9,7 +9,7 @@
 
 void FileInfoView::setup(int x, int y, int w, int h){
     View::setup(x, y, w, h);
-    setBackgroundColor(ofColor::darkBlue);
+    setBackgroundColor(40);
     
     ofTrueTypeFont::setGlobalDpi(72);
     verdana.load("gui_assets/fonts/verdana.ttf", 12, true, true);

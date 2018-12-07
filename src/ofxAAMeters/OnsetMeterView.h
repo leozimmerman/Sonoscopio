@@ -53,8 +53,6 @@ public:
     void setSilenceThreshold(float tres);
     void setTimeThreshold(float tres);
     void setArmed(bool val) {_isArmed = val;}
-    
-    
 
     bool getValue(){return _onsetValue;}
     float getAlpha(){return _alpha;}

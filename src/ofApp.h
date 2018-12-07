@@ -44,22 +44,17 @@
 class ofApp : public ofBaseApp{
 public:
 
-    
-    //void addKeyframeInFocusedTrack();//TODO: Remove from here
-    
     void setFrameRate(int fps);
-    
-    void updatePanelsDimensions(int w, int h);
-    
-    void onsetFired(int & panelId);//TODO: Remove from here
-    
 
     void onModalEvent(ofxModalEvent e);
-    void showKeyboardShortcuts();
+    void onsetFired(int & panelId);//TODO: Remove from here
+    void errorSent(string & errorMessage);
     
     MainPanel mainPanel;
     TimelinePanel timePanel;
     MetersPanel metersPanel;
+    
+    static ofEvent<string> errorEvent;
     
 private:
     
@@ -69,7 +64,9 @@ private:
     void exit();
     
     void keyPressed(int key);
+    
     void windowResized(int w, int h);
+    void updatePanelsDimensions(int w, int h);
   
     void setupOsc();
     void setupModals();
@@ -77,6 +74,9 @@ private:
     void setupTimeMeasurment();
     void setupPanels();
     void setupListeners();
+    
+    void showKeyboardShortcuts();
+    void showErrorMessage(string message);
     
     int _main_height;
     int _meters_width;

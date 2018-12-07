@@ -64,8 +64,7 @@ void SettingsManager::loadSettingsFromFile(){
     if( xml.loadFile(filename) ){
         ofLogVerbose()<<"SettingsManager: "<< filename <<" loaded.";
     }else{
-        ofLogError()<< "SettingsManager: unable to load " << filename ;
-        //TODO: Show error modal
+        ofLogError()<< "No settings file found" << filename ;
         return;
     }
     

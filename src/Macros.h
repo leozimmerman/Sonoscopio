@@ -18,8 +18,6 @@
 
 #pragma once
 
-//#define METERS_SETTINGS_DIR "meters_settings"
-//#define MAIN_SETTINGS_DIR "main_settings"
 #define TIMELINE_SETTINGS_DIR "timeline_settings"
 
 #define ANALYSIS_DATA_DIR "analysis_data"
@@ -31,8 +29,6 @@
 #define MT_PANEL_FPS 60
 #define GUI_STATIC_FPS 60
 
-#define INIT_AUDIO_FILE "audio_files/baby-weird.wav"
-//#define INIT_AUDIO_FILE ""
 #define INIT_SAMPLE_RATE 44100
 #define INIT_BUFFER_SIZE 512
 #define INIT_PROJECT_DIR ""
@@ -62,3 +58,5 @@
 #define MTR_SMOOTHING "SMTH"
 #define MTR_ON_OFF "ON"
 #define MTR_PEAK "PEAK"
+
+#define KEYBOARD_SHORTCUTS_MSG "'cmd 1,2,3: view modes | 'cmd + t': time measurement on/off  |  'cmd + m': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut"
