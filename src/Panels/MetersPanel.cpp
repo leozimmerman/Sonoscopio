@@ -20,6 +20,7 @@
 #include "ofApp.h"
 #include "ofxAAUtils.h"
 #include "SettingsManager.h"
+#include "FileManager.h"
 
 #pragma mark - Core Funcs
 
@@ -32,6 +33,7 @@ void MetersPanel::setup(int x, int y, int w, int h){
     enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
     
     SettingsManager::getInstance().setMetersPanelPtr(this);
+    FileManager::getInstance().setMetersPanelPtr(this);
 }
 
 void MetersPanel::update(){
@@ -82,12 +84,14 @@ void MetersPanel::resize(int x, int y, int w, int h){
 #pragma mark - Audio Analyzer
 
 void MetersPanel::setupAnalyzer(int sampleRate, int bufferSize, int channels){
-    audioAnalyzer.setup(sampleRate, bufferSize, channels);
+    _bufferSize = bufferSize;
+    _channels = channels;
+    audioAnalyzer.setup(sampleRate, _bufferSize, _channels);
     setChannelAnalyzers(audioAnalyzer.getChannelAnalyzersPtrs());
 }
 
-void MetersPanel::resetAnalyzer(int sampleRate, int bufferSize, int channels){
-    audioAnalyzer.reset(sampleRate, bufferSize, channels);
+void MetersPanel::resetAnalyzer(int sampleRate){
+    audioAnalyzer.reset(sampleRate, _bufferSize, _channels);
     resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
 }
 

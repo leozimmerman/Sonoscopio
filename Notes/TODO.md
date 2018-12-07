@@ -3,8 +3,7 @@
 ## Now
 ### Tasks
 - FIX Load/Save Settings and Project.
-    - Terminar save/load settings en SettingsManager
-    - Revisar open file functionality -> validar si existen settings para el archivo.
+    - Clean up ofApp
 
 - FIX Data Rendering
     - Save Analysis to Modal Menu

@@ -35,7 +35,7 @@ class TimelinePanel : public BasePanel {
     
 public:
     
-    void setup(int x, int y, int w, int h, string audiofile);
+    void setup(int x, int y, int w, int h) override;
     virtual void update() override;
     virtual void draw() override;
     virtual void exit() override;
@@ -74,9 +74,10 @@ public:
     #pragma mark - Getters
     bool isFileLoaded(){return timelineView.isSoundLoaded();}
     bool isPlaying(){return timelineView.timeline.getIsPlaying();}
-    string getFileInfo(){return timelineView.getFileInfo();};
-    int getSampleRate(){return timelineView.audioTrack->getSampleRate();}
-    int getNumChannels(){return timelineView.audioTrack->getNumChannels();}
+    //string getFileInfo(){return timelineView.getFileInfo();};
+    int getAudioFileSampleRate(){return timelineView.audioTrack->getSampleRate();}
+    int getAudioFileNumChannels(){return timelineView.audioTrack->getNumChannels();}
+    float getAudioFileDuration(){return timelineView.audioTrack->getDuration();}
     
     std::map<string, float> getTracksValues(){
         return timelineView.getTracksValues();

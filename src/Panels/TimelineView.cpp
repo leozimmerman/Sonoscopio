@@ -7,13 +7,12 @@
 
 #include "TimelineView.h"
 
-void TimelineView::setup(int x, int y, int w, int h, string audiofile) {
+void TimelineView::setup(int x, int y, int w, int h) {
     View::setup(x, y, w, h);
     setBackgroundColor(ofColor(40));
     waveformCol.set(120);
-    _frameRate = INIT_FPS;
-    setupTimeline(audiofile);
-    
+    _frameRate = INIT_FPS; //TODO: Fix
+    setupTimeline("");
 }
 
 void TimelineView::update(){}
@@ -96,11 +95,9 @@ void TimelineView::openAudioFile(string filename){
     timeline.setCurrentTimeSeconds(0.0);
     audioTrack->loadSoundfile(filename);
     timeline.setDurationInSeconds(audioTrack->getDuration());
-    
 }
 //--------------------------------------------------------------
 void TimelineView::setFrameRate(int fps){
-    
     _frameRate = fps;
     timeline.setFrameRate(_frameRate);
 }
@@ -201,15 +198,7 @@ void TimelineView::addKeyframeInFocusedTrack(){
     }
 }
 #pragma mark - Info & Value Getters
-//--------------------------------------------------------------
-string TimelineView::getFileInfo(){
-    string s =
-    "duration: " + ofToString(audioTrack->getDuration(), 2) + "sec."
-    " - sample rate: " + ofToString(audioTrack->getSampleRate()) +
-    " - channels: " + ofToString(audioTrack->getNumChannels()) +
-    " - frames: " + ofToString(timeline.getDurationInFrames()) + " at " + ofToString(_frameRate) + "fps";
-    return s;
-}
+
 //--------------------------------------------------------------
 bool TimelineView::isSoundLoaded(){
     return audioTrack->isSoundLoaded();

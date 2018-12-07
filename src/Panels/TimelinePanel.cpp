@@ -17,22 +17,25 @@
  */
 
 #include "TimelinePanel.h"
-#include "SettingsManager.h"
 #include "ofApp.h"
+#include "SettingsManager.h"
+#include "FileManager.h"
+
 
 
 #pragma mark - Core funcs
 
 //-------------------------------------------------
 
-void TimelinePanel::setup(int x, int y, int w, int h, string audiofile){
+void TimelinePanel::setup(int x, int y, int w, int h){
     
     BasePanel::setup(x, y, w, h);
     
     guiView.setup(x, y, w, GUI_COMP_HEIGHT * 3, &timelineView);
-    timelineView.setup(x, guiView.maxY(), w, h - guiView.getHeight(), audiofile);
+    timelineView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
     SettingsManager::getInstance().setTimelinePanelPtr(this);
+    FileManager::getInstance().setTimelinePanelPtr(this);
 }
 //-------------------------------------------------
 void TimelinePanel::update(){

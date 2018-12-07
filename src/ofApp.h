@@ -46,33 +46,26 @@ class ofApp : public ofBaseApp{
 public:
 
     
-    void stop();//TODO: Remove from here
-    
     void addKeyframeInFocusedTrack();//TODO: Remove from here
-    
-    void openAudioFile(string filename);//TODO: Remove from here
     
     void setFrameRate(int fps);
     
-    void resetAnalysisEngine();
     void setBufferSize(int bs);
     void updatePanelsDimensions(int w, int h);
     
-    //TODO: Remove from here
+    //TODO: Remove from here - Analysis Data saver
     int getTotalFramesNum(){return timePanel.getTotalFramesNum();}
     string getSoundfilePath(){return timePanel.getSoundfilePath();}
     float getDurationInSeconds(){return timePanel.getDurationInSeconds();}
     float getBpm(){return timePanel.getBpm();}
-        
-    void openProject(string projectDir);//TODO: Remove from here
-    
+    //---------
+
     void saveAnalysisDataToFile();//TODO: Remove from here
     void drawSavingAnalysisSign();//TODO: Remove from here
     
     void onsetFired(int & panelId);//TODO: Remove from here
     
     shared_ptr<TextModal> mText;
-    
     
     void onModalEvent(ofxModalEvent e);
     void showKeyboardShortcuts();
@@ -82,7 +75,7 @@ public:
     MetersPanel metersPanel;
     
     AnalysisDataSaver dataSaver;
-    MainPanelSettings config;//TODO: Remove from here!!!
+    //MainPanelSettings config;//TODO: Remove from here!!!
     OscSender oscSender;
     
 private:
@@ -103,7 +96,7 @@ private:
     void setupListeners();
     
     ofSoundBuffer soundBuffer;
-    ofMutex audioMutex;
+    
     ofTrueTypeFont	verdana; //Remove from here.
     
     int _main_height;

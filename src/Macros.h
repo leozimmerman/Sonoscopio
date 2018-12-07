@@ -33,6 +33,7 @@
 
 #define INIT_AUDIO_FILE "audio_files/baby-weird.wav"
 //#define INIT_AUDIO_FILE ""
+#define INIT_FRAME_RATE 44100
 #define INIT_BUFFER_SIZE 512
 #define INIT_PROJECT_DIR ""
 #define INIT_OSC_HOST "localhost"

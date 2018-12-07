@@ -11,18 +11,15 @@
 #include "GuiFactory.h"
 #include "SettingsManager.h"
 
-std::function<void(MainPanel*)> callback_saveSettings = &MainPanel::saveSettings;
-//std::function<void(MainPanel*)> callback_loadSettings = &MainPanel::loadSettings;
-
 void MainPanelGui::setup(int x, int y, int w, int h, MainPanel* mainPanel_ptr){
     GuiView::setup(x, y, w, h);
-    _mainPanelPtr = mainPanel_ptr;
+    mainPanelPtr = mainPanel_ptr;
     setupMenu();
 }
 
 void MainPanelGui::setupMenu(){
     auto ofAppPtr = (ofApp*)ofGetAppPtr();
-    menuModal = make_shared<MainMenuModal>(_mainPanelPtr);
+    menuModal = make_shared<MainMenuModal>(mainPanelPtr);
     menuModal->addListener(ofAppPtr, &ofApp::onModalEvent);
 }
 
@@ -71,11 +68,12 @@ void MainPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     cout<<label<<endl;
     if (label == CONFIG_LABEL){
         showMenu();
-    } else if (label == SAVE_SETTINGS_LABEL){
-        callback_saveSettings(_mainPanelPtr);
-    } else if (label == LOAD_SETTINGS_LABEL){
-        //callback_loadSettings(_mainPanelPtr);
-        _mainPanelPtr->loadSettings();
+    }else if (label == SAVE_SETTINGS_LABEL){
+        mainPanelPtr->saveSettings();
+    }else if (label == LOAD_SETTINGS_LABEL){
+        mainPanelPtr->loadSettings();
+    }else if (label == OPEN_FILE_LABEL){
+        mainPanelPtr->openFileDialog();
     }
 }
 void MainPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}

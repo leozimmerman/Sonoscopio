@@ -49,16 +49,14 @@ public:
     
     void setupAnalyzer(int sampleRate, int bufferSize, int channels);
     void analyzeBuffer(const ofSoundBuffer& inBuffer);
-    void resetAnalyzer(int sampleRate, int bufferSize, int channels);
+    void resetAnalyzer(int sampleRate);
     
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
     
-    void scrollUp(){
-        metersView.scrollUp();
-    }
-    void scrollDown(){
-        metersView.scrollDown();
-    }
+    void scrollUp(){metersView.scrollUp();}
+    void scrollDown(){metersView.scrollDown();}
+    
+    int getBufferSize(){return _bufferSize;}
     
     vector<std::map<string, float>>& getMetersValues(){
         return metersView.getMetersValues();
@@ -80,6 +78,9 @@ private:
     vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
     
     MetersPanelSettings currentSettings;
+    
+    int _bufferSize;
+    int _channels;
     
     /*
      TODO: Mover a Meters Modal

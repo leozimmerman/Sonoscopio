@@ -28,8 +28,8 @@ enum trackType {
 
 class TimelineView : public View {
 public:
-    void setup(int x, int y, int w, int h, string audiofile);
-    //void setup(int x, int y, int w, int h) override;
+    
+    void setup(int x, int y, int w, int h) override;
     void update();
     void draw() override;
     
@@ -89,7 +89,6 @@ public:
     void openAudioFile(string filename);
     void hideTracks();
     
-    string getFileInfo();
     std::map<string, float> getTracksValues();
     bool isSoundLoaded();
     
@@ -106,7 +105,8 @@ public:
     vector<float> _markers;
     int _frameRate;
     
-    
+///!!!
+    //TODO: definir que es private!
 private:
     
     

@@ -45,6 +45,6 @@ private:
     
     ofxDatGuiToggle* gSendOscToggle;
     
-    MainPanel* _mainPanelPtr;
+    MainPanel* mainPanelPtr;
     shared_ptr<MainMenuModal> menuModal;
 };

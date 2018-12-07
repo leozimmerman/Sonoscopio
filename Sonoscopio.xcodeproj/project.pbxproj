@@ -94,6 +94,8 @@
 		B371303321373A2D007BA046 /* ofxAudioDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B371303221373A2D007BA046 /* ofxAudioDecoder.cpp */; };
 		B371303E21373A89007BA046 /* audiodecoderbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B371303C21373A88007BA046 /* audiodecoderbase.cpp */; };
 		B371303F21373A89007BA046 /* audiodecodercoreaudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B371303D21373A88007BA046 /* audiodecodercoreaudio.cpp */; };
+		B38987EE21B9C1700076192A /* FileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B38987EC21B9C1700076192A /* FileManager.cpp */; };
+		B38987F121B9CC380076192A /* FileInfoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B38987EF21B9CC380076192A /* FileInfoView.cpp */; };
 		B3A475BC1DD4FBE600B1371C /* BinMeterView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475B41DD4FBE600B1371C /* BinMeterView.cpp */; };
 		B3A475BD1DD4FBE600B1371C /* ChannelMetersView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475B61DD4FBE600B1371C /* ChannelMetersView.cpp */; };
 		B3A475BE1DD4FBE600B1371C /* MeterView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475B81DD4FBE600B1371C /* MeterView.cpp */; };
@@ -525,6 +527,10 @@
 		B37219B72139A42300701DA3 /* audiodecoderbase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = audiodecoderbase.h; sourceTree = "<group>"; };
 		B37219B82139A42300701DA3 /* audiodecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = audiodecoder.h; sourceTree = "<group>"; };
 		B37219B92139A42400701DA3 /* audiodecodercoreaudio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = audiodecodercoreaudio.h; sourceTree = "<group>"; };
+		B38987EC21B9C1700076192A /* FileManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileManager.cpp; sourceTree = "<group>"; };
+		B38987ED21B9C1700076192A /* FileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileManager.h; sourceTree = "<group>"; };
+		B38987EF21B9CC380076192A /* FileInfoView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileInfoView.cpp; sourceTree = "<group>"; };
+		B38987F021B9CC380076192A /* FileInfoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileInfoView.h; sourceTree = "<group>"; };
 		B3A475B31DD4FBD500B1371C /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		B3A475B41DD4FBE600B1371C /* BinMeterView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BinMeterView.cpp; path = ofxAAMeters/BinMeterView.cpp; sourceTree = "<group>"; };
 		B3A475B51DD4FBE600B1371C /* BinMeterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BinMeterView.h; path = ofxAAMeters/BinMeterView.h; sourceTree = "<group>"; };
@@ -1468,9 +1474,13 @@
 				B3354C8E2141B2DE003F8F91 /* TimelinePanel */,
 				B3A475C01DD4FBF000B1371C /* MainPanel.cpp */,
 				B3A475C11DD4FBF000B1371C /* MainPanel.h */,
+				B38987EF21B9CC380076192A /* FileInfoView.cpp */,
+				B38987F021B9CC380076192A /* FileInfoView.h */,
 				B3A475C51DD4FBF000B1371C /* BasePanel.h */,
 				B3FD3491213EE77700B30C17 /* View.cpp */,
 				B3FD3492213EE77700B30C17 /* View.h */,
+				B38987EC21B9C1700076192A /* FileManager.cpp */,
+				B38987ED21B9C1700076192A /* FileManager.h */,
 			);
 			name = Panels;
 			sourceTree = "<group>";
@@ -1852,6 +1862,7 @@
 				B3712F462135EAA9007BA046 /* ofxMSATimer.cpp in Sources */,
 				5864AD82E20F15536D054EA3 /* ofxOscMessage.cpp in Sources */,
 				4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */,
+				B38987F121B9CC380076192A /* FileInfoView.cpp in Sources */,
 				B3712F412135E920007BA046 /* ofxTextInputField.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
@@ -1873,6 +1884,7 @@
 				B3FD3493213EE77700B30C17 /* View.cpp in Sources */,
 				B3712FCE21373856007BA046 /* ofxAudioAnalyzer.cpp in Sources */,
 				B3712F9F2136F733007BA046 /* ofxTLVideoThumb.cpp in Sources */,
+				B38987EE21B9C1700076192A /* FileManager.cpp in Sources */,
 				879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */,
 				B3712F8B2136F733007BA046 /* ofxTLLFO.cpp in Sources */,
 				B3712ED82135DDB9007BA046 /* ofxSmartFont.cpp in Sources */,

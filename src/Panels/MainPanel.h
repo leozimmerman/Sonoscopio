@@ -27,17 +27,16 @@
 #include "BasePanel.h"
 
 #include "MainPanelGui.h"
+#include "FileInfoView.h"
 #include "Settings.h"
 
 #define FILE_INFO_HEIGHT 20
-
-
 
 class MainPanel : public BasePanel{
     
 public:
     
-    virtual void setup(int x, int y, int width, int height) override;
+    virtual void setup(int x, int y, int w, int h) override;
     virtual void update() override;
     virtual void draw() override;
     virtual void exit() override;
@@ -48,16 +47,13 @@ public:
     
     void keyPressed(int key) override;
     
-    void setFileInfoString(string str){fileInfoStr = str;}
-    
     void saveSettings();
     void loadSettings();
     
     void loadSettings(MainPanelSettings& settings);
     void updateCurrentSettings();
 
-    void openOpenFileDialog();
-    void processOpenFileSelection(ofFileDialogResult openFileResult);
+    void openFileDialog();
     
     void applySettings(int fps, int buffersize, float bpm, string host, int port);
     
@@ -65,18 +61,13 @@ public:
         return &currentSettings;
     }
     
+    void setAudioFileInfo(string filename, string path,  float duration, int samplerate, int channels, int durationInFrames, int framerate){
+        fileInfoView.setAudioFileInfo(filename, path, duration, samplerate, channels, durationInFrames, framerate);
+    }
+    
 private:
-    
-    void drawFileInfo();
-    
     MainPanelGui guiView;
-    
-    string fileInfoStr;
-    string fileName;
-    ofTrueTypeFont	verdana;
-    
-    ofDirectory projects_dir;
-    
+    FileInfoView fileInfoView;
     MainPanelSettings currentSettings;
     
 };

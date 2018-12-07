@@ -41,12 +41,12 @@ void AnalysisDataSaver::reset(){
     
     soundfilePath = sMainApp->getSoundfilePath();
     //TODO: Remove this reference to config
-    frameRate = sMainApp->config.frameRate;
+    ///frameRate = sMainApp->config.frameRate;
     totalFramesNum = sMainApp->getTotalFramesNum();
     durationSecs = sMainApp->getDurationInSeconds();
     
-    sampleRate = sMainApp->config.sampleRate;
-    bufferSize = sMainApp->config.bufferSize;
+    ///sampleRate = sMainApp->config.sampleRate;
+    ///bufferSize = sMainApp->config.bufferSize;
 
     channelsNum = 1;
     percentage = 0.0;
@@ -54,7 +54,7 @@ void AnalysisDataSaver::reset(){
 //------------------------------------
 void AnalysisDataSaver::updateFrameRate(){
     //TODO: Remove this reference to config
-    frameRate       = sMainApp->config.frameRate;
+    ///frameRate       = sMainApp->config.frameRate;
     totalFramesNum  = sMainApp->getTotalFramesNum();
     
 }

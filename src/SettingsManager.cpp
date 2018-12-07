@@ -7,6 +7,7 @@
 
 #include "SettingsManager.h"
 #include "ofxAAUtils.h"
+#include "FileManager.h"
 
 SettingsManager::SettingsManager(){
     rootDir = "";
@@ -20,6 +21,11 @@ void SettingsManager::saveSettings(){
     addMetersPanelSettingsToXml();
     saveSettingsToFile();
     ///dataSaver.reset();
+}
+
+void SettingsManager::loadSettings(){
+    loadSettingsFromFile();
+    loadSettingsIntoPanels();
 }
 
 void SettingsManager::updateCurrentSettingsFromPanels(){
@@ -50,15 +56,11 @@ void SettingsManager::loadSettingsIntoPanels(){
     
 }
 
-void SettingsManager::loadSettings(){
-    loadSettingsFromFile();
-    loadSettingsIntoPanels();
-}
-
 void SettingsManager::loadSettingsFromFile(){
     xml.clear();
     
-    string filename = "test_settings.xml";
+    string filename = FileManager::getInstance().getSettingsFileName();
+    
     if( xml.loadFile(filename) ){
         ofLogVerbose()<<"SettingsManager: "<< filename <<" loaded.";
     }else{
@@ -73,9 +75,7 @@ void SettingsManager::loadSettingsFromFile(){
 }
 
 void SettingsManager::saveSettingsToFile(){
-    cout<<"SettingsManager saving settings..."<<endl;
-    //string filename = rootDir + "/test_settings.xml";
-    string filename = "test_settings.xml";
+    string filename = FileManager::getInstance().getSettingsFileName();
     xml.save(filename);
 }
 
