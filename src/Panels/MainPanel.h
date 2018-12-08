@@ -30,8 +30,6 @@
 #include "FileInfoView.h"
 #include "Settings.h"
 
-#include "OscSender.h"
-
 #define FILE_INFO_HEIGHT 20
 
 class MainPanel : public BasePanel{
@@ -49,7 +47,7 @@ public:
     
     void keyPressed(int key) override;
     
-    void saveSettings();
+    void saveAllSettings();
     void renderAnalysis();
     
     void loadSettings(MainPanelSettings& settings);
@@ -72,6 +70,6 @@ private:
     FileInfoView fileInfoView;
     MainPanelSettings currentSettings;
     
-    OscSender oscSender;
+    
     
 };

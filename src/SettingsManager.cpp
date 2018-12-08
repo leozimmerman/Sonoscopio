@@ -9,18 +9,15 @@
 #include "ofxAAUtils.h"
 #include "FileManager.h"
 
-SettingsManager::SettingsManager(){
-    rootDir = "";
-}
+SettingsManager::SettingsManager(){}
+
 void SettingsManager::saveSettings(){
     updateCurrentSettingsFromPanels();
-    
     xml.clear();
     addMainPanelSettingsToXml();
     addTimelinePanelSettingsToXml();
     addMetersPanelSettingsToXml();
     saveSettingsToFile();
-    
 }
 
 void SettingsManager::loadSettings(){
@@ -60,7 +57,6 @@ void SettingsManager::loadSettingsFromFile(){
     xml.clear();
     
     string filename = FileManager::getInstance().getSettingsFileName();
-    
     if( xml.loadFile(filename) ){
         ofLogVerbose()<<"SettingsManager: "<< filename <<" loaded.";
     }else{

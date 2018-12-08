@@ -19,9 +19,7 @@
 #pragma once
 
 #include "ofMain.h"
-
 #include "MeterView.h"
-
 
 class BinMeterView : public MeterView{
 

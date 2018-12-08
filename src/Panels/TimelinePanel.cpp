@@ -21,7 +21,7 @@
 #include "SettingsManager.h"
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
-#include "PanelsBridge.h"
+#include "OscSender.h"
 
 #pragma mark - Core funcs
 void TimelinePanel::setup(int x, int y, int w, int h){
@@ -34,7 +34,7 @@ void TimelinePanel::setup(int x, int y, int w, int h){
     SettingsManager::getInstance().setTimelinePanelPtr(this);
     FileManager::getInstance().setTimelinePanelPtr(this);
     AnalysisDataSaver::getInstance().setTimelinePanelPtr(this);
-    PanelsBridge::getInstance().setTimelinePanelPtr(this);
+    OscSender::getInstance().setTimelinePanelPtr(this);
 }
 
 void TimelinePanel::update(){
@@ -72,12 +72,11 @@ void TimelinePanel::keyPressed(int key){
     timelineView.keyPressed(key);
 }
 
-//--------------------------------------------------------------
 bool TimelinePanel::getFocused(){
     return guiView.getFocused();
 }
 void TimelinePanel::exit(){}
-//--------------------------------------------------------------
+
 #pragma mark - Settings
 void TimelinePanel::loadSettings(TimelinePanelSettings& settings){
     currentSettings = settings;
@@ -99,7 +98,6 @@ void TimelinePanel::loadSettings(TimelinePanelSettings& settings){
     timelineView.updateHeight();
 }
 
-//--------------------------------------------------------------
 void TimelinePanel::updateCurrentSettings(){
     guiView.loadStateIntoSettings(&currentSettings);
     auto tracksPage = timelineView.timeline.getPage(PAGE_TRACKS_NAME);
@@ -119,11 +117,11 @@ void TimelinePanel::updateCurrentSettings(){
 }
 
 void TimelinePanel::loadTimelineTracksFromFolder(){
-    string rootDir = SettingsManager::getInstance().getRootDir();
+    string rootDir = FileManager::getInstance().getRootDir();
     timelineView.timeline.loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR"/");
 }
 void TimelinePanel::saveTimelineTracksToFolder(){
-    string rootDir = SettingsManager::getInstance().getRootDir();
+    string rootDir = FileManager::getInstance().getRootDir();
     timelineView.timeline.saveTracksToFolder(rootDir + TIMELINE_SETTINGS_DIR);
 }
 

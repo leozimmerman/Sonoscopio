@@ -63,27 +63,9 @@ public:
     ChannelMeterSettings& getCurrentSettingsRef(){
         return currentSettings;
     }
-
-    //TODO: Remove this eventually....
-    vector<float>& getMelBandsValues(){
-        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
-        return binMeter->getValues();
-    }
-    vector<float>& getMfccValues(){
-        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MFCC));
-        return binMeter->getValues();
-    }
-    vector<float>& getHpcpValues(){
-        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(HPCP));
-        return binMeter->getValues();
-    }
-    vector<float>& getTristimulusValues(){
-        BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
-        return binMeter->getValues();
-    }
     
-    vector<MeterView*> meters;//TODO: Make private
-    
+    map<string, float> getMetersValues();
+    map<string, vector<float>> getMetersVectorValues();
     
 protected:
     void createMeters();
@@ -91,13 +73,16 @@ protected:
     MeterView* meterForType(ofxAAAlgorithmType type);
     int getHeightForMeter(MeterView* meter);
     
-    vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
+    vector<MeterView*> meters;
+    vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
     ofxAudioAnalyzerUnit* audioAnalyzerUnit;
+    ChannelMeterSettings currentSettings;
+    
     int _contentHeight;
     ofColor _mainColor;
     int _panelId;
     int _scrollOffset = 0;
     
-    ChannelMeterSettings currentSettings;
+    
 
 };

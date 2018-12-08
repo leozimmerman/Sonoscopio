@@ -17,13 +17,15 @@
  */
 
 #include "BinMeterView.h"
+#include "ofxAAUtils.h"
+
 int BinMeterView::height = 60;
 
 BinMeterView::BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(algorithmType, panelId, aaPtr){
     
     //spectrum cant be turned off
     //mfcc cant work if melBands is turn off
-    if(_name == MTR_NAME_SPECTRUM || _name == MTR_NAME_MFCC){
+    if(_name == SPECTRUM_STRING || _name == MFCC_STRING){
         onOffToggle->setVisible(false);
         onOffToggle->ofxDatGuiComponent::setEnabled(false);
     }

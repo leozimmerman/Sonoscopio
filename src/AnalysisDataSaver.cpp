@@ -158,18 +158,18 @@ void AnalysisDataSaver::threadedFunction(){
                     savedSettings.pushTag(channelTag);
                     
                     //->sames order as Osc Indexes (ofxAudioAnalyzerAlgorithms.h)
-                    float power         = metersValues[i].at(MTR_NAME_POWER);//0
-                    float pitchfreq     = metersValues[i].at(MTR_NAME_PITCH_FREQ);//1
-                    float pitchConf     = metersValues[i].at(MTR_NAME_PITCH_CONF);//2
-                    float pitchSalience = metersValues[i].at(MTR_NAME_PITCH_SALIENCE);//3
-                    float hfc           = metersValues[i].at(MTR_NAME_HFC);//4
-                    float centroid      = metersValues[i].at(MTR_NAME_CENTROID);//5
-                    float specComp      = metersValues[i].at(MTR_NAME_SPEC_COMP);//6
-                    float inharmonicity = metersValues[i].at(MTR_NAME_INHARMONICTY);//7
-                    float dissonance    = metersValues[i].at(MTR_NAME_DISSONANCE);//8
-                    float rollOff       = metersValues[i].at(MTR_NAME_ROLL_OFF);//9
-                    float oddToEven     = metersValues[i].at(MTR_NAME_ODD_TO_EVEN);//10
-                    int onset           = metersValues[i].at(MTR_NAME_ONSETS);//11
+                    float power         = metersValues[i].at(POWER_STRING);//0
+                    float pitchfreq     = metersValues[i].at(PITCH_FREQ_STRING);//1
+                    float pitchConf     = metersValues[i].at(PITCH_CONFIDENCE_STRING);//2
+                    float pitchSalience = metersValues[i].at(PITCH_SALIENCE_STRING);//3
+                    float hfc           = metersValues[i].at(HFC_STRING);//4
+                    float centroid      = metersValues[i].at(CENTROID_STRING);//5
+                    float specComp      = metersValues[i].at(SPEC_COMP_STRING);//6
+                    float inharmonicity = metersValues[i].at(INHARMONICITY_STRING);//7
+                    float dissonance    = metersValues[i].at(DISSONANCE_STRING);//8
+                    float rollOff       = metersValues[i].at(ROLL_OFF_STRING);//9
+                    float oddToEven     = metersValues[i].at(ODD_TO_EVEN_STRING);//10
+                    int onset           = metersValues[i].at(ONSETS_STRING);//11
                     
                     //TODO: set tags as constants/macros
                     //Single Value Algorithms:
@@ -192,8 +192,8 @@ void AnalysisDataSaver::threadedFunction(){
                         //MEL BANDS: ---------------------------
                         savedSettings.addTag("MELBANDS");
                         savedSettings.pushTag("MELBANDS");
-                        for (int j=0; j<metersVectorValues[i].at(MTR_NAME_MEL_BANDS).size(); j++){
-                            float val = metersVectorValues[i].at(MTR_NAME_MEL_BANDS)[j];
+                        for (int j=0; j<metersVectorValues[i].at(MEL_BANDS_STRING).size(); j++){
+                            float val = metersVectorValues[i].at(MEL_BANDS_STRING)[j];
                             savedSettings.addValue(ofToString(j), val);
                         }
                         savedSettings.popTag();//pop from MELBANDS back into CHANNEL-i
@@ -201,8 +201,8 @@ void AnalysisDataSaver::threadedFunction(){
                         //MFCC: ---------------------------
                         savedSettings.addTag("MFCC");
                         savedSettings.pushTag("MFCC");
-                        for (int j=0; j<metersVectorValues[i].at(MTR_NAME_MFCC).size(); j++){
-                            float val = metersVectorValues[i].at(MTR_NAME_MFCC)[j];
+                        for (int j=0; j<metersVectorValues[i].at(MFCC_STRING).size(); j++){
+                            float val = metersVectorValues[i].at(MFCC_STRING)[j];
                             savedSettings.addValue(ofToString(j), val);
                         }
                         savedSettings.popTag();//pop from MFCC back into CHANNEL-i
@@ -210,8 +210,8 @@ void AnalysisDataSaver::threadedFunction(){
                         //HPCP: ---------------------------
                         savedSettings.addTag("HPCP");
                         savedSettings.pushTag("HPCP");
-                        for (int j=0; j<metersVectorValues[i].at(MTR_NAME_HPCP).size(); j++){
-                            float val = metersVectorValues[i].at(MTR_NAME_HPCP)[j];
+                        for (int j=0; j<metersVectorValues[i].at(HPCP_STRING).size(); j++){
+                            float val = metersVectorValues[i].at(HPCP_STRING)[j];
                             savedSettings.addValue(ofToString(j), val);
                         }
                         savedSettings.popTag();//pop from HPCP back into CHANNEL-i
@@ -219,8 +219,8 @@ void AnalysisDataSaver::threadedFunction(){
                         //TRISTIMULUS: ---------------------------
                         savedSettings.addTag("TRISTIMULUS");
                         savedSettings.pushTag("TRISTIMULUS");
-                        for (int j=0; j<metersVectorValues[i].at(MTR_NAME_TRISTIMULUS).size(); j++){
-                            float val = metersVectorValues[i].at(MTR_NAME_TRISTIMULUS)[j];
+                        for (int j=0; j<metersVectorValues[i].at(TRISTIMULUS_STRING).size(); j++){
+                            float val = metersVectorValues[i].at(TRISTIMULUS_STRING)[j];
                             savedSettings.addValue(ofToString(j), val);
                         }
                         savedSettings.popTag();//pop from TRISTIMULUS back into CHANNEL-i

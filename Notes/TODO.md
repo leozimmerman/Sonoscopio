@@ -2,18 +2,11 @@
 
 ## Now
 ### Tasks
-
-- ADD: Render algorithm analysis to track (!)
-    - Add meter modal.
     
 - ADD: TimlinePanel modal: Which tracks to show
 
-- FIX: OSC sending
-
-- FIX Data Rendering
+- FIX Data Rendering: Make a test 
     - Save Analysis to Modal Menu?
-
-
 
 
 ### Bugs / Code Improvements

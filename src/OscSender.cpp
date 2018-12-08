@@ -8,23 +8,34 @@
 #include "OscSender.h"
 #include "Macros.h"
 
+OscSender::OscSender(){
+    bSendVectorValues = false;
+}
 
 void OscSender::setHost(string host){
     setup(host, getPort());
 }
-//--------------------------------------------------------------
+
 void OscSender::setPort(int port){
     setup(getHost(), port);
 }
-//--------------------------------------------------------------
+
+void OscSender::sendOscData(){
+    if (metersPanelPtr == NULL || timelinePanelPtr == NULL){
+        return;
+    }
+    
+    auto metersValues = metersPanelPtr->getMetersValues();
+    auto metersVectorValues = metersPanelPtr->getMetersVectorValues();
+    auto trackValues = timelinePanelPtr->getTracksValues();
+    sendOscData(metersValues, metersVectorValues, trackValues, bSendVectorValues);
+}
+
 void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues, const vector<std::map<string, vector<float>>> & metersVectorValues, const std::map<string, float> & timelineValues, bool sendVectorValues){
     
     //-------------------------------------------------
     //-:Send Meters Values
-    
-//    vector<std::map<string, float>> metersValues = metersPanel.getMetersValues();
-//    vector<std::map<string, vector<float>>> metersVectorValues = metersPanel.getMetersVectorValues();
-    
+
     if(metersVectorValues.size() != metersValues.size()){
         ofLogError()<<"ofApp sendOscData: metersValues and metersVectorValues not matching.";
         return;
@@ -42,18 +53,18 @@ void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues
         msg.setAddress(address);
         
         //->sames order as Osc Indexes (ofxAudioAnalyzerAlgorithms.h)
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_POWER));//0
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_FREQ));//1
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_CONF));//2
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_PITCH_SALIENCE));//3
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_HFC));//4
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_CENTROID));//5
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_SPEC_COMP));//6
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_INHARMONICTY));//7
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_DISSONANCE));//8
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_ROLL_OFF));//9
-        msg.addFloatArg(metersValues[i].at(MTR_NAME_ODD_TO_EVEN));//10
-        msg.addInt32Arg(metersValues[i].at(MTR_NAME_ONSETS));//11
+        msg.addFloatArg(metersValues[i].at(POWER_STRING));//0
+        msg.addFloatArg(metersValues[i].at(PITCH_FREQ_STRING));//1
+        msg.addFloatArg(metersValues[i].at(PITCH_CONFIDENCE_STRING));//2
+        msg.addFloatArg(metersValues[i].at(PITCH_SALIENCE_STRING));//3
+        msg.addFloatArg(metersValues[i].at(HFC_STRING));//4
+        msg.addFloatArg(metersValues[i].at(CENTROID_STRING));//5
+        msg.addFloatArg(metersValues[i].at(SPEC_COMP_STRING));//6
+        msg.addFloatArg(metersValues[i].at(INHARMONICITY_STRING));//7
+        msg.addFloatArg(metersValues[i].at(DISSONANCE_STRING));//8
+        msg.addFloatArg(metersValues[i].at(ROLL_OFF_STRING));//9
+        msg.addFloatArg(metersValues[i].at(ODD_TO_EVEN_STRING));//10
+        msg.addInt32Arg(metersValues[i].at(ONSETS_STRING));//11
         
         sendMessage(msg, false);//???ADD OSC BUNDLES?
         
@@ -69,8 +80,8 @@ void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues
             
             //cout<<"melbands size: "<< metersVectorValues[i].at(MTR_NAME_MEL_BANDS).size()<<" add: "<< address << endl;
             
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_MEL_BANDS).size(); j++){
-                msgMel.addFloatArg(metersVectorValues[i].at(MTR_NAME_MEL_BANDS)[j]);
+            for (int j=0; j<metersVectorValues[i].at(MEL_BANDS_STRING).size(); j++){
+                msgMel.addFloatArg(metersVectorValues[i].at(MEL_BANDS_STRING)[j]);
             }
             sendMessage(msgMel, false);
             
@@ -84,8 +95,8 @@ void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues
             
             //cout<<"mfcc size: "<< metersVectorValues[i].at(MTR_NAME_MFCC).size()<<" add: "<< address << endl;
             
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_MFCC).size(); j++){
-                msgMfcc.addFloatArg(metersVectorValues[i].at(MTR_NAME_MFCC)[j]);
+            for (int j=0; j<metersVectorValues[i].at(MFCC_STRING).size(); j++){
+                msgMfcc.addFloatArg(metersVectorValues[i].at(MFCC_STRING)[j]);
             }
             sendMessage(msgMfcc, false);
             
@@ -99,8 +110,8 @@ void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues
             
             //cout<<"hpcp size: "<< metersVectorValues[i].at(MTR_NAME_HPCP).size()<<" add: "<< address << endl;
             
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_HPCP).size(); j++){
-                msgHpcp.addFloatArg(metersVectorValues[i].at(MTR_NAME_HPCP)[j]);
+            for (int j=0; j<metersVectorValues[i].at(HPCP_STRING).size(); j++){
+                msgHpcp.addFloatArg(metersVectorValues[i].at(HPCP_STRING)[j]);
             }
             sendMessage(msgHpcp, false);
             
@@ -115,8 +126,8 @@ void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues
             
             //cout<<"tris size: "<< metersVectorValues[i].at(MTR_NAME_TRISTIMULUS).size()<<" add: "<< address << endl;
             
-            for (int j=0; j<metersVectorValues[i].at(MTR_NAME_TRISTIMULUS).size(); j++){
-                msgTris.addFloatArg(metersVectorValues[i].at(MTR_NAME_TRISTIMULUS)[j]);
+            for (int j=0; j<metersVectorValues[i].at(TRISTIMULUS_STRING).size(); j++){
+                msgTris.addFloatArg(metersVectorValues[i].at(TRISTIMULUS_STRING)[j]);
             }
             sendMessage(msgTris, false);
             

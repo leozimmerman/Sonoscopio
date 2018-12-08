@@ -62,7 +62,7 @@ void MainPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     if (label == CONFIG_LABEL){
         showMenu();
     }else if (label == SAVE_SETTINGS_LABEL){
-        mainPanelPtr->saveSettings();
+        mainPanelPtr->saveAllSettings();
     }else if (label == OPEN_FILE_LABEL){
         mainPanelPtr->openFileDialog();
     }else if (label == RENDER_ANALYSIS_LABEL){

@@ -91,7 +91,7 @@ void MeterView::initComponents(){
     font->setLetterSpacing(1.037);
     _line_h = font->getLineHeight();
 
-    onOffToggle = new OnOffToggle(MTR_ON_OFF, TRUE);
+    onOffToggle = new OnOffToggle(ON_LABEL, TRUE);
     onOffToggle->onButtonEvent(this, &MeterView::onButtonEvent);
     
     onOffToggle->setHeight(_line_h);
@@ -99,13 +99,13 @@ void MeterView::initComponents(){
     onOffToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     onOffToggle->setBackgroundColor(ofColor::black);
     
-    smoothSlider = new CustomSlider(MTR_SMOOTHING, 0.0, 1.0, _smoothAmnt);
+    smoothSlider = new CustomSlider(SMOOTHING_LABEL, 0.0, 1.0, _smoothAmnt);
     smoothSlider->onSliderEvent(this, &MeterView::onSliderEvent);
     smoothSlider->setHeight(_line_h);
     smoothSlider->setLabelMargin(1.0);
     smoothSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
-    peakButton = new PeakMeterButton(MTR_PEAK);
+    peakButton = new PeakMeterButton(PEAK_LABEL);
     peakButton->onButtonEvent(this, &MeterView::onButtonEvent);
     peakButton->setHeight(_line_h);
     peakButton->setLabelMargin(0.0);
@@ -295,7 +295,7 @@ void MeterView::onSliderEvent(ofxDatGuiSliderEvent e){
 //------------------------------------------------
 void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
     
-    if(e.target->getLabel()==MTR_ON_OFF){
+    if(e.target->getLabel() == ON_LABEL){
         OnOffEventData data;
         data.type = _algorithmType;
         data.state = e.enabled;
@@ -306,7 +306,7 @@ void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
      
     } else if(e.target->getType() == ofxDatGuiType::BUTTON){
         resetPeak();
-        showMenu();
+        ///showMenu();
     }
 
 }

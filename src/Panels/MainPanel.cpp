@@ -16,13 +16,12 @@
  *
  */
 
+#include "ofApp.h"
 #include "MainPanel.h"
 #include "SettingsManager.h"
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
-
-#include "ofApp.h"
-
+#include "OscSender.h"
 
 #pragma mark - core funcs
 void MainPanel::setup(int x, int y, int w, int h){
@@ -32,22 +31,15 @@ void MainPanel::setup(int x, int y, int w, int h){
     guiView.setup(x, y, w, GUI_COMP_HEIGHT, this);
     fileInfoView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
-    oscSender.setup(INIT_OSC_HOST,  INIT_OSC_PORT);
-    
+    OscSender::getInstance().setup(INIT_OSC_HOST,  INIT_OSC_PORT);
     SettingsManager::getInstance().setMainPanelPtr(this);
-    FileManager::getInstance().setMainPanelPtr(this);
 }
 
 void MainPanel::update(){
     guiView.update();
     
     if (guiView.getOscEnabled()) {
-        /**
-        auto metersValues = metersPanel.metersView.getMetersValues();
-        auto metersVectorValues = metersPanel.metersView.getMetersVectorValues();
-        auto trackValues = timePanel.timelineView.getTracksValues();
-        oscSender.sendOscData(metersValues, metersVectorValues, trackValues, config.osc().bSendVectorValues);
-        */
+        OscSender::getInstance().sendOscData();
     }
 }
 
@@ -83,8 +75,21 @@ void MainPanel::resize(int x, int y, int w, int h){
     fileInfoView.resize(x, guiView.maxX(), w, h - guiView.getHeight());
 }
 
+#pragma mark - Gui called funcs
+
 void MainPanel::openFileDialog(){
     FileManager::getInstance().openFileDialog();
+}
+
+void MainPanel::saveAllSettings(){
+    SettingsManager::getInstance().saveSettings();
+}
+
+void MainPanel::renderAnalysis(){
+    ///AnalysisDataSaver::getInstance().start();
+    string message = "This is an error message test";
+    ofNotifyEvent(ofApp::errorEvent, message);
+    
 }
 
 #pragma mark - Settings funcs
@@ -93,10 +98,10 @@ void MainPanel::applySettings(int fps, int buffersize, float bpm, string host, i
     currentSettings.osc.host = host;
     currentSettings.osc.port = port;
     
-    //!
-    oscSender.setHost(host);
-    oscSender.setPort(port);
-    //TODO: Implement!
+    OscSender::getInstance().setHost(host);
+    OscSender::getInstance().setPort(port);
+    ofApp* app = (ofApp*)ofGetAppPtr();
+    app->setFrameRate(fps);
 }
 
 void MainPanel::loadSettings(MainPanelSettings& settings){
@@ -108,16 +113,7 @@ void MainPanel::updateCurrentSettings(){
     guiView.loadStateIntoSettings(&currentSettings);
 }
 
-void MainPanel::saveSettings(){
-    SettingsManager::getInstance().saveSettings();
-}
 
-void MainPanel::renderAnalysis(){
-    ///AnalysisDataSaver::getInstance().start();
-    string message = "This is an error message test";
-    ofNotifyEvent(ofApp::errorEvent, message);
-    
-}
 
 
 

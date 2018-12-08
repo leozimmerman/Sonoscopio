@@ -21,7 +21,7 @@
 #include "ofMain.h"
 #include "ofxDatGui.h"
 #include "ExtendedDatGuiComponents.h"
-#include "Macros.h"
+//#include "Macros.h"
 #include "View.h"
 #include "ofxAudioAnalyzerUnit.h"
 #include "MeterModal.h"
@@ -35,11 +35,9 @@ public:
 };
 
 
-
-//-:Meters Colors
-//#define COLOR_MAIN_A ofColor::darkSeaGreen
-//#define COLOR_MAIN_B ofColor::darkKhaki
-
+#define SMOOTHING_LABEL "SMTH"
+#define ON_LABEL "ON"
+#define PEAK_LABEL "PEAK"
 
 #define COLOR_MAIN_A ofColor::paleTurquoise
 #define COLOR_MAIN_B ofColor::paleGoldenRod

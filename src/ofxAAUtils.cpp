@@ -10,23 +10,23 @@
 namespace ofxaa{
     string algorithmTypeToString(ofxAAAlgorithmType algorithmType) {
         switch (algorithmType) {
-            case RMS: return "RMS";
-            case PITCH_FREQ: return "PITCH_FREQ";
-            case PITCH_CONFIDENCE: return "PITCH_CONF";
-            case PITCH_SALIENCE: return "PITCH_SLNCE";
-            case HFC: return "HFC";
-            case CENTROID: return "CENTROID";
-            case SPECTRAL_COMPLEXITY: return "SPEC_COMP";
-            case INHARMONICITY: return "INHARMONICITY";
-            case DISSONANCE: return "DISSONANCE";
-            case ROLL_OFF: return "ROLL_OFF";
-            case ODD_TO_EVEN: return "ODD_TO_EVEN";
-            case ONSETS: return "ONSETS";
-            case SPECTRUM: return "SPECTRUM";
-            case MEL_BANDS: return "MEL_BANDS";
-            case MFCC: return "MFCC";
-            case HPCP: return "HPCP";
-            case TRISTIMULUS: return "TRISTIMULUS";
+            case POWER: return POWER_STRING;
+            case PITCH_FREQ: return PITCH_FREQ_STRING;
+            case PITCH_CONFIDENCE: return PITCH_CONFIDENCE_STRING;
+            case PITCH_SALIENCE: return PITCH_SALIENCE_STRING;
+            case HFC: return HFC_STRING;
+            case CENTROID: return CENTROID_STRING;
+            case SPECTRAL_COMPLEXITY: return SPEC_COMP_STRING;
+            case INHARMONICITY: return INHARMONICITY_STRING;
+            case DISSONANCE: return DISSONANCE_STRING;
+            case ROLL_OFF: return ROLL_OFF_STRING;
+            case ODD_TO_EVEN: return ODD_TO_EVEN_STRING;
+            case ONSETS: return ONSETS_STRING;
+            case SPECTRUM: return SPECTRUM_STRING;
+            case MEL_BANDS: return MEL_BANDS_STRING;
+            case MFCC: return MFCC_STRING;
+            case HPCP: return HPCP_STRING;
+            case TRISTIMULUS: return TRISTIMULUS_STRING;
             default: return "";
         }
     }
@@ -69,4 +69,10 @@ namespace ofxaa{
         }
     }
     
+    bool hasTypeVectorOutputValues(ofxAAAlgorithmType type){
+        if (type == SPECTRUM || type == MEL_BANDS || type == MFCC || type == HPCP || type == TRISTIMULUS){
+            return true;
+        }
+        return false;
+    }
 }

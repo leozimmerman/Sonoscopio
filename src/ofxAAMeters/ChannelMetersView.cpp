@@ -27,28 +27,23 @@ ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int pa
     
     ofAddListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
    
-    _panelId = panelId;
     audioAnalyzerUnit = audioAnalyzer;
-    _enabledAlgorithmTypes = enabledAlgorithms;
+    enabledAlgorithmTypes = enabledAlgorithms;
+    
     _mainColor = mainColor;
+    _panelId = panelId;
     
     createMeters();
 }
 
 void ChannelMetersView::createMeters(){
     meters.clear();
-    for (auto type : _enabledAlgorithmTypes) {
+    for (auto type : enabledAlgorithmTypes) {
         auto meterView = MeterView::createMeterView(type, _panelId, audioAnalyzerUnit);
         meters.push_back(meterView);
     }
     setColors();
     resize(_x, _y, _w, _h);
-    
-}
-
-void ChannelMetersView::setEnabledAlgorithms(vector<ofxAAAlgorithmType> &enabledAlgorithms){
-    _enabledAlgorithmTypes = enabledAlgorithms;
-    createMeters();
 }
 
 void ChannelMetersView::update(){
@@ -73,46 +68,7 @@ void ChannelMetersView::exit(){
     ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
 }
 
-//------------------------------------------------
-#pragma mark - Gral funcs
-//------------------------------------------------
-void ChannelMetersView::scrollUp(){
-    _scrollOffset += 40;
-    if (_scrollOffset > 0) {_scrollOffset = 0;}
-    resize(_x , _y, _w, _h);
-}
-//------------------------------------------------
-void ChannelMetersView::scrollDown(){
-    _scrollOffset -= 40;
-    if (_scrollOffset < (_contentHeight-_h) * (-1)) {
-        _scrollOffset = (_contentHeight-_h) * (-1);
-    }
-    resize(_x, _y, _w, _h);
-}
-//------------------------------------------------
-void ChannelMetersView::setColors(){
-    ofColor lightCol = _mainColor;
-    lightCol.setBrightness(30);//darker mainColor
-    setBackgroundColor(lightCol);
-    for (auto m : meters){
-        m->setMainColor(_mainColor);
-        if(m->getType()==ONSETS){
-            OnsetMeterView* om = dynamic_cast<OnsetMeterView*>(m);
-            om->updateComponentsColors();//update sliders colors
-        }
-    }
-}
-//------------------------------------------------
-int ChannelMetersView::getHeightForMeter(MeterView *meter) {
-    if (dynamic_cast<BinMeterView*>(meter)) {
-        return BinMeterView::height;
-    } else if (dynamic_cast<OnsetMeterView*>(meter))  {
-        return OnsetMeterView::height;
-    } else {
-        return MeterView::height;
-    }
-}
-//------------------------------------------------
+
 void ChannelMetersView::resize(int x, int y, int w, int h) {
     View::resize(x, y, w, h);
     int metersWidth = _w;
@@ -126,7 +82,50 @@ void ChannelMetersView::resize(int x, int y, int w, int h) {
     _contentHeight = y_pos;
 }
 
-//--------------------------------------------------------------
+#pragma mark - Gral funcs
+
+void ChannelMetersView::scrollUp(){
+    _scrollOffset += 40;
+    if (_scrollOffset > 0) {_scrollOffset = 0;}
+    resize(_x , _y, _w, _h);
+}
+
+void ChannelMetersView::scrollDown(){
+    _scrollOffset -= 40;
+    if (_scrollOffset < (_contentHeight-_h) * (-1)) {
+        _scrollOffset = (_contentHeight-_h) * (-1);
+    }
+    resize(_x, _y, _w, _h);
+}
+
+void ChannelMetersView::setEnabledAlgorithms(vector<ofxAAAlgorithmType> &enabledAlgorithms){
+    enabledAlgorithmTypes = enabledAlgorithms;
+    createMeters();
+}
+
+void ChannelMetersView::setColors(){
+    ofColor lightCol = _mainColor;
+    lightCol.setBrightness(30);//darker mainColor
+    setBackgroundColor(lightCol);
+    for (auto m : meters){
+        m->setMainColor(_mainColor);
+        if(m->getType()==ONSETS){
+            OnsetMeterView* om = dynamic_cast<OnsetMeterView*>(m);
+            om->updateComponentsColors();//update sliders colors
+        }
+    }
+}
+
+int ChannelMetersView::getHeightForMeter(MeterView *meter) {
+    if (dynamic_cast<BinMeterView*>(meter)) {
+        return BinMeterView::height;
+    } else if (dynamic_cast<OnsetMeterView*>(meter))  {
+        return OnsetMeterView::height;
+    } else {
+        return MeterView::height;
+    }
+}
+
 ///listener for all on/off buttons of all pannels
 void ChannelMetersView::onMeterStateChanged(OnOffEventData & data){
     
@@ -203,4 +202,40 @@ MeterView* ChannelMetersView::meterForType(ofxAAAlgorithmType type) {
         }
     }
     return NULL;
+}
+
+#pragma mark - Value getters
+
+map<string, float> ChannelMetersView::getMetersValues(){
+    std::map<string, float> channelMap;
+    for(MeterView* m : meters){
+        auto type = m->getType();
+        if (type == ONSETS){
+            string key =  m->getName();
+            OnsetMeterView* om = dynamic_cast<OnsetMeterView*>(m);
+            channelMap[key] = om->getValue();
+        }else if(!ofxaa::hasTypeVectorOutputValues(type)){
+            string key = m->getName();
+            channelMap[key]= m->getValue();
+        }
+    }
+    return channelMap;
+}
+
+map<string, vector<float>> ChannelMetersView::getMetersVectorValues(){
+    //TODO: Simplify this...
+    std::map<string, vector<float>> channelMap;
+    BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
+    channelMap[MEL_BANDS_STRING] = binMeter->getValues();
+    
+    binMeter = dynamic_cast<BinMeterView*>(meterForType(MFCC));
+    channelMap[MFCC_STRING] = binMeter->getValues();
+    
+    binMeter = dynamic_cast<BinMeterView*>(meterForType(HPCP));
+    channelMap[HPCP_STRING] = binMeter->getValues();
+    
+    binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
+    channelMap[TRISTIMULUS_STRING] = binMeter->getValues();
+    
+    return channelMap;
 }

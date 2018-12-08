@@ -66,11 +66,6 @@ public:
         return instance;
     }
     
-    string getRootDir(){ return rootDir; }
-    void setProjectDir(string dir){
-        rootDir = dir;
-    }
-    
     void saveSettings();
     void loadSettings();
     
@@ -105,8 +100,6 @@ private:
     void loadMetersPanelSettingsFromXml();
     
     ofxXmlSettings xml;
-    ofDirectory directory;
-    string rootDir;
     
     MainPanel* mainPanelPtr;
     MetersPanel* metersPanelPtr;
