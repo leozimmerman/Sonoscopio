@@ -17,6 +17,7 @@
 #define MP3_EXTENSION "MP3"
 
 #define SETTINGS_SUFFIX "_settings.xml"
+#define TIMELINE_SETTINGS_DIR "_tl_settings/"
 
 class FileManager {
 public:
@@ -37,10 +38,11 @@ public:
         metersPanelPtr = panelPtr;
     }
     
-    string getRootDir(){return absolutePath;}
+    string getFilePath(){return absolutePath;}
     float getFileDuration(){return duration;}
     int getFileSampleRate(){return samplerate;}
     string getSettingsFileName(){return directory + baseName + SETTINGS_SUFFIX;}
+    string getTimelineFolderPath(){return directory + baseName + TIMELINE_SETTINGS_DIR;}
     
 private:
     FileManager();

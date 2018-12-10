@@ -3,9 +3,11 @@
 ## Now
 ### Tasks
     
-- ADD: TimlinePanel modal: Which tracks to show
+    - ADD: TimlinePanel modal: Which tracks to show:
+    Fix timeline pages (Audio / Tracks) 
 
-- FIX Data Rendering: Make a test 
+- FIX Data Rendering: Make a test:
+
     - Save Analysis to Modal Menu?
 
 

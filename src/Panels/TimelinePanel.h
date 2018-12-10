@@ -95,11 +95,10 @@ public:
         return timelineView.audioTrack->getCurrentSoundBufferMono(size);
     }
     int getTotalFramesNum(){return timelineView.timeline.getDurationInFrames();}
-//    string getSoundfilePath(){return timelineView.audioTrack->getSoundfilePath();}
-//    float getDurationInSeconds(){return timelineView.timeline.getDurationInSeconds();}
-//    float getBpm(){return timelineView.timeline.getBPM();}
     
 private:
+    //vector<TLTrackSetting> visibleTracks;
+    
     TimelineViewGui guiView;
     TimelineView timelineView;
     TimelinePanelSettings currentSettings;

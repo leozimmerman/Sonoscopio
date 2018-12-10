@@ -29,10 +29,10 @@
 void MetersPanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
     
+    enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
+    
     guiView.setup(x, y, w, GUI_COMP_HEIGHT, this);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
-    
-    enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
     
     SettingsManager::getInstance().setMetersPanelPtr(this);
     FileManager::getInstance().setMetersPanelPtr(this);

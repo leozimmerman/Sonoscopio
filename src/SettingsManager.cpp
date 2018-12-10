@@ -50,7 +50,6 @@ void SettingsManager::loadSettingsIntoPanels(){
     if (metersPanelPtr != NULL){
         metersPanelPtr->loadSettings(metersPanelSettings);
     }
-    
 }
 
 void SettingsManager::loadSettingsFromFile(){
@@ -70,6 +69,9 @@ void SettingsManager::loadSettingsFromFile(){
 }
 
 void SettingsManager::saveSettingsToFile(){
+    if (timelinePanelPtr != NULL){
+        timelinePanelPtr->saveTimelineTracksToFolder();
+    }
     string filename = FileManager::getInstance().getSettingsFileName();
     xml.save(filename);
 }

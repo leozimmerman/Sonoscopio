@@ -54,7 +54,7 @@ void FileManager::openAudioFile(string filename){
         
         int durationInFrames = timelinePanelPtr->getTotalFramesNum();
         int framerate = timelinePanelPtr->getFrameRate();
-        mainPanelPtr->setAudioFileInfo(filename, directory, duration, samplerate, channels, durationInFrames, framerate);
+        mainPanelPtr->setAudioFileInfo(baseName, directory, duration, samplerate, channels, durationInFrames, framerate);
         
         metersPanelPtr->resetAnalyzer(samplerate);
         SettingsManager::getInstance().loadSettings();

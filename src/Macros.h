@@ -18,7 +18,6 @@
 
 #pragma once
 
-#define TIMELINE_SETTINGS_DIR "timeline_settings"
 
 #define ANALYSIS_DATA_DIR "analysis_data"
 
@@ -36,6 +35,5 @@
 #define INIT_OSC_PORT 12345
 
 #define GUI_COMP_HEIGHT 26
-
 
 #define KEYBOARD_SHORTCUTS_MSG "'cmd 1,2,3: view modes | 'cmd + t': time measurement on/off  |  'cmd + m': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut"

@@ -20,6 +20,6 @@ public:
     void setAudioFileInfo(string fileName, string path,  float duration, int samplerate, int channels, int durationInFrames, int framerate);
     
 private:
-    string infoStr;
+    std::string infoStr;
     ofTrueTypeFont    verdana;
 };

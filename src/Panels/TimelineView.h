@@ -36,13 +36,12 @@ public:
     void resize(int x, int y, int width, int height) override;
     void updateHeight();
     
-    void setupTimeline(string audiofile);
+    void setupTimeline();
     void keyPressed(int key);
     
     void togglePlay(){ timeline.togglePlay(); }
     void stop(){ timeline.stop(); }
     void rewind(){ timeline.setCurrentTimeToInPoint(); }
-    
     
     void setVolume(float volume){
         if (audioTrack != NULL) {
@@ -73,36 +72,31 @@ public:
         timeline.setOutPointAtPlayhead();
     }
     
+    void setFrameRate(int fps);
     void addMarker();
     void addMarkerAtTime(float millis);
     void clearMarkers();
     void addTrack(string name, trackType type);
+    void addTrackWithStringType(string stringType, string name);
     void removeTrack(string name);
     void toggleShowTracks();
     void toggleEnableDisableFocusedTrack();
     void expandFocusedTrack();
-    
-    
-    //void checkIfWaveformPreviewChanged();
     void addKeyframeInFocusedTrack();
-    void setFrameRate(int fps);
+    
     void openAudioFile(string filename);
+    bool isSoundLoaded(){
+        return audioTrack->isSoundLoaded();
+    }
     void hideTracks();
     
     std::map<string, float> getTracksValues();
     vector<float>& getMarkers(){return _markers;}
-    bool isSoundLoaded();
-    
-    void addTrackWithStringType(string stringType, string name);
     
     void bangFired(ofxTLBangEventArgs& args);
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;
     
-  
-    
-///!!!
-    //TODO: definir que es private!
 private:
     bool _isThereBang = false;
     ofxTLTrack* _bangedTrack;

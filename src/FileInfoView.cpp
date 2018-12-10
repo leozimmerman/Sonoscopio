@@ -28,10 +28,8 @@ void FileInfoView::draw(){
 
 void FileInfoView::setAudioFileInfo(string fileName, string path,  float duration, int samplerate, int channels, int durationInFrames, int framerate){
     
-    string audiofileInfoStr = "duration: " + ofToString(duration) + "sec."
-    " - sample rate: " + ofToString(samplerate) +
-    " - channels: " + ofToString(channels) +
-    " - frames: " + ofToString(durationInFrames) + " at " + ofToString(framerate) + "fps";
-    
-    infoStr = "File name: "+ fileName + " | " + audiofileInfoStr + " | path: "+ path;
+    infoStr = "File name: " + fileName + "-duration: " + ofToString(duration) + "sec."
+    "-sample rate: " + ofToString(samplerate) +
+    "-channels: " + ofToString(channels) +
+    "-frames: " + ofToString(durationInFrames) + " at " + ofToString(framerate) + "fps" + " | path: " + path;
 }

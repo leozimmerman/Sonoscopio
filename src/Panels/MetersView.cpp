@@ -113,8 +113,8 @@ void MetersView::updateCurrentSettings(){
 
 #pragma mark - Meters Values Getters
 
-vector<std::map<string, float>>& MetersView::getMetersValues(){
-    singleValuesForOsc.clear();
+vector<std::map<string, float>> MetersView::getMetersValues(){
+    vector < std::map<string, float> > singleValuesForOsc;
     for (auto ch : _channelMetersViews){
         std::map<string, float> channelMap =  ch->getMetersValues();
         singleValuesForOsc.push_back(channelMap);
@@ -122,8 +122,8 @@ vector<std::map<string, float>>& MetersView::getMetersValues(){
     return singleValuesForOsc;
 }
 
-vector<std::map<string, vector<float>>>& MetersView::getMetersVectorValues(){
-    vectorValuesForOsc.clear();
+vector<std::map<string, vector<float>>> MetersView::getMetersVectorValues(){
+    vector < std::map<string, vector<float> > > vectorValuesForOsc;
     for (auto ch : _channelMetersViews){
         std::map<string, vector<float>> channelMap = ch->getMetersVectorValues();
         vectorValuesForOsc.push_back(channelMap);

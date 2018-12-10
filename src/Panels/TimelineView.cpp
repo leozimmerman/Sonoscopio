@@ -6,25 +6,26 @@
 //
 
 #include "TimelineView.h"
+#include "FileManager.h"
 
+#pragma mark - Core
 void TimelineView::setup(int x, int y, int w, int h) {
     View::setup(x, y, w, h);
     setBackgroundColor(ofColor(40));
     waveformCol.set(120);
     _frameRate = INIT_FPS; //TODO: Fix
-    setupTimeline("");
+    setupTimeline();
 }
 
 void TimelineView::update(){}
 void TimelineView::draw(){
-    //TODO:Revisar esta separacion entre timeline y audioWaveform...
-    View::draw();//background
-    
+    View::draw();
     if (audioTrack->isSoundLoaded()){
         if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
             audioTrack->drawWaveforms();
         }
         timeline.draw(false, false);//without ticker timeMarks & hidden mode
+        //timeline.draw();
     }
 }
 
@@ -35,49 +36,9 @@ void TimelineView::resize(int x, int y, int width, int height){
     updateHeight();
 }
 
-void TimelineView::setupTimeline(string audiofile) {
-    
-    ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
-    timeline.setWorkingFolder(TIMELINE_SETTINGS_DIR);
-    
-    timeline.setup(PAGE_AUDIO_NAME);///<--tweaked SETUP
-    
-    timeline.setFrameRate(_frameRate);
-    timeline.setAutosave(false);
-    timeline.setOffset(ofVec2f(_x, _y));
-    
-    
-    timeline.setLoopType(OF_LOOP_NONE);
-    timeline.setBPM(120.f);
-    timeline.setShowBPMGrid(false);
-    
-    timeline.addAudioTrack("Audio", audiofile);
-    
-    //this means that calls to play/stop etc will be  routed to the waveform anofd that timing will be 100% accurate
-    timeline.setTimecontrolTrack("Audio");
-    timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration());
-    
-    audioTrack = timeline.getAudioTrack("Audio");
-    
-    timeline.addPage(PAGE_TRACKS_NAME);
-    addTrack("DEFAULT", CURVES);
-    
-    timeline.setCurrentPage(PAGE_AUDIO_NAME);
-    timeline.setShowPageTabs(false); //->modify if more pages are needed
-    timeline.setFootersHidden(true);
-    
-    //timeline.resetInOutTrack();//for using in_out xml file
-    timeline.setInOutRange(ofRange(0.0, 1.0));//always start with in/out at the sides, ignores xml file
-    timeline.setWidth(_w);
-    updateHeight();
-    
-    ofAddListener(timeline.events().bangFired, this, &TimelineView::bangFired);
-}
 
 void TimelineView::keyPressed(int key){
-    
     ofxTLTrack* ftrack = timeline.getFocusedTrack();
-    
     switch (key) {
         case 'e':
             expandFocusedTrack();
@@ -94,19 +55,59 @@ void TimelineView::keyPressed(int key){
     }
 }
 
+#pragma mark - Gral
+void TimelineView::setupTimeline() {
+    
+    ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
+    //timeline.setWorkingFolder(FileManager::getInstance().getTimelineFolderPath());
+    
+    timeline.setup(PAGE_AUDIO_NAME);///<--tweaked SETUP
+    
+    timeline.setFrameRate(_frameRate);
+    timeline.setAutosave(false);
+    timeline.setOffset(ofVec2f(_x, _y));
+    
+    
+    timeline.setLoopType(OF_LOOP_NONE);
+    timeline.setBPM(120.f);
+    timeline.setShowBPMGrid(false);
+    
+    timeline.addAudioTrack("Audio", ""); /// Add empty audio Track?
+    
+    //this means that calls to play/stop etc will be  routed to the waveform anofd that timing will be 100% accurate
+    timeline.setTimecontrolTrack("Audio");
+    timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration());
+    
+    audioTrack = timeline.getAudioTrack("Audio");
+    
+    timeline.addPage(PAGE_TRACKS_NAME);
+    ///addTrack("DEFAULT", CURVES);
+    
+    timeline.setCurrentPage(PAGE_AUDIO_NAME);
+    timeline.setShowPageTabs(false); //->modify if more pages are needed
+    timeline.setFootersHidden(true);
+    
+    //timeline.resetInOutTrack();//for using in_out xml file
+    timeline.setInOutRange(ofRange(0.0, 1.0));//always start with in/out at the sides, ignores xml file
+    timeline.setWidth(_w);
+    updateHeight();
+    
+    ofAddListener(timeline.events().bangFired, this, &TimelineView::bangFired);
+}
+
+
 void TimelineView::openAudioFile(string filename){
     timeline.stop();
     timeline.setCurrentTimeSeconds(0.0);
     audioTrack->loadSoundfile(filename);
     timeline.setDurationInSeconds(audioTrack->getDuration());
 }
-//--------------------------------------------------------------
+
 void TimelineView::setFrameRate(int fps){
     _frameRate = fps;
     timeline.setFrameRate(_frameRate);
 }
 
-//--------------------------------------------------------------
 void TimelineView::bangFired(ofxTLBangEventArgs& args){
     //cout << "bang fired!" << args.flag << endl;
     cout << "bang fired!" << endl;
@@ -114,9 +115,18 @@ void TimelineView::bangFired(ofxTLBangEventArgs& args){
     _bangedTrack = args.track;
 }
 
-//--------------------------------------------------------------
+void TimelineView::updateHeight(){
+    if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
+        int tracksNum = timeline.getPage(PAGE_TRACKS_NAME)->getTracksNum();
+        timeline.setHeight(_h - 20.0 - 17.68 * (tracksNum-1));
+    } else {
+        timeline.setHeight(_h - 20);
+    }
+}
+
+
 #pragma mark - Tracks
-//--------------------------------------------------------------
+
 void TimelineView::addTrack(string name, trackType type){
     
     string currentPageName = timeline.getCurrentPageName();
@@ -147,12 +157,24 @@ void TimelineView::addTrack(string name, trackType type){
     updateHeight();
     
 }
-//--------------------------------------------------------------
+
+void TimelineView::addTrackWithStringType(string stringType, string name){
+    if(stringType=="Curves"){
+        addTrack(name, CURVES);
+    } else if(stringType=="Bangs"){
+        addTrack(name, BANGS);
+    } else if(stringType=="Switches"){
+        addTrack(name, SWITCHES);
+    } else if(stringType=="Notes"){
+        addTrack(name, NOTES);
+    }
+}
+
 void TimelineView::removeTrack(string name){
     timeline.removeTrack(name);
     updateHeight();
 }
-//--------------------------------------------------------------
+
 void TimelineView::hideTracks(){
     if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME) {
         timeline.setCurrentPage(PAGE_AUDIO_NAME);
@@ -160,7 +182,7 @@ void TimelineView::hideTracks(){
         updateHeight();
     }
 }
-//--------------------------------------------------------------
+
 void TimelineView::toggleShowTracks(){
     
     if(timeline.getCurrentPageName() == PAGE_AUDIO_NAME){
@@ -172,50 +194,54 @@ void TimelineView::toggleShowTracks(){
     }
     updateHeight();
 }
-//--------------------------------------------------------------
-void TimelineView::updateHeight(){
-    if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
-        int tracksNum = timeline.getPage(PAGE_TRACKS_NAME)->getTracksNum();
-        timeline.setHeight(_h - 20.0 - 17.68 * (tracksNum-1));
-    } else {
-        timeline.setHeight(_h - 20);
-    }
-}
-//--------------------------------------------------------------
+
 void TimelineView::expandFocusedTrack(){
     ofxTLTrack* ftrack = timeline.getFocusedTrack();
     if(ftrack != NULL && timeline.getCurrentPageName()==PAGE_TRACKS_NAME){
         timeline.getPage(PAGE_TRACKS_NAME)->expandFocusedTrack();
     }
 }
-//--------------------------------------------------------------
+
 void TimelineView::toggleEnableDisableFocusedTrack(){
     ofxTLTrack* ftrack = timeline.getFocusedTrack();
     if(ftrack != NULL && timeline.getCurrentPageName()==PAGE_TRACKS_NAME){
         ftrack->isEnabled() ? ftrack->disable() : ftrack->enable();
     }
 }
+
 void TimelineView::addKeyframeInFocusedTrack(){
     ofxTLKeyframes* ftrack = (ofxTLKeyframes*) timeline.getFocusedTrack();
     if (ftrack != NULL) {
         ftrack->addKeyframe();
     }
 }
-#pragma mark - Info & Value Getters
+#pragma mark - Markers
 
-//--------------------------------------------------------------
-bool TimelineView::isSoundLoaded(){
-    return audioTrack->isSoundLoaded();
+void TimelineView::addMarker(){
+    timeline.getTicker()->addMarker(timeline.getCurrentTimeMillis());
+    _markers.push_back(timeline.getCurrentTimeMillis());
 }
-//--------------------------------------------------------------
+
+void TimelineView::addMarkerAtTime(float millis){
+    
+    float ms =  ofClamp(millis, 0.0, timeline.getDurationInMilliseconds());//clamp just in case...
+    timeline.getTicker()->addMarker(ms);
+    _markers.push_back(ms);
+    
+}
+
+void TimelineView::clearMarkers(){
+    timeline.getTicker()->clearMarkers();
+    _markers.clear();
+}
+
+#pragma mark - Value Getters
 
 std::map<string, float> TimelineView::getTracksValues(){
-    
     std::map<string, float> values;
     ofxTLPage* trPage = timeline.getPage(PAGE_TRACKS_NAME);
     
     for (int i=0; i<trPage->getTracksNum(); i++){
-        
         for(ofxTLTrack* track : trPage->getTracks()){
             //set key
             string name = track->getName();
@@ -239,46 +265,9 @@ std::map<string, float> TimelineView::getTracksValues(){
             //add key & value
             values[key]= value;
         }
-        
     }
-    
     return values;
 }
-//--------------------------------------------------------------
-void TimelineView::addMarker(){
-    timeline.getTicker()->addMarker(timeline.getCurrentTimeMillis());
-    _markers.push_back(timeline.getCurrentTimeMillis());
-}
-//--------------------------------------------------------------
-void TimelineView::addMarkerAtTime(float millis){
-    
-    float ms =  ofClamp(millis, 0.0, timeline.getDurationInMilliseconds());//clamp just in case...
-    timeline.getTicker()->addMarker(ms);
-    _markers.push_back(ms);
-    
-}
-//--------------------------------------------------------------
-void TimelineView::clearMarkers(){
-    timeline.getTicker()->clearMarkers();
-    _markers.clear();
-}
 
-//void TimelineView::checkIfWaveformPreviewChanged(){
-//    //FIXME: No se esta usando. Revisar que no se ajusta el waveform cuando se muestran los tracks.
-//    if(audioTrack->getShouldRecomputePreview() || audioTrack->getViewIsDirty()){
-//        ofLogVerbose()<<"TimePanel: recomputing audioPreview";
-//        audioTrack->recomputePreview();
-//    }
-//}
 
-void TimelineView::addTrackWithStringType(string stringType, string name){
-    if(stringType=="Curves"){
-        addTrack(name, CURVES);
-    } else if(stringType=="Bangs"){
-        addTrack(name, BANGS);
-    } else if(stringType=="Switches"){
-        addTrack(name, SWITCHES);
-    } else if(stringType=="Notes"){
-        addTrack(name, NOTES);
-    }
-}
+

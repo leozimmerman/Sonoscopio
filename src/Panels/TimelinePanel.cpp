@@ -61,13 +61,13 @@ void TimelinePanel::draw(){
     View::loadViewInTexture();
     
 }
-//--------------------------------------------------------------
+
 void TimelinePanel::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
     guiView.resize(x, y, w, GUI_COMP_HEIGHT);
     timelineView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
-//--------------------------------------------------------------
+
 void TimelinePanel::keyPressed(int key){
     timelineView.keyPressed(key);
 }
@@ -78,6 +78,7 @@ bool TimelinePanel::getFocused(){
 void TimelinePanel::exit(){}
 
 #pragma mark - Settings
+
 void TimelinePanel::loadSettings(TimelinePanelSettings& settings){
     currentSettings = settings;
     
@@ -94,7 +95,7 @@ void TimelinePanel::loadSettings(TimelinePanelSettings& settings){
             timelineView.addTrackWithStringType(t.type, t.name);
         }
     }
-    loadTimelineTracksFromFolder();///?
+    loadTimelineTracksFromFolder();
     timelineView.updateHeight();
 }
 
@@ -117,12 +118,12 @@ void TimelinePanel::updateCurrentSettings(){
 }
 
 void TimelinePanel::loadTimelineTracksFromFolder(){
-    string rootDir = FileManager::getInstance().getRootDir();
-    timelineView.timeline.loadTracksFromFolder(rootDir + TIMELINE_SETTINGS_DIR"/");
+    string folderPath = FileManager::getInstance().getTimelineFolderPath();
+    timelineView.timeline.loadTracksFromFolder(folderPath);
 }
 void TimelinePanel::saveTimelineTracksToFolder(){
-    string rootDir = FileManager::getInstance().getRootDir();
-    timelineView.timeline.saveTracksToFolder(rootDir + TIMELINE_SETTINGS_DIR);
+    string folderPath = FileManager::getInstance().getTimelineFolderPath();
+    timelineView.timeline.saveTracksToFolder(folderPath);
 }
 
 

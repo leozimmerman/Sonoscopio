@@ -32,8 +32,8 @@ public:
         return currentChannelSettings;
     }
     
-    vector<std::map<string, float>>& getMetersValues();
-    vector<std::map<string, vector<float>>>& getMetersVectorValues();
+    vector<std::map<string, float>> getMetersValues();
+    vector<std::map<string, vector<float>>> getMetersVectorValues();
     
 private:
     void createChannelMetersViews();
@@ -42,8 +42,8 @@ private:
     vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
     vector<ofxAudioAnalyzerUnit*> _channelAnalyzers;
 
-    vector < std::map<string, float> > singleValuesForOsc;
-    vector < std::map<string, vector<float> > > vectorValuesForOsc;
+//    vector < std::map<string, float> > singleValuesForOsc;
+//    vector < std::map<string, vector<float> > > vectorValuesForOsc;
     
     vector<ChannelMeterSettings> currentChannelSettings;
 };

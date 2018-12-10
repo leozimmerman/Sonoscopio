@@ -33,6 +33,7 @@ void MainPanel::setup(int x, int y, int w, int h){
     
     OscSender::getInstance().setup(INIT_OSC_HOST,  INIT_OSC_PORT);
     SettingsManager::getInstance().setMainPanelPtr(this);
+    FileManager::getInstance().setMainPanelPtr(this);
 }
 
 void MainPanel::update(){
