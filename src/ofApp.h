@@ -81,6 +81,7 @@ private:
     int _meters_width;
     
     shared_ptr<TextModal> mText;
+    string queuedErrorMessage;
     
 };
 

@@ -3,8 +3,15 @@
 ## Now
 ### Tasks
     
-    - ADD: TimlinePanel modal: Which tracks to show:
-    Fix timeline pages (Audio / Tracks) 
+    - ADD: TimlinePanel modal:
+
+- Disable panels if no audio file loaded
+
+- FIX meters load/save
+
+- Save settings if theres is file loaded
+
+- FIX keypressed
 
 - FIX Data Rendering: Make a test:
 

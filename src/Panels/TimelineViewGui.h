@@ -10,6 +10,9 @@
 #include "GuiView.h"
 #include "TimelineView.h"
 #include "Settings.h"
+#include "TimelineTracksModal.h"
+#include "AddTrackModal.h"
+#include "RemoveTrackModal.h"
 
 #define FRAMEBASED_LABEL "FRAME BASED"
 #define PLAY_STOP_LABEL "PLAY / STOP"
@@ -24,11 +27,10 @@
 #define SET_IN_LABEL "SET IN"
 #define SET_OUT_LABEL "SET OUT"
 
-#define TRACK_NAME_LABEL "TRACK NAME"
-#define TRACK_TYPE_LABEL "TRACK TYPE"
 #define ADD_TRACK_LABEL "ADD TRACK"
 #define REMOVE_TRACK_LABEL "REMOVE TRACK"
-#define SHOW_TRACKS_LABEL "SHOW TRACKS"
+#define SHOW_TRACKS_LABEL "SHOW/HIDE TRACKS"
+#define VISIBLE_TRACKS_LABEL "VISIBLE TRACKS"
 #define ADJUST_TRACKS_LABEL "ADJUST TRACKS"
 
 class TimelineViewGui : public GuiView {
@@ -38,16 +40,22 @@ public:
     void createComponents() override;
     void adjustComponentsSize() override;
     
-    string currentTrackName;
-    trackType currentTrackType;
-    
     bool getFocused();
     
     void loadStateIntoSettings(TimelinePanelSettings* settings);
     void setStateFromSettings(TimelinePanelSettings& settings);
     
 private:
-    ofxDatGuiTextInput* gTrackNameTextInput;
+    void setupMenus();
+    void showVisibleTracksMenu();
+    void showAddTrackMenu();
+    void showRemoveTrackMenu();
+    
+    void onButtonEvent(ofxDatGuiButtonEvent e) override;
+    void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
+    void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
+    void onSliderEvent(ofxDatGuiSliderEvent e);
+    
     ofxDatGuiTextInput* gBpm;
     ofxDatGuiSlider* gVolumeSlider;
     ofxDatGuiToggle* gLoopToggle;
@@ -55,11 +63,12 @@ private:
     ofxDatGuiToggle* gSnapToggle;
     ofxDatGuiToggle* gFramebasedToggle;
     
-    void onButtonEvent(ofxDatGuiButtonEvent e) override;
-    void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
-    void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
-    void onSliderEvent(ofxDatGuiSliderEvent e);
-    
     TimelineView* timelineViewPtr;
+    shared_ptr<TimelineTracksModal> visibleTracksModal;
+    shared_ptr<AddTrackModal> addTracksModal;
+    shared_ptr<RemoveTrackModal> removeTracksModal;
+    
+    string currentTrackName;
+    trackType currentTrackType;
     
 };

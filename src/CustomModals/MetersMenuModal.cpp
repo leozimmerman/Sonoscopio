@@ -19,6 +19,8 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
     
     addButton("CANCEL");
     
+    selectedBufferSize = -1;
+    
     auto availableAlgorithms = ofxaa::allAvailableAlgorithmTypes;
     
     for (int i=0; i<availableAlgorithms.size(); i++){
@@ -35,7 +37,6 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
 }
 
 void MetersMenuModal::display(int height){
-    
     setHeight(height);
     show();
 }
@@ -87,12 +88,15 @@ void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
 }
 void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
     applyConfiguration();
+    if (selectedBufferSize != -1){
+        _metersPanelPtr->setBufferSize(selectedBufferSize);
+    }
     hide();
 }
 
 void MetersMenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e){
     selectedBufferSize = buffer_sizes[e.child];
-    _metersPanelPtr->setBufferSize(selectedBufferSize);
+    
 }
 
 void MetersMenuModal::loadStateIntoSettings(MetersPanelSettings* settings){
@@ -103,7 +107,7 @@ void MetersMenuModal::setStateFromSettings(MetersPanelSettings& settings){
     enabledAlgorithms = settings.enabledAlgorithmTypes;
     updateTogglesFromEnabledAlgorithms();
     
-    ptrdiff_t index = distance(buffer_sizes.begin(), find(buffer_sizes.begin(), buffer_sizes.end(), settings.bufferSize));
+    int index = distance(buffer_sizes.begin(), find(buffer_sizes.begin(), buffer_sizes.end(), settings.bufferSize));
     gBufferSize->select(index);
 }
 

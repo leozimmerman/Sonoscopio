@@ -73,6 +73,7 @@ void ofApp::setupPanels() {
 }
 
 void ofApp::setupModals() {
+    queuedErrorMessage = "";
     mText = make_shared<TextModal>();
     mText->addListener(this, &ofApp::onModalEvent);
 }
@@ -260,13 +261,15 @@ void ofApp::errorSent(string & errorMessage){
     showErrorMessage(errorMessage);
 }
 
-
-
 void ofApp::onModalEvent(ofxModalEvent e) {
     if (e.type == ofxModalEvent::SHOWN){
         // dispatched when the window has finished animating in //
     }    else if (e.type == ofxModalEvent::HIDDEN){
         // dispatched when the window has finished animating out //
+        if (queuedErrorMessage != ""){
+            showErrorMessage(queuedErrorMessage);
+            queuedErrorMessage = "";
+        }
     }    else if (e.type == ofxModalEvent::CONFIRM){
         // dispatched when the button at index 0 is selected //
         cout << "ofApp: OK button was selected" << endl;
@@ -277,7 +280,7 @@ void ofApp::onModalEvent(ofxModalEvent e) {
     
    
 }
-//--------------------------------------------------------------
+
 void ofApp::showKeyboardShortcuts(){
     string title = "KEYBOARD SHORTCUTS";
     string msg = KEYBOARD_SHORTCUTS_MSG;
@@ -286,6 +289,10 @@ void ofApp::showKeyboardShortcuts(){
 
 void ofApp::showErrorMessage(string message){
     string title = "ERROR";
+    if (mText->visible()) {
+        queuedErrorMessage = message;
+        return;
+    }
     mText->display(title, message);
 }
 

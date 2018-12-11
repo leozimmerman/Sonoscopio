@@ -77,54 +77,24 @@ bool TimelinePanel::getFocused(){
 }
 void TimelinePanel::exit(){}
 
+
 #pragma mark - Settings
 
 void TimelinePanel::loadSettings(TimelinePanelSettings& settings){
     currentSettings = settings;
-    
     guiView.setStateFromSettings(currentSettings);
-    
-    timelineView.clearMarkers();
-    for (auto m : currentSettings.markers){
-        timelineView.addMarkerAtTime(m);
-    }
-    
-    auto tracksPage = timelineView.timeline.getPage(PAGE_TRACKS_NAME);
-    for (auto t : currentSettings.tracks){
-        if(t.name != "DEFAULT" && tracksPage->getTrack(t.name)==NULL) {
-            timelineView.addTrackWithStringType(t.type, t.name);
-        }
-    }
-    loadTimelineTracksFromFolder();
-    timelineView.updateHeight();
+    timelineView.setStateFromSettings(currentSettings);
 }
 
 void TimelinePanel::updateCurrentSettings(){
     guiView.loadStateIntoSettings(&currentSettings);
-    auto tracksPage = timelineView.timeline.getPage(PAGE_TRACKS_NAME);
-   
-    currentSettings.tracks.clear();
-    for (auto track : tracksPage->getTracks()) {
-        TLTrackSetting ts;
-        ts.name = track->getName();
-        ts.type = track->getTrackType();
-        currentSettings.tracks.push_back(ts);
-    }
-    
-    currentSettings.markers.clear();
-    for (auto marker : timelineView.getMarkers()){
-        currentSettings.markers.push_back(marker);
-    }
+    timelineView.loadStateIntoSettings(&currentSettings);
 }
 
-void TimelinePanel::loadTimelineTracksFromFolder(){
-    string folderPath = FileManager::getInstance().getTimelineFolderPath();
-    timelineView.timeline.loadTracksFromFolder(folderPath);
-}
-void TimelinePanel::saveTimelineTracksToFolder(){
-    string folderPath = FileManager::getInstance().getTimelineFolderPath();
-    timelineView.timeline.saveTracksToFolder(folderPath);
-}
+//void TimelinePanel::loadTimelineTracksFromFolder(){
+//    timelineView.loadTracksDataFromFolder();
+//}
+
 
 
 

@@ -52,7 +52,6 @@ public:
     void setBufferSize(int bs);
     void analyzeBuffer(const ofSoundBuffer& inBuffer);
     
-    
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
     
     void scrollUp(){metersView.scrollUp();}

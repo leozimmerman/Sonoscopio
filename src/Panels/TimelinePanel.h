@@ -48,10 +48,12 @@ public:
     void loadSettings(TimelinePanelSettings& settings);
     void updateCurrentSettings();
     
-    void saveTimelineTracksToFolder();
-    void loadTimelineTracksFromFolder();
+    void saveTracksDataToFolder(){
+        timelineView.saveTracksDataToFolder();
+    }
+//    void loadTimelineTracksFromFolder();
 
-    void stop(){ timelineView.timeline.stop(); }
+   // void stop(){ timelineView.timeline.stop(); }
     
     void openAudioFile(string filename){
         timelineView.openAudioFile(filename);
@@ -97,8 +99,6 @@ public:
     int getTotalFramesNum(){return timelineView.timeline.getDurationInFrames();}
     
 private:
-    //vector<TLTrackSetting> visibleTracks;
-    
     TimelineViewGui guiView;
     TimelineView timelineView;
     TimelinePanelSettings currentSettings;

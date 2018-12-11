@@ -70,7 +70,7 @@ void SettingsManager::loadSettingsFromFile(){
 
 void SettingsManager::saveSettingsToFile(){
     if (timelinePanelPtr != NULL){
-        timelinePanelPtr->saveTimelineTracksToFolder();
+        timelinePanelPtr->saveTracksDataToFolder();
     }
     string filename = FileManager::getInstance().getSettingsFileName();
     xml.save(filename);

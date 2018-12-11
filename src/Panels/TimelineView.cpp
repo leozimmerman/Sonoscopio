@@ -5,6 +5,7 @@
 //  Created by Leo on 06/09/2018.
 //
 
+#include "ofApp.h"
 #include "TimelineView.h"
 #include "FileManager.h"
 
@@ -83,7 +84,7 @@ void TimelineView::setupTimeline() {
     timeline.addPage(PAGE_TRACKS_NAME);
     ///addTrack("DEFAULT", CURVES);
     
-    timeline.setCurrentPage(PAGE_AUDIO_NAME);
+    timeline.setCurrentPage(PAGE_TRACKS_NAME);
     timeline.setShowPageTabs(false); //->modify if more pages are needed
     timeline.setFootersHidden(true);
     
@@ -125,9 +126,20 @@ void TimelineView::updateHeight(){
 }
 
 
-#pragma mark - Tracks
+#pragma mark - Tracks Add/Remove
 
-void TimelineView::addTrack(string name, trackType type){
+void TimelineView::createNewTrack(string name, string type ){
+    addExistingTrack(name, type);
+    addTrackToTimelineWithStringType(name, type);
+}
+
+void TimelineView::addTrackToTimeline(string name, trackType type){
+    
+    if (timeline.existsTrackWithName(name)){
+        string message = "A track with that name already exists";
+        ofNotifyEvent(ofApp::errorEvent, message);
+        return;
+    }
     
     string currentPageName = timeline.getCurrentPageName();
     timeline.setCurrentPage(PAGE_TRACKS_NAME);
@@ -155,25 +167,54 @@ void TimelineView::addTrack(string name, trackType type){
     }
     
     updateHeight();
-    
 }
 
-void TimelineView::addTrackWithStringType(string stringType, string name){
-    if(stringType=="Curves"){
-        addTrack(name, CURVES);
-    } else if(stringType=="Bangs"){
-        addTrack(name, BANGS);
-    } else if(stringType=="Switches"){
-        addTrack(name, SWITCHES);
-    } else if(stringType=="Notes"){
-        addTrack(name, NOTES);
+void TimelineView::addTrackToTimelineWithStringType(string name, string stringType){
+    if(stringType==CURVES_STRING){
+        addTrackToTimeline(name, CURVES);
+    } else if(stringType==BANGS_STRING){
+        addTrackToTimeline(name, BANGS);
+    } else if(stringType==SWITCHES_STRING){
+        addTrackToTimeline(name, SWITCHES);
+    } else if(stringType==NOTES_STRING){
+        addTrackToTimeline(name, NOTES);
+    } else {
+        ofLogError() << "Wrong track Type";
     }
+}
+
+string TimelineView::typeToString(trackType type){
+    switch (type) {
+        case CURVES:
+            return CURVES_STRING;
+            break;
+        case BANGS:
+            return BANGS_STRING;
+            break;
+        case SWITCHES:
+            return SWITCHES_STRING;
+            break;
+        case NOTES:
+            return NOTES_STRING;
+            break;
+        default:
+            break;
+    }
+}
+
+void TimelineView::addExistingTrack(string name, string type){
+    TLTrackSetting ts;
+    ts.name = name;
+    ts.type = type;
+    allExistingTracks.push_back(ts);
 }
 
 void TimelineView::removeTrack(string name){
     timeline.removeTrack(name);
     updateHeight();
 }
+
+#pragma mark - Tracks display
 
 void TimelineView::hideTracks(){
     if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME) {
@@ -246,20 +287,19 @@ std::map<string, float> TimelineView::getTracksValues(){
             //set key
             string name = track->getName();
             string key = "TL-" + name;
-            
             //set value
             float value;
-            if(track->getTrackType()=="Curves"){
+            if(track->getTrackType()==CURVES_STRING){
                 value = timeline.getValue(name);
-            }else if(track->getTrackType()=="Switches"){
+            }else if(track->getTrackType()==SWITCHES_STRING){
                 value = timeline.isSwitchOn(name);
-            }else if(track->getTrackType()=="Bangs"){
+            }else if(track->getTrackType()==BANGS_STRING){
                 if(_bangedTrack!=NULL && _bangedTrack==track && _isThereBang){
                     value = 1.0;
                 }else{
                     value = 0.0;
                 }
-            }else if(track->getTrackType()=="Notes"){
+            }else if(track->getTrackType()==NOTES_STRING){
                 value = timeline.getNote(name);
             }
             //add key & value
@@ -267,6 +307,64 @@ std::map<string, float> TimelineView::getTracksValues(){
         }
     }
     return values;
+}
+
+#pragma mark - Visible tracks
+
+void TimelineView::setVisibleTracks(vector<TLTrackSetting> tracks){
+    visibleTracks = tracks;
+    
+    auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
+    tracksPage->removeAllTracks();
+    createTracksFromTrackSettings(visibleTracks);
+    loadTracksDataFromFolder();
+}
+
+void TimelineView::createTracksFromTrackSettings(vector<TLTrackSetting> tracks){
+    auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
+    for (auto t : tracks){
+        if(tracksPage->getTrack(t.name)==NULL) { //TODO:already exists validation....
+            addTrackToTimelineWithStringType(t.name, t.type);
+        }
+    }
+    
+}
+
+#pragma mark - Settings
+
+void TimelineView::loadStateIntoSettings(TimelinePanelSettings* settings){
+    settings->tracks.clear();
+    for (auto track : allExistingTracks) {
+        TLTrackSetting ts;
+        ts.name = track.name;
+        ts.type = track.type;
+        settings->tracks.push_back(ts);
+    }
+    settings->markers.clear();
+    for (auto marker : _markers){
+        settings->markers.push_back(marker);
+    }
+}
+
+void TimelineView::setStateFromSettings(TimelinePanelSettings& settings){
+    clearMarkers();
+    for (auto m : settings.markers){
+        addMarkerAtTime(m);
+    }
+    createTracksFromTrackSettings(settings.tracks);
+    allExistingTracks = settings.tracks;
+    visibleTracks = allExistingTracks;
+    loadTracksDataFromFolder();
+    updateHeight();
+}
+
+void TimelineView::loadTracksDataFromFolder(){
+    string folderPath = FileManager::getInstance().getTimelineFolderPath();
+    timeline.loadTracksFromFolder(folderPath);
+}
+void TimelineView::saveTracksDataToFolder(){
+    string folderPath = FileManager::getInstance().getTimelineFolderPath();
+    timeline.saveTracksToFolder(folderPath);
 }
 
 
