@@ -54,18 +54,12 @@ void SettingsManager::loadSettingsIntoPanels(){
 
 void SettingsManager::loadSettingsFromFile(){
     xml.clear();
-    
     string filename = FileManager::getInstance().getSettingsFileName();
-    if( xml.loadFile(filename) ){
-        ofLogVerbose()<<"SettingsManager: "<< filename <<" loaded.";
-    }else{
-        ofLogError()<< "No settings file found" << filename ;
-        return;
+    if(xml.loadFile(filename)){
+        loadMainPanelSettingsFromXml();
+        loadTimelinePanelSettingsFromXml();
+        loadMetersPanelSettingsFromXml();
     }
-    
-    loadMainPanelSettingsFromXml();
-    loadTimelinePanelSettingsFromXml();
-    loadMetersPanelSettingsFromXml();
 }
 
 void SettingsManager::saveSettingsToFile(){

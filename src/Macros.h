@@ -18,9 +18,6 @@
 
 #pragma once
 
-
-#define ANALYSIS_DATA_DIR "analysis_data"
-
 #define INIT_FPS 60
 //Prime numbers to avoid simultaneous draws:
 #define MAIN_PANEL_FPS 60

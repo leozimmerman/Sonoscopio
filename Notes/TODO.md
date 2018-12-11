@@ -3,19 +3,11 @@
 ## Now
 ### Tasks
     
-    - ADD: TimlinePanel modal:
-
-- Disable panels if no audio file loaded
-
-- FIX meters load/save
-
-- Save settings if theres is file loaded
-
 - FIX keypressed
 
-- FIX Data Rendering: Make a test:
+- REMOVE: old settings dir
 
-    - Save Analysis to Modal Menu?
+- Start testing/debugging
 
 
 ### Bugs / Code Improvements

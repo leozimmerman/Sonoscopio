@@ -117,13 +117,13 @@ void ofApp::draw(){
         return;
     }
     
-    TS_START("TIMELINE-PANEL");
-    timePanel.draw();
-    TS_STOP("TIMELINE-PANEL");
-    
     TS_START("METERS-PANEL");
     metersPanel.draw();
     TS_STOP("METERS-PANEL");
+    
+    TS_START("TIMELINE-PANEL");
+    timePanel.draw();
+    TS_STOP("TIMELINE-PANEL");
     
     TS_START("MAIN-PANEL");
     mainPanel.draw();

@@ -225,17 +225,23 @@ map<string, float> ChannelMetersView::getMetersValues(){
 map<string, vector<float>> ChannelMetersView::getMetersVectorValues(){
     //TODO: Simplify this...
     std::map<string, vector<float>> channelMap;
-    BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
-    channelMap[MEL_BANDS_STRING] = binMeter->getValues();
     
-    binMeter = dynamic_cast<BinMeterView*>(meterForType(MFCC));
-    channelMap[MFCC_STRING] = binMeter->getValues();
-    
-    binMeter = dynamic_cast<BinMeterView*>(meterForType(HPCP));
-    channelMap[HPCP_STRING] = binMeter->getValues();
-    
-    binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
-    channelMap[TRISTIMULUS_STRING] = binMeter->getValues();
-    
+    for(MeterView* m : meters){
+        auto type = m->getType();
+        if (type == MEL_BANDS){
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
+            channelMap[MEL_BANDS_STRING] = binMeter->getValues();
+        }else if (type == MFCC){
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MFCC));
+            channelMap[MFCC_STRING] = binMeter->getValues();
+        }else if (type == HPCP){
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(HPCP));
+            channelMap[HPCP_STRING] = binMeter->getValues();
+        }else if (type == TRISTIMULUS){
+             BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
+            channelMap[TRISTIMULUS_STRING] = binMeter->getValues();
+        }
+    }
+
     return channelMap;
 }

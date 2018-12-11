@@ -11,6 +11,7 @@
 
 FileManager::FileManager(){
     fileName = "";
+    bFileLoaded = false;
 }
 
 void FileManager::openFileDialog(){
@@ -48,6 +49,7 @@ void FileManager::processFileSelection(ofFileDialogResult openFileResult){
 void FileManager::openAudioFile(string filename){
     timelinePanelPtr->openAudioFile(filename);
     if (timelinePanelPtr->isFileLoaded()){
+        bFileLoaded = true;
         samplerate = timelinePanelPtr->getAudioFileSampleRate();
         channels = timelinePanelPtr->getAudioFileNumChannels();
         duration = timelinePanelPtr->getAudioFileDuration();
@@ -55,6 +57,9 @@ void FileManager::openAudioFile(string filename){
         int durationInFrames = timelinePanelPtr->getTotalFramesNum();
         int framerate = timelinePanelPtr->getFrameRate();
         mainPanelPtr->setAudioFileInfo(baseName, directory, duration, samplerate, channels, durationInFrames, framerate);
+        
+        timelinePanelPtr->setEnabled(true);
+        metersPanelPtr->setEnabled(true);
         
         metersPanelPtr->resetAnalyzer(samplerate);
         SettingsManager::getInstance().loadSettings();

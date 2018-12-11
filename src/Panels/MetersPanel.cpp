@@ -28,6 +28,7 @@
 
 void MetersPanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
+    BasePanel::setEnabled(false);
     
     enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
     
@@ -38,14 +39,20 @@ void MetersPanel::setup(int x, int y, int w, int h){
     FileManager::getInstance().setMetersPanelPtr(this);
     AnalysisDataSaver::getInstance().setMetersPanelPtr(this);
     OscSender::getInstance().setMetersPanelPtr(this);
+    
+    
 }
 
 void MetersPanel::update(){
+    if(!enabled){return;}
+    
     metersView.update();
     guiView.update();
 }
 
 void MetersPanel::draw(){
+    if(!enabled){return;}
+    
     if (!View::mustDrawNewFrame()){
         View::drawLoadedTexture();
         return;

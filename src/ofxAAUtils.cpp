@@ -34,6 +34,8 @@ namespace ofxaa{
     ofxAAAlgorithmType stringToAlgorithmType(string stringType){
         if (stringType == algorithmTypeToString(RMS)){
             return RMS;
+        } else if (stringType == algorithmTypeToString(POWER)){
+            return POWER;
         } else if (stringType == algorithmTypeToString(PITCH_FREQ)){
             return PITCH_FREQ;
         } else if (stringType == algorithmTypeToString(PITCH_CONFIDENCE)){

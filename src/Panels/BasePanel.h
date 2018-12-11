@@ -30,15 +30,15 @@ public:
     virtual void update() =0;
     virtual void exit() =0; //??
     
-    virtual bool getFocused() =0; //???
-    
-    //virtual void saveSettings(string rootDir="") =0;
-    //virtual void loadSettings(string rootDir="") =0;
+    virtual bool getFocused() =0;
     
     virtual void keyPressed(int key) =0;
     
-protected:
+    virtual void setEnabled(bool e){enabled = e;}
+    virtual bool getEnabled(){return enabled;}
     
-    //string _panelDir;
+protected:
+    bool enabled = true;
+    
     
 };

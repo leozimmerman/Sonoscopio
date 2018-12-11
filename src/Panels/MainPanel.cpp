@@ -83,14 +83,21 @@ void MainPanel::openFileDialog(){
 }
 
 void MainPanel::saveAllSettings(){
+    if(!FileManager::getInstance().isFileLoaded()){
+        string message = "No Audio File loaded.";
+        ofNotifyEvent(ofApp::errorEvent, message);
+        return;
+    }
     SettingsManager::getInstance().saveSettings();
 }
 
 void MainPanel::renderAnalysis(){
-    ///AnalysisDataSaver::getInstance().start();
-    string message = "This is an error message test";
-    ofNotifyEvent(ofApp::errorEvent, message);
-    
+    if(!FileManager::getInstance().isFileLoaded()){
+        string message = "No Audio File loaded.";
+        ofNotifyEvent(ofApp::errorEvent, message);
+        return;
+    }
+    AnalysisDataSaver::getInstance().start();
 }
 
 #pragma mark - Settings funcs

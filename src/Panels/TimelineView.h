@@ -85,7 +85,7 @@ public:
     void setInPointAtPlayhead(){timeline.setInPointAtPlayhead();}
     void setOutPointAtPlayhead(){timeline.setOutPointAtPlayhead();}
     
-    
+    bool existsTrackWithName(string name);
     
     std::map<string, float> getTracksValues();
     

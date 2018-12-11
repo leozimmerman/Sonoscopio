@@ -10,7 +10,7 @@
 #include "GuiView.h"
 #include "MetersMenuModal.h"
 #include "Settings.h"
-#define MENU_LABEL "MENU"
+#define MENU_LABEL "ANALYSIS MENU"
 #define SCROLL_UP_LABEL "<"
 #define SCROLL_DOWN_LABEL ">"
 

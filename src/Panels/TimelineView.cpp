@@ -129,17 +129,16 @@ void TimelineView::updateHeight(){
 #pragma mark - Tracks Add/Remove
 
 void TimelineView::createNewTrack(string name, string type ){
+    if (existsTrackWithName(name)){
+        string message = "A track with that name already exists";
+        ofNotifyEvent(ofApp::errorEvent, message);
+        return;
+    }
     addExistingTrack(name, type);
     addTrackToTimelineWithStringType(name, type);
 }
 
 void TimelineView::addTrackToTimeline(string name, trackType type){
-    
-    if (timeline.existsTrackWithName(name)){
-        string message = "A track with that name already exists";
-        ofNotifyEvent(ofApp::errorEvent, message);
-        return;
-    }
     
     string currentPageName = timeline.getCurrentPageName();
     timeline.setCurrentPage(PAGE_TRACKS_NAME);
@@ -181,6 +180,15 @@ void TimelineView::addTrackToTimelineWithStringType(string name, string stringTy
     } else {
         ofLogError() << "Wrong track Type";
     }
+}
+
+bool TimelineView::existsTrackWithName(string name){
+    for (auto t : allExistingTracks){
+        if (t.name == name){
+            return true;
+        }
+    }
+    return false;
 }
 
 string TimelineView::typeToString(trackType type){

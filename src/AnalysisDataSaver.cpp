@@ -89,14 +89,9 @@ void AnalysisDataSaver::threadedFunction(){
     ofSoundBuffer frameSoundBuffer;
     
     while(isThreadRunning()){
-      
         if(lock()){
-            
             float initTime = ofGetElapsedTimef();
-            
             ofxXmlSettings savedSettings;
-            
-            //cout<<"saving file data"<<endl;
             //FILE-DATA-----------------
             savedSettings.addTag("FILE-INFO");
             savedSettings.pushTag("FILE-INFO");
@@ -109,166 +104,83 @@ void AnalysisDataSaver::threadedFunction(){
             savedSettings.addValue("channelsNum", channels);
             savedSettings.popTag();//pop from FILE-INFO back into MAIN
             //----------------------------------------
-            
             savedSettings.addTag("ANALYSIS-DATA");
             savedSettings.pushTag("ANALYSIS-DATA");
-            
             //FRAME LOOP
             for (int frameNum=0; frameNum<totalFramesNum; frameNum++){
-                
                 percentage = (frameNum / (float)totalFramesNum) * 100.0;
-                
                 ofLogVerbose("AnalysisDataSaver threaded Function: ")<<"saving frame: "<<frameNum<<endl;
                 string frameTag = "FRAME-" + ofToString(frameNum);
                 savedSettings.addTag(frameTag);
                 savedSettings.pushTag(frameTag);
-                
                 //ANALYZER-------------------------------------
                 savedSettings.addTag("ANALYZER");
                 savedSettings.pushTag("ANALYZER");
-                
                 //analyze buffer for frame:
                 frameSoundBuffer = timelinePanelPtr->getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
                 metersPanelPtr->analyzeBuffer(frameSoundBuffer);
                 metersPanelPtr->update();
-                
-                
                 //-:Get Meters values--------------------------------
                 vector<std::map<string, float>> metersValues = metersPanelPtr->getMetersValues();
-                vector<std::map<string, vector<float>>> metersVectorValues = metersPanelPtr->getMetersVectorValues();
-
-                if(metersVectorValues.size() != metersValues.size()){
-                    ofLogError("datasSaver threaded function:")<<"metersValues and metersVectorValues sizes not matching.";
-                    return;
-                }
-                
-                //--------------
                 
                 if(metersValues.size() != channels){
                     ofLogError("datasSaver threaded function:")<< "metersPanel channels number incorrect.";
                 }
-                
                 for(int i=0; i<metersValues.size(); i++){
-                    
                     //"i" -> channel
-                    
                     string channelTag = "CHANNEL-" + ofToString(i);
-                    
                     savedSettings.addTag(channelTag);
                     savedSettings.pushTag(channelTag);
                     
-                    //->sames order as Osc Indexes (ofxAudioAnalyzerAlgorithms.h)
-                    float power         = metersValues[i].at(POWER_STRING);//0
-                    float pitchfreq     = metersValues[i].at(PITCH_FREQ_STRING);//1
-                    float pitchConf     = metersValues[i].at(PITCH_CONFIDENCE_STRING);//2
-                    float pitchSalience = metersValues[i].at(PITCH_SALIENCE_STRING);//3
-                    float hfc           = metersValues[i].at(HFC_STRING);//4
-                    float centroid      = metersValues[i].at(CENTROID_STRING);//5
-                    float specComp      = metersValues[i].at(SPEC_COMP_STRING);//6
-                    float inharmonicity = metersValues[i].at(INHARMONICITY_STRING);//7
-                    float dissonance    = metersValues[i].at(DISSONANCE_STRING);//8
-                    float rollOff       = metersValues[i].at(ROLL_OFF_STRING);//9
-                    float oddToEven     = metersValues[i].at(ODD_TO_EVEN_STRING);//10
-                    int onset           = metersValues[i].at(ONSETS_STRING);//11
-                    
-                    //TODO: set tags as constants/macros
-                    //Single Value Algorithms:
-                    savedSettings.addValue("POWER", power);
-                    savedSettings.addValue("PITCHFREQ", pitchfreq);
-                    savedSettings.addValue("PITCHCONF", pitchConf);
-                    savedSettings.addValue("SALIENCE", pitchSalience);
-                    savedSettings.addValue("HFC", hfc);
-                    savedSettings.addValue("CENTROID", centroid);
-                    savedSettings.addValue("SPECCOMP", specComp);
-                    savedSettings.addValue("INHARM", inharmonicity);
-                    savedSettings.addValue("DISSONANCE", dissonance);
-                    savedSettings.addValue("ROLLOFF", rollOff);
-                    savedSettings.addValue("ODDTOEVEN", oddToEven);
-                    savedSettings.addValue("ONSET", onset);
+                    for (auto const& map : metersValues[i]){
+                        auto key = map.first;
+                        auto value = map.second;
+                        savedSettings.addValue(key, value);
+                    }
                     
                     if(bSaveVectorValues){
                         
+                        vector<std::map<string, vector<float>>> metersVectorValues = metersPanelPtr->getMetersVectorValues();
                         
-                        //MEL BANDS: ---------------------------
-                        savedSettings.addTag("MELBANDS");
-                        savedSettings.pushTag("MELBANDS");
-                        for (int j=0; j<metersVectorValues[i].at(MEL_BANDS_STRING).size(); j++){
-                            float val = metersVectorValues[i].at(MEL_BANDS_STRING)[j];
-                            savedSettings.addValue(ofToString(j), val);
+                        if(metersVectorValues.size() != metersValues.size()){
+                            ofLogError("datasSaver threaded function:")<<"metersValues and metersVectorValues sizes not matching.";
+                            return;
                         }
-                        savedSettings.popTag();//pop from MELBANDS back into CHANNEL-i
-                        
-                        //MFCC: ---------------------------
-                        savedSettings.addTag("MFCC");
-                        savedSettings.pushTag("MFCC");
-                        for (int j=0; j<metersVectorValues[i].at(MFCC_STRING).size(); j++){
-                            float val = metersVectorValues[i].at(MFCC_STRING)[j];
-                            savedSettings.addValue(ofToString(j), val);
+                        for (auto const& map : metersVectorValues[i]){
+                            auto key = map.first;
+                            savedSettings.addTag(key);
+                            savedSettings.pushTag(key);
+                            for (int j=0; j<metersVectorValues[i].at(key).size(); j++){
+                                float val = metersVectorValues[i].at(key)[j];
+                                savedSettings.addValue(ofToString(j), val);
+                            }
+                            savedSettings.popTag();
                         }
-                        savedSettings.popTag();//pop from MFCC back into CHANNEL-i
-                        
-                        //HPCP: ---------------------------
-                        savedSettings.addTag("HPCP");
-                        savedSettings.pushTag("HPCP");
-                        for (int j=0; j<metersVectorValues[i].at(HPCP_STRING).size(); j++){
-                            float val = metersVectorValues[i].at(HPCP_STRING)[j];
-                            savedSettings.addValue(ofToString(j), val);
-                        }
-                        savedSettings.popTag();//pop from HPCP back into CHANNEL-i
-                        
-                        //TRISTIMULUS: ---------------------------
-                        savedSettings.addTag("TRISTIMULUS");
-                        savedSettings.pushTag("TRISTIMULUS");
-                        for (int j=0; j<metersVectorValues[i].at(TRISTIMULUS_STRING).size(); j++){
-                            float val = metersVectorValues[i].at(TRISTIMULUS_STRING)[j];
-                            savedSettings.addValue(ofToString(j), val);
-                        }
-                        savedSettings.popTag();//pop from TRISTIMULUS back into CHANNEL-i
-                    
                     }
-                    
-                    //-------------------
-                    
                     savedSettings.popTag();//pop from CHANNEL-i back into ANALYZER
-                    
                 }
-                
                 savedSettings.popTag();//pop from ANALYZER back into frameTag
-                
+        
                 //TIMELINE-----------------------------------------
-                
                 savedSettings.addTag("TIMELINE");
                 savedSettings.pushTag("TIMELINE");
-                
                 timelinePanelPtr->setCurrentFrame(frameNum);
                 std::map<string, float> timelineValues = timelinePanelPtr->getTracksValues();
                 
-                for (auto& kv : timelineValues){
-                    //cout<<"timeline send osc :: "<<kv.first<<" -- "<<kv.second<<endl;
-                    string key = kv.first;
-                    float floatValue = kv.second;
+                for (auto const& map : timelineValues){
+                    string key = map.first;
+                    float floatValue = map.second;
                     savedSettings.addValue(key, floatValue);
-                    
                 }
-
                 savedSettings.popTag();//pop from TIMELINE back into frameTag
-                
-                //-------------------------------------------------
-                
                 savedSettings.popTag();//pop from frameTag back into ANALYSIS-DATA
             }
-            
             timelinePanelPtr->setCurrentFrame(0);
-        
-            
             //save and stop----------------------------------
-            string fileName = ANALYSIS_DATA_DIR "/analysisData.xml";
-            //savedSettings.saveFile("analysis_data/analysisData.xml");
-            
+            string fileName = FileManager::getInstance().getAnalysisFileName();
             savedSettings.saveFile(fileName);
             unlock();
             stop();
-            
             //--------------------------
             float finalTime = ofGetElapsedTimef();
             ofLogVerbose("threadedFunction took: ")<<finalTime-initTime<<" secs.";
@@ -280,9 +192,7 @@ void AnalysisDataSaver::threadedFunction(){
             ofLogWarning("threadedFunction()") << "Unable to lock mutex.";
             
             percentage = 0.0;
-            
         }
-        
     }
 
     

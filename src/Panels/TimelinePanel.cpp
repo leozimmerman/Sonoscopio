@@ -25,8 +25,8 @@
 
 #pragma mark - Core funcs
 void TimelinePanel::setup(int x, int y, int w, int h){
-    
     BasePanel::setup(x, y, w, h);
+    BasePanel::setEnabled(false);
     
     guiView.setup(x, y, w, GUI_COMP_HEIGHT * 3, &timelineView);
     timelineView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
@@ -38,11 +38,15 @@ void TimelinePanel::setup(int x, int y, int w, int h){
 }
 
 void TimelinePanel::update(){
+    if(!enabled){return;}
+    
     timelineView.update();
     guiView.update();
 }
 
 void TimelinePanel::draw(){
+    if(!enabled){return;}
+    
     if (!View::mustDrawNewFrame()){
         View::drawLoadedTexture();
         return;
