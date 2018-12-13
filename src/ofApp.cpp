@@ -47,7 +47,7 @@ void ofApp::setupTimeMeasurment() {
     
     TIME_SAMPLE_SET_FRAMERATE(INIT_FPS); //set the app's target framerate (MANDATORY)
     //specify where the widget is to be drawn
-    TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_TOP_RIGHT );
+    TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_BOTTOM_LEFT );
     TIME_SAMPLE_SET_AVERAGE_RATE(0.1);    //averaging samples, (0..1],
     //1.0 gets you no averaging at all
     //use lower values to get steadier readings
@@ -137,80 +137,60 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
-    //---------------------------
-    //If any dat gui text input is in focus return
     if(mainPanel.getFocused() || timePanel.getFocused() || metersPanel.getFocused()){
         return;
     }
-    //---------------------------
-    mainPanel.keyPressed(key);
-    //---------------------------
-    /*
+    
+    if (mainPanel.keyPressed(key)){
+        return;
+    }
+    //TODO: Edit actions should add 'Cmd'.
+    /* TimelinePanel:
      * 'e' expands focused track
      * 'd' enables/disables focused track
      * 'a' adjust tracks height shorcut
+     * 'm': add marker
+     * 'w': rewind
+     * 'k': add keyframe in focused track
      */
-    timePanel.keyPressed(key);
+    else if (timePanel.keyPressed(key)){
+        return;
+    }
     //---------------------------
     /* TODO: REMOVE
      * '1' scrollUp
      * '2' scrollDown
      */
-    metersPanel.keyPressed(key);
+    else if (metersPanel.keyPressed(key)){
+        return;
+    }
     
     //--------------------------------
     /*
      * 't': time measurement on/off
-     * 'm': add marker
-     * 'w': rewind
-     * 'k': add keyframe in focused track
+     * 'q': keyboardshortcuts
      */
     switch (key) {
-        
-        case 'w':
-            ///rewind(); //TODO: Move to timePanel.keyPressed
-            break;
-            
-        case 'k':
-            //TODO: Move to timepanel keyPressed
-            timePanel.addKeyframeInFocusedTrack();
-            break;
-            
         case 'q':
             showKeyboardShortcuts();
             break;
-            
         case 't':
-            if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
-            else TIME_SAMPLE_ENABLE();
+            toggleTimeMeasurement();
             break;
-            
         default:
             break;
     }
     
+    //'Cmd' modifier
     if (ofGetModifierShortcutKeyPressed()) {
         switch (key) {
             case '1':
-                //setViewMode(ALL);
                 break;
-            case '2':
-                //setViewMode(TIMEPANEL_ONLY);
-                break;
-            case '3':
-                //setViewMode(METERSPANEL_ONLY);
-                break;
-                
             case 'm':
-                //timePanel.addMarker();
-                break;
                 
-            case 't':
-                if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
-                else TIME_SAMPLE_ENABLE();
                 break;
+
         }
-        
 
     }
     
@@ -296,3 +276,7 @@ void ofApp::showErrorMessage(string message){
     mText->display(title, message);
 }
 
+void ofApp::toggleTimeMeasurement(){
+    if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
+    else TIME_SAMPLE_ENABLE();
+}

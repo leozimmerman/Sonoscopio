@@ -38,22 +38,31 @@ void TimelineView::resize(int x, int y, int width, int height){
 }
 
 
-void TimelineView::keyPressed(int key){
+bool TimelineView::keyPressed(int key){
     ofxTLTrack* ftrack = timeline.getFocusedTrack();
     switch (key) {
         case 'e':
             expandFocusedTrack();
+            return true;
             break;
         case 'd':
             toggleEnableDisableFocusedTrack();
+            return true;
             break;
         case 'a':
             updateHeight();
+            return true;
             break;
-            
+        case 'w':
+            rewind();
+            return true;
+        case 'k':
+            addKeyframeInFocusedTrack();
+            return true;
         default:
             break;
     }
+    return false;
 }
 
 #pragma mark - Gral

@@ -77,6 +77,8 @@ private:
     void showKeyboardShortcuts();
     void showErrorMessage(string message);
     
+    void toggleTimeMeasurement();
+    
     int _main_height;
     int _meters_width;
     

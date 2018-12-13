@@ -33,19 +33,16 @@
 #define FILE_INFO_HEIGHT 20
 
 class MainPanel : public BasePanel{
-    
 public:
+    void setup(int x, int y, int w, int h) override;
+    void update() override;
+    void draw() override;
+    void exit() override;
     
-    virtual void setup(int x, int y, int w, int h) override;
-    virtual void update() override;
-    virtual void draw() override;
-    virtual void exit() override;
+    void resize(int x, int y, int w, int h) override;
     
-    virtual bool getFocused() override;
-
-    virtual void resize(int x, int y, int w, int h) override;
-    
-    void keyPressed(int key) override;
+    bool getFocused() override;
+    bool keyPressed(int key) override;
     
     void saveAllSettings();
     void renderAnalysis();

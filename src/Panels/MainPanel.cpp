@@ -60,14 +60,12 @@ void MainPanel::draw(){
 
 void MainPanel::exit(){}
 
-void MainPanel::keyPressed(int key){
-    if(guiView.getFocused()){
-        return;
-    }
+bool MainPanel::keyPressed(int key){
+    return false;
 }
 
 bool MainPanel::getFocused(){
-    return (guiView.getFocused());
+    return guiView.getFocused();
 }
 
 void MainPanel::resize(int x, int y, int w, int h){

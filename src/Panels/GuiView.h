@@ -20,9 +20,8 @@ public:
     
     virtual void createComponents() =0;
     virtual void adjustComponentsSize() =0;
-    virtual void onButtonEvent(ofxDatGuiButtonEvent e) =0;
-    virtual void onTextInputEvent(ofxDatGuiTextInputEvent e) =0;
-    virtual void onDropdownEvent(ofxDatGuiDropdownEvent e) =0;
+    
+    virtual bool getFocused() =0;
     
 protected:
     vector<ofxDatGuiComponent*> _components;

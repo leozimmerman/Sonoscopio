@@ -7,6 +7,9 @@
 
 - REMOVE: old settings dir
 
+- Add max estimated value pop-up / Add Value Plotter option
+
+- FIX: TImelineView audioTrack->drawWaveforms(); bug
 - Start testing/debugging
 
 

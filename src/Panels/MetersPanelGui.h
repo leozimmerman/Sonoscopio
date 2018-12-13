@@ -26,13 +26,15 @@ public:
     void loadStateIntoSettings(MetersPanelSettings* settings);
     void setStateFromSettings(MetersPanelSettings& settings);
     
+    bool getFocused() override;
+    
 private:
     void setupMenu();
     void showMenu();
     
-    void onButtonEvent(ofxDatGuiButtonEvent e) override;
-    void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
-    void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
+    void onButtonEvent(ofxDatGuiButtonEvent e);
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    void onDropdownEvent(ofxDatGuiDropdownEvent e);
     
     MetersPanel* _metersPanelPtr;
     shared_ptr<MetersMenuModal> menuModal;

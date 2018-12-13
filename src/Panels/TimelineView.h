@@ -45,7 +45,7 @@ public:
     void updateHeight();
     
     void setupTimeline();
-    void keyPressed(int key);
+    bool keyPressed(int key);
     
     void saveTracksDataToFolder();
     void loadStateIntoSettings(TimelinePanelSettings* settings);

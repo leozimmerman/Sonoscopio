@@ -45,6 +45,10 @@ void MetersPanelGui::createComponents(){
 
 }
 
+bool MetersPanelGui::getFocused(){
+    return menuModal->getFocused();
+}
+
 void MetersPanelGui::adjustComponentsSize(){
     int gui_y = _y;
     int gui_x = _x;

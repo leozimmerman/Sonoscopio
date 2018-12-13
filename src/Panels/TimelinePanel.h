@@ -40,7 +40,7 @@ public:
     virtual void draw() override;
     virtual void exit() override;
     
-    void keyPressed(int key) override;
+    bool keyPressed(int key) override;
     virtual bool getFocused() override;
     
     virtual void resize(int x, int y, int w, int h) override;

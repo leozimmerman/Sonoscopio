@@ -72,8 +72,8 @@ void TimelinePanel::resize(int x, int y, int w, int h){
     timelineView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
 
-void TimelinePanel::keyPressed(int key){
-    timelineView.keyPressed(key);
+bool TimelinePanel::keyPressed(int key){
+    return timelineView.keyPressed(key);
 }
 
 bool TimelinePanel::getFocused(){

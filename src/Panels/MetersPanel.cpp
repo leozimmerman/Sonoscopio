@@ -76,15 +76,22 @@ void MetersPanel::exit(){
     metersView.exit();
 }
 
-void MetersPanel::keyPressed(int key){
+bool MetersPanel::keyPressed(int key){
     switch (key) {
-        case '1':
+        case OF_KEY_UP:
             metersView.scrollUp();
+            return true;
             break;
-        case '2':
+        case OF_KEY_DOWN:
             metersView.scrollDown();
+            return true;
             break;
     }
+    return false;
+}
+
+bool MetersPanel::getFocused(){
+    return guiView.getFocused();
 }
 
 void MetersPanel::resize(int x, int y, int w, int h){
@@ -155,22 +162,7 @@ void MetersPanel::resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzer
     metersView.reset(chanAnalyzerPtrs);
 }
 
-bool MetersPanel::getFocused(){
-    /**
-    if(gMaxFreq->getFocused() ||
-       gMaxHfc->getFocused() ||
-       gMaxCentroid->getFocused()  ||
-       gMaxSpecComp->getFocused()  ||
-       gMaxRollOff->getFocused()  ||
-       gMaxOddEven->getFocused()   )
-    {
-        return true;
-    }else{
-        return false;
-    }
-    */
-    return false;
-}
+
 
 //--------------------------------------------------------------
 void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value){

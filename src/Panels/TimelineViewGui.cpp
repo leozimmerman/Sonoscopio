@@ -230,6 +230,6 @@ void TimelineViewGui::setStateFromSettings(TimelinePanelSettings& settings){
 }
 
 bool TimelineViewGui::getFocused() {
-    return  gBpm->getFocused() ;
+    return  gBpm->getFocused() || addTracksModal->getFocused();
 }
 

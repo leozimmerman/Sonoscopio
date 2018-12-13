@@ -51,9 +51,9 @@ private:
     void showAddTrackMenu();
     void showRemoveTrackMenu();
     
-    void onButtonEvent(ofxDatGuiButtonEvent e) override;
-    void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
-    void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
+    void onButtonEvent(ofxDatGuiButtonEvent e);
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    void onDropdownEvent(ofxDatGuiDropdownEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
     
     ofxDatGuiTextInput* gBpm;

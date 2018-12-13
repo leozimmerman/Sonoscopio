@@ -31,14 +31,11 @@ public:
     virtual void exit() =0; //??
     
     virtual bool getFocused() =0;
-    
-    virtual void keyPressed(int key) =0;
+    virtual bool keyPressed(int key) =0;
     
     virtual void setEnabled(bool e){enabled = e;}
     virtual bool getEnabled(){return enabled;}
     
 protected:
     bool enabled = true;
-    
-    
 };

@@ -28,16 +28,16 @@ public:
     void loadStateIntoSettings(MainPanelSettings* settings);
     void setStateFromSettings(MainPanelSettings& settings);
     
-    bool getFocused(){ return menuModal->getFocused(); }
+    bool getFocused() override{ return menuModal->getFocused(); }
     bool getOscEnabled(){ return  gSendOscToggle->getEnabled(); }
     
 private:
     void setupMenu();
     void showMenu();
     
-    void onButtonEvent(ofxDatGuiButtonEvent e) override;
-    void onTextInputEvent(ofxDatGuiTextInputEvent e) override;
-    void onDropdownEvent(ofxDatGuiDropdownEvent e) override;
+    void onButtonEvent(ofxDatGuiButtonEvent e);
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    void onDropdownEvent(ofxDatGuiDropdownEvent e);
     
     ofxDatGuiToggle* gSendOscToggle;
     
