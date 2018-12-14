@@ -19,6 +19,7 @@
 #include "AnalysisDataSaver.h"
 #include "FileManager.h"
 
+
 AnalysisDataSaver::AnalysisDataSaver(){
     bSaveVectorValues = TRUE;
     verdana.load("gui_assets/fonts/verdana.ttf", 25, false, false);
@@ -42,19 +43,19 @@ void AnalysisDataSaver::reset(){
         channels = metersPanelPtr->getChannelsNum();
     }
 }
-//------------------------------------
+
 void AnalysisDataSaver::updateFrameRate(int fps, int framesNum){
     frameRate       = fps;
     totalFramesNum  = framesNum;
 }
-//------------------------------------
+
 void AnalysisDataSaver::start(){
     // Mutex blocking is set to true by default
     // It is rare that one would want to use startThread(false).
     startThread();
     ofLogVerbose("AnalysisDataSaver: ")<<"thread started.";
 }
-//------------------------------------
+
 void AnalysisDataSaver::stop(){
     stopThread();
     ofLogVerbose("AnalysisDataSaver: ")<<"thread stopped.";
@@ -93,29 +94,29 @@ void AnalysisDataSaver::threadedFunction(){
             float initTime = ofGetElapsedTimef();
             ofxXmlSettings savedSettings;
             //FILE-DATA-----------------
-            savedSettings.addTag(FILE_INFO_TAG);
-            savedSettings.pushTag(FILE_INFO_TAG);
-            savedSettings.addValue(SOUNDFILE_TAG, soundfilePath);
-            savedSettings.addValue(FRAMERATE_TAG, frameRate);
-            savedSettings.addValue(FRAMES_NUM_TAG, totalFramesNum);
-            savedSettings.addValue(DURATION_TAG, durationSecs);
-            savedSettings.addValue(SAMPLERATE_TAG, sampleRate);
-            savedSettings.addValue(BUFFER_SIZE_TAG, bufferSize);
-            savedSettings.addValue(CHANNELS_TAG, channels);
+            savedSettings.addTag(RENDER_FILE_INFO_TAG);
+            savedSettings.pushTag(RENDER_FILE_INFO_TAG);
+            savedSettings.addValue(RENDER_SOUNDFILE_TAG, soundfilePath);
+            savedSettings.addValue(RENDER_FRAMERATE_TAG, frameRate);
+            savedSettings.addValue(RENDER_FRAMES_NUM_TAG, totalFramesNum);
+            savedSettings.addValue(RENDER_DURATION_TAG, durationSecs);
+            savedSettings.addValue(RENDER_SAMPLERATE_TAG, sampleRate);
+            savedSettings.addValue(RENDER_BUFFER_SIZE_TAG, bufferSize);
+            savedSettings.addValue(RENDER_CHANNELS_NUM_TAG, channels);
             savedSettings.popTag();//pop from FILE-INFO back into MAIN
             //----------------------------------------
-            savedSettings.addTag(ANALYSIS_DATA_TAG);
-            savedSettings.pushTag(ANALYSIS_DATA_TAG);
+            savedSettings.addTag(RENDER_ANALYSIS_DATA_TAG);
+            savedSettings.pushTag(RENDER_ANALYSIS_DATA_TAG);
             //FRAME LOOP
             for (int frameNum=0; frameNum<totalFramesNum; frameNum++){
                 percentage = (frameNum / (float)totalFramesNum) * 100.0;
                 ofLogVerbose("AnalysisDataSaver threaded Function: ")<<"saving frame: "<<frameNum<<endl;
-                string frameTag = FRAME_N_TAG + ofToString(frameNum);
+                string frameTag = RENDER_FRAME_N_TAG + ofToString(frameNum);
                 savedSettings.addTag(frameTag);
                 savedSettings.pushTag(frameTag);
                 //ANALYZER-------------------------------------
-                savedSettings.addTag(ANALYZER_TAG);
-                savedSettings.pushTag(ANALYZER_TAG);
+                savedSettings.addTag(RENDER_ANALYZER_TAG);
+                savedSettings.pushTag(RENDER_ANALYZER_TAG);
                 //analyze buffer for frame:
                 frameSoundBuffer = timelinePanelPtr->getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
                 metersPanelPtr->analyzeBuffer(frameSoundBuffer);
@@ -128,7 +129,7 @@ void AnalysisDataSaver::threadedFunction(){
                 }
                 for(int i=0; i<metersValues.size(); i++){
                     //"i" -> channel
-                    string channelTag = CHANNEL_N_TAG + ofToString(i);
+                    string channelTag = RENDER_CHANNEL_N_TAG + ofToString(i);
                     savedSettings.addTag(channelTag);
                     savedSettings.pushTag(channelTag);
                     
@@ -162,8 +163,8 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.popTag();//pop from ANALYZER back into frameTag
         
                 //TIMELINE-----------------------------------------
-                savedSettings.addTag(TIMELINE_TAG);
-                savedSettings.pushTag(TIMELINE_TAG);
+                savedSettings.addTag(RENDER_TIMELINE_TAG);
+                savedSettings.pushTag(RENDER_TIMELINE_TAG);
                 timelinePanelPtr->setCurrentFrame(frameNum);
                 std::map<string, float> timelineValues = timelinePanelPtr->getTracksValues();
                 
@@ -197,7 +198,17 @@ void AnalysisDataSaver::threadedFunction(){
             percentage = 0.0;
         }
     }
+}
 
-    
+string AnalysisDataSaver::getRenderInfoString(){
+    stringstream ss;
+    ss << "File Path: " << soundfilePath << " | ";
+    ss << "Frame Rate: " << frameRate << " | ";
+    ss << "Total Frames: " << totalFramesNum << " | ";
+    ss << "Duration: " << durationSecs << " | ";
+    ss << "Sample Rate: " << sampleRate << " | ";
+    ss << "Buffer Size: " << bufferSize << " | ";
+    ss << "Channels: " << channels << " | ";
+    return ss.str();
 }
 

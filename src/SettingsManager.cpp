@@ -9,7 +9,9 @@
 #include "ofxAAUtils.h"
 #include "FileManager.h"
 
-SettingsManager::SettingsManager(){}
+SettingsManager::SettingsManager(){
+    bXmlSettingsLoaded = false;
+}
 
 void SettingsManager::saveSettings(){
     updateCurrentSettingsFromPanels();
@@ -22,7 +24,12 @@ void SettingsManager::saveSettings(){
 
 void SettingsManager::loadSettings(){
     loadSettingsFromFile();
-    loadSettingsIntoPanels();
+    if (bXmlSettingsLoaded){
+        loadSettingsIntoPanels();
+    } else {
+        resetPanelSettings();
+    }
+    
 }
 
 void SettingsManager::updateCurrentSettingsFromPanels(){
@@ -37,6 +44,18 @@ void SettingsManager::updateCurrentSettingsFromPanels(){
     if (metersPanelPtr != NULL){
         metersPanelPtr->updateCurrentSettings();
         metersPanelSettings = *metersPanelPtr->getCurrentSettingsPtr();
+    }
+}
+
+void SettingsManager::resetPanelSettings(){
+    if (mainPanelPtr != NULL) {
+        mainPanelPtr->resetSettings();
+    }
+    if (timelinePanelPtr != NULL){
+        timelinePanelPtr->resetSettings();
+    }
+    if (metersPanelPtr != NULL){
+        metersPanelPtr->resetSettings();
     }
 }
 
@@ -59,6 +78,9 @@ void SettingsManager::loadSettingsFromFile(){
         loadMainPanelSettingsFromXml();
         loadTimelinePanelSettingsFromXml();
         loadMetersPanelSettingsFromXml();
+        bXmlSettingsLoaded = true;
+    } else {
+        bXmlSettingsLoaded = false;
     }
 }
 

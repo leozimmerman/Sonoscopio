@@ -336,6 +336,7 @@ void TimelineView::setVisibleTracks(vector<TLTrackSetting> tracks){
 
 void TimelineView::createTracksFromTrackSettings(vector<TLTrackSetting> tracks){
     auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
+    tracksPage->removeAllTracks();
     for (auto t : tracks){
         if(tracksPage->getTrack(t.name)==NULL) { //TODO:already exists validation....
             addTrackToTimelineWithStringType(t.name, t.type);

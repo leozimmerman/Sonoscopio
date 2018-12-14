@@ -39,8 +39,10 @@ public:
     
     virtual bool getFocused() override;
     
+    
     virtual void resize(int x, int y, int w, int h) override;
     
+    void resetSettings();
     void loadSettings(MetersPanelSettings& settings);
     void updateCurrentSettings();
     MetersPanelSettings* getCurrentSettingsPtr(){

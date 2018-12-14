@@ -27,20 +27,21 @@
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
-#define FILE_INFO_TAG "FILE-INFO"
-#define SOUNDFILE_TAG "soundfile"
-#define FRAMERATE_TAG "frameRate"
-#define FRAMES_NUM_TAG "totalFramesNum"
-#define DURATION_TAG "durationSeconds"
-#define SAMPLERATE_TAG "sampleRate"
-#define BUFFER_SIZE_TAG "bufferSize"
-#define CHANNELS_TAG "channelsNum"
+#define RENDER_FILE_INFO_TAG "FILE-INFO"
+#define RENDER_SOUNDFILE_TAG "soundfile"
+#define RENDER_FRAMERATE_TAG "frameRate"
+#define RENDER_FRAMES_NUM_TAG "totalFramesNum"
+#define RENDER_DURATION_TAG "durationSeconds"
+#define RENDER_SAMPLERATE_TAG "sampleRate"
+#define RENDER_BUFFER_SIZE_TAG "bufferSize"
+#define RENDER_CHANNELS_NUM_TAG "channelsNum"
 
-#define ANALYSIS_DATA_TAG "ANALYSIS-DATA"
-#define FRAME_N_TAG "FRAME-"
-#define ANALYZER_TAG "ANALYZER"
-#define CHANNEL_N_TAG "CHANNEL-"
-#define TIMELINE_TAG "TIMELINE"
+#define RENDER_ANALYSIS_DATA_TAG "ANALYSIS-DATA"
+#define RENDER_FRAME_N_TAG "FRAME-"
+#define RENDER_ANALYZER_TAG "ANALYZER"
+#define RENDER_CHANNEL_N_TAG "CHANNEL-"
+#define RENDER_TIMELINE_TAG "TIMELINE"
+
 
 class AnalysisDataSaver: public ofThread{
 
@@ -58,7 +59,7 @@ public:
     
     void threadedFunction();
     
-    float getPercentage(){return percentage;};
+    string getRenderInfoString();
 
     void updateFrameRate(int fps, int framesNum);
     
@@ -87,7 +88,7 @@ private:
     
     float percentage;
     bool bSaveVectorValues;
-    ofTrueTypeFont verdana; //Remove from here.
+    ofTrueTypeFont verdana; 
 
 
 };

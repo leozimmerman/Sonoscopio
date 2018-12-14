@@ -18,6 +18,7 @@
 
 #include "ofApp.h"
 #include "AnalysisDataSaver.h"
+#include "FileManager.h"
 
 ofEvent<string> ofApp::errorEvent = ofEvent<string>();
 
@@ -89,8 +90,11 @@ void ofApp::update(){
     if(AnalysisDataSaver::getInstance().isThreadRunning()){
         return;
     }
-
-    ofSetWindowTitle("Sonoscopio");//("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
+    string windowTitle = "Sonoscopio";
+    if (FileManager::getInstance().isFileLoaded()){
+        windowTitle += " - " + FileManager::getInstance().getBaseName();
+    }
+    ofSetWindowTitle(windowTitle);//("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
     
     if (timePanel.isFileLoaded() && timePanel.isPlaying()){
         ofSoundUpdate();

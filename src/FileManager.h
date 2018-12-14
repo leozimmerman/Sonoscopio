@@ -46,6 +46,7 @@ public:
     float getFileDuration(){return duration;}
     int getFileSampleRate(){return samplerate;}
     
+    string getBaseName(){return baseName;}
     string getOutputDirectory(){return directory + OUTPUT_DIR;}
     string getAnalysisFileName(){return directory + OUTPUT_DIR + baseName + ANALYSIS_SUFFIX;}
     string getSettingsFileName(){return directory + baseName + SETTINGS_SUFFIX;}

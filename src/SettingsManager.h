@@ -92,6 +92,7 @@ private:
     
     void updateCurrentSettingsFromPanels();
     void loadSettingsIntoPanels();
+    void resetPanelSettings();
     
     void addMainPanelSettingsToXml();
     void loadMainPanelSettingsFromXml();
@@ -100,7 +101,11 @@ private:
     void addMetersPanelSettingsToXml();
     void loadMetersPanelSettingsFromXml();
     
+    
+    
     ofxXmlSettings xml;
+    
+    bool bXmlSettingsLoaded;
     
     MainPanel* mainPanelPtr;
     MetersPanel* metersPanelPtr;

@@ -91,6 +91,11 @@ void TimelinePanel::exit(){}
 
 #pragma mark - Settings
 
+void TimelinePanel::resetSettings(){
+    currentSettings = TimelinePanelSettings();
+    loadSettings(currentSettings);
+}
+
 void TimelinePanel::loadSettings(TimelinePanelSettings& settings){
     currentSettings = settings;
     guiView.setStateFromSettings(currentSettings);

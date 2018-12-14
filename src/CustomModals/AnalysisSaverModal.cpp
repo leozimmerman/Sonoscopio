@@ -7,6 +7,7 @@
 
 #include "AnalysisSaverModal.h"
 #include "MainPanel.h"
+#include "AnalysisDataSaver.h"
 
 AnalysisSaverModal::AnalysisSaverModal(MainPanel* mainPanel_ptr){
     _mainPanelPtr = mainPanel_ptr;
@@ -16,12 +17,11 @@ AnalysisSaverModal::AnalysisSaverModal(MainPanel* mainPanel_ptr){
     getButton(0)->onButtonEvent(this, &AnalysisSaverModal::onApplyButtonEvent);
     
     addButton("CANCEL");
-    
-    //TODO: Add message
-    
 }
 
 void AnalysisSaverModal::display(int height){
+    string msg = AnalysisDataSaver::getInstance().getRenderInfoString();
+    setMessage(msg);
     setHeight(height);
     show();
 }

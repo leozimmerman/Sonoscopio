@@ -134,8 +134,13 @@ void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
 }
 
 #pragma mark - Settings
+void MetersPanel::resetSettings(){
+    currentSettings = MetersPanelSettings();
+    loadSettings(currentSettings);
+}
 
 void MetersPanel::loadSettings(MetersPanelSettings& settings){
+    currentSettings = settings;
     guiView.setStateFromSettings(settings);
     setEnabledAlgorithms(settings.enabledAlgorithmTypes);
     metersView.loadSettings(settings);

@@ -10,6 +10,7 @@
 #include "MainPanel.h"
 #include "GuiFactory.h"
 #include "SettingsManager.h"
+#include "FileManager.h"
 
 void MainPanelGui::setup(int x, int y, int w, int h, MainPanel* mainPanel_ptr){
     GuiView::setup(x, y, w, h);
@@ -35,6 +36,11 @@ void MainPanelGui::showConfigMenu(){
 }
 
 void MainPanelGui::showSaverMenu(){
+    if(!FileManager::getInstance().isFileLoaded()){
+        string message = "No Audio File loaded.";
+        ofNotifyEvent(ofApp::errorEvent, message);
+        return;
+    }
     saverModal->display(ofGetHeight());
 }
 
@@ -77,7 +83,6 @@ void MainPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     }else if (label == OPEN_FILE_LABEL){
         mainPanelPtr->openFileDialog();
     }else if (label == RENDER_ANALYSIS_LABEL){
-        //mainPanelPtr->renderAnalysis();
         showSaverMenu();
     }
 }

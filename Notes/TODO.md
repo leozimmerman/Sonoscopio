@@ -2,7 +2,7 @@
 
 ## Now
 ### Tasks
-    
+
 ### Bugs / Code Improvements
 - Definir: va o no el "_" en las variables ->  Va si hace falta diferenciar....
 - Sacar "//------" de a poco...
@@ -15,7 +15,7 @@
 
 ## Backlog
 
-- Testear TLNotes get values.
+
 
 
 ## VERSION 1.0

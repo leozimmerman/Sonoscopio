@@ -96,11 +96,6 @@ void MainPanel::saveAllSettings(){
 }
 
 void MainPanel::renderAnalysis(){
-    if(!FileManager::getInstance().isFileLoaded()){
-        string message = "No Audio File loaded.";
-        ofNotifyEvent(ofApp::errorEvent, message);
-        return;
-    }
     AnalysisDataSaver::getInstance().start();
 }
 
@@ -114,6 +109,11 @@ void MainPanel::applySettings(int fps, int buffersize, float bpm, string host, i
     OscSender::getInstance().setPort(port);
     ofApp* app = (ofApp*)ofGetAppPtr();
     app->setFrameRate(fps);
+}
+
+void MainPanel::resetSettings(){
+    currentSettings = MainPanelSettings();
+    loadSettings(currentSettings);
 }
 
 void MainPanel::loadSettings(MainPanelSettings& settings){

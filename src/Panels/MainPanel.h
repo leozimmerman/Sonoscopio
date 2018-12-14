@@ -47,6 +47,7 @@ public:
     void saveAllSettings();
     void renderAnalysis();
     
+    void resetSettings();
     void loadSettings(MainPanelSettings& settings);
     void updateCurrentSettings();
 
