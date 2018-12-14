@@ -162,6 +162,7 @@ void ChannelMetersView::loadSettings(ChannelMeterSettings& settings){
             onsets_m->setTimeThreshold(ms.timeTreshold);
         } else {
             meter->setSmoothAmnt(ms.smooth);
+            meter->setMaxEstimatedValue(ms.maxEstimatedValue);
         }
     
         //spectrm cant be turned off, no audioAnalyzer->setActive
@@ -189,6 +190,7 @@ void ChannelMetersView::updateCurrentSettings(){
         } else {
             setting.smooth = m->getSmoothAmnt();
             setting.bState = m->getEnabled();
+            setting.maxEstimatedValue = m->getMaxEstimatedValue();
         }
         currentSettings.meters.push_back(setting);
     }

@@ -93,29 +93,29 @@ void AnalysisDataSaver::threadedFunction(){
             float initTime = ofGetElapsedTimef();
             ofxXmlSettings savedSettings;
             //FILE-DATA-----------------
-            savedSettings.addTag("FILE-INFO");
-            savedSettings.pushTag("FILE-INFO");
-            savedSettings.addValue("soundfile", soundfilePath);
-            savedSettings.addValue("frameRate", frameRate);
-            savedSettings.addValue("totalFramesNum", totalFramesNum);
-            savedSettings.addValue("durationSeconds", durationSecs);
-            savedSettings.addValue("sampleRate", sampleRate);
-            savedSettings.addValue("bufferSize", bufferSize);
-            savedSettings.addValue("channelsNum", channels);
+            savedSettings.addTag(FILE_INFO_TAG);
+            savedSettings.pushTag(FILE_INFO_TAG);
+            savedSettings.addValue(SOUNDFILE_TAG, soundfilePath);
+            savedSettings.addValue(FRAMERATE_TAG, frameRate);
+            savedSettings.addValue(FRAMES_NUM_TAG, totalFramesNum);
+            savedSettings.addValue(DURATION_TAG, durationSecs);
+            savedSettings.addValue(SAMPLERATE_TAG, sampleRate);
+            savedSettings.addValue(BUFFER_SIZE_TAG, bufferSize);
+            savedSettings.addValue(CHANNELS_TAG, channels);
             savedSettings.popTag();//pop from FILE-INFO back into MAIN
             //----------------------------------------
-            savedSettings.addTag("ANALYSIS-DATA");
-            savedSettings.pushTag("ANALYSIS-DATA");
+            savedSettings.addTag(ANALYSIS_DATA_TAG);
+            savedSettings.pushTag(ANALYSIS_DATA_TAG);
             //FRAME LOOP
             for (int frameNum=0; frameNum<totalFramesNum; frameNum++){
                 percentage = (frameNum / (float)totalFramesNum) * 100.0;
                 ofLogVerbose("AnalysisDataSaver threaded Function: ")<<"saving frame: "<<frameNum<<endl;
-                string frameTag = "FRAME-" + ofToString(frameNum);
+                string frameTag = FRAME_N_TAG + ofToString(frameNum);
                 savedSettings.addTag(frameTag);
                 savedSettings.pushTag(frameTag);
                 //ANALYZER-------------------------------------
-                savedSettings.addTag("ANALYZER");
-                savedSettings.pushTag("ANALYZER");
+                savedSettings.addTag(ANALYZER_TAG);
+                savedSettings.pushTag(ANALYZER_TAG);
                 //analyze buffer for frame:
                 frameSoundBuffer = timelinePanelPtr->getSoundBufferMonoForFrame(frameNum, bufferSize);//mono soundbuffer
                 metersPanelPtr->analyzeBuffer(frameSoundBuffer);
@@ -128,7 +128,7 @@ void AnalysisDataSaver::threadedFunction(){
                 }
                 for(int i=0; i<metersValues.size(); i++){
                     //"i" -> channel
-                    string channelTag = "CHANNEL-" + ofToString(i);
+                    string channelTag = CHANNEL_N_TAG + ofToString(i);
                     savedSettings.addTag(channelTag);
                     savedSettings.pushTag(channelTag);
                     
@@ -162,8 +162,8 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.popTag();//pop from ANALYZER back into frameTag
         
                 //TIMELINE-----------------------------------------
-                savedSettings.addTag("TIMELINE");
-                savedSettings.pushTag("TIMELINE");
+                savedSettings.addTag(TIMELINE_TAG);
+                savedSettings.pushTag(TIMELINE_TAG);
                 timelinePanelPtr->setCurrentFrame(frameNum);
                 std::map<string, float> timelineValues = timelinePanelPtr->getTracksValues();
                 
@@ -176,7 +176,10 @@ void AnalysisDataSaver::threadedFunction(){
                 savedSettings.popTag();//pop from frameTag back into ANALYSIS-DATA
             }
             timelinePanelPtr->setCurrentFrame(0);
-            //save and stop----------------------------------
+            
+            //Save and stop----------------------------------
+            ofDirectory dir = ofDirectory();
+            dir.createDirectory(FileManager::getInstance().getOutputDirectory());
             string fileName = FileManager::getInstance().getAnalysisFileName();
             savedSettings.saveFile(fileName);
             unlock();

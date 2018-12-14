@@ -21,6 +21,9 @@
 #include "OnsetMeterView.h"
 #include "ofxAAUtils.h"
 #include "ofApp.h"
+#include "GuiFactory.h"
+#include "PanelsBridge.h"
+
 // the static event, or any static variable, must be initialized outside of the class definition.
 ofEvent<OnOffEventData> MeterView::onOffEventGlobal = ofEvent<OnOffEventData>();
 
@@ -42,16 +45,18 @@ MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int pane
     }
 }
 
-#pragma mark Inits
+#pragma mark - Inits
 
 MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) {
     
+    _h = MeterView::height;
     _audioAnalyzer = aaPtr;
     _algorithmType = algorithmType;
     _name = ofxaa::algorithmTypeToString(algorithmType);
     _panelId = panelId;
     _mainColor.set(ofColor::cyan);
     setBackgroundColor(ofColor::black);
+    _plotterEnabled = false;
     
     initDefaultValues();
     initComponents();
@@ -71,19 +76,19 @@ void MeterView::setupMenu(){
 void MeterView::showMenu(){
     menuModal->display(ofGetHeight() / 2);
 }
-//------------------------------------------------
+
 void MeterView::initDefaultValues(){
     _value = 0.0;
     _valueNorm = -1.0;
     _minEstimatedValue = 0.0;
-    _maxEstimatedValue = 1.0;
+    _maxEstimatedValue = _audioAnalyzer->getMaxEstimatedValue(_algorithmType);
     _maxValueRegistered = 0.0;
     _smoothAmnt = 0.0;
     _enabled = TRUE;
     ofColor bordCol = ofColor::grey;
     int bordWidth = 1;
 }
-//------------------------------------------------
+
 void MeterView::initComponents(){
     font  = new ofTrueTypeFont();
     font->load("gui_assets/fonts/verdana.ttf", 10, false, false);
@@ -93,7 +98,6 @@ void MeterView::initComponents(){
 
     onOffToggle = new OnOffToggle(ON_LABEL, TRUE);
     onOffToggle->onButtonEvent(this, &MeterView::onButtonEvent);
-    
     onOffToggle->setHeight(_line_h);
     onOffToggle->setLabelMargin(0.0);
     onOffToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
@@ -105,45 +109,67 @@ void MeterView::initComponents(){
     smoothSlider->setLabelMargin(1.0);
     smoothSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
-    peakButton = new PeakMeterButton(PEAK_LABEL);
+    peakButton = new TransparentMeterButton(PEAK_LABEL);
     peakButton->onButtonEvent(this, &MeterView::onButtonEvent);
     peakButton->setHeight(_line_h);
     peakButton->setLabelMargin(0.0);
     peakButton->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    
+    configButton = new TransparentMeterButton(CONFIG_LABEL);
+    configButton->setColor(ofColor::white);
+    configButton->onButtonEvent(this, &MeterView::onButtonEvent);
+    configButton->setLabelMargin(0.0);
+    configButton->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+    configButton->setHeight(_line_h);
+    
+    valuePlotter = GuiFactory::createValuePlotter("", 0.0, 1.0);
+    valuePlotter->setHeight(_h);
+    valuePlotter->setDrawMode(ofxDatGuiGraph::OUTLINE);
+    
 }
-//------------------------------------------------
+
 MeterView::~MeterView(){
     delete smoothSlider;
     delete onOffToggle;
     delete peakButton;
+    delete configButton;
+    delete valuePlotter;
 }
-#pragma mark Update
-//------------------------------------------------
+
+#pragma mark - Update
+
 void MeterView::update(){
+    updateValues();
     updateComponents();
     updatePeak();
-    updateValues();
 }
-//------------------------------------------------
+
 void MeterView::updateComponents(){
     smoothSlider->update();
     onOffToggle->update();
     peakButton->update();
+    configButton->update();
+    if (_plotterEnabled && PanelsBridge::getInstance().getIsTimelinePlaying ()){
+        valuePlotter->setValue(_valueNorm * valuePlotter->getRange());
+        valuePlotter->update(true);
+    }
+    
 }
-//------------------------------------------------
+
 void MeterView::updatePeak(){
     if(_value > _maxValueRegistered){
         _maxValueRegistered = _value;
         peakButton->setLabel(ofToString(_maxValueRegistered, 2));
     }
 }
-//------------------------------------------------
+
 void MeterView::updateValues(){
     setValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt));
     setNormalizedValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt, TRUE));
 }
-#pragma mark Draw
-//------------------------------------------------
+
+#pragma mark - Draw
+
 void MeterView::draw(){
     if (!View::mustDrawNewFrame()){
         View::drawLoadedTexture();
@@ -152,51 +178,53 @@ void MeterView::draw(){
     }
     renderDraw();
 }
-//------------------------------------------------
+
 void MeterView::renderDraw(){
     View::draw();
     ofPushStyle();
+    drawValueElements();
     drawStaticElements();
     ofPopStyle();
     View::loadViewInTexture();
-    
-    drawValueElements();
 }
-//------------------------------------------------
+
 void MeterView::drawStaticElements(){
     drawLabel();
     onOffToggle->drawTransparent();
+    configButton->drawTransparent();
     if(_enabled){
-        peakButton->draw();
+        peakButton->drawTransparent();
         smoothSlider->drawSimplified();
     }
     drawBounds();
 }
-//------------------------------------------------
+
 void MeterView::drawValueElements(){
     if(_enabled){
+        if (_plotterEnabled){
+            valuePlotter->ofxDatGuiTimeGraph::draw();
+        }
         drawValueDisplay();
         drawMeter();
     }
 }
-//------------------------------------------------
+
 void MeterView::drawBounds(){
     ofNoFill();
     ofSetColor(_mainColor);
     ofDrawRectangle(_x, _y, _w, _h);
 }
-//------------------------------------------------
+
 void MeterView::drawMeter(){
     ofPushMatrix();
     ofTranslate(_x, _y);
     ofFill();
-    ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA);//change
+    ofSetColor(_mainColor, COLOR_RECT_METER_ALPHA);//change
     float scaledValue = (_valueNorm >= 0) ? _valueNorm : ofMap(_value, _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
     ofDrawRectangle(0 , 0, _w * scaledValue, _h);
     ofPopMatrix();
 }
 
-//------------------------------------------------
 void MeterView::drawValueDisplay(){
     ofPushMatrix();
     ofTranslate(_x, _y);
@@ -208,7 +236,7 @@ void MeterView::drawValueDisplay(){
     ofPopStyle();
     ofPopMatrix();
 }
-//------------------------------------------------
+
 void MeterView::drawLabel(){
     ofPushMatrix();
     ofTranslate(_x, _y);
@@ -219,34 +247,42 @@ void MeterView::drawLabel(){
     ofPopMatrix();
 }
 
-//------------------------------------------------
+
 void MeterView::resetPeak(){
     _maxValueRegistered = 0.0;
     peakButton->setLabel(ofToString(_maxValueRegistered, 2));
 }
-//------------------------------------------------
-#pragma mark - Setters
-//------------------------------------------------
+
+#pragma mark - Display set
+
+void MeterView::toggleValuePlotter(bool enabled){
+    _plotterEnabled = enabled;
+}
+
 void MeterView::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
     setComponentsWidth();
     setComponentsPositions();
 }
-//------------------------------------------------
+
 void MeterView::setComponentsWidth(){
     MeterView::adjustFontLetterSpacing( _w * 0.5);
     onOffToggle->setWidth(_w * 0.25, 0.0);
     smoothSlider->setWidth(_w * 0.25, 0.0);
     peakButton->setWidth(_w * 0.25, 0.0);
+    configButton->setWidth(_w * 0.25, 0.0);
+    valuePlotter->ofxDatGuiTimeGraph::setWidth(_w , 0.0);
 }
-//------------------------------------------------
+
 void MeterView::setComponentsPositions(){
     _label_x = _w * .5 - _label_w *.5;
     onOffToggle->setPosition(_x, _y);
+    configButton->setPosition(_x, _y + onOffToggle->getHeight() + 5);
     smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
     peakButton->setPosition  (_x + _w - _w * 0.25, _y + _line_h);
+    valuePlotter->ofxDatGuiTimeGraph::setPosition(_x, _y);
 }
-//------------------------------------------------
+
 void MeterView::adjustFontLetterSpacing(int width){
     float widthForLabel = width;
     _label_w = font->stringWidth(_name);
@@ -257,25 +293,36 @@ void MeterView::adjustFontLetterSpacing(int width){
         font->setLetterSpacing(1.1);
     }
 }
-//------------------------------------------------
-void MeterView::setValue(float val){
-    _value = val;
+
+#pragma mark - Value Setters
+
+void MeterView::setValue(float value){
+    _value = value;
 }
-//------------------------------------------------
-void MeterView::setNormalizedValue(float val){
-    _valueNorm = val;
+
+void MeterView::setNormalizedValue(float value){
+    _valueNorm = value;
 }
-//------------------------------------------------
+
+void MeterView::setMinEstimatedValue(float value){
+    _minEstimatedValue = value;
+}
+
+void MeterView::setMaxEstimatedValue(float value){
+    _maxEstimatedValue = value;
+    _audioAnalyzer->setMaxEstimatedValue(_algorithmType, value);
+}
+
 void MeterView::setSmoothAmnt(float val){
     _smoothAmnt = val;
     smoothSlider->setValue(val);
 }
-//------------------------------------------------
+
 void MeterView::setEnabled(bool state){
     onOffToggle->setEnabled(state);
     _enabled = state;
 }
-//------------------------------------------------
+
 void MeterView::setMainColor(ofColor col){
     _mainColor = col;
     //colors
@@ -285,14 +332,14 @@ void MeterView::setMainColor(ofColor col){
     //onOffToggle->setColors(COLOR_ONOFF_ON, COLOR_ONOFF_OFF);
     onOffToggle->setColors(_mainColor, COLOR_ONOFF_OFF);
 }
-//------------------------------------------------
+
 #pragma mark - Gui listeners
-//------------------------------------------------
+
 void MeterView::onSliderEvent(ofxDatGuiSliderEvent e){
     //cout << _name <<"::slider: " <<e.value << endl;
     _smoothAmnt = e.value;
 }
-//------------------------------------------------
+
 void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
     
     if(e.target->getLabel() == ON_LABEL){
@@ -304,9 +351,11 @@ void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
         
         _enabled = e.enabled;
      
-    } else if(e.target->getType() == ofxDatGuiType::BUTTON){
+    } else if(e.target->getLabel() == CONFIG_LABEL){
+        showMenu();
+    } else {
+        //peak button's label changes constantly
         resetPeak();
-        ///showMenu();
     }
 
 }

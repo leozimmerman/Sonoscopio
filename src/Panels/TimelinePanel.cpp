@@ -22,19 +22,25 @@
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
 #include "OscSender.h"
+#include "PanelsBridge.h"
 
 #pragma mark - Core funcs
+
 void TimelinePanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
     BasePanel::setEnabled(false);
+    setupSingletons();
     
     guiView.setup(x, y, w, GUI_COMP_HEIGHT * 3, &timelineView);
     timelineView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
-    
+}
+
+void TimelinePanel::setupSingletons(){
     SettingsManager::getInstance().setTimelinePanelPtr(this);
     FileManager::getInstance().setTimelinePanelPtr(this);
     AnalysisDataSaver::getInstance().setTimelinePanelPtr(this);
     OscSender::getInstance().setTimelinePanelPtr(this);
+    PanelsBridge::getInstance().setTimelinePanelPtr(this);
 }
 
 void TimelinePanel::update(){
@@ -54,13 +60,14 @@ void TimelinePanel::draw(){
     
     if (_isHidden){ return; }
     View::draw();
-    TS_START("timeline");
-    timelineView.draw();
-    TS_STOP("timeline");
     
     TS_START("gui-tl");
     guiView.draw();
     TS_STOP("gui-tl");
+    
+    TS_START("timeline");
+    timelineView.draw();
+    TS_STOP("timeline");
     
     View::loadViewInTexture();
     
@@ -68,7 +75,7 @@ void TimelinePanel::draw(){
 
 void TimelinePanel::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
-    guiView.resize(x, y, w, GUI_COMP_HEIGHT);
+    guiView.resize(x, y, w,  GUI_COMP_HEIGHT * 3);
     timelineView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
 
@@ -94,10 +101,6 @@ void TimelinePanel::updateCurrentSettings(){
     guiView.loadStateIntoSettings(&currentSettings);
     timelineView.loadStateIntoSettings(&currentSettings);
 }
-
-//void TimelinePanel::loadTimelineTracksFromFolder(){
-//    timelineView.loadTracksDataFromFolder();
-//}
 
 
 

@@ -14,17 +14,28 @@
 void MainPanelGui::setup(int x, int y, int w, int h, MainPanel* mainPanel_ptr){
     GuiView::setup(x, y, w, h);
     mainPanelPtr = mainPanel_ptr;
-    setupMenu();
+    setupConfigMenu();
+    setupSaverMenu();
 }
 
-void MainPanelGui::setupMenu(){
+void MainPanelGui::setupConfigMenu(){
     auto ofAppPtr = (ofApp*)ofGetAppPtr();
-    menuModal = make_shared<MainMenuModal>(mainPanelPtr);
-    menuModal->addListener(ofAppPtr, &ofApp::onModalEvent);
+    configModal = make_shared<MainMenuModal>(mainPanelPtr);
+    configModal->addListener(ofAppPtr, &ofApp::onModalEvent);
 }
 
-void MainPanelGui::showMenu(){
-    menuModal->display(ofGetHeight());
+void MainPanelGui::setupSaverMenu(){
+    auto ofAppPtr = (ofApp*)ofGetAppPtr();
+    saverModal = make_shared<AnalysisSaverModal>(mainPanelPtr);
+    saverModal->addListener(ofAppPtr, &ofApp::onModalEvent);
+}
+
+void MainPanelGui::showConfigMenu(){
+    configModal->display(ofGetHeight());
+}
+
+void MainPanelGui::showSaverMenu(){
+    saverModal->display(ofGetHeight());
 }
 
 void MainPanelGui::createComponents(){
@@ -60,24 +71,25 @@ void MainPanelGui::adjustComponentsSize(){
 void MainPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     string label = e.target->getLabel();
     if (label == CONFIG_LABEL){
-        showMenu();
+        showConfigMenu();
     }else if (label == SAVE_SETTINGS_LABEL){
         mainPanelPtr->saveAllSettings();
     }else if (label == OPEN_FILE_LABEL){
         mainPanelPtr->openFileDialog();
     }else if (label == RENDER_ANALYSIS_LABEL){
-        mainPanelPtr->renderAnalysis();
+        //mainPanelPtr->renderAnalysis();
+        showSaverMenu();
     }
 }
 void MainPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 void MainPanelGui::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 
 void MainPanelGui::loadStateIntoSettings(MainPanelSettings* settings){
-    menuModal->loadStateIntoSettings(settings);
+    configModal->loadStateIntoSettings(settings);
     settings->osc.bSend = gSendOscToggle->getEnabled();
 }
 
 void MainPanelGui::setStateFromSettings(MainPanelSettings& settings){
-    menuModal->setStateFromSettings(settings);
+    configModal->setStateFromSettings(settings);
     gSendOscToggle->setEnabled(settings.osc.bSend);
 }

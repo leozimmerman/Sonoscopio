@@ -38,6 +38,7 @@ public:
 #define SMOOTHING_LABEL "SMTH"
 #define ON_LABEL "ON"
 #define PEAK_LABEL "PEAK"
+#define CONFIG_LABEL "CONFIG"
 
 #define COLOR_MAIN_A ofColor::paleTurquoise
 #define COLOR_MAIN_B ofColor::paleGoldenRod
@@ -49,11 +50,18 @@ public:
 #define COLOR_ONOFF_OFF ofColor::dimGray
 
 #define COLOR_RECT_METER ofColor::white
-#define COLOR_RECT_METER_ALPHA 40
+#define COLOR_RECT_METER_ALPHA 50
 
 
 class MeterView : public View {
 public:
+#pragma mark  - Static
+    static MeterView* createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
+    static int height;
+    
+     static ofEvent<OnOffEventData> onOffEventGlobal;//this is a shared event for all the instances of this class, so any instance of this class will broadcast to the same event,
+    
+#pragma mark - Instanced
     
     MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     virtual ~MeterView();
@@ -61,27 +69,9 @@ public:
     virtual void update();
     void draw() override;
 
-    void initDefaultValues();
-    void initComponents();
-    
-    virtual void updateComponents();
-    virtual void updateValues();
-    virtual void updatePeak();
-    
-    virtual void renderDraw() override;
-    virtual void drawStaticElements();
-    virtual void drawValueElements();
-    
-    void drawBounds();
-    virtual void drawLabel();
-    virtual void drawMeter();
-    virtual void drawValueDisplay();
-    
     virtual void resize(int x, int y, int w, int h) override;
-    virtual void setComponentsPositions();
-    virtual void setComponentsWidth();
     
-    void resetPeak();
+    void toggleValuePlotter(bool enabled);
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
@@ -96,33 +86,48 @@ public:
     
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return _enabled;}
+    bool getPlotterEnabled(){return _plotterEnabled;}
     ofxAAAlgorithmType getType(){return _algorithmType;}
     
     void setMainColor(ofColor col);
-    void setValue(float val);
-    void setNormalizedValue(float val);
-    void setMinEstimatedValue(float val){_minEstimatedValue = val;}
-    void setMaxEstimatedValue(float val){_maxEstimatedValue = val;}
+    void setValue(float value);
+    void setNormalizedValue(float value);
+    void setMinEstimatedValue(float value);
+    void setMaxEstimatedValue(float value);
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
+    
+
+protected:
+    void initDefaultValues();
+    void initComponents();
+    
+    virtual void updateComponents();
+    virtual void updateValues();
+    virtual void updatePeak();
+    
+    void drawBounds();
+    virtual void drawLabel();
+    virtual void drawMeter();
+    virtual void drawValueDisplay();
+    
+    virtual void renderDraw() override;
+    virtual void drawStaticElements();
+    virtual void drawValueElements();
+    
+    void resetPeak();
+    
+    virtual void setComponentsPositions();
+    virtual void setComponentsWidth();
+    void adjustFontLetterSpacing(int width);
     
     virtual void onSliderEvent(ofxDatGuiSliderEvent e);
     virtual void onButtonEvent(ofxDatGuiButtonEvent e);
     
-    static ofEvent<OnOffEventData> onOffEventGlobal;//this is a shared event for all the instances of this class, so any instance of this class will broadcast to the same event,
-    
     CustomSlider * smoothSlider;
     OnOffToggle* onOffToggle;
-    PeakMeterButton* peakButton;
-    
-    //TODO: Esto aca?? 
-    static MeterView* createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
-    
-    static int height;
-    
-    
-protected:
-    void adjustFontLetterSpacing(int width);
+    TransparentMeterButton* peakButton;
+    TransparentMeterButton* configButton;
     
     ofxAudioAnalyzerUnit* _audioAnalyzer;
     ofxAAAlgorithmType _algorithmType;
@@ -131,15 +136,18 @@ protected:
     ofColor _mainColor;
     ofTrueTypeFont*	font;
     
-    float _smoothAmnt;
+    float   _smoothAmnt;
     string  _name;
     bool    _enabled;
+    bool    _plotterEnabled;
     float   _line_h;
     int     _label_x, _label_w;
     
 private:
     void setupMenu();
     void showMenu();
+    
+    ofxDatGuiValuePlotter* valuePlotter;
     
     float _value;
     float _valueNorm;

@@ -94,13 +94,10 @@ void ofApp::update(){
     
     if (timePanel.isFileLoaded() && timePanel.isPlaying()){
         ofSoundUpdate();
-        
         ofSoundBuffer soundBuffer = timePanel.getCurrentSoundBufferMono(metersPanel.getBufferSize());
-        
         TS_START("AUDIO-ANALYSIS");
         metersPanel.analyzeBuffer(soundBuffer);
         TS_STOP("AUDIO-ANALYSIS");
-        
     }
 
     TS_START("PANELS-UPDATE");
@@ -231,8 +228,7 @@ void ofApp::windowResized(int w, int h){
                      (w - metersPanel.maxX()),
                      (h - mainPanel.maxY()));
     
-    ofLogVerbose()<<"-- Window resized: "<< w <<"x"<< h;
-    ofLogVerbose()<<"-- main height: "<< _main_height <<"- _meters_width: "<< h;
+    ofLogVerbose()<<"ofApp: Window resized: "<< w <<"x"<< h;
 }
 
 #pragma mark - Other

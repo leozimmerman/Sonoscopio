@@ -15,6 +15,3 @@ void PanelsBridge::onsetFired(int & panelId){
     timelinePanelPtr->addKeyframeInFocusedTrack();
 }
 
-void PanelsBridge::freezeMeter(MeterView& meter){
-    cout<<"Bridge: Freezing meter..."<<endl;
-}

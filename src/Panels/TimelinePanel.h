@@ -51,9 +51,6 @@ public:
     void saveTracksDataToFolder(){
         timelineView.saveTracksDataToFolder();
     }
-//    void loadTimelineTracksFromFolder();
-
-   // void stop(){ timelineView.timeline.stop(); }
     
     void openAudioFile(string filename){
         timelineView.openAudioFile(filename);
@@ -99,6 +96,8 @@ public:
     int getTotalFramesNum(){return timelineView.timeline.getDurationInFrames();}
     
 private:
+    void setupSingletons() override;
+    
     TimelineViewGui guiView;
     TimelineView timelineView;
     TimelinePanelSettings currentSettings;

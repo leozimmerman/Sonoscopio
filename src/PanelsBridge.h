@@ -22,7 +22,10 @@ public:
     
     void onsetFired(int & panelId);
     
-    void freezeMeter(MeterView& meter);
+    bool getIsTimelinePlaying(){
+        if (timelinePanelPtr != NULL){return timelinePanelPtr->isPlaying();}
+        else {return false;}
+    }
     
     void setMainPanelPtr(MainPanel* panelPtr){
         mainPanelPtr = panelPtr;

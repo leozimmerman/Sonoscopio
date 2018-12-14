@@ -27,6 +27,21 @@
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
+#define FILE_INFO_TAG "FILE-INFO"
+#define SOUNDFILE_TAG "soundfile"
+#define FRAMERATE_TAG "frameRate"
+#define FRAMES_NUM_TAG "totalFramesNum"
+#define DURATION_TAG "durationSeconds"
+#define SAMPLERATE_TAG "sampleRate"
+#define BUFFER_SIZE_TAG "bufferSize"
+#define CHANNELS_TAG "channelsNum"
+
+#define ANALYSIS_DATA_TAG "ANALYSIS-DATA"
+#define FRAME_N_TAG "FRAME-"
+#define ANALYZER_TAG "ANALYZER"
+#define CHANNEL_N_TAG "CHANNEL-"
+#define TIMELINE_TAG "TIMELINE"
+
 class AnalysisDataSaver: public ofThread{
 
 public:

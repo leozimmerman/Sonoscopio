@@ -63,10 +63,10 @@ public:
     }
     
 private:
+    void setupSingletons() override;
+    
     MainPanelGui guiView;
     FileInfoView fileInfoView;
     MainPanelSettings currentSettings;
-    
-    
     
 };

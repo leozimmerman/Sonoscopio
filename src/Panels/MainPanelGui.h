@@ -9,6 +9,7 @@
 
 #include "GuiView.h"
 #include "MainMenuModal.h"
+#include "AnalysisSaverModal.h"
 #include "Settings.h"
 
 #define OPEN_FILE_LABEL "OPEN FILE"
@@ -28,12 +29,14 @@ public:
     void loadStateIntoSettings(MainPanelSettings* settings);
     void setStateFromSettings(MainPanelSettings& settings);
     
-    bool getFocused() override{ return menuModal->getFocused(); }
+    bool getFocused() override{ return configModal->getFocused(); }
     bool getOscEnabled(){ return  gSendOscToggle->getEnabled(); }
     
 private:
-    void setupMenu();
-    void showMenu();
+    void setupConfigMenu();
+    void showConfigMenu();
+    void setupSaverMenu();
+    void showSaverMenu();
     
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
@@ -42,5 +45,6 @@ private:
     ofxDatGuiToggle* gSendOscToggle;
     
     MainPanel* mainPanelPtr;
-    shared_ptr<MainMenuModal> menuModal;
+    shared_ptr<MainMenuModal> configModal;
+    shared_ptr<AnalysisSaverModal> saverModal;
 };

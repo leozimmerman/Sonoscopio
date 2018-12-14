@@ -28,13 +28,10 @@ AddTrackModal::AddTrackModal(TimelineView* timelineView_ptr){
     selectedTrackType = options[0];
 }
 
-
-
 void AddTrackModal::display(int height){
     setHeight(height);
     show();
 }
-
 
 void AddTrackModal::applyConfiguration(){
     if (selectedTrackName == "" || selectedTrackType == ""){return;}
@@ -45,14 +42,12 @@ bool AddTrackModal::getFocused(){
     return gTrackNameTextInput->getFocused();
 }
 
-
 void AddTrackModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
     applyConfiguration();
     hide();
 }
 
 void AddTrackModal::onTextInputEvent(ofxDatGuiTextInputEvent e){
-    
     selectedTrackName = e.text;
 }
 

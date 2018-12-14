@@ -23,14 +23,15 @@ public:
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
-    void scrollUp();
-    void scrollDown();
     
     void loadSettings(MetersPanelSettings& settings);
     void updateCurrentSettings();
     vector<ChannelMeterSettings>& getCurrentChannelSettingsRef(){
         return currentChannelSettings;
     }
+    
+    void scrollUp();
+    void scrollDown();
     
     vector<std::map<string, float>> getMetersValues();
     vector<std::map<string, vector<float>>> getMetersVectorValues();
@@ -42,8 +43,5 @@ private:
     vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
     vector<ofxAudioAnalyzerUnit*> _channelAnalyzers;
 
-//    vector < std::map<string, float> > singleValuesForOsc;
-//    vector < std::map<string, vector<float> > > vectorValuesForOsc;
-    
     vector<ChannelMeterSettings> currentChannelSettings;
 };

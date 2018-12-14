@@ -18,7 +18,7 @@
 
 #define SETTINGS_SUFFIX "_settings.xml"
 #define TIMELINE_SETTINGS_DIR "_tl_settings/"
-#define ANALYSIS_DIR "_analysis/"
+#define OUTPUT_DIR "output/"
 #define ANALYSIS_SUFFIX "_analysis.xml"
 
 class FileManager {
@@ -40,12 +40,14 @@ public:
         metersPanelPtr = panelPtr;
     }
     
-    bool isFileLoaded(){return bFileLoaded;}
     string getFilePath(){return absolutePath;}
+    string getDirectory(){return directory;}
+    bool isFileLoaded(){return bFileLoaded;}
     float getFileDuration(){return duration;}
     int getFileSampleRate(){return samplerate;}
     
-    string getAnalysisFileName(){return directory + baseName + ANALYSIS_SUFFIX;}
+    string getOutputDirectory(){return directory + OUTPUT_DIR;}
+    string getAnalysisFileName(){return directory + OUTPUT_DIR + baseName + ANALYSIS_SUFFIX;}
     string getSettingsFileName(){return directory + baseName + SETTINGS_SUFFIX;}
     string getTimelineFolderPath(){return directory + baseName + TIMELINE_SETTINGS_DIR;}
     

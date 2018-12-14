@@ -9,8 +9,9 @@
 
 #include "ofMain.h"
 #include "ofxModal.h"
+#include "Settings.h"
 
-#define FREEZE_LABEL "FREEZE METER"
+#define PLOT_VALUE_LABEL "PLOT VALUE"
 #define MAX_LABEL "MAX ESTIMATED VALUE"
 
 class MeterView;
@@ -25,17 +26,18 @@ public:
     void applySettings();
     bool getFocused();
     
-    //void loadStateIntoSettings(MainPanelSettings* settings);
-    //void setStateFromSettings(MainPanelSettings& settings);
+    void loadStateIntoSettings(MainPanelSettings* settings);
+    void setStateFromSettings(MainPanelSettings& settings);
     
 private:
     void onButtonEvent(ofxDatGuiButtonEvent e);
     void onApplyButtonEvent(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
     
-    ofxDatGuiTextInput* gMaxValue;
+    ofxDatGuiTextInput* gMaxValueTextInput;
+    ofxDatGuiToggle *gPlotValueToggle;
     
-    MeterView* _meter_ptr;
+    MeterView* meterView_ptr;
     
     /*
      TODO: Mover a Meters Modal

@@ -64,7 +64,7 @@ namespace GuiFactory {
     
     template<typename T, typename args, class ListenerClass>
     ofxDatGuiDropdown* createDropDown(string label, const vector<string>& options, T* owner, void (ListenerClass::*listenerMethod)(args)){
-       
+    
         ofxDatGuiDropdown* dropdown = new ofxDatGuiDropdown(label, options);
         dropdown->onDropdownEvent(owner, listenerMethod);;
         dropdown->setBorder(borderColor, borderWidth);
@@ -73,4 +73,6 @@ namespace GuiFactory {
         dropdown->setStripeColor(borderColor);
         return dropdown;
     }
+    
+    ofxDatGuiValuePlotter* createValuePlotter(string label, float min, float max);
 }

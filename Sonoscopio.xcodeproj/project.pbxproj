@@ -30,6 +30,7 @@
 		B3354C912141B300003F8F91 /* TimelineViewGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C8F2141B300003F8F91 /* TimelineViewGui.cpp */; };
 		B3354C942141BB14003F8F91 /* TimelineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C922141BB14003F8F91 /* TimelineView.cpp */; };
 		B3354C9F21430DC2003F8F91 /* MetersView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3354C9D21430DC2003F8F91 /* MetersView.cpp */; };
+		B34AB35221C4097100F67E7B /* AnalysisSaverModal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B34AB35021C4097100F67E7B /* AnalysisSaverModal.cpp */; };
 		B363C7801FE4398F0014F7F7 /* MainMenuModal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B363C77E1FE4398F0014F7F7 /* MainMenuModal.cpp */; };
 		B3712ED82135DDB9007BA046 /* ofxSmartFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3712ED62135DDB9007BA046 /* ofxSmartFont.cpp */; };
 		B3712EE62135DDFE007BA046 /* ofxModalWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3712EE22135DDFE007BA046 /* ofxModalWindow.cpp */; };
@@ -105,6 +106,7 @@
 		B3A475C81DD4FBF000B1371C /* MainPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C01DD4FBF000B1371C /* MainPanel.cpp */; };
 		B3A475C91DD4FBF000B1371C /* MetersPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C21DD4FBF000B1371C /* MetersPanel.cpp */; };
 		B3A475CB1DD4FBF000B1371C /* TimelinePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */; };
+		B3A6D11121C2D8ED001B2223 /* GuiFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3A6D11021C2D8ED001B2223 /* GuiFactory.cpp */; };
 		B3B69B6521542EFB00CB9179 /* GuiView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B69B6321542EFB00CB9179 /* GuiView.cpp */; };
 		B3B69B692154327300CB9179 /* MetersPanelGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3B69B672154327300CB9179 /* MetersPanelGui.cpp */; };
 		B3DD5B7521486AEE00B3D08F /* ofxAAUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3DD5B7321486AEE00B3D08F /* ofxAAUtils.cpp */; };
@@ -197,6 +199,8 @@
 		B3354C972141D517003F8F91 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = Notes/TODO.md; sourceTree = "<group>"; };
 		B3354C9D21430DC2003F8F91 /* MetersView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetersView.cpp; path = Panels/MetersView.cpp; sourceTree = "<group>"; };
 		B3354C9E21430DC2003F8F91 /* MetersView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MetersView.h; path = Panels/MetersView.h; sourceTree = "<group>"; };
+		B34AB35021C4097100F67E7B /* AnalysisSaverModal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AnalysisSaverModal.cpp; path = CustomModals/AnalysisSaverModal.cpp; sourceTree = "<group>"; };
+		B34AB35121C4097100F67E7B /* AnalysisSaverModal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AnalysisSaverModal.h; path = CustomModals/AnalysisSaverModal.h; sourceTree = "<group>"; };
 		B363C77E1FE4398F0014F7F7 /* MainMenuModal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MainMenuModal.cpp; path = CustomModals/MainMenuModal.cpp; sourceTree = "<group>"; };
 		B363C77F1FE4398F0014F7F7 /* MainMenuModal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainMenuModal.h; path = CustomModals/MainMenuModal.h; sourceTree = "<group>"; };
 		B3712ED62135DDB9007BA046 /* ofxSmartFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxSmartFont.cpp; path = local_addons/GUI/ofxSmartFont/src/ofxSmartFont.cpp; sourceTree = "<group>"; };
@@ -556,6 +560,7 @@
 		B3A475C51DD4FBF000B1371C /* BasePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePanel.h; path = Panels/BasePanel.h; sourceTree = "<group>"; };
 		B3A475C61DD4FBF000B1371C /* TimelinePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimelinePanel.cpp; path = Panels/TimelinePanel.cpp; sourceTree = "<group>"; };
 		B3A475C71DD4FBF000B1371C /* TimelinePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimelinePanel.h; path = Panels/TimelinePanel.h; sourceTree = "<group>"; };
+		B3A6D11021C2D8ED001B2223 /* GuiFactory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GuiFactory.cpp; sourceTree = "<group>"; };
 		B3B69B6321542EFB00CB9179 /* GuiView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GuiView.cpp; path = Panels/GuiView.cpp; sourceTree = "<group>"; };
 		B3B69B6421542EFB00CB9179 /* GuiView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GuiView.h; path = Panels/GuiView.h; sourceTree = "<group>"; };
 		B3B69B672154327300CB9179 /* MetersPanelGui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetersPanelGui.cpp; path = Panels/MetersPanelGui.cpp; sourceTree = "<group>"; };
@@ -1098,6 +1103,8 @@
 				B39DBF0A21C02E4400CBD320 /* RemoveTrackModal.h */,
 				B39DBF0621C02E2C00CBD320 /* AddTrackModal.cpp */,
 				B39DBF0721C02E2C00CBD320 /* AddTrackModal.h */,
+				B34AB35021C4097100F67E7B /* AnalysisSaverModal.cpp */,
+				B34AB35121C4097100F67E7B /* AnalysisSaverModal.h */,
 			);
 			name = CustomModals;
 			sourceTree = "<group>";
@@ -1537,6 +1544,7 @@
 				B3B69B672154327300CB9179 /* MetersPanelGui.cpp */,
 				B3B69B682154327300CB9179 /* MetersPanelGui.h */,
 				B32D93B321B6FDC900E14271 /* GuiFactory.h */,
+				B3A6D11021C2D8ED001B2223 /* GuiFactory.cpp */,
 				B32D93B521B71D0400E14271 /* MainPanelGui.cpp */,
 				B32D93B621B71D0400E14271 /* MainPanelGui.h */,
 			);
@@ -1894,6 +1902,7 @@
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
 				67FE4C7B15C2F0478C8126C2 /* NetworkingUtils.cpp in Sources */,
+				B34AB35221C4097100F67E7B /* AnalysisSaverModal.cpp in Sources */,
 				B3354C942141BB14003F8F91 /* TimelineView.cpp in Sources */,
 				B3712F9D2136F733007BA046 /* ofxHotKeys_impl_mac.mm in Sources */,
 				B3712F922136F733007BA046 /* ofxTLKeyframes.cpp in Sources */,
@@ -1909,6 +1918,7 @@
 				B3712F942136F733007BA046 /* ofxTLPageTabs.cpp in Sources */,
 				0546D1A38E13BD319CC9755B /* OscReceivedElements.cpp in Sources */,
 				B3FD3493213EE77700B30C17 /* View.cpp in Sources */,
+				B3A6D11121C2D8ED001B2223 /* GuiFactory.cpp in Sources */,
 				B3712FCE21373856007BA046 /* ofxAudioAnalyzer.cpp in Sources */,
 				B3712F9F2136F733007BA046 /* ofxTLVideoThumb.cpp in Sources */,
 				B38987EE21B9C1700076192A /* FileManager.cpp in Sources */,

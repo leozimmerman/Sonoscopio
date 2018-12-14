@@ -3,22 +3,11 @@
 ## Now
 ### Tasks
     
-- FIX keypressed
-
-- REMOVE: old settings dir
-
-- Add max estimated value pop-up / Add Value Plotter option
-
-- FIX: TImelineView audioTrack->drawWaveforms(); bug
-- Start testing/debugging
-
-
 ### Bugs / Code Improvements
-- Definir: va o no el "_" en las variables -> NO VA
+- Definir: va o no el "_" en las variables ->  Va si hace falta diferenciar....
 - Sacar "//------" de a poco...
 
 
-**********************************************************************************************
 **********************************************************************************************
 ## Notes
 - En algun momento hay que cortar las new features para la 1.0 porque esto no termina mas -> La version 1.0 = lo que necesito para laburar con los Estudios Audiovisuales. 

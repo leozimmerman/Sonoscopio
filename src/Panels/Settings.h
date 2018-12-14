@@ -55,6 +55,7 @@ public:
     float silenceTreshold;
     float timeTreshold;
     string type;
+    float maxEstimatedValue;
 };
 
 class ChannelMeterSettings{

@@ -23,24 +23,29 @@
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
 #include "OscSender.h"
+#include "PanelsBridge.h"
 
 #pragma mark - Core Funcs
 
 void MetersPanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
     BasePanel::setEnabled(false);
+    setupSingletons();
     
     enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
     
     guiView.setup(x, y, w, GUI_COMP_HEIGHT, this);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
+    
+}
+
+void MetersPanel::setupSingletons(){
     SettingsManager::getInstance().setMetersPanelPtr(this);
     FileManager::getInstance().setMetersPanelPtr(this);
     AnalysisDataSaver::getInstance().setMetersPanelPtr(this);
     OscSender::getInstance().setMetersPanelPtr(this);
-    
-    
+    PanelsBridge::getInstance().setMetersPanelPtr(this);
 }
 
 void MetersPanel::update(){
@@ -160,15 +165,6 @@ void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgori
 
 void MetersPanel::resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     metersView.reset(chanAnalyzerPtrs);
-}
-
-
-
-//--------------------------------------------------------------
-void MetersPanel::setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value){
-    for (ofxAudioAnalyzerUnit* anUnit : channelAnalyzers){
-        anUnit->setMaxEstimatedValue(algorithm, value);
-    }
 }
 
 

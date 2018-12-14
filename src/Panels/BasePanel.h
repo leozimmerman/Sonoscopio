@@ -37,5 +37,6 @@ public:
     virtual bool getEnabled(){return enabled;}
     
 protected:
+    virtual void setupSingletons() =0;
     bool enabled = true;
 };

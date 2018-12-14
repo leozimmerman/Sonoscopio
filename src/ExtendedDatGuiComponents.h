@@ -151,37 +151,31 @@ private:
     ofColor colorFill;
     ofColor colorLabel;
    
-    
 };
 //----------------------------------------------
-class PeakMeterButton : public ofxDatGuiButton{
+class TransparentMeterButton : public ofxDatGuiButton{
 
 public:
-    PeakMeterButton(string label) : ofxDatGuiButton(label){
+    TransparentMeterButton(string label) : ofxDatGuiButton(label){
         gralColor = ofColor::red;
     };
-    
     void setColor(ofColor color){gralColor = color;}
     
-    void draw(){
-        
+    void drawTransparent(){
         if (mVisible) {
-            // anything that extends ofxDatGuiButton has the same rollover effect //
             ofPushStyle();
             
-            //if (mStyle.border.visible) drawBorder();
-            drawBorder();
             ofNoFill();
+            ofSetLineWidth(0.5);
             ofSetColor(gralColor);
-            mFont->draw(mLabel.text , x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
+            ofDrawRectangle(x, y, mStyle.width, mStyle.height);
+            mFont->draw(mLabel.text, x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
             
             ofPopStyle();
         }
-    
     }
-    
+
 private:
     ofColor gralColor;
-    
     
 };

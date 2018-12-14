@@ -68,6 +68,7 @@ public:
     }
     
 private:
+    void setupSingletons() override;
     
     void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);

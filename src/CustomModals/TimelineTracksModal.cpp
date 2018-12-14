@@ -84,9 +84,8 @@ void TimelineTracksModal::applyConfiguration(){
 bool TimelineTracksModal::getFocused(){
     return false;
 }
-void TimelineTracksModal::onToggleEvent(ofxDatGuiButtonEvent e){
-    //TODO: Implement?
-}
+
+void TimelineTracksModal::onToggleEvent(ofxDatGuiButtonEvent e){}
 void TimelineTracksModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
     applyConfiguration();
     hide();
@@ -94,7 +93,6 @@ void TimelineTracksModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
 
 void TimelineTracksModal::loadStateIntoSettings(TimelinePanelSettings* settings){
     //settings->bufferSize = selectedBufferSize;
-    
 }
 
 void TimelineTracksModal::updateVisibleTracks(){

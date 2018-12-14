@@ -22,18 +22,24 @@
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"
 #include "OscSender.h"
+#include "PanelsBridge.h"
 
 #pragma mark - core funcs
 void MainPanel::setup(int x, int y, int w, int h){
     BasePanel::setup(x, y, w, h);
     setBackgroundColor(ofColor(80));
+    setupSingletons();
     
     guiView.setup(x, y, w, GUI_COMP_HEIGHT, this);
     fileInfoView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
+}
+
+void MainPanel::setupSingletons(){
     OscSender::getInstance().setup(INIT_OSC_HOST,  INIT_OSC_PORT);
     SettingsManager::getInstance().setMainPanelPtr(this);
     FileManager::getInstance().setMainPanelPtr(this);
+    PanelsBridge::getInstance().setMainPanelPtr(this);
 }
 
 void MainPanel::update(){
@@ -71,7 +77,7 @@ bool MainPanel::getFocused(){
 void MainPanel::resize(int x, int y, int w, int h){
     View::resize(x, y, w, h);
     guiView.resize(x, y, w, GUI_COMP_HEIGHT);
-    fileInfoView.resize(x, guiView.maxX(), w, h - guiView.getHeight());
+    fileInfoView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
 
 #pragma mark - Gui called funcs

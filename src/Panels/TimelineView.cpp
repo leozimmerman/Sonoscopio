@@ -126,11 +126,16 @@ void TimelineView::bangFired(ofxTLBangEventArgs& args){
 }
 
 void TimelineView::updateHeight(){
-    if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
-        int tracksNum = timeline.getPage(PAGE_TRACKS_NAME)->getTracksNum();
-        timeline.setHeight(_h - 20.0 - 17.68 * (tracksNum-1));
-    } else {
+    if (timeline.getCurrentPageName() == PAGE_AUDIO_NAME){
         timeline.setHeight(_h - 20);
+    } else {
+        timeline.setCurrentPage(PAGE_AUDIO_NAME);
+        timeline.setHeight(_h - 20);
+        
+        timeline.setCurrentPage(PAGE_TRACKS_NAME);
+        int tracksNum = timeline.getPage(PAGE_TRACKS_NAME)->getTracksNum();
+        if (tracksNum == 0){tracksNum = 1;}
+        timeline.setHeight(_h - 20.0 - 17.68 * (tracksNum-1));
     }
 }
 
@@ -168,12 +173,6 @@ void TimelineView::addTrackToTimeline(string name, trackType type){
         default:
             break;
     }
-    
-    //-If track was added from audio page, go back  to it.
-    if(currentPageName == PAGE_AUDIO_NAME){
-        timeline.setCurrentPage(PAGE_AUDIO_NAME);
-    }
-    
     updateHeight();
 }
 
@@ -281,11 +280,9 @@ void TimelineView::addMarker(){
 }
 
 void TimelineView::addMarkerAtTime(float millis){
-    
     float ms =  ofClamp(millis, 0.0, timeline.getDurationInMilliseconds());//clamp just in case...
     timeline.getTicker()->addMarker(ms);
     _markers.push_back(ms);
-    
 }
 
 void TimelineView::clearMarkers(){

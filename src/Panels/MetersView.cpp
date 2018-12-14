@@ -69,7 +69,6 @@ void MetersView::exit(){
     _channelMetersViews.clear();
 }
 
-//TODO: Move scroll funcs to ChannelPannelMV
 void MetersView::scrollUp(){
     for (auto p : _channelMetersViews) {
         p->scrollUp();
