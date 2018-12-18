@@ -23,7 +23,7 @@
 ofEvent<string> ofApp::errorEvent = ofEvent<string>();
 
 #pragma mark - Core funcs
-//--------------------------------------------------------------
+
 void ofApp::setup(){
     
     setupOFContext();
@@ -33,58 +33,8 @@ void ofApp::setup(){
     setupModals();
 
     setFrameRate(INIT_FPS);
-    
 }
 
-void ofApp::setupOFContext() {
-    ofSetLogLevel(OF_LOG_VERBOSE);
-    ofSetBackgroundColor(ofColor::black);
-    ofEnableSmoothing();
-    ofEnableAlphaBlending();
-    //ofSetFrameRate(INIT_FPS);
-}
-
-void ofApp::setupTimeMeasurment() {
-    
-    TIME_SAMPLE_SET_FRAMERATE(INIT_FPS); //set the app's target framerate (MANDATORY)
-    //specify where the widget is to be drawn
-    TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_BOTTOM_LEFT );
-    TIME_SAMPLE_SET_AVERAGE_RATE(0.1);    //averaging samples, (0..1],
-    //1.0 gets you no averaging at all
-    //use lower values to get steadier readings
-    TIME_SAMPLE_DISABLE_AVERAGE();    //disable averaging
-    TIME_SAMPLE_SET_REMOVE_EXPIRED_THREADS(true); //inactive threads will be dropped from the table
-    TIME_SAMPLE_DISABLE();
-}
-
-void ofApp::setupPanels() {
-    int w = ofGetWidth();
-    int h = ofGetHeight();
-    updatePanelsDimensions(w, h);
-    
-    mainPanel.setup(0, 0, w, _main_height);
-    metersPanel.setup(0, mainPanel.maxY(), _meters_width, (h - mainPanel.maxY()));
-    timePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()));
-   
-    metersPanel.setupAnalyzer(INIT_SAMPLE_RATE, INIT_BUFFER_SIZE, 1);
-    
-    mainPanel.setFrameRate(MAIN_PANEL_FPS);
-    timePanel.setFrameRate(TL_PANEL_FPS);
-    metersPanel.setFrameRate(MT_PANEL_FPS);
-}
-
-void ofApp::setupModals() {
-    queuedErrorMessage = "";
-    mText = make_shared<TextModal>();
-    mText->addListener(this, &ofApp::onModalEvent);
-}
-
-void ofApp::setupListeners() {
-    
-    ofAddListener(ofApp::errorEvent, this, &ofApp::errorSent);
-}
-
-//--------------------------------------------------------------
 void ofApp::update(){
     
     if(AnalysisDataSaver::getInstance().isThreadRunning()){
@@ -110,7 +60,6 @@ void ofApp::update(){
     metersPanel.update();
     TS_STOP("PANELS-UPDATE");
 }
-
 
 void ofApp::draw(){
 
@@ -197,6 +146,53 @@ void ofApp::keyPressed(int key){
     
 }
 
+#pragma mark - Setups
+
+void ofApp::setupOFContext() {
+    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetBackgroundColor(ofColor::black);
+    ofEnableSmoothing();
+    ofEnableAlphaBlending();
+    //ofSetFrameRate(INIT_FPS);
+}
+
+void ofApp::setupTimeMeasurment() {
+    
+    TIME_SAMPLE_SET_FRAMERATE(INIT_FPS); //set the app's target framerate (MANDATORY)
+    //specify where the widget is to be drawn
+    TIME_SAMPLE_SET_DRAW_LOCATION( TIME_MEASUREMENTS_BOTTOM_LEFT );
+    TIME_SAMPLE_SET_AVERAGE_RATE(0.1);    //averaging samples, (0..1],
+    //1.0 gets you no averaging at all
+    //use lower values to get steadier readings
+    TIME_SAMPLE_DISABLE_AVERAGE();    //disable averaging
+    TIME_SAMPLE_SET_REMOVE_EXPIRED_THREADS(true); //inactive threads will be dropped from the table
+    TIME_SAMPLE_DISABLE();
+}
+
+void ofApp::setupPanels() {
+    int w = ofGetWidth();
+    int h = ofGetHeight();
+    updatePanelsDimensions(w, h);
+    
+    mainPanel.setup(0, 0, w, _main_height);
+    metersPanel.setup(0, mainPanel.maxY(), _meters_width, (h - mainPanel.maxY()));
+    timePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()));
+        
+    mainPanel.setFrameRate(MAIN_PANEL_FPS);
+    timePanel.setFrameRate(TL_PANEL_FPS);
+    metersPanel.setFrameRate(MT_PANEL_FPS);
+}
+
+void ofApp::setupModals() {
+    queuedErrorMessage = "";
+    mText = make_shared<TextModal>();
+    mText->addListener(this, &ofApp::onModalEvent);
+}
+
+void ofApp::setupListeners() {
+    ofAddListener(ofApp::errorEvent, this, &ofApp::errorSent);
+}
+
 void ofApp::setFrameRate(int fps){
     
     ofSetFrameRate(fps);
@@ -211,6 +207,7 @@ void ofApp::setFrameRate(int fps){
 }
 
 #pragma mark - Sizes
+
 void ofApp::updatePanelsDimensions(int w, int h) {
     _main_height   = GUI_COMP_HEIGHT + FILE_INFO_HEIGHT;
     _meters_width = METER_PANEL_WIDTH * w;

@@ -20,20 +20,14 @@
 
 #include "ofMain.h"
 
-#include "ofxTimeline.h"
-#include "ofxTLAudioTrack.h"
-
 #include "ofxTimeMeasurements.h"
-#include "ofxAudioAnalyzer.h"
 
 #include "MainPanel.h"
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
 #include "ofEvents.h"
-
 #include "TextModal.h"
-
 #include "ofxHotKeys.h"
 
 
@@ -44,9 +38,7 @@ class ofApp : public ofBaseApp{
 public:
 
     void setFrameRate(int fps);
-
     void onModalEvent(ofxModalEvent e);
-    
     void errorSent(string & errorMessage);
     
     MainPanel mainPanel;

@@ -33,11 +33,11 @@ BinMeterView::BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAu
     setBinsNum(binNums);
     setMinMaxEstimatedValues();
 }
-//-------------------------------------------------------
+
 void BinMeterView::updateValues(){
     setValues(_audioAnalyzer->getValues(_algorithmType, _smoothAmnt));
 }
-//-------------------------------------------------------
+
 void BinMeterView::drawStaticElements(){
     MeterView::drawLabel();
     onOffToggle->drawTransparent();
@@ -46,13 +46,13 @@ void BinMeterView::drawStaticElements(){
     }
     MeterView::drawBounds();
 }
-//-------------------------------------------------------
+
 void BinMeterView::drawValueElements(){
     if (_enabled) {
         drawMeter();
     }
 }
-//-------------------------------------------------------
+
 void BinMeterView::setMinMaxEstimatedValues() {
     switch (_algorithmType) {
         case SPECTRUM:
@@ -68,13 +68,15 @@ void BinMeterView::setMinMaxEstimatedValues() {
             setMaxEstimatedValue(MFCC_MAX_ESTIMATED_VALUE);
             break;
         default:
+            setMinEstimatedValue(0.0);
+            setMaxEstimatedValue(1.0);
             break;
     }
 }
-//-------------------------------------------------------
+
 void BinMeterView::drawMeter(){
     
-    ofPushMatrix();
+     ofPushMatrix();
     ofTranslate(_x, _y);
     //ofPushStyle();
     ofFill();
@@ -88,13 +90,13 @@ void BinMeterView::drawMeter(){
     //ofPopStyle();
     ofPopMatrix();
 }
-//-------------------------------------------------------
+
 void BinMeterView::setComponentsWidth(){
     MeterView::adjustFontLetterSpacing( _w * 0.5);
     smoothSlider->setWidth(_w * 0.25 , 0.0);
     onOffToggle->setWidth (_w * 0.25, 0.0);
 }
-//-------------------------------------------------------
+
 void BinMeterView::setComponentsPositions(){
     _label_x =  _w * .5 - _label_w *.5; //align center
     onOffToggle->setPosition(_x, _y);

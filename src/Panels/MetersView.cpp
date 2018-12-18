@@ -92,21 +92,24 @@ void MetersView::resize(int x, int y, int w, int h){
 
 #pragma mark - Settings
 
-void MetersView::loadSettings(MetersPanelSettings& settings){    
+void MetersView::setStateFromSettings(MetersPanelSettings& settings){
     if (_channelMetersViews.size() != settings.channelMeters.size()){
         return;
     }
     
     for (int i=0; i<_channelMetersViews.size(); i++){
-        _channelMetersViews[i]->loadSettings(settings.channelMeters[i]);
+        _channelMetersViews[i]->setStateFromSettings(settings.channelMeters[i]);
     }
 }
 
-void MetersView::updateCurrentSettings(){
-    currentChannelSettings.clear();
-    for (auto channelView : _channelMetersViews){
-        channelView->updateCurrentSettings();
-        currentChannelSettings.push_back(channelView->getCurrentSettingsRef());
+void MetersView::loadStateIntoSettings(MetersPanelSettings* settings){
+    settings->channelMeters.clear();
+    settings->channelMeters.shrink_to_fit();
+    
+    for (auto ch : _channelMetersViews){
+        ChannelMeterSettings ch_s;
+        ch->loadStateIntoSettings(&ch_s);
+        settings->channelMeters.push_back(ch_s);
     }
 }
 

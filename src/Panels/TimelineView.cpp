@@ -25,7 +25,7 @@ void TimelineView::draw(){
         if(timeline.getCurrentPageName() == PAGE_TRACKS_NAME){
             audioTrack->drawWaveforms();
         }
-        timeline.draw(false, false);//without ticker timeMarks & hidden mode
+        timeline.draw(true, false);
         //timeline.draw();
     }
 }

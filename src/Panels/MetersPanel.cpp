@@ -32,12 +32,12 @@ void MetersPanel::setup(int x, int y, int w, int h){
     BasePanel::setEnabled(false);
     setupSingletons();
     
-    enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
+    //enabledAlgorithmTypes = ofxaa::allAvailableAlgorithmTypes;
     
     guiView.setup(x, y, w, GUI_COMP_HEIGHT, this);
     metersView.setup(x, guiView.maxY(), w, h - guiView.getHeight());
     
-    
+    setupAnalyzer(INIT_SAMPLE_RATE, INIT_BUFFER_SIZE, 1);
 }
 
 void MetersPanel::setupSingletons(){
@@ -119,6 +119,7 @@ void MetersPanel::resetAnalyzer(int sampleRate){
 }
 
 void MetersPanel::setBufferSize(int bs){
+    if (bs == _bufferSize){return;}
     _bufferSize = bs;
     audioAnalyzer.reset(audioAnalyzer.getSampleRate(), _bufferSize, _channels);
     resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
@@ -134,6 +135,7 @@ void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
 }
 
 #pragma mark - Settings
+
 void MetersPanel::resetSettings(){
     currentSettings = MetersPanelSettings();
     loadSettings(currentSettings);
@@ -141,35 +143,34 @@ void MetersPanel::resetSettings(){
 
 void MetersPanel::loadSettings(MetersPanelSettings& settings){
     currentSettings = settings;
+    
+    enabledAlgorithmTypes = settings.enabledAlgorithmTypes;
+    metersView.setEnabledAlgorithms(enabledAlgorithmTypes);//resetsMeters
+    
     guiView.setStateFromSettings(settings);
-    setEnabledAlgorithms(settings.enabledAlgorithmTypes);
-    metersView.loadSettings(settings);
+    metersView.setStateFromSettings(settings);
+}
+
+void MetersPanel::updateMetersViewSettings(){
+    metersView.loadStateIntoSettings(&currentSettings);
 }
 
 void MetersPanel::updateCurrentSettings(){
-    metersView.updateCurrentSettings();
     currentSettings.enabledAlgorithmTypes = enabledAlgorithmTypes;
-    currentSettings.channelMeters = metersView.getCurrentChannelSettingsRef();
+    guiView.loadStateIntoSettings(&currentSettings);
+    metersView.loadStateIntoSettings(&currentSettings);
 }
 
 #pragma mark - Other funcs
 
-void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms) {
-    enabledAlgorithmTypes = enabledAlgorithms;
-    
-    for (int ch=0; ch<audioAnalyzer.getChannelsNum(); ch++){
-        for (auto algorithm : ofxaa::allAvailableAlgorithmTypes){
-            audioAnalyzer.setActive(ch, algorithm, false);
-        }
-        for (auto algorithm : enabledAlgorithms){
-            audioAnalyzer.setActive(ch, algorithm, true);
-        }
-    }
-    metersView.setEnabledAlgorithms(enabledAlgorithms);
+void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& algorithms) {
+    currentSettings.enabledAlgorithmTypes = algorithms;
+    loadSettings(currentSettings);
 }
 
 void MetersPanel::resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     metersView.reset(chanAnalyzerPtrs);
+    metersView.setStateFromSettings(currentSettings);
 }
 
 

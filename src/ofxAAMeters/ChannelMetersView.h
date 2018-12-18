@@ -57,12 +57,8 @@ public:
     
     void onMeterStateChanged(OnOffEventData & data);
     
-    void loadSettings(ChannelMeterSettings& settings);
-    void updateCurrentSettings();
-    
-    ChannelMeterSettings& getCurrentSettingsRef(){
-        return currentSettings;
-    }
+    void setStateFromSettings(ChannelMeterSettings& settings);
+    void loadStateIntoSettings(ChannelMeterSettings* settings);
     
     map<string, float> getMetersValues();
     map<string, vector<float>> getMetersVectorValues();
@@ -76,7 +72,6 @@ protected:
     vector<MeterView*> meters;
     vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
     ofxAudioAnalyzerUnit* audioAnalyzerUnit;
-    ChannelMeterSettings currentSettings;
     
     int _contentHeight;
     ofColor _mainColor;

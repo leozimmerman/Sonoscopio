@@ -14,6 +14,10 @@
 std::function<void(MetersPanel*)> callback_scrollUp = &MetersPanel::scrollUp;
 std::function<void(MetersPanel*)> callback_scrollDown = &MetersPanel::scrollDown;
 
+MetersPanelGui:: ~MetersPanelGui(){
+    _components.clear();
+    _components.shrink_to_fit();
+}
 
 void MetersPanelGui::setup(int x, int y, int w, int h, MetersPanel* metersPanel_ptr){
     GuiView::setup(x, y, w, h);
@@ -89,8 +93,7 @@ void MetersPanelGui::onDropdownEvent(ofxDatGuiDropdownEvent e){}
 void MetersPanelGui::onTextInputEvent(ofxDatGuiTextInputEvent e){}
 
 void MetersPanelGui::loadStateIntoSettings(MetersPanelSettings* settings){
-//    settings->volume = gVolumeSlider->getValue();
-
+    menuModal->loadStateIntoSettings(settings);
 }
 
 void MetersPanelGui::setStateFromSettings(MetersPanelSettings& settings){

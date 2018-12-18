@@ -38,6 +38,7 @@ ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int pa
 
 void ChannelMetersView::createMeters(){
     meters.clear();
+    meters.shrink_to_fit();
     for (auto type : enabledAlgorithmTypes) {
         auto meterView = MeterView::createMeterView(type, _panelId, audioAnalyzerUnit);
         meters.push_back(meterView);
@@ -64,6 +65,7 @@ void ChannelMetersView::exit(){
         delete m;
     }
     meters.clear();
+    meters.shrink_to_fit();
     ofRemoveListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
     ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
 }
@@ -146,53 +148,57 @@ void ChannelMetersView::onMeterStateChanged(OnOffEventData & data){
 
 #pragma mark - Settings
 
-void ChannelMetersView::loadSettings(ChannelMeterSettings& settings){
-    currentSettings = settings;
-    for (auto ms : currentSettings.meters) {
+void ChannelMetersView::setStateFromSettings(ChannelMeterSettings& settings){
+    //currentSettings = settings;
+    for (auto ms : settings.meters) {
         string stringType = ms.type;
         ofxAAAlgorithmType type = ofxaa::stringToAlgorithmType(stringType);
         
         auto meter = meterForType(type);
         
-        meter->setEnabled(ms.bState);
-        if (type == ONSETS) {
-            auto onsets_m = dynamic_cast<OnsetMeterView*>(meter);
-            onsets_m->setAlpha(ms.alpha);
-            onsets_m->setSilenceThreshold(ms.silenceTreshold);
-            onsets_m->setTimeThreshold(ms.timeTreshold);
-        } else {
-            meter->setSmoothAmnt(ms.smooth);
-            meter->setMaxEstimatedValue(ms.maxEstimatedValue);
+        if (meter != NULL){
+            meter->setEnabled(ms.bState);
+            if (type == ONSETS) {
+                auto onsets_m = dynamic_cast<OnsetMeterView*>(meter);
+                onsets_m->setAlpha(ms.alpha);
+                onsets_m->setSilenceThreshold(ms.silenceTreshold);
+                onsets_m->setTimeThreshold(ms.timeTreshold);
+            } else {
+                meter->setSmoothAmnt(ms.smooth);
+                meter->setMaxEstimatedValue(ms.maxEstimatedValue);
+            }
+            //spectrm cant be turned off, no audioAnalyzer->setActive
+            //MFcc also turn on-off melBands
+            //TODO: Remove this
+            audioAnalyzerUnit->setActive(type, ms.bState);
         }
-    
-        //spectrm cant be turned off, no audioAnalyzer->setActive
-        //MFcc also turn on-off melBands
-        audioAnalyzerUnit->setActive(type, ms.bState);
+        
     }
 }
 
-void ChannelMetersView::updateCurrentSettings(){
-    currentSettings.meters.clear();
+void ChannelMetersView::loadStateIntoSettings(ChannelMeterSettings* settings){
+    settings->meters.clear();
+    settings->meters.shrink_to_fit();
     for (auto m : meters) {
-        MeterSettings setting;
+        MeterSettings s;
         
         auto type = m->getType();
         auto typeString = ofxaa::algorithmTypeToString(type);
         
-        setting.type = typeString;
+        s.type = typeString;
         
         if (type == ONSETS) {
             auto onsets_m = dynamic_cast<OnsetMeterView*>(m);
-            setting.alpha = onsets_m->getAlpha();
-            setting.silenceTreshold = onsets_m->getSilenceThreshold();
-            setting.timeTreshold = onsets_m->getTimeThreshold();
-            setting.bState = onsets_m->getEnabled();
+            s.alpha = onsets_m->getAlpha();
+            s.silenceTreshold = onsets_m->getSilenceThreshold();
+            s.timeTreshold = onsets_m->getTimeThreshold();
+            s.bState = onsets_m->getEnabled();
         } else {
-            setting.smooth = m->getSmoothAmnt();
-            setting.bState = m->getEnabled();
-            setting.maxEstimatedValue = m->getMaxEstimatedValue();
+            s.smooth = m->getSmoothAmnt();
+            s.bState = m->getEnabled();
+            s.maxEstimatedValue = m->getMaxEstimatedValue();
         }
-        currentSettings.meters.push_back(setting);
+        settings->meters.push_back(s);
     }
 }
 
@@ -240,7 +246,7 @@ map<string, vector<float>> ChannelMetersView::getMetersVectorValues(){
             BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(HPCP));
             channelMap[HPCP_STRING] = binMeter->getValues();
         }else if (type == TRISTIMULUS){
-             BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
             channelMap[TRISTIMULUS_STRING] = binMeter->getValues();
         }
     }

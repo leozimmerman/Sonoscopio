@@ -76,6 +76,10 @@ bool MetersMenuModal::isAlgorithmEnabled(ofxAAAlgorithmType algorithmType){
 }
 
 void MetersMenuModal::applyConfiguration(){
+    _metersPanelPtr->updateMetersViewSettings();
+    if (selectedBufferSize != -1){
+        _metersPanelPtr->setBufferSize(selectedBufferSize);
+    }
     updateEnabledAlgorithmsFromToggles();
     _metersPanelPtr->setEnabledAlgorithms(enabledAlgorithms);
 }
@@ -87,16 +91,13 @@ void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
     //TODO: Implement?
 }
 void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
+ 
     applyConfiguration();
-    if (selectedBufferSize != -1){
-        _metersPanelPtr->setBufferSize(selectedBufferSize);
-    }
     hide();
 }
 
 void MetersMenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e){
     selectedBufferSize = buffer_sizes[e.child];
-    
 }
 
 void MetersMenuModal::loadStateIntoSettings(MetersPanelSettings* settings){
@@ -108,7 +109,10 @@ void MetersMenuModal::setStateFromSettings(MetersPanelSettings& settings){
     updateTogglesFromEnabledAlgorithms();
     
     int index = distance(buffer_sizes.begin(), find(buffer_sizes.begin(), buffer_sizes.end(), settings.bufferSize));
-    gBufferSize->select(index);
+    if (index < buffer_sizes.size()){
+        gBufferSize->select(index);
+    }
+    
 }
 
 

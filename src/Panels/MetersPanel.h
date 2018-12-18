@@ -43,18 +43,18 @@ public:
     virtual void resize(int x, int y, int w, int h) override;
     
     void resetSettings();
+    void updateMetersViewSettings();
     void loadSettings(MetersPanelSettings& settings);
     void updateCurrentSettings();
     MetersPanelSettings* getCurrentSettingsPtr(){
         return &currentSettings;
     }
     
-    void setupAnalyzer(int sampleRate, int bufferSize, int channels);
     void resetAnalyzer(int sampleRate);
     void setBufferSize(int bs);
     void analyzeBuffer(const ofSoundBuffer& inBuffer);
     
-    void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
+    void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& algorithms);
     
     void scrollUp(){metersView.scrollUp();}
     void scrollDown(){metersView.scrollDown();}
@@ -71,6 +71,7 @@ public:
     
 private:
     void setupSingletons() override;
+    void setupAnalyzer(int sampleRate, int bufferSize, int channels);
     
     void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
@@ -86,9 +87,6 @@ private:
     
     int _bufferSize;
     int _channels;
-    
-
-
     
 };
 

@@ -19,6 +19,7 @@ class MetersPanel;
 class MetersPanelGui : public GuiView {
 public:
     void setup(int x, int y, int w, int h, MetersPanel* metersPanel_ptr);
+    ~MetersPanelGui();
     
     void createComponents() override;
     void adjustComponentsSize() override;
