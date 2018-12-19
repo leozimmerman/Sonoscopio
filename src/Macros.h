@@ -18,6 +18,8 @@
 
 #pragma once
 
+#define SONOSCOPIO_VERSION "0.1.0"
+
 #define INIT_FPS 60
 //Prime numbers to avoid simultaneous draws:
 #define MAIN_PANEL_FPS 60
@@ -33,4 +35,5 @@
 
 #define GUI_COMP_HEIGHT 26
 
+//TODO: Fix this:
 #define KEYBOARD_SHORTCUTS_MSG "'cmd 1,2,3: view modes | 'cmd + t': time measurement on/off  |  'cmd + m': add marker  |  'w': rewind  |  'e': expands focused track  |  'd': enables/disables focused track  |  'a': adjust tracks height shortcut"

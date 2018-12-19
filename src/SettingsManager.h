@@ -16,6 +16,9 @@
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
+#define SONOSCOPIO_INFO_TAG "SONOSCOPIO-INFO"
+#define VERSION_TAG "VERSION"
+
 #define MAIN_PANEL_TAG "MAIN-PANEL"
 #define FRAMERATE_TAG "FRAMERATE"
 #define BUFFER_SIZE_TAG "BUFFER-SIZE"
@@ -94,14 +97,13 @@ private:
     void loadSettingsIntoPanels();
     void resetPanelSettings();
     
+    void addVersionSettingsToXml();
     void addMainPanelSettingsToXml();
     void loadMainPanelSettingsFromXml();
     void addTimelinePanelSettingsToXml();
     void loadTimelinePanelSettingsFromXml();
     void addMetersPanelSettingsToXml();
     void loadMetersPanelSettingsFromXml();
-    
-    
     
     ofxXmlSettings xml;
     

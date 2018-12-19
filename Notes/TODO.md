@@ -3,7 +3,6 @@
 ## Now
 ### Tasks 
 
-- Remove TextInput from switches
 
 - Fix keyboard shortcuts.
     - Cmd+S: Save 

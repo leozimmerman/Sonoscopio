@@ -16,6 +16,7 @@ SettingsManager::SettingsManager(){
 void SettingsManager::saveSettings(){
     updateCurrentSettingsFromPanels();
     xml.clear();
+    addVersionSettingsToXml();
     addMainPanelSettingsToXml();
     addTimelinePanelSettingsToXml();
     addMetersPanelSettingsToXml();
@@ -29,7 +30,6 @@ void SettingsManager::loadSettings(){
     } else {
         resetPanelSettings();
     }
-    
 }
 
 void SettingsManager::updateCurrentSettingsFromPanels(){
@@ -75,6 +75,7 @@ void SettingsManager::loadSettingsFromFile(){
     xml.clear();
     string filename = FileManager::getInstance().getSettingsFileName();
     if(xml.loadFile(filename)){
+        //TODO: Check version matches
         loadMainPanelSettingsFromXml();
         loadTimelinePanelSettingsFromXml();
         loadMetersPanelSettingsFromXml();
@@ -197,10 +198,16 @@ void SettingsManager::loadMetersPanelSettingsFromXml(){
 
 #pragma mark - Add Settings to XML
 
+void SettingsManager::addVersionSettingsToXml(){
+    xml.addTag(SONOSCOPIO_INFO_TAG);
+    xml.pushTag(SONOSCOPIO_INFO_TAG);
+    xml.addValue(VERSION_TAG, SONOSCOPIO_VERSION);
+    xml.popTag();
+}
+
 void SettingsManager::addMainPanelSettingsToXml(){
     xml.addTag(MAIN_PANEL_TAG);
     xml.pushTag(MAIN_PANEL_TAG);
-    
     xml.addValue(FRAMERATE_TAG, mainPanelSettings.frameRate);
     xml.addValue(HOST_TAG, mainPanelSettings.osc.host);
     xml.addValue(PORT_TAG, mainPanelSettings.osc.port);

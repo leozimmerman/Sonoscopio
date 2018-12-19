@@ -37,7 +37,7 @@ void AnalysisDataSaver::reset(){
         frameRate = timelinePanelPtr->getFrameRate();
         totalFramesNum = timelinePanelPtr->getTotalFramesNum();
     }
-
+    
     if (metersPanelPtr != NULL){
         bufferSize = metersPanelPtr->getBufferSize();
         channels = metersPanelPtr->getChannelsNum();
@@ -93,7 +93,12 @@ void AnalysisDataSaver::threadedFunction(){
         if(lock()){
             float initTime = ofGetElapsedTimef();
             ofxXmlSettings savedSettings;
-            //FILE-DATA-----------------
+            //-:SONSOCOPIO-INFO-----------------
+            savedSettings.addTag(RENDER_SONOSCOPIO_INFO_TAG);
+            savedSettings.pushTag(RENDER_SONOSCOPIO_INFO_TAG);
+            savedSettings.addValue(RENDER_VERSION_TAG, SONOSCOPIO_VERSION);
+            savedSettings.popTag();
+            //-:FILE-INFO-----------------
             savedSettings.addTag(RENDER_FILE_INFO_TAG);
             savedSettings.pushTag(RENDER_FILE_INFO_TAG);
             savedSettings.addValue(RENDER_SOUNDFILE_TAG, soundfilePath);
@@ -161,7 +166,7 @@ void AnalysisDataSaver::threadedFunction(){
                     savedSettings.popTag();//pop from CHANNEL-i back into ANALYZER
                 }
                 savedSettings.popTag();//pop from ANALYZER back into frameTag
-        
+                
                 //TIMELINE-----------------------------------------
                 savedSettings.addTag(RENDER_TIMELINE_TAG);
                 savedSettings.pushTag(RENDER_TIMELINE_TAG);

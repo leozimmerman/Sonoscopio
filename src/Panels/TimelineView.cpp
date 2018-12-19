@@ -311,7 +311,7 @@ std::map<string, float> TimelineView::getTracksValues(){
         for(ofxTLTrack* track : trPage->getTracks()){
             //set key
             string name = track->getName();
-            string key = "TL-" + name;
+            string key = name;
             //set value
             float value;
             if(track->getTrackType()==CURVES_STRING){
