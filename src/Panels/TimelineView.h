@@ -47,6 +47,7 @@ public:
     void setupTimeline();
     bool keyPressed(int key);
     
+    
     void saveTracksDataToFolder();
     void loadStateIntoSettings(TimelinePanelSettings* settings);
     void setStateFromSettings(TimelinePanelSettings& settings);
@@ -85,7 +86,7 @@ public:
     void setInPointAtPlayhead(){timeline.setInPointAtPlayhead();}
     void setOutPointAtPlayhead(){timeline.setOutPointAtPlayhead();}
     
-    bool existsTrackWithName(string name);
+
     
     std::map<string, float> getTracksValues();
     
@@ -103,6 +104,9 @@ private:
     void addTrackToTimelineWithStringType(string name, string stringType);
     void loadTracksDataFromFolder();
     void addMarkerAtTime(float millis);
+    
+    bool existsTrackWithName(string name);
+    void removeExistingTrackWithName(string name);
     
     void expandFocusedTrack();
     void hideTracks();

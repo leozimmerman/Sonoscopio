@@ -241,12 +241,14 @@ void ofApp::errorSent(string & errorMessage){
 void ofApp::onModalEvent(ofxModalEvent e) {
     if (e.type == ofxModalEvent::SHOWN){
         // dispatched when the window has finished animating in //
+        disablePanelsEvents();
     }    else if (e.type == ofxModalEvent::HIDDEN){
         // dispatched when the window has finished animating out //
         if (queuedErrorMessage != ""){
             showErrorMessage(queuedErrorMessage);
             queuedErrorMessage = "";
         }
+        enablePanelsEvents();
     }    else if (e.type == ofxModalEvent::CONFIRM){
         // dispatched when the button at index 0 is selected //
         cout << "ofApp: OK button was selected" << endl;
@@ -271,6 +273,15 @@ void ofApp::showErrorMessage(string message){
         return;
     }
     mText->display(title, message);
+}
+
+//TODO: Add events enable/disabler to more panels 
+void ofApp::enablePanelsEvents(){
+    timePanel.enableEvents();
+}
+
+void ofApp::disablePanelsEvents(){
+    timePanel.disableEvents();
 }
 
 void ofApp::toggleTimeMeasurement(){

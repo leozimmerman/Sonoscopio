@@ -101,14 +101,17 @@ void MetersMenuModal::onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e){
 }
 
 void MetersMenuModal::loadStateIntoSettings(MetersPanelSettings* settings){
-     settings->bufferSize = selectedBufferSize;
+//    if (selectedBufferSize != -1){
+//        settings->bufferSize = selectedBufferSize;
+//    }
+    
 }
 
 void MetersMenuModal::setStateFromSettings(MetersPanelSettings& settings){
     enabledAlgorithms = settings.enabledAlgorithmTypes;
     updateTogglesFromEnabledAlgorithms();
     
-    int index = distance(buffer_sizes.begin(), find(buffer_sizes.begin(), buffer_sizes.end(), settings.bufferSize));
+    auto index = distance(buffer_sizes.begin(), find(buffer_sizes.begin(), buffer_sizes.end(), settings.bufferSize));
     if (index < buffer_sizes.size()){
         gBufferSize->select(index);
     }

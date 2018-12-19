@@ -42,6 +42,8 @@ public:
     
     bool keyPressed(int key) override;
     virtual bool getFocused() override;
+    void disableEvents(){timelineView.timeline.disableEvents();}
+    void enableEvents(){timelineView.timeline.enableEvents();}
     
     virtual void resize(int x, int y, int w, int h) override;
     
@@ -66,7 +68,6 @@ public:
     }
     
     #pragma mark - Setters
-    //TODO: Remove this.
     void setCurrentFrame(int currentFrame){
         timelineView.timeline.setCurrentFrame(currentFrame);
     }

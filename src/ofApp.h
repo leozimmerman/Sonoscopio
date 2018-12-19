@@ -56,6 +56,9 @@ private:
     
     void keyPressed(int key);
     
+    void enablePanelsEvents();
+    void disablePanelsEvents();
+    
     void windowResized(int w, int h);
     void updatePanelsDimensions(int w, int h);
   

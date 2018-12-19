@@ -109,6 +109,7 @@ void MetersPanel::resize(int x, int y, int w, int h){
 void MetersPanel::setupAnalyzer(int sampleRate, int bufferSize, int channels){
     _bufferSize = bufferSize;
     _channels = channels;
+    currentSettings.bufferSize = bufferSize;
     audioAnalyzer.setup(sampleRate, _bufferSize, _channels);
     setChannelAnalyzers(audioAnalyzer.getChannelAnalyzersPtrs());
 }
@@ -138,11 +139,14 @@ void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
 
 void MetersPanel::resetSettings(){
     currentSettings = MetersPanelSettings();
+    currentSettings.bufferSize = _bufferSize;
     loadSettings(currentSettings);
 }
 
 void MetersPanel::loadSettings(MetersPanelSettings& settings){
     currentSettings = settings;
+    
+    setBufferSize(settings.bufferSize);
     
     enabledAlgorithmTypes = settings.enabledAlgorithmTypes;
     metersView.setEnabledAlgorithms(enabledAlgorithmTypes);//resetsMeters
@@ -156,6 +160,7 @@ void MetersPanel::updateMetersViewSettings(){
 }
 
 void MetersPanel::updateCurrentSettings(){
+    currentSettings.bufferSize = _bufferSize;
     currentSettings.enabledAlgorithmTypes = enabledAlgorithmTypes;
     guiView.loadStateIntoSettings(&currentSettings);
     metersView.loadStateIntoSettings(&currentSettings);

@@ -225,8 +225,19 @@ void TimelineView::addExistingTrack(string name, string type){
     allExistingTracks.push_back(ts);
 }
 
+void TimelineView::removeExistingTrackWithName(string name){
+    for (int i=0; i<allExistingTracks.size(); i++){
+        if (allExistingTracks[i].name == name){
+            allExistingTracks.erase(allExistingTracks.begin()+i);
+            return;
+        }
+    }
+}
+
+
 void TimelineView::removeTrack(string name){
     timeline.removeTrack(name);
+    removeExistingTrackWithName(name);
     updateHeight();
 }
 
@@ -349,6 +360,7 @@ void TimelineView::createTracksFromTrackSettings(vector<TLTrackSetting> tracks){
 
 void TimelineView::loadStateIntoSettings(TimelinePanelSettings* settings){
     settings->tracks.clear();
+    settings->tracks.shrink_to_fit();
     for (auto track : allExistingTracks) {
         TLTrackSetting ts;
         ts.name = track.name;
