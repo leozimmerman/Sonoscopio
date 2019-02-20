@@ -51,6 +51,7 @@ class MeterSettings{
 public:
     float smooth;
     bool bState;
+    bool bPlotValue;
     float alpha;
     float silenceTreshold;
     float timeTreshold;

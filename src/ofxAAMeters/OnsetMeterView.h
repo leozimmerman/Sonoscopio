@@ -27,17 +27,16 @@
 #define MTR_SIL_TH "SIL-TH"
 #define MTR_TI_TH "TI-TH"
 #define MTR_ARM "ARM"
-
-
+#define MTR_RESET "RESET"
 
 class OnsetMeterView : public MeterView{
     
 public:
     
     OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
+    virtual ~OnsetMeterView();
     
     void update() override;
-    //void draw() override;
     
     void drawStaticElements() override;
     void drawValueElements() override;
@@ -45,6 +44,7 @@ public:
     void drawMeter() override;
     
     void updateComponentsColors();
+    void setComponentsHeight();
     void setComponentsWidth() override;
     void setComponentsPositions() override;
     
@@ -62,15 +62,12 @@ public:
     void onSliderEvent(ofxDatGuiSliderEvent e) override;
     void onButtonEvent(ofxDatGuiButtonEvent e) override;
     
-    /*Ver onOffEventGlobal si hace falta mandar mas data*/
+    /*TODO: Ver onOffEventGlobal si hace falta mandar mas data*/
     static ofEvent<int> onsetEventGlobal;
     static int height;
     
 protected:
     void sendOnsetEvent();
-    
-    
-    //ofxAudioAnalyzerUnit* audioAnalyzer;
     ofxAAOnsetsAlgorithm* onsets;
     
     bool _onsetValue;
@@ -80,12 +77,12 @@ protected:
     float _silenceThreshold;
     float _timeThreshold;
     
-    
-    
     CustomSlider * alphaSlider;
     CustomSlider * silenceThresholdSlider;
     CustomSlider * timeThresholdSlider;
     OnOffToggle* armToggle;
+    TransparentMeterButton * resetButton;
+    
 };
 
 

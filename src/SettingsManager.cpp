@@ -175,6 +175,7 @@ void SettingsManager::loadMetersPanelSettingsFromXml(){
         for (int j=0; j<metersNum; j++){
             const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + TYPE_TAG;
             const std::string stateTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + STATE_TAG;
+            const std::string plotTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + PLOT_TAG;
             const std::string smoothTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + SMOOTH_TAG;
             const std::string maxValueTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + MAX_EST_VALUE_TAG;
             const std::string alphaTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNEL_N_TAG + ofToString(i) + ":" + METER_N_TAG + ofToString(j) + ":" + ALPHA_TAG;
@@ -184,6 +185,7 @@ void SettingsManager::loadMetersPanelSettingsFromXml(){
             MeterSettings ms;
             ms.type = xml.getValue(typeTag, "");
             ms.bState = xml.getValue(stateTag, 0) > 0;
+            ms.bPlotValue = xml.getValue(plotTag, 0) > 0;
             ms.smooth = xml.getValue(smoothTag, 0.0);
             ms.maxEstimatedValue = xml.getValue(maxValueTag, 0.0);
             ms.alpha = xml.getValue(alphaTag, 0.0);
@@ -282,6 +284,7 @@ void SettingsManager::addMetersPanelSettingsToXml(){
             xml.pushTag(meterTag);
             
             xml.addValue(STATE_TAG, metersPanelSettings.channelMeters[i].meters[j].bState);
+            xml.addValue(PLOT_TAG, metersPanelSettings.channelMeters[i].meters[j].bPlotValue);
             xml.addValue(TYPE_TAG, metersPanelSettings.channelMeters[i].meters[j].type);
             if (metersPanelSettings.channelMeters[i].meters[j].type == "ONSETS"){
                 xml.addValue(ALPHA_TAG, metersPanelSettings.channelMeters[i].meters[j].alpha);

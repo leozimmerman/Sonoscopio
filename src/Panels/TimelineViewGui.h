@@ -40,7 +40,7 @@ public:
     void createComponents() override;
     void adjustComponentsSize() override;
     
-    bool getFocused();
+    bool getFocused() override;
     
     void loadStateIntoSettings(TimelinePanelSettings* settings);
     void setStateFromSettings(TimelinePanelSettings& settings);

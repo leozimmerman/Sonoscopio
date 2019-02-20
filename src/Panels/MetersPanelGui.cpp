@@ -10,10 +10,6 @@
 #include "MetersPanel.h"
 #include "GuiFactory.h"
 
-
-std::function<void(MetersPanel*)> callback_scrollUp = &MetersPanel::scrollUp;
-std::function<void(MetersPanel*)> callback_scrollDown = &MetersPanel::scrollDown;
-
 MetersPanelGui:: ~MetersPanelGui(){
     _components.clear();
     _components.shrink_to_fit();
@@ -80,11 +76,10 @@ void MetersPanelGui::onButtonEvent(ofxDatGuiButtonEvent e){
     string label = e.target->getLabel();
     if(label ==  MENU_LABEL){
         showMenu();
-        
     }else if (label == SCROLL_UP_LABEL){
-        callback_scrollUp(_metersPanelPtr);
+        _metersPanelPtr->scrollUp();
     }else if (label == SCROLL_DOWN_LABEL){
-        callback_scrollDown(_metersPanelPtr);
+        _metersPanelPtr->scrollDown();
     }
 }
 

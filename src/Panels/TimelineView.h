@@ -90,7 +90,6 @@ public:
     
     std::map<string, float> getTracksValues();
     
-    void bangFired(ofxTLBangEventArgs& args);
     ofxTimeline timeline;
     ofxTLAudioTrack* audioTrack;
    
@@ -115,8 +114,6 @@ private:
     vector<TLTrackSetting> visibleTracks;
     vector<TLTrackSetting> allExistingTracks;
     
-    bool _isThereBang = false;
-    ofxTLTrack* _bangedTrack;
     ofColor waveformCol;
     bool _footerIsDragging;
     vector<float> _markers;

@@ -24,11 +24,6 @@
 #include "GuiFactory.h"
 #include "PanelsBridge.h"
 
-// the static event, or any static variable, must be initialized outside of the class definition.
-ofEvent<OnOffEventData> MeterView::onOffEventGlobal = ofEvent<OnOffEventData>();
-
-//FIXME: Move this to somewhere else. Same plase as availableTypes
-
 int MeterView::height = 50;
 
 MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
@@ -93,39 +88,25 @@ void MeterView::initComponents(){
     font  = new ofTrueTypeFont();
     font->load("gui_assets/fonts/verdana.ttf", 10, false, false);
     font->setLineHeight(12.0f);
-    font->setLetterSpacing(1.037);
+    font->setLetterSpacing(1.0);
     _line_h = font->getLineHeight();
 
-    onOffToggle = new OnOffToggle(ON_LABEL, TRUE);
-    onOffToggle->onButtonEvent(this, &MeterView::onButtonEvent);
+    onOffToggle = GuiFactory::createOnOffToggle(ON_LABEL, TRUE, this, &MeterView::onButtonEvent);
     onOffToggle->setHeight(_line_h);
-    onOffToggle->setLabelMargin(0.0);
-    onOffToggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
-    onOffToggle->setBackgroundColor(ofColor::black);
     
-    smoothSlider = new CustomSlider(SMOOTHING_LABEL, 0.0, 1.0, _smoothAmnt);
-    smoothSlider->onSliderEvent(this, &MeterView::onSliderEvent);
+    smoothSlider = GuiFactory::createCustomSlider(SMOOTHING_LABEL, 0.0, 1.0, _smoothAmnt, this, &MeterView::onSliderEvent);
     smoothSlider->setHeight(_line_h);
-    smoothSlider->setLabelMargin(1.0);
-    smoothSlider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
     
-    peakButton = new TransparentMeterButton(PEAK_LABEL);
-    peakButton->onButtonEvent(this, &MeterView::onButtonEvent);
+    peakButton = GuiFactory::createTransparentMeterButton(PEAK_LABEL, this, &MeterView::onButtonEvent);
     peakButton->setHeight(_line_h);
-    peakButton->setLabelMargin(0.0);
-    peakButton->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     
-    configButton = new TransparentMeterButton(CONFIG_LABEL);
+    configButton = GuiFactory::createTransparentMeterButton(CONFIG_LABEL, this, &MeterView::onButtonEvent);
     configButton->setColor(ofColor::white);
-    configButton->onButtonEvent(this, &MeterView::onButtonEvent);
-    configButton->setLabelMargin(0.0);
-    configButton->setLabelAlignment(ofxDatGuiAlignment::CENTER);
     configButton->setHeight(_line_h);
     
     valuePlotter = GuiFactory::createValuePlotter("", 0.0, 1.0);
     valuePlotter->setHeight(_h);
     valuePlotter->setDrawMode(ofxDatGuiGraph::OUTLINE);
-    
 }
 
 MeterView::~MeterView(){
@@ -153,11 +134,10 @@ void MeterView::updateComponents(){
         valuePlotter->setValue(_valueNorm * valuePlotter->getRange());
         valuePlotter->update(true);
     }
-    
 }
 
 void MeterView::updatePeak(){
-    if(_value > _maxValueRegistered){
+    if (_value > _maxValueRegistered){
         _maxValueRegistered = _value;
         peakButton->setLabel(ofToString(_maxValueRegistered, 2));
     }
@@ -231,7 +211,6 @@ void MeterView::drawValueDisplay(){
     ofPushStyle();
         ofSetColor(_mainColor);
         string strValue = ofToString(_value, 2);
-        //int strVal_x = _x + 5;
         font->drawString(strValue, _label_x, _line_h * 2.0);
     ofPopStyle();
     ofPopMatrix();
@@ -266,7 +245,6 @@ void MeterView::resize(int x, int y, int w, int h){
 }
 
 void MeterView::setComponentsWidth(){
-    MeterView::adjustFontLetterSpacing( _w * 0.5);
     onOffToggle->setWidth(_w * 0.25, 0.0);
     smoothSlider->setWidth(_w * 0.25, 0.0);
     peakButton->setWidth(_w * 0.25, 0.0);
@@ -275,23 +253,13 @@ void MeterView::setComponentsWidth(){
 }
 
 void MeterView::setComponentsPositions(){
-    _label_x = _w * .5 - _label_w *.5;
+    _label_x = _w * 0.25 + 10;
     onOffToggle->setPosition(_x, _y);
-    configButton->setPosition(_x, _y + onOffToggle->getHeight() + 5);
     smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
+    
+    configButton->setPosition(_x, _y + onOffToggle->getHeight() + 5);
     peakButton->setPosition  (_x + _w - _w * 0.25, _y + _line_h);
     valuePlotter->ofxDatGuiTimeGraph::setPosition(_x, _y);
-}
-
-void MeterView::adjustFontLetterSpacing(int width){
-    float widthForLabel = width;
-    _label_w = font->stringWidth(_name);
-    if(_label_w >= widthForLabel){
-        float space_ratio = 1 / (_label_w / widthForLabel);
-        font->setLetterSpacing(space_ratio);
-    } else {
-        font->setLetterSpacing(1.1);
-    }
 }
 
 #pragma mark - Value Setters
@@ -325,39 +293,26 @@ void MeterView::setEnabled(bool state){
 
 void MeterView::setMainColor(ofColor col){
     _mainColor = col;
-    //colors
     peakButton->setColor(COLOR_PEAKS);
     smoothSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);//back,label,fill
-    
-    //onOffToggle->setColors(COLOR_ONOFF_ON, COLOR_ONOFF_OFF);
     onOffToggle->setColors(_mainColor, COLOR_ONOFF_OFF);
 }
 
 #pragma mark - Gui listeners
 
 void MeterView::onSliderEvent(ofxDatGuiSliderEvent e){
-    //cout << _name <<"::slider: " <<e.value << endl;
     _smoothAmnt = e.value;
 }
 
 void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
     
     if(e.target->getLabel() == ON_LABEL){
-        OnOffEventData data;
-        data.type = _algorithmType;
-        data.state = e.enabled;
-        data.panelId = _panelId;
-        ofNotifyEvent(onOffEventGlobal, data);
-        
         _enabled = e.enabled;
-     
     } else if(e.target->getLabel() == CONFIG_LABEL){
         showMenu();
     } else {
-        //peak button's label changes constantly
-        resetPeak();
+        resetPeak();//peak button's label changes constantly
     }
-
 }
 
 

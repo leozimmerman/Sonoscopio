@@ -26,15 +26,6 @@
 #include "ofxAudioAnalyzerUnit.h"
 #include "MeterModal.h"
 
-class OnOffEventData{
-public:
-    //string name;
-    ofxAAAlgorithmType type;
-    bool state;
-    int panelId;
-};
-
-
 #define SMOOTHING_LABEL "SMTH"
 #define ON_LABEL "ON"
 #define PEAK_LABEL "PEAK"
@@ -59,8 +50,6 @@ public:
     static MeterView* createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     static int height;
     
-     static ofEvent<OnOffEventData> onOffEventGlobal;//this is a shared event for all the instances of this class, so any instance of this class will broadcast to the same event,
-    
 #pragma mark - Instanced
     
     MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
@@ -71,7 +60,7 @@ public:
 
     virtual void resize(int x, int y, int w, int h) override;
     
-    void toggleValuePlotter(bool enabled);
+    
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
@@ -89,6 +78,7 @@ public:
     bool getPlotterEnabled(){return _plotterEnabled;}
     ofxAAAlgorithmType getType(){return _algorithmType;}
     
+    void toggleValuePlotter(bool enabled);
     void setMainColor(ofColor col);
     void setValue(float value);
     void setNormalizedValue(float value);
@@ -97,7 +87,6 @@ public:
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
     
-
 protected:
     void initDefaultValues();
     void initComponents();
@@ -141,7 +130,7 @@ protected:
     bool    _enabled;
     bool    _plotterEnabled;
     float   _line_h;
-    int     _label_x, _label_w;
+    int     _label_x;
     
 private:
     void setupMenu();

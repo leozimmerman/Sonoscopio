@@ -55,8 +55,6 @@ public:
     
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
     
-    void onMeterStateChanged(OnOffEventData & data);
-    
     void setStateFromSettings(ChannelMeterSettings& settings);
     void loadStateIntoSettings(ChannelMeterSettings* settings);
     
@@ -66,7 +64,7 @@ public:
 protected:
     void createMeters();
     void setColors();
-    MeterView* meterForType(ofxAAAlgorithmType type);
+    MeterView* meterOfType(ofxAAAlgorithmType type);
     int getHeightForMeter(MeterView* meter);
     
     vector<MeterView*> meters;

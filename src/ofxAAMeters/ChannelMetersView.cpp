@@ -25,8 +25,6 @@ ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int pa
    
     View::setup(x, y ,width, height);
     
-    ofAddListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
-   
     audioAnalyzerUnit = audioAnalyzer;
     enabledAlgorithmTypes = enabledAlgorithms;
     
@@ -66,7 +64,6 @@ void ChannelMetersView::exit(){
     }
     meters.clear();
     meters.shrink_to_fit();
-    ofRemoveListener(MeterView::onOffEventGlobal, this, &ChannelMetersView::onMeterStateChanged);
     ofLogVerbose()<<"ofxAAChannelMetersPanel exit.";
 }
 
@@ -93,6 +90,7 @@ void ChannelMetersView::scrollUp(){
 }
 
 void ChannelMetersView::scrollDown(){
+    if (_contentHeight < _h) {return;}
     _scrollOffset -= 40;
     if (_scrollOffset < (_contentHeight-_h) * (-1)) {
         _scrollOffset = (_contentHeight-_h) * (-1);
@@ -128,33 +126,14 @@ int ChannelMetersView::getHeightForMeter(MeterView *meter) {
     }
 }
 
-///listener for all on/off buttons of all pannels
-void ChannelMetersView::onMeterStateChanged(OnOffEventData & data){
-    
-    if(data.panelId != _panelId) return;
-    
-    audioAnalyzerUnit->setActive(data.type, data.state);
-    
-    /*
-     TODO: Revisar cuando compile...
-    if(data.name == MTR_NAME_MEL_BANDS){
-        mMfcc->setEnabled(data.state);//if MelBands are off, Mfcc must be off too.
-        //audioAnalyzer->setActive(MEL_BANDS, data.state);
-        audioAnalyzer->setActive(MFCC, data.state);//turns on-off mfcc and mel-bands together
-    }
-     */
-    
-}
-
 #pragma mark - Settings
 
 void ChannelMetersView::setStateFromSettings(ChannelMeterSettings& settings){
-    //currentSettings = settings;
     for (auto ms : settings.meters) {
         string stringType = ms.type;
         ofxAAAlgorithmType type = ofxaa::stringToAlgorithmType(stringType);
         
-        auto meter = meterForType(type);
+        auto meter = meterOfType(type);
         
         if (meter != NULL){
             meter->setEnabled(ms.bState);
@@ -166,13 +145,9 @@ void ChannelMetersView::setStateFromSettings(ChannelMeterSettings& settings){
             } else {
                 meter->setSmoothAmnt(ms.smooth);
                 meter->setMaxEstimatedValue(ms.maxEstimatedValue);
+                meter->toggleValuePlotter(ms.bPlotValue);
             }
-            //spectrm cant be turned off, no audioAnalyzer->setActive
-            //MFcc also turn on-off melBands
-            //TODO: Remove this
-            audioAnalyzerUnit->setActive(type, ms.bState);
         }
-        
     }
 }
 
@@ -194,16 +169,16 @@ void ChannelMetersView::loadStateIntoSettings(ChannelMeterSettings* settings){
             s.timeTreshold = onsets_m->getTimeThreshold();
             s.bState = onsets_m->getEnabled();
         } else {
-            s.smooth = m->getSmoothAmnt();
             s.bState = m->getEnabled();
+            s.bPlotValue = m->getPlotterEnabled();
+            s.smooth = m->getSmoothAmnt();
             s.maxEstimatedValue = m->getMaxEstimatedValue();
         }
         settings->meters.push_back(s);
     }
 }
 
-//for osc and data saving
-MeterView* ChannelMetersView::meterForType(ofxAAAlgorithmType type) {
+MeterView* ChannelMetersView::meterOfType(ofxAAAlgorithmType type) {
     for (auto m: meters) {
         if (m->getType() == type) {
             return m;
@@ -237,16 +212,16 @@ map<string, vector<float>> ChannelMetersView::getMetersVectorValues(){
     for(MeterView* m : meters){
         auto type = m->getType();
         if (type == MEL_BANDS){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MEL_BANDS));
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(MEL_BANDS));
             channelMap[MEL_BANDS_STRING] = binMeter->getValues();
         }else if (type == MFCC){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(MFCC));
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(MFCC));
             channelMap[MFCC_STRING] = binMeter->getValues();
         }else if (type == HPCP){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(HPCP));
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(HPCP));
             channelMap[HPCP_STRING] = binMeter->getValues();
         }else if (type == TRISTIMULUS){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterForType(TRISTIMULUS));
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(TRISTIMULUS));
             channelMap[TRISTIMULUS_STRING] = binMeter->getValues();
         }
     }

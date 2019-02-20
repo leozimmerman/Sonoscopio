@@ -84,11 +84,11 @@ void MetersPanel::exit(){
 bool MetersPanel::keyPressed(int key){
     switch (key) {
         case OF_KEY_UP:
-            metersView.scrollUp();
+            scrollUp();
             return true;
             break;
         case OF_KEY_DOWN:
-            metersView.scrollDown();
+            scrollDown();
             return true;
             break;
     }
@@ -122,6 +122,7 @@ void MetersPanel::resetAnalyzer(int sampleRate){
 void MetersPanel::setBufferSize(int bs){
     if (bs == _bufferSize){return;}
     _bufferSize = bs;
+    currentSettings.bufferSize = _bufferSize;
     audioAnalyzer.reset(audioAnalyzer.getSampleRate(), _bufferSize, _channels);
     resetAnalyzerUnits(audioAnalyzer.getChannelAnalyzersPtrs());
 }

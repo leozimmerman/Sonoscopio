@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ofxDatGui.h"
+#include "ExtendedDatGuiComponents.h"
 
 namespace GuiFactory {
     
@@ -73,6 +74,38 @@ namespace GuiFactory {
         dropdown->setStripeColor(borderColor);
         return dropdown;
     }
+    
+    template<typename T, typename args, class ListenerClass>
+    OnOffToggle* createOnOffToggle(string label, bool enabled, T* owner, void (ListenerClass::*listenerMethod)(args)){
+        
+        OnOffToggle* toggle = new OnOffToggle(label, enabled);
+        toggle->onButtonEvent(owner, listenerMethod);
+        toggle->setLabelMargin(0.0);
+        toggle->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+        toggle->setBackgroundColor(ofColor::black);
+        return toggle;
+    }
+    
+    template<typename T, typename args, class ListenerClass>
+    CustomSlider* createCustomSlider(string label, float min, float max, double val, T* owner, void (ListenerClass::*listenerMethod)(args)){
+        
+        CustomSlider* slider = new CustomSlider(label, min, max, val);
+        slider->onSliderEvent(owner, listenerMethod);
+        slider->setLabelMargin(1.0);
+        slider->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+        return slider;
+    }
+    
+    template<typename T, typename args, class ListenerClass>
+    TransparentMeterButton* createTransparentMeterButton(string label, T* owner, void (ListenerClass::*listenerMethod)(args)){
+        
+        TransparentMeterButton* button =  new TransparentMeterButton(label);
+        button->onButtonEvent(owner, listenerMethod);
+        button->setLabelMargin(0.0);
+        button->setLabelAlignment(ofxDatGuiAlignment::CENTER);
+        return button;
+    }
+    
     
     ofxDatGuiValuePlotter* createValuePlotter(string label, float min, float max);
 }

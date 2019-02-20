@@ -91,7 +91,6 @@ void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
     //TODO: Implement?
 }
 void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
- 
     applyConfiguration();
     hide();
 }
@@ -113,7 +112,7 @@ void MetersMenuModal::setStateFromSettings(MetersPanelSettings& settings){
     
     auto index = distance(buffer_sizes.begin(), find(buffer_sizes.begin(), buffer_sizes.end(), settings.bufferSize));
     if (index < buffer_sizes.size()){
-        gBufferSize->select(index);
+        gBufferSize->select(int(index));
     }
     
 }

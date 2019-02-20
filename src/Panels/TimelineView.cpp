@@ -102,7 +102,6 @@ void TimelineView::setupTimeline() {
     timeline.setWidth(_w);
     updateHeight();
     
-    ofAddListener(timeline.events().bangFired, this, &TimelineView::bangFired);
 }
 
 
@@ -116,13 +115,6 @@ void TimelineView::openAudioFile(string filename){
 void TimelineView::setFrameRate(int fps){
     _frameRate = fps;
     timeline.setFrameRate(_frameRate);
-}
-
-void TimelineView::bangFired(ofxTLBangEventArgs& args){
-    //cout << "bang fired!" << args.flag << endl;
-    cout << "bang fired!" << endl;
-    _isThereBang = TRUE;
-    _bangedTrack = args.track;
 }
 
 void TimelineView::updateHeight(){
@@ -319,11 +311,7 @@ std::map<string, float> TimelineView::getTracksValues(){
             }else if(track->getTrackType()==SWITCHES_STRING){
                 value = timeline.isSwitchOn(name);
             }else if(track->getTrackType()==BANGS_STRING){
-                if(_bangedTrack!=NULL && _bangedTrack==track && _isThereBang){
-                    value = 1.0;
-                }else{
-                    value = 0.0;
-                }
+                value = timeline.isBang(name);
             }else if(track->getTrackType()==NOTES_STRING){
                 value = timeline.getNote(name);
             }

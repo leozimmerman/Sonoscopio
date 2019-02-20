@@ -76,9 +76,9 @@ void BinMeterView::setMinMaxEstimatedValues() {
 
 void BinMeterView::drawMeter(){
     
-     ofPushMatrix();
+    ofPushMatrix();
     ofTranslate(_x, _y);
-    //ofPushStyle();
+    ofPushStyle();
     ofFill();
     ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA);
     float bin_w = (float) _w / _nBins;
@@ -87,18 +87,18 @@ void BinMeterView::drawMeter(){
         float bin_h = -1 * (scaledValue * _h);
         ofDrawRectangle(i*bin_w, _h, bin_w, bin_h);
     }
-    //ofPopStyle();
+    ofPopStyle();
     ofPopMatrix();
 }
 
 void BinMeterView::setComponentsWidth(){
-    MeterView::adjustFontLetterSpacing( _w * 0.5);
+    
     smoothSlider->setWidth(_w * 0.25 , 0.0);
     onOffToggle->setWidth (_w * 0.25, 0.0);
 }
 
 void BinMeterView::setComponentsPositions(){
-    _label_x =  _w * .5 - _label_w *.5; //align center
+    _label_x = _w * 0.25 + 10;
     onOffToggle->setPosition(_x, _y);
     smoothSlider->setPosition(_x + _w - _w * 0.25, _y);
 }
