@@ -18,6 +18,8 @@ public:
     void resize(int x, int y, int width, int height) override;
     void setupGui();
     
+    void setClicksEnabled(bool enabled) override;
+    
     virtual void createComponents() =0;
     virtual void adjustComponentsSize() =0;
     
@@ -30,5 +32,4 @@ protected:
     int _bordWidth;
     int _guiCompHeight;
     int  _guiCompWidth;
-    
 };

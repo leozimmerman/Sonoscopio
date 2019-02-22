@@ -44,6 +44,8 @@ public:
     bool getFocused() override;
     bool keyPressed(int key) override;
     
+    void setClicksEnabled(bool enabled) override;
+    
     void saveAllSettings();
     void renderAnalysis();
     

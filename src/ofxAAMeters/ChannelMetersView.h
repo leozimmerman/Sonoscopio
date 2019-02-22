@@ -44,11 +44,13 @@ public:
     ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * audioAnalyzer, vector<ofxAAAlgorithmType>& enabledAlgorithms, ofColor mainColor);
     ~ChannelMetersView(){}
     
-    virtual void update();
-    virtual void draw();
+    void update();
+    void draw() override;
     virtual void exit();
     
-    void resize(int x, int y, int w, int h);
+    void resize(int x, int y, int w, int h) override;
+    
+    void setClicksEnabled(bool enabled) override;
     
     void scrollUp();
     void scrollDown();

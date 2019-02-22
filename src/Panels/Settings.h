@@ -8,19 +8,19 @@
 #pragma once
 
 #include "ofxAAUtils.h"
+#include "Macros.h"
 
 struct OscSetting {
-    bool bSend;
-    string host;
-    int port;
-    bool bSendVectorValues; //TODO: Implement
+    bool bSend = true;
+    string host = INIT_OSC_HOST;
+    int port = INIT_OSC_PORT;
+    bool bSendVectorValues = false; //TODO: Implement
 };
 
 class MainPanelSettings {
 public:
-    std::string projectDir;
-    int frameRate;
-    int sampleRate;
+    std::string projectDir = "";
+    int frameRate = INIT_FPS;
     
     OscSetting osc;
 };
@@ -32,14 +32,16 @@ struct TLTrackSetting{
     std::string type;
 };
 
+
+
 class TimelinePanelSettings {
 public:
-    float volume;
-    float bpm;
-    bool bLoop;
-    bool bBpmGrid;
-    bool bSnap;
-    bool bFrambased;
+    float volume = 1.0;
+    float bpm = TL_DEFAULT_INIT_BPM;
+    bool bLoop = false;
+    bool bBpmGrid = false;
+    bool bSnap = false;
+    bool bFrambased = false;
     
     vector<float> markers;
     vector<TLTrackSetting> tracks;
@@ -49,14 +51,14 @@ public:
 //------------------------------------
 class MeterSettings{
 public:
-    float smooth;
-    bool bState;
-    bool bPlotValue;
+    float smooth = 0.0;
+    bool bState = true;
+    bool bPlotValue = false;
     float alpha;
     float silenceTreshold;
     float timeTreshold;
-    string type;
     float maxEstimatedValue;
+    string type;
 };
 
 class ChannelMeterSettings{

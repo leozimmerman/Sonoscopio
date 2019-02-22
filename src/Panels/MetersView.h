@@ -20,6 +20,7 @@ public:
     void exit();
     
     void resize(int x, int y, int w, int h) override;
+    void setClicksEnabled(bool enabled) override;
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);

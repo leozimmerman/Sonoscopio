@@ -23,7 +23,6 @@ void FileManager::openFileDialog(){
     }else {
         ofLogVerbose("User pressed CANCEL");
     }
-    
 }
 
 void FileManager::processFileSelection(ofFileDialogResult openFileResult){

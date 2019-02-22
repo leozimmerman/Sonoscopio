@@ -104,6 +104,13 @@ void MetersPanel::resize(int x, int y, int w, int h){
     guiView.resize(x, y, w, GUI_COMP_HEIGHT);
     metersView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
+
+void MetersPanel::setClicksEnabled(bool enabled) {
+    View::setClicksEnabled(enabled);
+    guiView.setClicksEnabled(enabled);
+    metersView.setClicksEnabled(enabled);
+}
+
 #pragma mark - Audio Analyzer
 
 void MetersPanel::setupAnalyzer(int sampleRate, int bufferSize, int channels){

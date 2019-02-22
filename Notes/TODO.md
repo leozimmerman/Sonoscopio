@@ -9,11 +9,6 @@
     - Cmd+T: Time measurements
     - Change disable track shortcut
 
-### Bugs / Code Improvements
-- Definir: va o no el "_" en las variables ->  Va si hace falta diferenciar....
-- Sacar "//------" de a poco...
-
-
 **********************************************************************************************
 
 ## Backlog

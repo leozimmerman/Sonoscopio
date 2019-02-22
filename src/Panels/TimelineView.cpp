@@ -26,7 +26,6 @@ void TimelineView::draw(){
             audioTrack->drawWaveforms();
         }
         timeline.draw(true, false);
-        //timeline.draw();
     }
 }
 
@@ -37,6 +36,10 @@ void TimelineView::resize(int x, int y, int width, int height){
     updateHeight();
 }
 
+void TimelineView::setClicksEnabled(bool enabled){
+    View::setClicksEnabled(enabled);
+    enabled ? timeline.enableEvents() : timeline.disableEvents();
+}
 
 bool TimelineView::keyPressed(int key){
     ofxTLTrack* ftrack = timeline.getFocusedTrack();
@@ -79,7 +82,7 @@ void TimelineView::setupTimeline() {
     
     
     timeline.setLoopType(OF_LOOP_NONE);
-    timeline.setBPM(120.f);
+    timeline.setBPM(TL_DEFAULT_INIT_BPM);
     timeline.setShowBPMGrid(false);
     
     timeline.addAudioTrack("Audio", ""); /// Add empty audio Track?
@@ -91,8 +94,6 @@ void TimelineView::setupTimeline() {
     audioTrack = timeline.getAudioTrack("Audio");
     
     timeline.addPage(PAGE_TRACKS_NAME);
-    ///addTrack("DEFAULT", CURVES);
-    
     timeline.setCurrentPage(PAGE_TRACKS_NAME);
     timeline.setShowPageTabs(false); //->modify if more pages are needed
     timeline.setFootersHidden(true);
@@ -136,19 +137,31 @@ void TimelineView::updateHeight(){
 
 void TimelineView::createNewTrack(string name, string type ){
     if (existsTrackWithName(name)){
-        string message = "A track with that name already exists";
-        ofNotifyEvent(ofApp::errorEvent, message);
+        showErrorMessage(TRACK_ALREADY_EXISTS);
         return;
     }
-    addExistingTrack(name, type);
+    addTrack(name, type);
+    loadTracksDataFromFolder();
+}
+
+void TimelineView::removeTrack(string name){
+    timeline.removeTrack(name);
+    removeExistingTrackWithName(name);
+    hideTracksIfNeeded();
+    updateHeight();
+}
+
+void TimelineView::addTrack(string name, string type){
+    TLTrackSetting ts;
+    ts.name = name;
+    ts.type = type;
+    allExistingTracks.push_back(ts);
+    visibleTracks.push_back(ts);
     addTrackToTimelineWithStringType(name, type);
 }
 
-void TimelineView::addTrackToTimeline(string name, trackType type){
-    
-    string currentPageName = timeline.getCurrentPageName();
+void TimelineView::addTrackToTimeline(string name, TrackType type){
     timeline.setCurrentPage(PAGE_TRACKS_NAME);
-    
     switch (type) {
         case CURVES:
             timeline.addCurves(name, ofRange(0, 1));
@@ -191,7 +204,7 @@ bool TimelineView::existsTrackWithName(string name){
     return false;
 }
 
-string TimelineView::typeToString(trackType type){
+string TimelineView::typeToString(TrackType type){
     switch (type) {
         case CURVES:
             return CURVES_STRING;
@@ -210,27 +223,42 @@ string TimelineView::typeToString(trackType type){
     }
 }
 
-void TimelineView::addExistingTrack(string name, string type){
-    TLTrackSetting ts;
-    ts.name = name;
-    ts.type = type;
-    allExistingTracks.push_back(ts);
-}
-
 void TimelineView::removeExistingTrackWithName(string name){
     for (int i=0; i<allExistingTracks.size(); i++){
         if (allExistingTracks[i].name == name){
             allExistingTracks.erase(allExistingTracks.begin()+i);
-            return;
+            break;
+        }
+    }
+    for (int i=0; i<visibleTracks.size(); i++){
+        if (visibleTracks[i].name == name){
+            visibleTracks.erase(visibleTracks.begin()+i);
+            break;
         }
     }
 }
 
+void TimelineView::createTracksFromTrackSettings(vector<TLTrackSetting> tracks){
+    auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
+    tracksPage->removeAllTracks();
+    for (auto t : tracks){
+        if(tracksPage->getTrack(t.name)==NULL){
+            addTrackToTimelineWithStringType(t.name, t.type);
+        }
+    }
+}
 
-void TimelineView::removeTrack(string name){
-    timeline.removeTrack(name);
-    removeExistingTrackWithName(name);
-    updateHeight();
+#pragma mark - Visible tracks
+
+void TimelineView::setVisibleTracks(vector<TLTrackSetting> tracks){
+    visibleTracks = tracks;
+    
+    auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
+    saveTracksDataToFolder();
+    tracksPage->removeAllTracks();
+    createTracksFromTrackSettings(visibleTracks);
+    loadTracksDataFromFolder();
+    hideTracksIfNeeded();
 }
 
 #pragma mark - Tracks display
@@ -243,16 +271,22 @@ void TimelineView::hideTracks(){
     }
 }
 
+void  TimelineView::hideTracksIfNeeded() {
+    setTracksHidden(visibleTracks.size() == 0);
+}
+
 void TimelineView::toggleShowTracks(){
-    
-    if(timeline.getCurrentPageName() == PAGE_AUDIO_NAME){
-        timeline.setCurrentPage(PAGE_TRACKS_NAME);
-        //timeline.setFootersHidden(TRUE);
-    }else if (timeline.getCurrentPageName() == PAGE_TRACKS_NAME) {
-        timeline.setCurrentPage(PAGE_AUDIO_NAME);
-        //timeline.setFootersHidden(false);
-    }
+    setTracksHidden(!getTracksHidden());
     updateHeight();
+}
+
+void TimelineView::setTracksHidden(bool hide){
+    auto pageName = hide ? PAGE_AUDIO_NAME : PAGE_TRACKS_NAME;
+    timeline.setCurrentPage(pageName);
+}
+
+bool TimelineView::getTracksHidden(){
+    return timeline.getCurrentPageName() == PAGE_AUDIO_NAME;
 }
 
 void TimelineView::expandFocusedTrack(){
@@ -301,10 +335,8 @@ std::map<string, float> TimelineView::getTracksValues(){
     
     for (int i=0; i<trPage->getTracksNum(); i++){
         for(ofxTLTrack* track : trPage->getTracks()){
-            //set key
             string name = track->getName();
             string key = name;
-            //set value
             float value;
             if(track->getTrackType()==CURVES_STRING){
                 value = timeline.getValue(name);
@@ -315,33 +347,10 @@ std::map<string, float> TimelineView::getTracksValues(){
             }else if(track->getTrackType()==NOTES_STRING){
                 value = timeline.getNote(name);
             }
-            //add key & value
             values[key]= value;
         }
     }
     return values;
-}
-
-#pragma mark - Visible tracks
-
-void TimelineView::setVisibleTracks(vector<TLTrackSetting> tracks){
-    visibleTracks = tracks;
-    
-    auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
-    tracksPage->removeAllTracks();
-    createTracksFromTrackSettings(visibleTracks);
-    loadTracksDataFromFolder();
-}
-
-void TimelineView::createTracksFromTrackSettings(vector<TLTrackSetting> tracks){
-    auto tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
-    tracksPage->removeAllTracks();
-    for (auto t : tracks){
-        if(tracksPage->getTrack(t.name)==NULL) { //TODO:already exists validation....
-            addTrackToTimelineWithStringType(t.name, t.type);
-        }
-    }
-    
 }
 
 #pragma mark - Settings
@@ -370,6 +379,7 @@ void TimelineView::setStateFromSettings(TimelinePanelSettings& settings){
     allExistingTracks = settings.tracks;
     visibleTracks = allExistingTracks;
     loadTracksDataFromFolder();
+    hideTracksIfNeeded();
     updateHeight();
 }
 
@@ -381,6 +391,21 @@ void TimelineView::saveTracksDataToFolder(){
     string folderPath = FileManager::getInstance().getTimelineFolderPath();
     timeline.saveTracksToFolder(folderPath);
 }
+
+#pragma mark - Modal Messages
+const string getErrorMessage(TLViewError error){
+    switch (error) {
+        case TRACK_ALREADY_EXISTS: return "A track with that name already exists";
+        case NONE_EXISTING_TRACKS: return "You need to add at least one track first";
+    }
+}
+
+void TimelineView::showErrorMessage(TLViewError error){
+    string message = getErrorMessage(error);
+    ofNotifyEvent(ofApp::errorEvent, message);
+}
+
+
 
 
 

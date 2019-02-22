@@ -80,6 +80,11 @@ void MainPanel::resize(int x, int y, int w, int h){
     fileInfoView.resize(x, guiView.maxY(), w, h - guiView.getHeight());
 }
 
+void MainPanel::setClicksEnabled(bool enabled) {
+    View::setClicksEnabled(enabled);
+    guiView.setClicksEnabled(enabled);
+}
+
 #pragma mark - Gui called funcs
 
 void MainPanel::openFileDialog(){

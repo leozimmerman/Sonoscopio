@@ -21,6 +21,8 @@
 #define SONOSCOPIO_VERSION "0.1.0"
 
 #define INIT_FPS 60
+#define TL_DEFAULT_INIT_BPM 120.0
+
 //Prime numbers to avoid simultaneous draws:
 #define MAIN_PANEL_FPS 60
 #define TL_PANEL_FPS 60

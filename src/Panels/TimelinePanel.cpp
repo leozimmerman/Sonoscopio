@@ -88,6 +88,11 @@ bool TimelinePanel::getFocused(){
 }
 void TimelinePanel::exit(){}
 
+void TimelinePanel::setClicksEnabled(bool enabled) {
+    View::setClicksEnabled(enabled);
+    guiView.setClicksEnabled(enabled);
+    timelineView.setClicksEnabled(enabled);
+}
 
 #pragma mark - Settings
 

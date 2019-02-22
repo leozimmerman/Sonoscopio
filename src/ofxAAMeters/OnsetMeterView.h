@@ -36,6 +36,8 @@ public:
     OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     virtual ~OnsetMeterView();
     
+    void setClicksEnabled(bool enabled) override;
+    
     void update() override;
     
     void drawStaticElements() override;

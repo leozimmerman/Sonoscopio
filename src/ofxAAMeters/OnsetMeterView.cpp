@@ -57,6 +57,13 @@ OnsetMeterView::~OnsetMeterView(){
     delete resetButton;
 }
 
+void OnsetMeterView::sendOnsetEvent(){
+    int value = _panelId;
+    ofNotifyEvent(onsetEventGlobal, value);
+}
+
+#pragma mark - Update
+
 void OnsetMeterView::update(){
     onOffToggle->update();
     alphaSlider->update();
@@ -67,6 +74,15 @@ void OnsetMeterView::update(){
 
     setValue(_audioAnalyzer->getOnsetValue());
 }
+
+void OnsetMeterView::updateComponentsColors(){
+    alphaSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
+    silenceThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
+    timeThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
+    armToggle->setColors(ofColor::red, COLOR_ONOFF_OFF);
+}
+
+#pragma mark - Draw
 
 void OnsetMeterView::drawStaticElements(){
     drawLabel();
@@ -94,11 +110,13 @@ void OnsetMeterView::drawMeter(){
         ofPushStyle();
         ofFill();
         ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA * 2.0);
-            ofDrawRectangle(0 , 0, _w, _h);
+        ofDrawRectangle(0 , 0, _w, _h);
         ofPopStyle();
         ofPopMatrix();
     }
 }
+
+#pragma mark - Display sets
 
 void OnsetMeterView::setComponentsWidth(){
     MeterView::setComponentsWidth();
@@ -126,23 +144,13 @@ void OnsetMeterView::setComponentsPositions(){
     resetButton->setPosition             (_x + _w - _w * 0.25, _y);
 }
 
-void OnsetMeterView::updateComponentsColors(){
-    alphaSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
-    silenceThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
-    timeThresholdSlider->setColors(_mainColor, COLOR_SMTH_LABEL, _mainColor);
-    armToggle->setColors(ofColor::red, COLOR_ONOFF_OFF);
-}
+#pragma mark - Value Setters
 
 void OnsetMeterView::setValue(bool val){
     _onsetValue = val;
     if (_onsetValue && _isArmed) {
         sendOnsetEvent();
     }
-}
-
-void OnsetMeterView::sendOnsetEvent(){
-    int value = _panelId;
-    ofNotifyEvent(onsetEventGlobal, value);
 }
 
 void OnsetMeterView::setAlpha(float alpha){
@@ -165,6 +173,17 @@ void OnsetMeterView::setTimeThreshold(float tres){
     if(onsets!=NULL){
         onsets->setOnsetTimeThreshold(tres);
     }
+}
+
+#pragma mark - Gui listeners
+
+void OnsetMeterView::setClicksEnabled(bool enabled){
+    View::setClicksEnabled(enabled);
+    alphaSlider->setEnabled(enabled);
+    silenceThresholdSlider->setEnabled(enabled);
+    timeThresholdSlider->setEnabled(enabled);
+    armToggle->setEnabled(enabled);
+    resetButton->setEnabled(enabled);
 }
 
 void OnsetMeterView::onSliderEvent(ofxDatGuiSliderEvent e){

@@ -42,7 +42,7 @@ public:
     void errorSent(string & errorMessage);
     
     MainPanel mainPanel;
-    TimelinePanel timePanel;
+    TimelinePanel timelinePanel;
     MetersPanel metersPanel;
     
     static ofEvent<string> errorEvent;
@@ -55,9 +55,6 @@ private:
     void exit();
     
     void keyPressed(int key);
-    
-    void enablePanelsEvents();
-    void disablePanelsEvents();
     
     void windowResized(int w, int h);
     void updatePanelsDimensions(int w, int h);
@@ -73,6 +70,8 @@ private:
     void showErrorMessage(string message);
     
     void toggleTimeMeasurement();
+    
+    void setPanelsClicksEnabled(bool enabled);
     
     int _main_height;
     int _meters_width;

@@ -46,9 +46,9 @@ void ofApp::update(){
     }
     ofSetWindowTitle(windowTitle);//("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
     
-    if (timePanel.isFileLoaded() && timePanel.isPlaying()){
+    if (timelinePanel.isFileLoaded() && timelinePanel.isPlaying()){
         ofSoundUpdate();
-        ofSoundBuffer soundBuffer = timePanel.getCurrentSoundBufferMono(metersPanel.getBufferSize());
+        ofSoundBuffer soundBuffer = timelinePanel.getCurrentSoundBufferMono(metersPanel.getBufferSize());
         TS_START("AUDIO-ANALYSIS");
         metersPanel.analyzeBuffer(soundBuffer);
         TS_STOP("AUDIO-ANALYSIS");
@@ -56,7 +56,7 @@ void ofApp::update(){
 
     TS_START("PANELS-UPDATE");
     mainPanel.update();
-    timePanel.update();
+    timelinePanel.update();
     metersPanel.update();
     TS_STOP("PANELS-UPDATE");
 }
@@ -72,7 +72,7 @@ void ofApp::draw(){
     TS_STOP("METERS-PANEL");
     
     TS_START("TIMELINE-PANEL");
-    timePanel.draw();
+    timelinePanel.draw();
     TS_STOP("TIMELINE-PANEL");
     
     TS_START("MAIN-PANEL");
@@ -84,10 +84,10 @@ void ofApp::exit(){
     metersPanel.exit();
     AnalysisDataSaver::getInstance().stop();
 }
-//--------------------------------------------------------------
+
 void ofApp::keyPressed(int key){
     
-    if(mainPanel.getFocused() || timePanel.getFocused() || metersPanel.getFocused()){
+    if(mainPanel.getFocused() || timelinePanel.getFocused() || metersPanel.getFocused()){
         return;
     }
     
@@ -103,7 +103,7 @@ void ofApp::keyPressed(int key){
      * 'w': rewind
      * 'k': add keyframe in focused track
      */
-    else if (timePanel.keyPressed(key)){
+    else if (timelinePanel.keyPressed(key)){
         return;
     }
     //---------------------------
@@ -176,10 +176,10 @@ void ofApp::setupPanels() {
     
     mainPanel.setup(0, 0, w, _main_height);
     metersPanel.setup(0, mainPanel.maxY(), _meters_width, (h - mainPanel.maxY()));
-    timePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()));
+    timelinePanel.setup(metersPanel.maxX(), mainPanel.maxY(), (w - metersPanel.maxX()), (h - mainPanel.maxY()));
         
     mainPanel.setFrameRate(MAIN_PANEL_FPS);
-    timePanel.setFrameRate(TL_PANEL_FPS);
+    timelinePanel.setFrameRate(TL_PANEL_FPS);
     metersPanel.setFrameRate(MT_PANEL_FPS);
 }
 
@@ -196,12 +196,12 @@ void ofApp::setupListeners() {
 void ofApp::setFrameRate(int fps){
     
     ofSetFrameRate(fps);
-    timePanel.setFrameRate(fps);
+    timelinePanel.setFrameRate(fps);
     
     //TODO: update file info frames num info:
     //-> mainPanel.updateFileInfoString(fps, framesNum;
     
-    AnalysisDataSaver::getInstance().updateFrameRate(fps, timePanel.getTotalFramesNum());
+    AnalysisDataSaver::getInstance().updateFrameRate(fps, timelinePanel.getTotalFramesNum());
     
     TIME_SAMPLE_SET_FRAMERATE(fps);
 }
@@ -224,7 +224,7 @@ void ofApp::windowResized(int w, int h){
                        mainPanel.maxY(),
                        _meters_width,
                        (h - mainPanel.maxY()));
-    timePanel.resize(metersPanel.maxX(),
+    timelinePanel.resize(metersPanel.maxX(),
                      mainPanel.maxY(),
                      (w - metersPanel.maxX()),
                      (h - mainPanel.maxY()));
@@ -241,23 +241,21 @@ void ofApp::errorSent(string & errorMessage){
 void ofApp::onModalEvent(ofxModalEvent e) {
     if (e.type == ofxModalEvent::SHOWN){
         // dispatched when the window has finished animating in //
-        disablePanelsEvents();
-    }    else if (e.type == ofxModalEvent::HIDDEN){
+        setPanelsClicksEnabled(false);
+    } else if (e.type == ofxModalEvent::HIDDEN){
         // dispatched when the window has finished animating out //
         if (queuedErrorMessage != ""){
             showErrorMessage(queuedErrorMessage);
             queuedErrorMessage = "";
         }
-        enablePanelsEvents();
-    }    else if (e.type == ofxModalEvent::CONFIRM){
+        setPanelsClicksEnabled(true);
+    } else if (e.type == ofxModalEvent::CONFIRM){
         // dispatched when the button at index 0 is selected //
         cout << "ofApp: OK button was selected" << endl;
-    }    else if (e.type == ofxModalEvent::CANCEL){
+    } else if (e.type == ofxModalEvent::CANCEL){
         // dispatched when the button at index 1 is selected //
         cout << "ofApp: CANCEL button was selected" << endl;
     }
-    
-   
 }
 
 void ofApp::showKeyboardShortcuts(){
@@ -275,16 +273,13 @@ void ofApp::showErrorMessage(string message){
     mText->display(title, message);
 }
 
-//TODO: Add events enable/disabler to more panels 
-void ofApp::enablePanelsEvents(){
-    timePanel.enableEvents();
-}
-
-void ofApp::disablePanelsEvents(){
-    timePanel.disableEvents();
-}
-
 void ofApp::toggleTimeMeasurement(){
     if(TIME_SAMPLE_GET_ENABLED()) TIME_SAMPLE_DISABLE();
     else TIME_SAMPLE_ENABLE();
+}
+
+void ofApp::setPanelsClicksEnabled(bool enabled){
+    mainPanel.setClicksEnabled(enabled);
+    timelinePanel.setClicksEnabled(enabled);
+    metersPanel.setClicksEnabled(enabled);
 }

@@ -19,6 +19,8 @@ public:
     int maxY() {return _y + _h;}
     
     virtual void renderDraw(){}
+    virtual void setClicksEnabled(bool enabled){_clicksEnabled = enabled;}
+    bool getClicksEnabled(){return _clicksEnabled;}
     
     void setPosition(ofVec2f pos){_x = pos.x; _y = pos.y;}
     void setBackgroundColor(ofColor col){backgroundColor = col;}
@@ -36,13 +38,13 @@ public:
     std::shared_ptr<View> parent;
     std::vector<std::shared_ptr<View>> subviews;
     
-    
 protected:
     
     int _x, _y;
     int _w, _h;
     ofColor backgroundColor;
     bool _isHidden = false;
+    bool _clicksEnabled;
     
     float _framerate;
     bool mustDrawNewFrame();

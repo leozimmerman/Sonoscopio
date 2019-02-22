@@ -42,10 +42,10 @@ public:
     
     bool keyPressed(int key) override;
     virtual bool getFocused() override;
-    void disableEvents(){timelineView.timeline.disableEvents();}
-    void enableEvents(){timelineView.timeline.enableEvents();}
     
     virtual void resize(int x, int y, int w, int h) override;
+    
+    void setClicksEnabled(bool enabled) override;
     
     void resetSettings();
     void loadSettings(TimelinePanelSettings& settings);

@@ -42,6 +42,8 @@ public:
     
     virtual void resize(int x, int y, int w, int h) override;
     
+    void setClicksEnabled(bool enabled) override;
+    
     void resetSettings();
     void updateMetersViewSettings();
     void loadSettings(MetersPanelSettings& settings);

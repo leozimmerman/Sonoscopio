@@ -21,19 +21,26 @@ void GuiView::setupGui() {
 }
 
 void GuiView::update(){
-    for(int i=0; i<_components.size(); i++){
-        _components[i]->update();
+    for (auto component : _components){
+        component->update();
     }
 }
 
 void GuiView::draw(){
     View::draw();
-    for(int i=0; i<_components.size(); i++){
-        _components[i]->draw();
+    for (auto component : _components){
+        component->draw();
     }
 }
 
 void GuiView::resize(int x, int y, int width, int height){
     View::resize(x, y, width, height);
     adjustComponentsSize();
+}
+
+void GuiView::setClicksEnabled(bool enabled){
+    View::setClicksEnabled(enabled);
+    for (auto component : _components){
+        component->setEnabled(enabled);
+    }
 }

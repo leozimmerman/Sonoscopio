@@ -50,34 +50,34 @@ void MetersView::createChannelMetersViews() {
 }
 
 void MetersView::update(){
-    for(auto p : _channelMetersViews){
-        p->update();
+    for(auto ch : _channelMetersViews){
+        ch->update();
     }
 }
 
 void MetersView::draw(){
     View::draw();
-    for(auto p : _channelMetersViews){
-        p->draw();
+    for(auto ch : _channelMetersViews){
+        ch->draw();
     }
 }
 
 void MetersView::exit(){
-    for (auto p : _channelMetersViews){
-        p->exit();
+    for (auto ch : _channelMetersViews){
+        ch->exit();
     }
     _channelMetersViews.clear();
 }
 
 void MetersView::scrollUp(){
-    for (auto p : _channelMetersViews) {
-        p->scrollUp();
+    for (auto ch : _channelMetersViews) {
+        ch->scrollUp();
     }
 }
 
 void MetersView::scrollDown(){
-    for (auto p : _channelMetersViews) {
-        p->scrollDown();
+    for (auto ch : _channelMetersViews) {
+        ch->scrollDown();
     }
 }
 
@@ -87,6 +87,13 @@ void MetersView::resize(int x, int y, int w, int h){
         int width = w / _channelMetersViews.size();
         int xpos = i * width;
         _channelMetersViews[i]->resize(xpos, y, width, h);
+    }
+}
+
+void MetersView::setClicksEnabled(bool enabled){
+    View::setClicksEnabled(enabled);
+    for (auto ch : _channelMetersViews) {
+        ch->setClicksEnabled(enabled);
     }
 }
 

@@ -39,4 +39,5 @@ public:
 protected:
     virtual void setupSingletons() =0;
     bool enabled = true;
+    
 };

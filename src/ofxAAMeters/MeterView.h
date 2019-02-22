@@ -60,7 +60,7 @@ public:
 
     virtual void resize(int x, int y, int w, int h) override;
     
-    
+    void setClicksEnabled(bool enabled) override;
     
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}

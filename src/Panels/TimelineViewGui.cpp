@@ -33,6 +33,7 @@ void TimelineViewGui::setupMenus(){
 }
 
 void TimelineViewGui::showVisibleTracksMenu(){
+    if (checkForExistingTracks()){ return; }
     visibleTracksModal->display(ofGetHeight());
 }
 
@@ -41,7 +42,17 @@ void TimelineViewGui::showAddTrackMenu(){
 }
 
 void TimelineViewGui::showRemoveTrackMenu(){
+    if (checkForExistingTracks()){ return; }
     removeTracksModal->display(ofGetHeight() / 2);
+}
+
+bool TimelineViewGui::checkForExistingTracks(){
+    if (timelineViewPtr->getExistingTracksRef().size() == 0){
+        timelineViewPtr->showErrorMessage(NONE_EXISTING_TRACKS);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void TimelineViewGui::createComponents(){
@@ -49,72 +60,70 @@ void TimelineViewGui::createComponents(){
     ofxDatGuiComponent* component;
     //0
     component = GuiFactory::createButton(ADD_TRACK_LABEL, this, &TimelineViewGui::onButtonEvent);
+    
     _components.push_back(component);
     
     component = GuiFactory::createButton(REMOVE_TRACK_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
     
-    component = GuiFactory::createButton(SHOW_TRACKS_LABEL, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
-    
     component = GuiFactory::createButton(VISIBLE_TRACKS_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
     
-    component = GuiFactory::createButton(ADJUST_TRACKS_LABEL, this, &TimelineViewGui::onButtonEvent);
+    component = GuiFactory::createButton(SHOW_TRACKS_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
+    
     //--FIRST LINE:
-    
-    component = GuiFactory::createButton(PLAY_STOP_LABEL, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
-    
-    gVolumeSlider = GuiFactory::createSlider(VOLUME_LABEL, 0.0, 1.0, 1.0, this, &TimelineViewGui::onSliderEvent);
-    _components.push_back(gVolumeSlider);
-    
-    gLoopToggle = GuiFactory::createToggle(LOOP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(gLoopToggle);
-    
-    gBpm = GuiFactory::createTextInput(BPM_LABEL, "120", this, &TimelineViewGui::onTextInputEvent);
+    //6
+    gBpm = GuiFactory::createTextInput(BPM_LABEL, "0", this, &TimelineViewGui::onTextInputEvent);
     _components.push_back(gBpm);
     
     gBpmGridToggle = GuiFactory::createToggle(BPM_GRID_LABEL, false, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(gBpmGridToggle);
     
-    component = GuiFactory::createButton(SET_IN_LABEL, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
-    
-    component = GuiFactory::createButton(SET_OUT_LABEL, this, &TimelineViewGui::onButtonEvent);
-    _components.push_back(component);
-    
-    //5
-    //--SECOND LINE:
     component = GuiFactory::createButton(ADD_MARKER_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
     
     component = GuiFactory::createButton(CLEAR_MARKERS_LABEL, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(component);
     
-
-    
     gSnapToggle = GuiFactory::createToggle(SNAP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(gSnapToggle);
-  
+    
     gFramebasedToggle = GuiFactory::createToggle(FRAMEBASED_LABEL, false, this, &TimelineViewGui::onButtonEvent);
     _components.push_back(gFramebasedToggle);
-  
-  
-
     
+
+    //--SECOND LINE:
+    //12
+    component = GuiFactory::createButton(REWIND_LABEL, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(component);
+    
+    component = GuiFactory::createButton(PLAY_STOP_LABEL, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(component);
+    
+    gVolumeSlider = GuiFactory::createSlider(VOLUME_LABEL, 0.0, 1.0, 0.0, this, &TimelineViewGui::onSliderEvent);
+    _components.push_back(gVolumeSlider);
+    
+    gLoopToggle = GuiFactory::createToggle(LOOP_LABEL, false, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(gLoopToggle);
+    
+    component = GuiFactory::createButton(SET_IN_LABEL, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(component);
+    
+    component = GuiFactory::createButton(SET_OUT_LABEL, this, &TimelineViewGui::onButtonEvent);
+    _components.push_back(component);
+ 
 }
 
 void TimelineViewGui::adjustComponentsSize(){
     const int guiCompHeight = GUI_COMP_HEIGHT;
-    int guiCompWidth = _w / 5;
+    int guiCompWidth = _w / 4;
     
     ofxDatGuiComponent* component;
     
     int gui_y = _y;
     int gui_x = _x;
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<4; i++) {
         component = _components[i];
         component->setPosition(gui_x, gui_y);
         component->setWidth(guiCompWidth, 0.5);
@@ -123,8 +132,8 @@ void TimelineViewGui::adjustComponentsSize(){
     //--SECOND LINE:
     gui_y = gui_y + guiCompHeight;
     gui_x = _x;
-    guiCompWidth = _w / 5;
-    for (int i=5; i<10; i++) {
+    guiCompWidth = _w / 6;
+    for (int i=4; i<10; i++) {
         component = _components[i];
         component->setPosition(gui_x, gui_y);
         component->setWidth(guiCompWidth, 0.5);
@@ -151,13 +160,15 @@ void TimelineViewGui::onButtonEvent(ofxDatGuiButtonEvent e){
     }else if (label == REMOVE_TRACK_LABEL){
         showRemoveTrackMenu();
     }else if (label == SHOW_TRACKS_LABEL){
-        timelineViewPtr->toggleShowTracks();
-    }else if (label == ADJUST_TRACKS_LABEL){
-        timelineViewPtr->updateHeight();
+        if (!checkForExistingTracks()){
+            timelineViewPtr->toggleShowTracks();
+        }
     }else if (label == VISIBLE_TRACKS_LABEL){
         showVisibleTracksMenu();
     }else if(e.target->getLabel() == PLAY_STOP_LABEL){
         timelineViewPtr->togglePlay();
+    }else if(e.target->getLabel() == REWIND_LABEL){
+        timelineViewPtr->rewind();
     }else if(e.target->getLabel() == LOOP_LABEL){
         auto loopType = e.enabled ? OF_LOOP_NORMAL : OF_LOOP_NONE;
         timelineViewPtr->setLoopType(loopType);

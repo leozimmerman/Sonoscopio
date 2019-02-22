@@ -22,8 +22,11 @@ public:
         
         onLabel = "ON";
         offLabel = "OFF";
-    
+        
+        bStateOn = true;
     };
+    
+    void setStateOn(bool state){bStateOn = state;}
     
     void setColors(ofColor on, ofColor off){
         colorOn = on;
@@ -37,17 +40,16 @@ public:
     
     void drawTransparent(){
         if (mVisible) {
-        
             ofPushStyle();
  
             ofNoFill();
             ofSetLineWidth(0.5);
             
-            if (mEnabled == true){
+            if (bStateOn){
                 ofSetColor(colorOn);
                 ofDrawRectangle(x, y, mStyle.width, mStyle.height);
                 mFont->draw(onLabel, x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
-            }   else{
+            } else {
                 ofSetColor(colorOff);
                 ofDrawRectangle(x, y, mStyle.width, mStyle.height);
                 mFont->draw(offLabel, x+mLabel.x, y+mStyle.height/2 + mLabel.rect.height/2);
@@ -61,6 +63,7 @@ private:
     ofColor colorOff;
     string onLabel;
     string offLabel;
+    bool bStateOn;
 
 };
 //----------------------------------------------

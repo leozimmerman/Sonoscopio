@@ -24,14 +24,17 @@
 #define NOTES_STRING "Notes"
 
 
-enum trackType {
+enum TrackType {
     CURVES,
     BANGS,
     SWITCHES,
     NOTES
 };
 
-
+enum TLViewError {
+    TRACK_ALREADY_EXISTS,
+    NONE_EXISTING_TRACKS
+};
 
 
 class TimelineView : public View {
@@ -42,11 +45,12 @@ public:
     void draw() override;
     
     void resize(int x, int y, int width, int height) override;
+    void setClicksEnabled(bool enabled) override;
+    
     void updateHeight();
     
     void setupTimeline();
     bool keyPressed(int key);
-    
     
     void saveTracksDataToFolder();
     void loadStateIntoSettings(TimelinePanelSettings* settings);
@@ -60,8 +64,13 @@ public:
     void addMarker();
     
     void clearMarkers();
+    
+    void hideTracksIfNeeded();
     void toggleShowTracks();
+    void setTracksHidden(bool hide);
+    bool getTracksHidden();
     void toggleEnableDisableFocusedTrack();
+    void expandFocusedTrack();
     void addKeyframeInFocusedTrack();
     
     void openAudioFile(string filename);
@@ -86,7 +95,7 @@ public:
     void setInPointAtPlayhead(){timeline.setInPointAtPlayhead();}
     void setOutPointAtPlayhead(){timeline.setOutPointAtPlayhead();}
     
-
+    void showErrorMessage(TLViewError error);
     
     std::map<string, float> getTracksValues();
     
@@ -96,10 +105,12 @@ public:
     vector<TLTrackSetting>& getVisibleTracksRef(){return visibleTracks;}
     vector<TLTrackSetting>& getExistingTracksRef(){return allExistingTracks;}
     
+    
+    
 private:
     void createTracksFromTrackSettings(vector<TLTrackSetting> tracks);
-    void addExistingTrack(string name, string type);
-    void addTrackToTimeline(string name, trackType type);
+    void addTrack(string name, string type);
+    void addTrackToTimeline(string name, TrackType type);
     void addTrackToTimelineWithStringType(string name, string stringType);
     void loadTracksDataFromFolder();
     void addMarkerAtTime(float millis);
@@ -107,9 +118,8 @@ private:
     bool existsTrackWithName(string name);
     void removeExistingTrackWithName(string name);
     
-    void expandFocusedTrack();
     void hideTracks();
-    string typeToString(trackType type);
+    string typeToString(TrackType type);
     
     vector<TLTrackSetting> visibleTracks;
     vector<TLTrackSetting> allExistingTracks;

@@ -81,6 +81,13 @@ void ChannelMetersView::resize(int x, int y, int w, int h) {
     _contentHeight = y_pos;
 }
 
+void ChannelMetersView::setClicksEnabled(bool enabled){
+    View::setClicksEnabled(enabled);
+    for (auto m : meters) {
+        m->setClicksEnabled(enabled);
+    }
+}
+
 #pragma mark - Gral funcs
 
 void ChannelMetersView::scrollUp(){

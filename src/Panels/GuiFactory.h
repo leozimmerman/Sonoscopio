@@ -20,7 +20,7 @@ namespace GuiFactory {
         
         ofxDatGuiButton* button =  new ofxDatGuiButton(label);
         button->onButtonEvent(owner, listenerMethod);
-        button->setLabelAlignment(ofxDatGuiAlignment::LEFT);
+        button->setLabelAlignment(ofxDatGuiAlignment::CENTER);
         button->setBorder(borderColor, borderWidth);
         button->setBorderVisible(TRUE);
         button->setStripeVisible(false);

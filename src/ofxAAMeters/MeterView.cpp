@@ -232,7 +232,7 @@ void MeterView::resetPeak(){
     peakButton->setLabel(ofToString(_maxValueRegistered, 2));
 }
 
-#pragma mark - Display set
+#pragma mark - Display sets
 
 void MeterView::toggleValuePlotter(bool enabled){
     _plotterEnabled = enabled;
@@ -287,7 +287,7 @@ void MeterView::setSmoothAmnt(float val){
 }
 
 void MeterView::setEnabled(bool state){
-    onOffToggle->setEnabled(state);
+    onOffToggle->setStateOn(state);
     _enabled = state;
 }
 
@@ -300,14 +300,21 @@ void MeterView::setMainColor(ofColor col){
 
 #pragma mark - Gui listeners
 
+void MeterView::setClicksEnabled(bool enabled){
+    View::setClicksEnabled(enabled);
+    smoothSlider->setEnabled(enabled);
+    onOffToggle->setEnabled(enabled);
+    peakButton->setEnabled(enabled);
+    configButton->setEnabled(enabled);
+}
+
 void MeterView::onSliderEvent(ofxDatGuiSliderEvent e){
     _smoothAmnt = e.value;
 }
 
 void MeterView::onButtonEvent(ofxDatGuiButtonEvent e){
-    
     if(e.target->getLabel() == ON_LABEL){
-        _enabled = e.enabled;
+        setEnabled(e.enabled);
     } else if(e.target->getLabel() == CONFIG_LABEL){
         showMenu();
     } else {
