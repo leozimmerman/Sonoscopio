@@ -67,6 +67,16 @@ void MainPanel::draw(){
 void MainPanel::exit(){}
 
 bool MainPanel::keyPressed(int key){
+    if (ofGetModifierShortcutKeyPressed()) {
+        switch (key) {
+            case 'o':
+                openFileDialog();
+                return true;
+            case 's':
+                saveAllSettings();
+                return true;
+        }
+    }
     return false;
 }
 

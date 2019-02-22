@@ -43,25 +43,35 @@ void TimelineView::setClicksEnabled(bool enabled){
 
 bool TimelineView::keyPressed(int key){
     ofxTLTrack* ftrack = timeline.getFocusedTrack();
+    
+    // c/cmd
+    if (ofGetModifierShortcutKeyPressed()) {
+        switch (key) {
+            case 'e':
+                expandFocusedTrack();
+                return true;
+            case 'd':
+                toggleEnableDisableFocusedTrack();
+                return true;
+            case 'a':
+                updateHeight();
+                return true;
+            case 'k':
+                addKeyframeInFocusedTrack();
+                return true;
+          
+        }
+    }
+    
     switch (key) {
-        case 'e':
-            expandFocusedTrack();
-            return true;
-            break;
-        case 'd':
-            toggleEnableDisableFocusedTrack();
-            return true;
-            break;
-        case 'a':
-            updateHeight();
-            return true;
-            break;
+ 
         case 'w':
             rewind();
             return true;
-        case 'k':
-            addKeyframeInFocusedTrack();
+        case 'm':
+            addMarker();
             return true;
+        
         default:
             break;
     }

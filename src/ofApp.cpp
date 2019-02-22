@@ -91,10 +91,14 @@ void ofApp::keyPressed(int key){
         return;
     }
     
+    /* Meters Panel
+     * 'cmd+o': Open File
+     * 'cmd+s': Save Settings
+     */
     if (mainPanel.keyPressed(key)){
         return;
     }
-    //TODO: Edit actions should add 'Cmd'.
+    
     /* TimelinePanel:
      * 'e' expands focused track
      * 'd' enables/disables focused track
@@ -106,42 +110,28 @@ void ofApp::keyPressed(int key){
     else if (timelinePanel.keyPressed(key)){
         return;
     }
-    //---------------------------
-    /* TODO: REMOVE
-     * '1' scrollUp
-     * '2' scrollDown
+    
+    /* Meters Panel
+     * 'ARROW-UP': scrollUp
+     * 'ARROW-DOWN': scrollDown
      */
     else if (metersPanel.keyPressed(key)){
         return;
     }
     
-    //--------------------------------
-    /*
-     * 't': time measurement on/off
-     * 'q': keyboardshortcuts
-     */
-    switch (key) {
-        case 'q':
-            showKeyboardShortcuts();
-            break;
-        case 't':
-            toggleTimeMeasurement();
-            break;
-        default:
-            break;
-    }
-    
     //'Cmd' modifier
+    //* 'cmd+t': time measurement on/off
+    //* 'cmd+y': keyboardshortcuts
     if (ofGetModifierShortcutKeyPressed()) {
         switch (key) {
-            case '1':
+            case 't':
+                toggleTimeMeasurement();
                 break;
-            case 'm':
-                
+            case 'y':
+                //TODO: Depreacte this functionality:
+                showKeyboardShortcuts();
                 break;
-
         }
-
     }
     
 }
