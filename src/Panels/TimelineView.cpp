@@ -15,7 +15,7 @@ void TimelineView::setup(int x, int y, int w, int h) {
     setBackgroundColor(ofColor(40));
     waveformCol.set(120);
     _frameRate = INIT_FPS; //TODO: Fix
-    setupTimeline();
+    setupTimeline("");
 }
 
 void TimelineView::update(){}
@@ -43,7 +43,6 @@ void TimelineView::setClicksEnabled(bool enabled){
 
 bool TimelineView::keyPressed(int key){
     ofxTLTrack* ftrack = timeline.getFocusedTrack();
-    
     // c/cmd
     if (ofGetModifierShortcutKeyPressed()) {
         switch (key) {
@@ -59,12 +58,10 @@ bool TimelineView::keyPressed(int key){
             case 'k':
                 addKeyframeInFocusedTrack();
                 return true;
-          
         }
     }
     
     switch (key) {
- 
         case 'w':
             rewind();
             return true;
@@ -79,27 +76,26 @@ bool TimelineView::keyPressed(int key){
 }
 
 #pragma mark - Gral
-void TimelineView::setupTimeline() {
+void TimelineView::setupTimeline(string audiofile) {
     
     ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
-    //timeline.setWorkingFolder(FileManager::getInstance().getTimelineFolderPath());
-    
+ 
+    timeline.setWorkingFolder("X"); //On purpose.
     timeline.setup(PAGE_AUDIO_NAME);///<--tweaked SETUP
     
     timeline.setFrameRate(_frameRate);
     timeline.setAutosave(false);
     timeline.setOffset(ofVec2f(_x, _y));
     
-    
     timeline.setLoopType(OF_LOOP_NONE);
     timeline.setBPM(TL_DEFAULT_INIT_BPM);
     timeline.setShowBPMGrid(false);
     
-    timeline.addAudioTrack("Audio", ""); /// Add empty audio Track?
+    timeline.addAudioTrack("Audio", audiofile); /// Add empty audio Track?
     
     //this means that calls to play/stop etc will be  routed to the waveform anofd that timing will be 100% accurate
     timeline.setTimecontrolTrack("Audio");
-    timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration());
+    timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration(), false);
     
     audioTrack = timeline.getAudioTrack("Audio");
     
@@ -112,15 +108,16 @@ void TimelineView::setupTimeline() {
     timeline.setInOutRange(ofRange(0.0, 1.0));//always start with in/out at the sides, ignores xml file
     timeline.setWidth(_w);
     updateHeight();
-    
 }
 
 
 void TimelineView::openAudioFile(string filename){
     timeline.stop();
     timeline.setCurrentTimeSeconds(0.0);
-    audioTrack->loadSoundfile(filename);
-    timeline.setDurationInSeconds(audioTrack->getDuration());
+    timeline.reset();
+    setupTimeline(filename);
+    //audioTrack->loadSoundfile(filename);
+    timeline.setDurationInSeconds(audioTrack->getDuration(), false);
 }
 
 void TimelineView::setFrameRate(int fps){
@@ -339,27 +336,40 @@ void TimelineView::clearMarkers(){
 
 #pragma mark - Value Getters
 
-std::map<string, float> TimelineView::getTracksValues(){
-    std::map<string, float> values;
+void TimelineView::prepareTimelineForRenderingData(){
     ofxTLPage* trPage = timeline.getPage(PAGE_TRACKS_NAME);
-    
-    for (int i=0; i<trPage->getTracksNum(); i++){
-        for(ofxTLTrack* track : trPage->getTracks()){
-            string name = track->getName();
-            string key = name;
-            float value;
-            if(track->getTrackType()==CURVES_STRING){
-                value = timeline.getValue(name);
-            }else if(track->getTrackType()==SWITCHES_STRING){
-                value = timeline.isSwitchOn(name);
-            }else if(track->getTrackType()==BANGS_STRING){
-                value = timeline.isBang(name);
-            }else if(track->getTrackType()==NOTES_STRING){
-                value = timeline.getNote(name);
-            }
-            values[key]= value;
+    for(ofxTLTrack* track : trPage->getTracks()){
+        if(track->getTrackType()==BANGS_STRING){
+            ofxTLBangs* bangsTrack = (ofxTLBangs*)track;
+            bangsTrack->prepareForRenderingData();
+        }else if(track->getTrackType()==NOTES_STRING){
+            ofxTLNotes* notesTrack = (ofxTLNotes*)track;
+            notesTrack->prepareForRenderingData();
         }
     }
+}
+
+std::map<string, float> TimelineView::getTracksValues(){
+    std::map<string, float> values;
+    
+    ofxTLPage* tracksPage = timeline.getPage(PAGE_TRACKS_NAME);
+    
+    for(ofxTLTrack* track : tracksPage->getTracks()){
+        string name = track->getName();
+        string key = name;
+        float value;
+        if(track->getTrackType()==CURVES_STRING){
+            value = timeline.getValue(name);
+        }else if(track->getTrackType()==SWITCHES_STRING){
+            value = timeline.isSwitchOn(name);
+        }else if(track->getTrackType()==BANGS_STRING){
+            value = timeline.isBang(name);
+        }else if(track->getTrackType()==NOTES_STRING){
+            value = timeline.getNote(name);
+        }
+        values[key]= value;
+    }
+    
     return values;
 }
 
@@ -381,6 +391,14 @@ void TimelineView::loadStateIntoSettings(TimelinePanelSettings* settings){
 }
 
 void TimelineView::setStateFromSettings(TimelinePanelSettings& settings){
+    setNewBPM(settings.bpm);
+    setVolume(settings.volume);
+    setFrameBased(settings.bFrambased);
+    auto loopType = settings.bLoop ? OF_LOOP_NORMAL : OF_LOOP_NONE;
+    setLoopType(loopType);
+    setShowBPMGrid(settings.bBpmGrid);
+    enableSnapToBPM(settings.bSnap);
+    
     clearMarkers();
     for (auto m : settings.markers){
         addMarkerAtTime(m);
@@ -389,6 +407,7 @@ void TimelineView::setStateFromSettings(TimelinePanelSettings& settings){
     allExistingTracks = settings.tracks;
     visibleTracks = allExistingTracks;
     loadTracksDataFromFolder();
+    
     hideTracksIfNeeded();
     updateHeight();
 }

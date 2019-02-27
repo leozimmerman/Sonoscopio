@@ -1,0 +1,1 @@
+Los archivos de 32 bits no andan!

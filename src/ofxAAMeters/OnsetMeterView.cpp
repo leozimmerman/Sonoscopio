@@ -175,6 +175,11 @@ void OnsetMeterView::setTimeThreshold(float tres){
     }
 }
 
+void OnsetMeterView::setArmed(bool armed){
+    armToggle->setStateOn(armed);
+    _isArmed = armed;
+}
+
 #pragma mark - Gui listeners
 
 void OnsetMeterView::setClicksEnabled(bool enabled){
@@ -204,7 +209,7 @@ void OnsetMeterView::onSliderEvent(ofxDatGuiSliderEvent e){
 void OnsetMeterView::onButtonEvent(ofxDatGuiButtonEvent e) {
     MeterView::onButtonEvent(e);
     if (e.target->getLabel() == MTR_ARM){
-        _isArmed = e.enabled;
+        setArmed(e.enabled);
     } else if(e.target->getLabel() == MTR_RESET){
         onsets->reset();
     }

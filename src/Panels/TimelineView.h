@@ -49,7 +49,7 @@ public:
     
     void updateHeight();
     
-    void setupTimeline();
+    void setupTimeline(string audiofile);
     bool keyPressed(int key);
     
     void saveTracksDataToFolder();
@@ -97,6 +97,8 @@ public:
     
     void showErrorMessage(TLViewError error);
     
+    void prepareTimelineForRenderingData();
+    
     std::map<string, float> getTracksValues();
     
     ofxTimeline timeline;
@@ -104,8 +106,6 @@ public:
    
     vector<TLTrackSetting>& getVisibleTracksRef(){return visibleTracks;}
     vector<TLTrackSetting>& getExistingTracksRef(){return allExistingTracks;}
-    
-    
     
 private:
     void createTracksFromTrackSettings(vector<TLTrackSetting> tracks);

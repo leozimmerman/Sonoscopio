@@ -67,6 +67,8 @@ public:
         return &currentSettings;
     }
     
+    void prepareForRenderingData();
+    
     #pragma mark - Setters
     void setCurrentFrame(int currentFrame){
         timelineView.timeline.setCurrentFrame(currentFrame);

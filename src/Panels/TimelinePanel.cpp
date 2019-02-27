@@ -70,7 +70,6 @@ void TimelinePanel::draw(){
     TS_STOP("timeline");
     
     View::loadViewInTexture();
-    
 }
 
 void TimelinePanel::resize(int x, int y, int w, int h){
@@ -92,6 +91,10 @@ void TimelinePanel::setClicksEnabled(bool enabled) {
     View::setClicksEnabled(enabled);
     guiView.setClicksEnabled(enabled);
     timelineView.setClicksEnabled(enabled);
+}
+
+void TimelinePanel::prepareForRenderingData(){
+    timelineView.prepareTimelineForRenderingData();
 }
 
 #pragma mark - Settings

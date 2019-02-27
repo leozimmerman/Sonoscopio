@@ -4,10 +4,8 @@
 ### Tasks 
 
 
-- Fix keyboard shortcuts.
-    - Cmd+S: Save 
-    - Cmd+T: Time measurements
-    - Change disable track shortcut
+### Enhancements
+- Onsets Armed -> popup for selecting the track to trigger.
 
 **********************************************************************************************
 

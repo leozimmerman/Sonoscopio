@@ -19,9 +19,7 @@ struct OscSetting {
 
 class MainPanelSettings {
 public:
-    std::string projectDir = "";
     int frameRate = INIT_FPS;
-    
     OscSetting osc;
 };
 
@@ -31,8 +29,6 @@ struct TLTrackSetting{
     std::string name;
     std::string type;
 };
-
-
 
 class TimelinePanelSettings {
 public:

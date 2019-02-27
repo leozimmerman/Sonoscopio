@@ -112,6 +112,9 @@ void AnalysisDataSaver::threadedFunction(){
             //----------------------------------------
             savedSettings.addTag(RENDER_ANALYSIS_DATA_TAG);
             savedSettings.pushTag(RENDER_ANALYSIS_DATA_TAG);
+            
+            timelinePanelPtr->prepareForRenderingData();
+            
             //FRAME LOOP
             for (int frameNum=0; frameNum<totalFramesNum; frameNum++){
                 percentage = (frameNum / (float)totalFramesNum) * 100.0;
