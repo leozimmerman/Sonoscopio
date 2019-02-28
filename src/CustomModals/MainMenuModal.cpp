@@ -43,7 +43,21 @@ void MainMenuModal::display(int height){
     show();
 }
 
-void MainMenuModal::applySettings(){}
+void MainMenuModal::applySettings(){
+    try {
+        int fps = std::stoi(gFps->getText());
+        string host = gHost->getText();
+        int port = std::stoi(gPort->getText());
+        
+        _mainPanelPtr->applySettings(fps, host, port);
+        
+    } catch (const std::invalid_argument& ia) {
+        std::cerr << "Main Menu Modal Invalid arguments: " << ia.what() << '\n';
+        string message = "Invalid values for settings";
+        ofNotifyEvent(ofApp::errorEvent, message);
+    }
+    
+}
 
 
 void MainMenuModal::onTextInputEvent(ofxDatGuiTextInputEvent e){}
@@ -76,10 +90,4 @@ void MainMenuModal::loadStateIntoSettings(MainPanelSettings* settings){
 
 }
 
-void MainMenuModal::setStateFromSettings(MainPanelSettings& settings){
-    //    gVolumeSlider->setValue(settings.volume);
-    //    gLoopToggle->setEnabled(settings.bLoop);
-    //    gBpmGridToggle->setEnabled(settings.bBpmGrid);
-    //    gSnapToggle->setEnabled(settings.bSnap);
-    //    gFramebasedToggle->setEnabled(settings.bFrambased);
-}
+void MainMenuModal::setStateFromSettings(MainPanelSettings& settings){}

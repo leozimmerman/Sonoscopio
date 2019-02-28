@@ -9,7 +9,7 @@
 #include "Macros.h"
 
 OscSender::OscSender(){
-    bSendVectorValues = false;
+    bSendVectorValues = INIT_OSC_SEND_VECTOR;
 }
 
 void OscSender::setHost(string host){
@@ -18,6 +18,10 @@ void OscSender::setHost(string host){
 
 void OscSender::setPort(int port){
     setup(getHost(), port);
+}
+
+void OscSender::setSendVectorValues(bool send){
+    bSendVectorValues = send;
 }
 
 void OscSender::sendOscData(){
@@ -33,62 +37,48 @@ void OscSender::sendOscData(){
 
 void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues, const vector<std::map<string, vector<float>>> & metersVectorValues, const std::map<string, float> & timelineValues, bool sendVectorValues){
     
-    //-------------------------------------------------
+    bool bWrapInBundle = false;
+    
     //-:Send Meters Values
-
     if(metersVectorValues.size() != metersValues.size()){
         ofLogError()<<"ofApp sendOscData: metersValues and metersVectorValues not matching.";
         return;
     }
     
     for(int i=0; i<metersValues.size(); i++){
-        
-        //"i" -> channel
-        
-        //Send Single Values-----------------
-        ofxOscMessage msg;
-        
-        //address: "/ch0" - "/ch1" - "/ch2" etc...
-        string address = "/ch" + ofToString(i);
-        msg.setAddress(address);
-        
+        ///'i' -> channel -- For now it will only be 0 as it is only MONO
+
+        //-:Send Single Values
         for (auto const& map : metersValues[i]){
-           // auto key = map.first;
+            auto key = map.first;
             auto value = map.second;
+            ofxOscMessage msg;
+            msg.setAddress("/" + key);
             msg.addFloatArg(value);
+            sendMessage(msg, bWrapInBundle);
         }
-        
-        sendMessage(msg, false);//???ADD OSC BUNDLES?
         
         if(sendVectorValues){
             for (auto const& map : metersVectorValues[i]){
                 ofxOscMessage vectorMessage;
                 auto key = map.first;
-                address = "/ch" + ofToString(i) + key;
-                vectorMessage.setAddress(address);
-                
+                vectorMessage.setAddress("/" + key);
                 for (int j=0; j<metersVectorValues[i].at(key).size(); j++){
                     float value = metersVectorValues[i].at(key)[j];
                     vectorMessage.addFloatArg(value);
                 }
-                sendMessage(vectorMessage, false);
+                sendMessage(vectorMessage, bWrapInBundle);
             }
         }
-        
     }
     
-    //-------------------------------------------------
     //-:Send Timeline Tracks Values (one msg x each track)
-    //std::map<string, float> timelineValues = timePanel.getTracksValues();
     for (auto& kv : timelineValues){
         string key = kv.first;
         float floatValue = kv.second;
-        
         ofxOscMessage msg;
-        msg.setAddress("/" + key);//address: "/TL-(trackName)"
+        msg.setAddress("/" + key);//address: "/trackName"
         msg.addFloatArg(floatValue);
-        sendMessage(msg, false);
-        
+        sendMessage(msg, bWrapInBundle);
     }
-    
 }

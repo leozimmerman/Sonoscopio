@@ -123,21 +123,21 @@ void MetersView::loadStateIntoSettings(MetersPanelSettings* settings){
 #pragma mark - Meters Values Getters
 
 vector<std::map<string, float>> MetersView::getMetersValues(){
-    vector < std::map<string, float> > singleValuesForOsc;
+    vector < std::map<string, float> > singleValues;
     for (auto ch : _channelMetersViews){
         std::map<string, float> channelMap =  ch->getMetersValues();
-        singleValuesForOsc.push_back(channelMap);
+        singleValues.push_back(channelMap);
     }
-    return singleValuesForOsc;
+    return singleValues;
 }
 
 vector<std::map<string, vector<float>>> MetersView::getMetersVectorValues(){
-    vector < std::map<string, vector<float> > > vectorValuesForOsc;
+    vector < std::map<string, vector<float> > > vectorValues;
     for (auto ch : _channelMetersViews){
         std::map<string, vector<float>> channelMap = ch->getMetersVectorValues();
-        vectorValuesForOsc.push_back(channelMap);
+        vectorValues.push_back(channelMap);
     }
-    return vectorValuesForOsc;
+    return vectorValues;
 }
 
 

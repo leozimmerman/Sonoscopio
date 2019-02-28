@@ -115,7 +115,7 @@ void MainPanel::renderAnalysis(){
 }
 
 #pragma mark - Settings funcs
-void MainPanel::applySettings(int fps, int buffersize, float bpm, string host, int port){
+void MainPanel::applySettings(int fps, string host, int port){
     currentSettings.frameRate = fps;
     currentSettings.osc.host = host;
     currentSettings.osc.port = port;
@@ -134,6 +134,7 @@ void MainPanel::resetSettings(){
 void MainPanel::loadSettings(MainPanelSettings& settings){
     currentSettings = settings;
     guiView.setStateFromSettings(settings);
+    applySettings(settings.frameRate, settings.osc.host, settings.osc.port);
 }
 
 void MainPanel::updateCurrentSettings(){

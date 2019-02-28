@@ -14,7 +14,7 @@ struct OscSetting {
     bool bSend = true;
     string host = INIT_OSC_HOST;
     int port = INIT_OSC_PORT;
-    bool bSendVectorValues = false; //TODO: Implement
+    bool bSendVectorValues = INIT_OSC_SEND_VECTOR; //TODO: Implement
 };
 
 class MainPanelSettings {

@@ -55,7 +55,7 @@ public:
 
     void openFileDialog();
     
-    void applySettings(int fps, int buffersize, float bpm, string host, int port);
+    void applySettings(int fps, string host, int port);
     
     MainPanelSettings* getCurrentSettingsPtr(){
         return &currentSettings;

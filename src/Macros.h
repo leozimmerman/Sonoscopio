@@ -34,6 +34,7 @@
 #define INIT_PROJECT_DIR ""
 #define INIT_OSC_HOST "localhost"
 #define INIT_OSC_PORT 12345
+#define INIT_OSC_SEND_VECTOR false
 
 #define GUI_COMP_HEIGHT 26
 

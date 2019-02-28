@@ -22,9 +22,8 @@ public:
     
     void setHost(string host);
     void setPort(int port);
+    void setSendVectorValues(bool send);
     void sendOscData();
-    
-
     
     void setTimelinePanelPtr(TimelinePanel* panelPtr){
         timelinePanelPtr = panelPtr;

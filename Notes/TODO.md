@@ -2,7 +2,7 @@
 
 ## Now
 ### Tasks 
-
+- Add GUI for toggling SendVectorValues OSC on/off
 
 ### Enhancements
 - Onsets Armed -> popup for selecting the track to trigger.
