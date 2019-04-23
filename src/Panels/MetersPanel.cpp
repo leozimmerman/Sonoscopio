@@ -136,7 +136,7 @@ void MetersPanel::setBufferSize(int bs){
 
 void MetersPanel::setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs){
     channelAnalyzers = chanAnalyzerPtrs;
-    metersView.setupChannelMeters(chanAnalyzerPtrs, enabledAlgorithmTypes);
+    metersView.setupChannelMeters(chanAnalyzerPtrs, _enabledValueTypes, _enabledBinsValueTypes);
 }
 
 void MetersPanel::analyzeBuffer(const ofSoundBuffer& inBuffer){
@@ -156,8 +156,9 @@ void MetersPanel::loadSettings(MetersPanelSettings& settings){
     
     setBufferSize(settings.bufferSize);
     
-    enabledAlgorithmTypes = settings.enabledAlgorithmTypes;
-    metersView.setEnabledAlgorithms(enabledAlgorithmTypes);//resetsMeters
+    _enabledValueTypes = settings.enabledValueTypes;
+    _enabledBinsValueTypes = settings.enabledBinsValueTypes;
+    metersView.setEnabledAlgorithms(_enabledValueTypes, _enabledBinsValueTypes);//resetsMeters
     
     guiView.setStateFromSettings(settings);
     metersView.setStateFromSettings(settings);
@@ -169,15 +170,17 @@ void MetersPanel::updateMetersViewSettings(){
 
 void MetersPanel::updateCurrentSettings(){
     currentSettings.bufferSize = _bufferSize;
-    currentSettings.enabledAlgorithmTypes = enabledAlgorithmTypes;
+    currentSettings.enabledValueTypes = _enabledValueTypes;
+    currentSettings.enabledBinsValueTypes = _enabledBinsValueTypes;
     guiView.loadStateIntoSettings(&currentSettings);
     metersView.loadStateIntoSettings(&currentSettings);
 }
 
 #pragma mark - Other funcs
 
-void MetersPanel::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& algorithms) {
-    currentSettings.enabledAlgorithmTypes = algorithms;
+void MetersPanel::setEnabledAlgorithms(vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues) {
+    currentSettings.enabledValueTypes = enabledValues;
+    currentSettings.enabledBinsValueTypes = enabledBinValues;
     loadSettings(currentSettings);
 }
 

@@ -33,7 +33,7 @@ class OnsetMeterView : public MeterView{
     
 public:
     
-    OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
+    OnsetMeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     virtual ~OnsetMeterView();
     
     void setClicksEnabled(bool enabled) override;
@@ -85,6 +85,8 @@ protected:
     OnOffToggle* armToggle;
     TransparentMeterButton * resetButton;
     
+private:
+    ofxAAValue _valueType;
 };
 
 

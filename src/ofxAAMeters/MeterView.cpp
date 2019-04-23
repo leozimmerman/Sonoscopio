@@ -26,28 +26,22 @@
 
 int MeterView::height = 50;
 
-MeterView* MeterView::createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
-    switch (algorithmType) {
-        case ONSETS: return new OnsetMeterView(algorithmType, panelId, aaPtr);
-        case MEL_BANDS: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case SPECTRUM: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case HPCP: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case TRISTIMULUS: return new BinMeterView(algorithmType, panelId, aaPtr);
-        case MFCC: return new BinMeterView(algorithmType, panelId, aaPtr);
-            
+MeterView* MeterView::createMeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
+    switch (valueType) {
+        case ONSETS: return new OnsetMeterView(valueType, panelId, aaPtr);
         default:
-            return new MeterView(algorithmType, panelId, aaPtr);
+            return new MeterView(valueType, panelId, aaPtr);
     }
 }
 
 #pragma mark - Inits
 
-MeterView::MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) {
+MeterView::MeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) {
     
     _h = MeterView::height;
     _audioAnalyzer = aaPtr;
-    _algorithmType = algorithmType;
-    _name = ofxaa::algorithmTypeToString(algorithmType);
+    _valueType = valueType;
+    _name = ofxaa::valueTypeToString(valueType);
     _panelId = panelId;
     _mainColor.set(ofColor::cyan);
     setBackgroundColor(ofColor::black);
@@ -76,7 +70,7 @@ void MeterView::initDefaultValues(){
     _value = 0.0;
     _valueNorm = -1.0;
     _minEstimatedValue = 0.0;
-    _maxEstimatedValue = _audioAnalyzer->getMaxEstimatedValue(_algorithmType);
+    _maxEstimatedValue = _audioAnalyzer->getMaxEstimatedValue(_valueType);
     _maxValueRegistered = 0.0;
     _smoothAmnt = 0.0;
     _enabled = TRUE;
@@ -144,8 +138,8 @@ void MeterView::updatePeak(){
 }
 
 void MeterView::updateValues(){
-    setValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt));
-    setNormalizedValue(_audioAnalyzer->getValue(_algorithmType, _smoothAmnt, TRUE));
+    setValue(_audioAnalyzer->getValue(_valueType, _smoothAmnt, false));
+    setNormalizedValue(_audioAnalyzer->getValue(_valueType, _smoothAmnt, TRUE));
 }
 
 #pragma mark - Draw
@@ -278,7 +272,7 @@ void MeterView::setMinEstimatedValue(float value){
 
 void MeterView::setMaxEstimatedValue(float value){
     _maxEstimatedValue = value;
-    _audioAnalyzer->setMaxEstimatedValue(_algorithmType, value);
+    _audioAnalyzer->setMaxEstimatedValue(_valueType, value);
 }
 
 void MeterView::setSmoothAmnt(float val){

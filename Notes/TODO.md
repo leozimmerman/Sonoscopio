@@ -1,24 +1,20 @@
 # ToDo list
 
 ## Now
-### Tasks 
-- Add GUI for toggling SendVectorValues OSC on/off
+### Bugs: 
 
-### Enhancements
+### Tasks:
+- Add GUI for toggling which OSC data to send: SendVectorValues, FrameNumber, ....
+
+### Enhancements:
 - Onsets Armed -> popup for selecting the track to trigger.
+- Improve Markers add/remove/edit.
 
 **********************************************************************************************
 
 ## Backlog
 - Check memory management
-- Tristimulus anda?
 - Organize Xcode project and directory
-
-## Notes
-- En algun momento hay que cortar las new features para la 1.0 porque esto no termina mas -> La version 1.0 = lo que necesito para laburar con los Estudios Audiovisuales. 
-
-- Desactivar por ahora el channelSplit. v1.0 sin esa opcion. Desarrollar UI app pensando para un archivo mono o un solo analisis por archivo. Los distintos canales son gralmente una cuestion de espacializacion. De ultima, se renderizan varios analisis y despues se superponen. El SonoscopioRT si tiene sentido que sea multicanal.
-
 
 
 ## VERSION 1.0

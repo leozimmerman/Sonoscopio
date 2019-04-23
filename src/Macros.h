@@ -30,7 +30,7 @@
 #define GUI_STATIC_FPS 60
 
 #define INIT_SAMPLE_RATE 44100
-#define INIT_BUFFER_SIZE 512
+#define INIT_BUFFER_SIZE 2048
 #define INIT_PROJECT_DIR ""
 #define INIT_OSC_HOST "localhost"
 #define INIT_OSC_PORT 12345

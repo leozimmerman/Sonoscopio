@@ -16,8 +16,7 @@
 MeterModal::MeterModal(MeterView* meter_ptr){
     meterView_ptr = meter_ptr;
     
-    auto algorithmType = meterView_ptr->getType();
-    auto title = ofxaa::algorithmTypeToString(algorithmType);
+    auto title = meter_ptr->getName();
     setTitle(title);
     
     getButton(0)->setLabel("APPLY");

@@ -41,7 +41,7 @@
 class ChannelMetersView : public View {
 public:
 
-    ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * audioAnalyzer, vector<ofxAAAlgorithmType>& enabledAlgorithms, ofColor mainColor);
+    ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * audioAnalyzer, vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues, ofColor mainColor);
     ~ChannelMetersView(){}
     
     void update();
@@ -55,7 +55,7 @@ public:
     void scrollUp();
     void scrollDown();
     
-    void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
+    void setEnabledAlgorithms(vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues);
     
     void setStateFromSettings(ChannelMeterSettings& settings);
     void loadStateIntoSettings(ChannelMeterSettings* settings);
@@ -66,11 +66,13 @@ public:
 protected:
     void createMeters();
     void setColors();
-    MeterView* meterOfType(ofxAAAlgorithmType type);
+    MeterView* meterOfType(ofxAAValue valueType);
+    MeterView* meterOfType(ofxAABinsValue valueType);
     int getHeightForMeter(MeterView* meter);
     
     vector<MeterView*> meters;
-    vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
+    vector<ofxAAValue> _enabledValueTypes;
+    vector<ofxAABinsValue> _enabledBinsValueTypes;
     ofxAudioAnalyzerUnit* audioAnalyzerUnit;
     
     int _contentHeight;

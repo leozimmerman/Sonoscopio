@@ -56,7 +56,7 @@ public:
     void setBufferSize(int bs);
     void analyzeBuffer(const ofSoundBuffer& inBuffer);
     
-    void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& algorithms);
+    void setEnabledAlgorithms(vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues);
     
     void scrollUp(){metersView.scrollUp();}
     void scrollDown(){metersView.scrollDown();}
@@ -77,13 +77,16 @@ private:
     
     void setChannelAnalyzers(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
     void resetAnalyzerUnits(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    void setAnalyzerMaxEstimatedValue(ofxAAAlgorithmType algorithm, float value);
+    void setAnalyzerMaxEstimatedValue(ofxAAValue algorithm, float value);
+    void setAnalyzerMaxEstimatedValue(ofxAABinsValue algorithm, float value);
     
     ofxAudioAnalyzer audioAnalyzer;
     MetersView metersView;
     MetersPanelGui guiView;
     vector<ofxAudioAnalyzerUnit*> channelAnalyzers;
-    vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
+    
+    vector<ofxAAValue> _enabledValueTypes;
+    vector<ofxAABinsValue> _enabledBinsValueTypes;
     
     MetersPanelSettings currentSettings;
     

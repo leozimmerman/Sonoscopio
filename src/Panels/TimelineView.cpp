@@ -96,7 +96,6 @@ void TimelineView::setupTimeline(string audiofile) {
     //this means that calls to play/stop etc will be  routed to the waveform anofd that timing will be 100% accurate
     timeline.setTimecontrolTrack("Audio");
     timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration(), false);
-    
     audioTrack = timeline.getAudioTrack("Audio");
     
     timeline.addPage(PAGE_TRACKS_NAME);
@@ -115,6 +114,7 @@ void TimelineView::openAudioFile(string filename){
     timeline.stop();
     timeline.setCurrentTimeSeconds(0.0);
     timeline.reset();
+    
     setupTimeline(filename);
     //audioTrack->loadSoundfile(filename);
     timeline.setDurationInSeconds(audioTrack->getDuration(), false);

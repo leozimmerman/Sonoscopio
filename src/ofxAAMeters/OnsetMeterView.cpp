@@ -24,9 +24,9 @@ ofEvent<int> OnsetMeterView::onsetEventGlobal = ofEvent<int>();
 
 int OnsetMeterView::height = 100;
 
-OnsetMeterView::OnsetMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) : MeterView(algorithmType, panelId, aaPtr){
+OnsetMeterView::OnsetMeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) : MeterView(valueType, panelId, aaPtr){
     
-    onsets = aaPtr->getOnsetsAlgorithmPtr();
+    onsets = aaPtr->getOnsetsPtr();
     
     _alpha = onsets->getOnsetAlpha();
     alphaSlider = GuiFactory::createCustomSlider(MTR_ALPHA, 0.0, 1.0, _alpha, this, &OnsetMeterView::onSliderEvent);
@@ -72,7 +72,7 @@ void OnsetMeterView::update(){
     armToggle->update();
     resetButton->update();
 
-    setValue(_audioAnalyzer->getOnsetValue());
+    setValue(_audioAnalyzer->getValue(ONSETS));
 }
 
 void OnsetMeterView::updateComponentsColors(){

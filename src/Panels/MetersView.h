@@ -13,7 +13,7 @@
 class MetersView : public View {
 public:
     void setup(int x, int y, int w, int h) override;
-    void setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs, vector<ofxAAAlgorithmType> enabledAlgorithms);
+    void setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs, vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues);
     
     void draw() override;
     void update();
@@ -23,7 +23,7 @@ public:
     void setClicksEnabled(bool enabled) override;
     
     void reset(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs);
-    void setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms);
+    void setEnabledAlgorithms(vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues);
     
     void loadStateIntoSettings(MetersPanelSettings* settings);
     void setStateFromSettings(MetersPanelSettings& settings);
@@ -38,7 +38,9 @@ private:
     void createChannelMetersViews();
    
     vector <shared_ptr<ChannelMetersView>> _channelMetersViews;
-    vector<ofxAAAlgorithmType> _enabledAlgorithmTypes;
     vector<ofxAudioAnalyzerUnit*> _channelAnalyzers;
+    vector<ofxAAValue> _enabledValueTypes;
+    vector<ofxAABinsValue> _enabledBinsValueTypes;
+    
 
 };

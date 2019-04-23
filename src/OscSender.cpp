@@ -32,10 +32,10 @@ void OscSender::sendOscData(){
     auto metersValues = metersPanelPtr->getMetersValues();
     auto metersVectorValues = metersPanelPtr->getMetersVectorValues();
     auto trackValues = timelinePanelPtr->getTracksValues();
-    sendOscData(metersValues, metersVectorValues, trackValues, bSendVectorValues);
+    sendOscData(timelinePanelPtr->getCurrentFrameNum(), metersValues, metersVectorValues, trackValues, bSendVectorValues);
 }
 
-void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues, const vector<std::map<string, vector<float>>> & metersVectorValues, const std::map<string, float> & timelineValues, bool sendVectorValues){
+void OscSender::sendOscData(int currentFrameNum,const vector<std::map<string, float>> & metersValues, const vector<std::map<string, vector<float>>> & metersVectorValues, const std::map<string, float> & timelineValues, bool sendVectorValues){
     
     bool bWrapInBundle = false;
     
@@ -45,9 +45,13 @@ void OscSender::sendOscData(const vector<std::map<string, float>> & metersValues
         return;
     }
     
+    ofxOscMessage msg;
+    msg.setAddress(OSC_FRAME_ADDRESS);
+    msg.addIntArg(currentFrameNum);
+    sendMessage(msg, bWrapInBundle);
+    
     for(int i=0; i<metersValues.size(); i++){
         ///'i' -> channel -- For now it will only be 0 as it is only MONO
-
         //-:Send Single Values
         for (auto const& map : metersValues[i]){
             auto key = map.first;

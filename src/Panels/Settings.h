@@ -65,6 +65,7 @@ public:
 class MetersPanelSettings{
 public:
     int bufferSize;
-    vector<ofxAAAlgorithmType> enabledAlgorithmTypes;
+    vector<ofxAAValue> enabledValueTypes;
+    vector<ofxAABinsValue> enabledBinsValueTypes;
     vector<ChannelMeterSettings> channelMeters;
 };

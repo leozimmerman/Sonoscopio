@@ -97,7 +97,8 @@ public:
     ofSoundBuffer& getCurrentSoundBufferMono(int size){
         return timelineView.audioTrack->getCurrentSoundBufferMono(size);
     }
-    int getTotalFramesNum(){return timelineView.timeline.getDurationInFrames();}
+    int getTotalFramesNum(){ return timelineView.timeline.getDurationInFrames(); }
+    int getCurrentFrameNum(){ return timelineView.timeline.getCurrentFrame(); }
     
 private:
     void setupSingletons() override;

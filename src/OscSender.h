@@ -12,6 +12,8 @@
 #include "TimelinePanel.h"
 #include "MetersPanel.h"
 
+#define OSC_FRAME_ADDRESS "/FRAME"
+
 class OscSender: public ofxOscSender {
 public:
     
@@ -38,7 +40,7 @@ private:
     OscSender& operator=(OscSender const& copy);
     
     
-    void sendOscData(const vector<std::map<string, float>> & metersValues, const vector<std::map<string, vector<float>>> & metersVectorValues, const std::map<string, float> & timelineValues, bool sendVectorValues);
+    void sendOscData(int currentFrameNum, const vector<std::map<string, float>> & metersValues, const vector<std::map<string, vector<float>>> & metersVectorValues, const std::map<string, float> & timelineValues, bool sendVectorValues);
     
     bool bSendVectorValues;
     MetersPanel* metersPanelPtr;

@@ -24,8 +24,11 @@
 class BinMeterView : public MeterView{
 
  public:
+    
+    
+    static BinMeterView* createBinMeterView(ofxAABinsValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
 
-    BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
+    BinMeterView(ofxAABinsValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     
     //void draw() override;
     void drawStaticElements() override;
@@ -44,7 +47,11 @@ class BinMeterView : public MeterView{
     vector<float>& getValues(){return _values;}
     static int height;
     
+    ofxAABinsValue getBinsValueType(){return _valueType;}
+    
  protected:
+    
+    ofxAABinsValue _valueType;
     
     vector<float> _values;
     int _nBins;

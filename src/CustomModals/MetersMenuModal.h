@@ -30,19 +30,23 @@ public:
     void updateTogglesFromEnabledAlgorithms();
     void updateEnabledAlgorithmsFromToggles();
     
-    bool isAlgorithmEnabled(ofxAAAlgorithmType algorithmType);
+    bool isAlgorithmEnabled(ofxAAValue algorithmType);
+    bool isAlgorithmEnabled(ofxAABinsValue algorithmType);
     
 private:
     void onApplyButtonEvent(ofxDatGuiButtonEvent e);
     void onToggleEvent(ofxDatGuiButtonEvent e);
     void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
     
-    vector<ofxDatGuiToggle*> _algorithmToggles;
+    vector<ofxDatGuiToggle*> _valuesToggles;
+    vector<ofxDatGuiToggle*> _binsValuesToggles;
     ofxDatGuiDropdown* gBufferSize;
     
     int selectedBufferSize;
     const vector<int> buffer_sizes = {256, 512, 1024, 2048};
     
-    vector<ofxAAAlgorithmType> enabledAlgorithms;
+    vector<ofxAAValue> _enabledValueTypes;
+    vector<ofxAABinsValue> _enabledBinsValueTypes;
+    
     MetersPanel* _metersPanelPtr;
 };

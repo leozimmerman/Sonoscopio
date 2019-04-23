@@ -14,16 +14,18 @@ void MetersView::setup(int x, int y, int w, int h){
     setBackgroundColor(ofColor::darkGray);
 }
 
-void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs, vector<ofxAAAlgorithmType> enabledAlgorithms) {
+void MetersView::setupChannelMeters(vector<ofxAudioAnalyzerUnit*>& chanAnalyzerPtrs, vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues) {
     _channelAnalyzers = chanAnalyzerPtrs;
-    _enabledAlgorithmTypes = enabledAlgorithms;
+    _enabledValueTypes = enabledValues;
+    _enabledBinsValueTypes = enabledBinValues;
     createChannelMetersViews();
 }
 
-void MetersView::setEnabledAlgorithms(vector<ofxAAAlgorithmType>& enabledAlgorithms){
-    _enabledAlgorithmTypes = enabledAlgorithms;
+void MetersView::setEnabledAlgorithms(vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues){
+    _enabledValueTypes = enabledValues;
+    _enabledBinsValueTypes = enabledBinValues;
     for(auto p : _channelMetersViews){
-        p->setEnabledAlgorithms(enabledAlgorithms);
+        p->setEnabledAlgorithms(_enabledValueTypes, _enabledBinsValueTypes);
     }
 }
 
@@ -44,7 +46,7 @@ void MetersView::createChannelMetersViews() {
         int y_pos = _y + panelHeight*i;
         int panelId = i;
         ofColor mainColor = (i%2) ? COLOR_MAIN_B : COLOR_MAIN_A;
-        auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, _channelAnalyzers[i], _enabledAlgorithmTypes, mainColor);
+        auto p = make_shared<ChannelMetersView>(_x, y_pos, _w, panelHeight, panelId, _channelAnalyzers[i], _enabledValueTypes, _enabledBinsValueTypes, mainColor);
         _channelMetersViews.push_back(p);
     }
 }

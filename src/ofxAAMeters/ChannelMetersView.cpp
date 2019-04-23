@@ -21,12 +21,13 @@
 
 #pragma mark - Core funcs
 
-ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * audioAnalyzer, vector<ofxAAAlgorithmType>& enabledAlgorithms, ofColor mainColor){
+ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int panelId, ofxAudioAnalyzerUnit * audioAnalyzer, vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues, ofColor mainColor){
    
     View::setup(x, y ,width, height);
     
     audioAnalyzerUnit = audioAnalyzer;
-    enabledAlgorithmTypes = enabledAlgorithms;
+    _enabledValueTypes = enabledValues;
+    _enabledBinsValueTypes = enabledBinValues;
     
     _mainColor = mainColor;
     _panelId = panelId;
@@ -37,8 +38,12 @@ ChannelMetersView::ChannelMetersView(int x, int y, int width, int height, int pa
 void ChannelMetersView::createMeters(){
     meters.clear();
     meters.shrink_to_fit();
-    for (auto type : enabledAlgorithmTypes) {
+    for (auto type : _enabledValueTypes) {
         auto meterView = MeterView::createMeterView(type, _panelId, audioAnalyzerUnit);
+        meters.push_back(meterView);
+    }
+    for (auto type : _enabledBinsValueTypes) {
+        auto meterView = BinMeterView::createBinMeterView(type, _panelId, audioAnalyzerUnit);
         meters.push_back(meterView);
     }
     setColors();
@@ -105,8 +110,9 @@ void ChannelMetersView::scrollDown(){
     resize(_x, _y, _w, _h);
 }
 
-void ChannelMetersView::setEnabledAlgorithms(vector<ofxAAAlgorithmType> &enabledAlgorithms){
-    enabledAlgorithmTypes = enabledAlgorithms;
+void ChannelMetersView::setEnabledAlgorithms(vector<ofxAAValue>& enabledValues, vector<ofxAABinsValue>& enabledBinValues){
+    _enabledValueTypes = enabledValues;
+    _enabledBinsValueTypes = enabledBinValues;
     createMeters();
 }
 
@@ -116,7 +122,7 @@ void ChannelMetersView::setColors(){
     setBackgroundColor(lightCol);
     for (auto m : meters){
         m->setMainColor(_mainColor);
-        if(m->getType()==ONSETS){
+        if(m->getValueType() == ONSETS){
             OnsetMeterView* om = dynamic_cast<OnsetMeterView*>(m);
             om->updateComponentsColors();//update sliders colors
         }
@@ -138,13 +144,20 @@ int ChannelMetersView::getHeightForMeter(MeterView *meter) {
 void ChannelMetersView::setStateFromSettings(ChannelMeterSettings& settings){
     for (auto ms : settings.meters) {
         string stringType = ms.type;
-        ofxAAAlgorithmType type = ofxaa::stringToAlgorithmType(stringType);
         
-        auto meter = meterOfType(type);
+        ofxAAValue valueType = ofxaa::stringToValueType(stringType);
+        
+        MeterView* meter = NULL;
+        if (valueType != NONE){
+            meter = meterOfType(valueType);
+        } else {
+            ofxAABinsValue binsValueType = ofxaa::stringToBinsValueType(stringType);
+            meter = meterOfType(binsValueType);
+        }
         
         if (meter != NULL){
             meter->setEnabled(ms.bState);
-            if (type == ONSETS) {
+            if (valueType == ONSETS) {
                 auto onsets_m = dynamic_cast<OnsetMeterView*>(meter);
                 onsets_m->setAlpha(ms.alpha);
                 onsets_m->setSilenceThreshold(ms.silenceTreshold);
@@ -155,6 +168,7 @@ void ChannelMetersView::setStateFromSettings(ChannelMeterSettings& settings){
                 meter->toggleValuePlotter(ms.bPlotValue);
             }
         }
+        
     }
 }
 
@@ -163,13 +177,17 @@ void ChannelMetersView::loadStateIntoSettings(ChannelMeterSettings* settings){
     settings->meters.shrink_to_fit();
     for (auto m : meters) {
         MeterSettings s;
+
+        auto valueType = m->getValueType();
         
-        auto type = m->getType();
-        auto typeString = ofxaa::algorithmTypeToString(type);
+        if (valueType != NONE){
+            s.type = ofxaa::valueTypeToString(valueType);
+        } else {
+            auto binMeter = dynamic_cast<BinMeterView*>(m);
+            s.type = ofxaa::binsValueTypeToString(binMeter->getBinsValueType());
+        }
         
-        s.type = typeString;
-        
-        if (type == ONSETS) {
+        if (valueType == ONSETS) {
             auto onsets_m = dynamic_cast<OnsetMeterView*>(m);
             s.alpha = onsets_m->getAlpha();
             s.silenceTreshold = onsets_m->getSilenceThreshold();
@@ -183,12 +201,25 @@ void ChannelMetersView::loadStateIntoSettings(ChannelMeterSettings* settings){
         }
         settings->meters.push_back(s);
     }
+    
 }
 
-MeterView* ChannelMetersView::meterOfType(ofxAAAlgorithmType type) {
+MeterView* ChannelMetersView::meterOfType(ofxAAValue type) {
     for (auto m: meters) {
-        if (m->getType() == type) {
+        if (m->getValueType() == type) {
             return m;
+        }
+    }
+    return NULL;
+}
+
+MeterView* ChannelMetersView::meterOfType(ofxAABinsValue valueType){
+    for (auto m: meters) {
+        auto binMeter = dynamic_cast<BinMeterView*>(m);
+        if (binMeter != NULL){
+            if (binMeter->getBinsValueType() == valueType) {
+                return m;
+            }
         }
     }
     return NULL;
@@ -199,14 +230,14 @@ MeterView* ChannelMetersView::meterOfType(ofxAAAlgorithmType type) {
 map<string, float> ChannelMetersView::getMetersValues(){
     std::map<string, float> channelMap;
     for(MeterView* m : meters){
-        auto type = m->getType();
+        auto type = m->getValueType();
         if (type == ONSETS){
             string key =  m->getName();
             OnsetMeterView* om = dynamic_cast<OnsetMeterView*>(m);
             channelMap[key] = om->getValue();
-        }else if(!ofxaa::hasTypeVectorOutputValues(type)){
+        }else if(type != NONE){
             string key = m->getName();
-            channelMap[key]= m->getValue();
+            channelMap[key]= m->getNormalizedValue();
         }
     }
     return channelMap;
@@ -217,19 +248,11 @@ map<string, vector<float>> ChannelMetersView::getMetersVectorValues(){
     std::map<string, vector<float>> channelMap;
     
     for(MeterView* m : meters){
-        auto type = m->getType();
-        if (type == MEL_BANDS){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(MEL_BANDS));
-            channelMap[MEL_BANDS_STRING] = binMeter->getValues();
-        }else if (type == MFCC){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(MFCC));
-            channelMap[MFCC_STRING] = binMeter->getValues();
-        }else if (type == HPCP){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(HPCP));
-            channelMap[HPCP_STRING] = binMeter->getValues();
-        }else if (type == TRISTIMULUS){
-            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(meterOfType(TRISTIMULUS));
-            channelMap[TRISTIMULUS_STRING] = binMeter->getValues();
+        auto valueType = m->getValueType();
+        if (valueType == NONE){
+            BinMeterView* binMeter = dynamic_cast<BinMeterView*>(m);
+            string key = m->getName();
+            channelMap[key] = binMeter->getValues();
         }
     }
 

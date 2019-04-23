@@ -21,15 +21,21 @@
 
 int BinMeterView::height = 60;
 
-BinMeterView::BinMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(algorithmType, panelId, aaPtr){
+BinMeterView* BinMeterView::createBinMeterView(ofxAABinsValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr){
+    return new BinMeterView(valueType, panelId, aaPtr);
+}
+
+//TODO: FIX MeterView values
+BinMeterView::BinMeterView(ofxAABinsValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(NONE, panelId, aaPtr){
     
-    int binNums = _audioAnalyzer->getBinsNum(_algorithmType);
+    _name = ofxaa::binsValueTypeToString(valueType);
+    int binNums = _audioAnalyzer->getBinsNum(_valueType);
     setBinsNum(binNums);
     setMinMaxEstimatedValues();
 }
 
 void BinMeterView::updateValues(){
-    setValues(_audioAnalyzer->getValues(_algorithmType, _smoothAmnt));
+    setValues(_audioAnalyzer->getValues(_valueType, _smoothAmnt, false));
 }
 
 void BinMeterView::drawStaticElements(){
@@ -48,7 +54,10 @@ void BinMeterView::drawValueElements(){
 }
 
 void BinMeterView::setMinMaxEstimatedValues() {
-    switch (_algorithmType) {
+    setMinEstimatedValue(0.0);
+    setMaxEstimatedValue(1.0);
+    /*
+    switch (valueType) {
         case SPECTRUM:
             setMinEstimatedValue(DB_MIN);
             setMaxEstimatedValue(DB_MAX);
@@ -66,6 +75,7 @@ void BinMeterView::setMinMaxEstimatedValues() {
             setMaxEstimatedValue(1.0);
             break;
     }
+    */
 }
 
 void BinMeterView::drawMeter(){

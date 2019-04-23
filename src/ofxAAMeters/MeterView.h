@@ -43,16 +43,17 @@
 #define COLOR_RECT_METER ofColor::white
 #define COLOR_RECT_METER_ALPHA 50
 
+using namespace ofxaa;
 
 class MeterView : public View {
 public:
 #pragma mark  - Static
-    static MeterView* createMeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
+    static MeterView* createMeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     static int height;
     
 #pragma mark - Instanced
     
-    MeterView(ofxAAAlgorithmType algorithmType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
+    MeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr);
     virtual ~MeterView();
 
     virtual void update();
@@ -66,6 +67,7 @@ public:
     ofColor getMainColor(){return _mainColor;}
 
     float getValue(){return _value;}
+    float getNormalizedValue(){return _valueNorm;}
     int getPositionX(){return _x;}
     int getPositionY(){return _y;}
     int getWidth(){return _w;}
@@ -76,7 +78,7 @@ public:
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return _enabled;}
     bool getPlotterEnabled(){return _plotterEnabled;}
-    ofxAAAlgorithmType getType(){return _algorithmType;}
+    ofxAAValue getValueType(){return _valueType;}
     
     void toggleValuePlotter(bool enabled);
     void setMainColor(ofColor col);
@@ -119,7 +121,8 @@ protected:
     TransparentMeterButton* configButton;
     
     ofxAudioAnalyzerUnit* _audioAnalyzer;
-    ofxAAAlgorithmType _algorithmType;
+    
+
     float _minEstimatedValue, _maxEstimatedValue;
     int _panelId; //for OnOff Event Listeners
     ofColor _mainColor;
@@ -132,7 +135,12 @@ protected:
     float   _line_h;
     int     _label_x;
     
+    
+    
+    
 private:
+    ofxAAValue _valueType;
+    
     void setupMenu();
     void showMenu();
     

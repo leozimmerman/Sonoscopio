@@ -151,17 +151,27 @@ void SettingsManager::loadMetersPanelSettingsFromXml(){
 
     metersPanelSettings.bufferSize = xml.getValue(bsTag, 0);
     
-    const std::string enabledNumTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + ENABLED_NUM_TAG;
-    int enabledNum = xml.getValue(enabledNumTag, 0);
+    const std::string enabledNumTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + ENABLED_VALUES_NUM_TAG;
+    int enabledValuesNum = xml.getValue(enabledNumTag, 0);
+    const std::string enabledBinNumTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + ENABLED_BINVALUES_NUM_TAG;
+    int enabledBinValuesNum = xml.getValue(enabledBinNumTag, 0);
     
-    metersPanelSettings.enabledAlgorithmTypes.clear();
-    for (int i=0; i<enabledNum; i++){
+    metersPanelSettings.enabledValueTypes.clear();
+    metersPanelSettings.enabledBinsValueTypes.clear();
+    
+    for (int i=0; i<enabledValuesNum; i++){
         const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + TYPE_N_TAG + ofToString(i);
         string stringType = xml.getValue(typeTag, "");
-        auto algorithm = ofxaa::stringToAlgorithmType(stringType);
-        metersPanelSettings.enabledAlgorithmTypes.push_back(algorithm);
+        ofxAAValue algorithm = ofxaa::stringToValueType(stringType);
+        metersPanelSettings.enabledValueTypes.push_back(algorithm);
     }
     
+    for (int i=0; i<enabledBinValuesNum; i++){
+        const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + TYPE_N_TAG + ofToString(i);
+        string stringType = xml.getValue(typeTag, "");
+        ofxAABinsValue algorithm = ofxaa::stringToBinsValueType(stringType);
+        metersPanelSettings.enabledBinsValueTypes.push_back(algorithm);
+    }
     
     const std::string channelsNumTag = std::string(METERS_PANEL_TAG) + ":" + CHANNELS_TAG + ":" + CHANNELS_NUM_TAG;
     int channelsNum = xml.getValue(channelsNumTag, 0);
@@ -262,10 +272,18 @@ void SettingsManager::addMetersPanelSettingsToXml(){
     
     xml.addTag(ENABLED_ALGORITHMS_TAG);
     xml.pushTag(ENABLED_ALGORITHMS_TAG);
-    xml.addValue(ENABLED_NUM_TAG, int(metersPanelSettings.enabledAlgorithmTypes.size()));
-    for(int i=0; i<metersPanelSettings.enabledAlgorithmTypes.size(); i++){
+    xml.addValue(ENABLED_VALUES_NUM_TAG, int(metersPanelSettings.enabledValueTypes.size()));
+    for(int i=0; i<metersPanelSettings.enabledValueTypes.size(); i++){
         const std::string typeTag = TYPE_N_TAG + ofToString(i);
-        string stringType = ofxaa::algorithmTypeToString(metersPanelSettings.enabledAlgorithmTypes[i]);
+        string stringType = ofxaa::valueTypeToString(metersPanelSettings.enabledValueTypes[i]);
+        xml.addValue(typeTag, stringType);
+    }
+    xml.popTag();
+    
+    xml.addValue(ENABLED_BINVALUES_NUM_TAG, int(metersPanelSettings.enabledBinsValueTypes.size()));
+    for(int i=0; i<metersPanelSettings.enabledValueTypes.size(); i++){
+        const std::string typeTag = TYPE_N_TAG + ofToString(i);
+        string stringType = ofxaa::binsValueTypeToString(metersPanelSettings.enabledBinsValueTypes[i]);
         xml.addValue(typeTag, stringType);
     }
     xml.popTag();
