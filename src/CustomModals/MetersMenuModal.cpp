@@ -21,14 +21,17 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
     addButton("CANCEL");
     
     selectedBufferSize = -1;
-    
+  
     
     auto availableValues = sonoscopio::allAvailableValueTypes;
     for (int i=0; i<availableValues.size(); i++){
         auto label = utils::valueTypeToString(availableValues[i]);
         ofxDatGuiToggle* toggle = GuiFactory::createToggle(label, TRUE, this, &MetersMenuModal::onToggleEvent);
         _valuesToggles.push_back(toggle);
-        addComponent(toggle);
+        if (availableValues[i] == MEL_BANDS_KURTOSIS){
+            cout<<"Hola"<<endl;
+        }
+        addComponentInGrid(toggle);
     }
     
     auto availableBinsValues = sonoscopio::allAvailableBinsValueTypes;
@@ -36,13 +39,28 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
         auto label = utils::binsValueTypeToString(availableBinsValues[i]);
         ofxDatGuiToggle* toggle = GuiFactory::createToggle(label, TRUE, this, &MetersMenuModal::onToggleEvent);
         _binsValuesToggles.push_back(toggle);
-        addComponent(toggle);
+        addComponentInGrid(toggle);
     }
     
     vector<string> options = {ofToString(buffer_sizes[0]), ofToString(buffer_sizes[1]), ofToString(buffer_sizes[2]), ofToString(buffer_sizes[3])};
     
     gBufferSize = GuiFactory::createDropDown(BUFFER_SIZE_LABEL, options, this, &MetersMenuModal::onBufferSizeDropdownEvent);
-    addComponent(gBufferSize);
+    addComponentInGrid(gBufferSize);
+}
+
+void MetersMenuModal::addComponentInGrid(ofxDatGuiComponent* component){
+    int togglesWidth = getWidth()/4;
+    int togglesPerColumn = 19;
+    int compHeight = 26;
+    int yOffset = 15;
+    
+    int n = (int) mModalComponents.size();
+    
+    int mod = n % togglesPerColumn;
+    int xmod = n/togglesPerColumn;
+    int x = togglesWidth * xmod;
+    int y = mod * compHeight + yOffset;
+    addComponent(component, x, y, togglesWidth);
 }
 
 void MetersMenuModal::display(int height){
@@ -125,6 +143,7 @@ bool MetersMenuModal::getFocused(){
     return false;
 }
 void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
+//    cout<<"TOggle"<<endl;
     //TODO: Implement?
 }
 void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){
@@ -142,6 +161,7 @@ void MetersMenuModal::loadStateIntoSettings(MetersPanelSettings* settings){
 //    }
     
 }
+
 
 void MetersMenuModal::setStateFromSettings(MetersPanelSettings& settings){
     _enabledValueTypes = settings.enabledValueTypes;

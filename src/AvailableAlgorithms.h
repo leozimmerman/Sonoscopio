@@ -23,7 +23,7 @@
 
 namespace sonoscopio {
     static const vector<ofxAAValue> allAvailableValueTypes = {
-        /*
+        
          RMS,
          POWER,
          ZERO_CROSSING_RATE,
@@ -94,7 +94,7 @@ namespace sonoscopio {
          PITCH_YIN_CONFIDENCE,
          
          ONSETS
-         */
+         
     };
     static const vector<ofxAABinsValue> allAvailableBinsValueTypes = {
         SPECTRUM,

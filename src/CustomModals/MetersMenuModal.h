@@ -34,6 +34,7 @@ public:
     bool isAlgorithmEnabled(ofxAABinsValue algorithmType);
     
 private:
+    void addComponentInGrid(ofxDatGuiComponent* component);
     void onApplyButtonEvent(ofxDatGuiButtonEvent e);
     void onToggleEvent(ofxDatGuiButtonEvent e);
     void onBufferSizeDropdownEvent(ofxDatGuiDropdownEvent e);
