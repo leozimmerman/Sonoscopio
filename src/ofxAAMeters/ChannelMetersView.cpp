@@ -17,7 +17,7 @@
  */
 
 #include "ChannelMetersView.h"
-#include "ofxAAUtils.h"
+#include "StringUtils.h"
 
 #pragma mark - Core funcs
 
@@ -145,13 +145,13 @@ void ChannelMetersView::setStateFromSettings(ChannelMeterSettings& settings){
     for (auto ms : settings.meters) {
         string stringType = ms.type;
         
-        ofxAAValue valueType = ofxaa::stringToValueType(stringType);
+        ofxAAValue valueType = utils::stringToValueType(stringType);
         
         MeterView* meter = NULL;
         if (valueType != NONE){
             meter = meterOfType(valueType);
         } else {
-            ofxAABinsValue binsValueType = ofxaa::stringToBinsValueType(stringType);
+            ofxAABinsValue binsValueType = utils::stringToBinsValueType(stringType);
             meter = meterOfType(binsValueType);
         }
         
@@ -181,10 +181,10 @@ void ChannelMetersView::loadStateIntoSettings(ChannelMeterSettings* settings){
         auto valueType = m->getValueType();
         
         if (valueType != NONE){
-            s.type = ofxaa::valueTypeToString(valueType);
+            s.type = utils::valueTypeToString(valueType);
         } else {
             auto binMeter = dynamic_cast<BinMeterView*>(m);
-            s.type = ofxaa::binsValueTypeToString(binMeter->getBinsValueType());
+            s.type = utils::binsValueTypeToString(binMeter->getBinsValueType());
         }
         
         if (valueType == ONSETS) {
@@ -244,9 +244,7 @@ map<string, float> ChannelMetersView::getMetersValues(){
 }
 
 map<string, vector<float>> ChannelMetersView::getMetersVectorValues(){
-    //TODO: Simplify this...
     std::map<string, vector<float>> channelMap;
-    
     for(MeterView* m : meters){
         auto valueType = m->getValueType();
         if (valueType == NONE){
@@ -255,6 +253,5 @@ map<string, vector<float>> ChannelMetersView::getMetersVectorValues(){
             channelMap[key] = binMeter->getValues();
         }
     }
-
     return channelMap;
 }

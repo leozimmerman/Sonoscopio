@@ -10,7 +10,7 @@
 #include "GuiFactory.h"
 #include "MeterView.h"
 #include "ofApp.h"
-#include "ofxAAUtils.h"
+#include "StringUtils.h"
 #include "PanelsBridge.h"
 
 MeterModal::MeterModal(MeterView* meter_ptr){

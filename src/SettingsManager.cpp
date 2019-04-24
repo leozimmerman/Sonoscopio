@@ -6,7 +6,7 @@
 //
 
 #include "SettingsManager.h"
-#include "ofxAAUtils.h"
+#include "StringUtils.h"
 #include "FileManager.h"
 
 SettingsManager::SettingsManager(){
@@ -160,16 +160,16 @@ void SettingsManager::loadMetersPanelSettingsFromXml(){
     metersPanelSettings.enabledBinsValueTypes.clear();
     
     for (int i=0; i<enabledValuesNum; i++){
-        const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + TYPE_N_TAG + ofToString(i);
+        const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + VALUE_TYPE_N_TAG + ofToString(i);
         string stringType = xml.getValue(typeTag, "");
-        ofxAAValue algorithm = ofxaa::stringToValueType(stringType);
+        ofxAAValue algorithm = utils::stringToValueType(stringType);
         metersPanelSettings.enabledValueTypes.push_back(algorithm);
     }
     
     for (int i=0; i<enabledBinValuesNum; i++){
-        const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + TYPE_N_TAG + ofToString(i);
+        const std::string typeTag = std::string(METERS_PANEL_TAG) + ":" + ENABLED_ALGORITHMS_TAG + ":" + BIN_VALUE_TYPE_N_TAG + ofToString(i);
         string stringType = xml.getValue(typeTag, "");
-        ofxAABinsValue algorithm = ofxaa::stringToBinsValueType(stringType);
+        ofxAABinsValue algorithm = utils::stringToBinsValueType(stringType);
         metersPanelSettings.enabledBinsValueTypes.push_back(algorithm);
     }
     
@@ -272,18 +272,18 @@ void SettingsManager::addMetersPanelSettingsToXml(){
     
     xml.addTag(ENABLED_ALGORITHMS_TAG);
     xml.pushTag(ENABLED_ALGORITHMS_TAG);
+    
     xml.addValue(ENABLED_VALUES_NUM_TAG, int(metersPanelSettings.enabledValueTypes.size()));
     for(int i=0; i<metersPanelSettings.enabledValueTypes.size(); i++){
-        const std::string typeTag = TYPE_N_TAG + ofToString(i);
-        string stringType = ofxaa::valueTypeToString(metersPanelSettings.enabledValueTypes[i]);
+        const std::string typeTag = VALUE_TYPE_N_TAG + ofToString(i);
+        string stringType = utils::valueTypeToString(metersPanelSettings.enabledValueTypes[i]);
         xml.addValue(typeTag, stringType);
     }
-    xml.popTag();
     
     xml.addValue(ENABLED_BINVALUES_NUM_TAG, int(metersPanelSettings.enabledBinsValueTypes.size()));
     for(int i=0; i<metersPanelSettings.enabledValueTypes.size(); i++){
-        const std::string typeTag = TYPE_N_TAG + ofToString(i);
-        string stringType = ofxaa::binsValueTypeToString(metersPanelSettings.enabledBinsValueTypes[i]);
+        const std::string typeTag = BIN_VALUE_TYPE_N_TAG + ofToString(i);
+        string stringType = utils::binsValueTypeToString(metersPanelSettings.enabledBinsValueTypes[i]);
         xml.addValue(typeTag, stringType);
     }
     xml.popTag();

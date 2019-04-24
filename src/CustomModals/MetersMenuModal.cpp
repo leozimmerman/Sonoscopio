@@ -6,7 +6,8 @@
 //
 
 #include "MetersMenuModal.h"
-#include "ofxAAUtils.h"
+#include "AvailableAlgorithms.h"
+#include "StringUtils.h"
 #include "MetersPanel.h"
 #include "GuiFactory.h"
 
@@ -21,17 +22,18 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
     
     selectedBufferSize = -1;
     
-    auto availableValues = ofxaa::allAvailableValueTypes;
+    
+    auto availableValues = sonoscopio::allAvailableValueTypes;
     for (int i=0; i<availableValues.size(); i++){
-        auto label = ofxaa::valueTypeToString(availableValues[i]);
+        auto label = utils::valueTypeToString(availableValues[i]);
         ofxDatGuiToggle* toggle = GuiFactory::createToggle(label, TRUE, this, &MetersMenuModal::onToggleEvent);
         _valuesToggles.push_back(toggle);
         addComponent(toggle);
     }
     
-    auto availableBinsValues = ofxaa::allAvailableBinsValueTypes;
+    auto availableBinsValues = sonoscopio::allAvailableBinsValueTypes;
     for (int i=0; i<availableBinsValues.size(); i++){
-        auto label = ofxaa::binsValueTypeToString(availableBinsValues[i]);
+        auto label = utils::binsValueTypeToString(availableBinsValues[i]);
         ofxDatGuiToggle* toggle = GuiFactory::createToggle(label, TRUE, this, &MetersMenuModal::onToggleEvent);
         _binsValuesToggles.push_back(toggle);
         addComponent(toggle);
@@ -49,7 +51,7 @@ void MetersMenuModal::display(int height){
 }
 
 void MetersMenuModal::updateTogglesFromEnabledAlgorithms(){
-    auto availableValues = ofxaa::allAvailableValueTypes;
+    auto availableValues = sonoscopio::allAvailableValueTypes;
     if (_valuesToggles.size() != availableValues.size()){
         return;
     }
@@ -58,8 +60,8 @@ void MetersMenuModal::updateTogglesFromEnabledAlgorithms(){
         _valuesToggles[i]->setEnabled(enabled);
     }
     
-    auto availableBinsValues = ofxaa::allAvailableBinsValueTypes;
-    if (_binsValuesToggles.size() != availableValues.size()){
+    auto availableBinsValues = sonoscopio::allAvailableBinsValueTypes;
+    if (_binsValuesToggles.size() != availableBinsValues.size()){
         return;
     }
     for (int i=0; i<_binsValuesToggles.size(); i++){
@@ -69,7 +71,7 @@ void MetersMenuModal::updateTogglesFromEnabledAlgorithms(){
 }
 
 void MetersMenuModal::updateEnabledAlgorithmsFromToggles(){
-    auto availableValues = ofxaa::allAvailableValueTypes;
+    auto availableValues = sonoscopio::allAvailableValueTypes;
     if (_valuesToggles.size() != availableValues.size()){
         return;
     }
@@ -80,14 +82,14 @@ void MetersMenuModal::updateEnabledAlgorithmsFromToggles(){
         }
     }
     
-    auto availableBinsValues = ofxaa::allAvailableBinsValueTypes;
-    if (_binsValuesToggles.size() != availableValues.size()){
+    auto availableBinsValues = sonoscopio::allAvailableBinsValueTypes;
+    if (_binsValuesToggles.size() != availableBinsValues.size()){
         return;
     }
     _enabledBinsValueTypes.clear();
     for (int i=0; i<_binsValuesToggles.size(); i++){
         if (_binsValuesToggles[i]->getEnabled()) {
-            _enabledValueTypes.push_back(availableValues[i]);
+            _enabledBinsValueTypes.push_back(availableBinsValues[i]);
         }
     }
 }

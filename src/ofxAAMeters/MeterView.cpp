@@ -19,7 +19,7 @@
 #include "MeterView.h"
 #include "BinMeterView.h"
 #include "OnsetMeterView.h"
-#include "ofxAAUtils.h"
+#include "StringUtils.h"
 #include "ofApp.h"
 #include "GuiFactory.h"
 #include "PanelsBridge.h"
@@ -41,7 +41,7 @@ MeterView::MeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * 
     _h = MeterView::height;
     _audioAnalyzer = aaPtr;
     _valueType = valueType;
-    _name = ofxaa::valueTypeToString(valueType);
+    _name = utils::valueTypeToString(valueType);
     _panelId = panelId;
     _mainColor.set(ofColor::cyan);
     setBackgroundColor(ofColor::black);
@@ -70,7 +70,7 @@ void MeterView::initDefaultValues(){
     _value = 0.0;
     _valueNorm = -1.0;
     _minEstimatedValue = 0.0;
-    _maxEstimatedValue = _audioAnalyzer->getMaxEstimatedValue(_valueType);
+    _maxEstimatedValue = _valueType != NONE ? _audioAnalyzer->getMaxEstimatedValue(_valueType) : 1.0;
     _maxValueRegistered = 0.0;
     _smoothAmnt = 0.0;
     _enabled = TRUE;

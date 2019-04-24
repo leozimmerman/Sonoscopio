@@ -85,7 +85,7 @@ public:
     void setValue(float value);
     void setNormalizedValue(float value);
     void setMinEstimatedValue(float value);
-    void setMaxEstimatedValue(float value);
+    virtual void setMaxEstimatedValue(float value);
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
     
@@ -134,8 +134,6 @@ protected:
     bool    _plotterEnabled;
     float   _line_h;
     int     _label_x;
-    
-    
     
     
 private:

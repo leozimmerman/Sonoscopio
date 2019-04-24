@@ -18,7 +18,7 @@
 
 #include "MetersPanel.h"
 #include "ofApp.h"
-#include "ofxAAUtils.h"
+#include "StringUtils.h"
 #include "SettingsManager.h"
 #include "FileManager.h"
 #include "AnalysisDataSaver.h"

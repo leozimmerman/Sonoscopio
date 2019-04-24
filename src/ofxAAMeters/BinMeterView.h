@@ -37,9 +37,10 @@ class BinMeterView : public MeterView{
     void updateValues() override;
     void drawMeter() override;
     
-    void setBinsNum(int bins){_nBins = bins;}
+    void setBinsNum(unsigned long bins){_nBins = bins;}
     void setValues(vector<float>& vals){_values = vals;}
     void setMinMaxEstimatedValues();
+    void setMaxEstimatedValue(float value) override;
     
     void setComponentsPositions() override;
     void setComponentsWidth() override;
@@ -47,12 +48,12 @@ class BinMeterView : public MeterView{
     vector<float>& getValues(){return _values;}
     static int height;
     
-    ofxAABinsValue getBinsValueType(){return _valueType;}
+    ofxAABinsValue getBinsValueType(){return _binsValueType;}
     
  protected:
     
-    ofxAABinsValue _valueType;
+    ofxAABinsValue _binsValueType;
     
     vector<float> _values;
-    int _nBins;
+    unsigned long _nBins;
 };

@@ -24,7 +24,7 @@
 		9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 832BDC407620CDBA568B713D /* tinyxmlerror.cpp */; };
 		9D72A0B4BAED5487D5CD7538 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D1B275EC347E41C380E1179 /* OpenAL.framework */; };
 		ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADD194746185E2DA11468377 /* IpEndpointName.cpp */; };
-		B3003FA9226F971000216367 /* ofxAAUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3003FA8226F971000216367 /* ofxAAUtils.cpp */; };
+		B3003FA9226F971000216367 /* StringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3003FA8226F971000216367 /* StringUtils.cpp */; };
 		B3003FB4226F993700216367 /* ofxAAFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3003FAE226F993700216367 /* ofxAAFactory.cpp */; };
 		B3003FB6226F993700216367 /* ofxAAConfigurations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3003FB1226F993700216367 /* ofxAAConfigurations.cpp */; };
 		B3003FB7226F993700216367 /* ofxAANetwork.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3003FB2226F993700216367 /* ofxAANetwork.cpp */; };
@@ -188,8 +188,8 @@
 		AE335EB4709BFD4671EEAC84 /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = MessageMappingOscPacketListener.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/MessageMappingOscPacketListener.h; sourceTree = SOURCE_ROOT; };
 		AE803632C8979292003FC2CF /* AnalysisDataSaver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = AnalysisDataSaver.cpp; path = src/AnalysisDataSaver.cpp; sourceTree = SOURCE_ROOT; };
 		B21E7E5F548EEA92F368040B /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
-		B3003FA7226F971000216367 /* ofxAAUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAAUtils.h; sourceTree = "<group>"; };
-		B3003FA8226F971000216367 /* ofxAAUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAAUtils.cpp; sourceTree = "<group>"; };
+		B3003FA7226F971000216367 /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
+		B3003FA8226F971000216367 /* StringUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StringUtils.cpp; sourceTree = "<group>"; };
 		B3003FAC226F993600216367 /* ofxAANetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxAANetwork.h; path = local_addons/Audio/ofxAudioAnalyzer/src/ofxAANetwork.h; sourceTree = "<group>"; };
 		B3003FAD226F993700216367 /* ofxAAFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxAAFactory.h; path = local_addons/Audio/ofxAudioAnalyzer/src/ofxAAFactory.h; sourceTree = "<group>"; };
 		B3003FAE226F993700216367 /* ofxAAFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxAAFactory.cpp; path = local_addons/Audio/ofxAudioAnalyzer/src/ofxAAFactory.cpp; sourceTree = "<group>"; };
@@ -213,6 +213,7 @@
 		B3003FC6226F996900216367 /* ofxAATwoTypesVectorOutputAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxAATwoTypesVectorOutputAlgorithm.h; path = local_addons/Audio/ofxAudioAnalyzer/src/algorithms/ofxAATwoTypesVectorOutputAlgorithm.h; sourceTree = "<group>"; };
 		B3003FC7226F996900216367 /* ofxAAValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxAAValues.h; path = local_addons/Audio/ofxAudioAnalyzer/src/algorithms/ofxAAValues.h; sourceTree = "<group>"; };
 		B3003FC8226F996900216367 /* ofxAAVectorComplexOutputAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxAAVectorComplexOutputAlgorithm.h; path = local_addons/Audio/ofxAudioAnalyzer/src/algorithms/ofxAAVectorComplexOutputAlgorithm.h; sourceTree = "<group>"; };
+		B3003FD22270BCF300216367 /* AvailableAlgorithms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvailableAlgorithms.h; sourceTree = "<group>"; };
 		B31C608870ECEB2490A93736 /* ofxOscParameterSync.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscParameterSync.h; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.h; sourceTree = SOURCE_ROOT; };
 		B32D93A221B1DB2F00E14271 /* TextModal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TextModal.h; path = CustomModals/TextModal.h; sourceTree = "<group>"; };
 		B32D93A321B1DC1000E14271 /* MetersMenuModal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetersMenuModal.cpp; path = CustomModals/MetersMenuModal.cpp; sourceTree = "<group>"; };
@@ -1750,8 +1751,8 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B3003FA8226F971000216367 /* ofxAAUtils.cpp */,
-				B3003FA7226F971000216367 /* ofxAAUtils.h */,
+				B3003FA8226F971000216367 /* StringUtils.cpp */,
+				B3003FA7226F971000216367 /* StringUtils.h */,
 				B32D93BA21B820E300E14271 /* Settings */,
 				B363C77D1FE439610014F7F7 /* CustomModals */,
 				B3A475B21DD4FBC300B1371C /* ofxAAMeters */,
@@ -1765,6 +1766,7 @@
 				7413FA8F1E9A9D785B1C2E16 /* ExtendedDatGuiComponents.h */,
 				B3FD3488213DD25300B30C17 /* OscSender.cpp */,
 				B3FD3489213DD25300B30C17 /* OscSender.h */,
+				B3003FD22270BCF300216367 /* AvailableAlgorithms.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1926,7 +1928,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
-				B3003FA9226F971000216367 /* ofxAAUtils.cpp in Sources */,
+				B3003FA9226F971000216367 /* StringUtils.cpp in Sources */,
 				B3712FA72136F733007BA046 /* ofxTLTrack.cpp in Sources */,
 				B3712F8A2136F733007BA046 /* ofxTLCurves.cpp in Sources */,
 				B3003FB6226F993700216367 /* ofxAAConfigurations.cpp in Sources */,

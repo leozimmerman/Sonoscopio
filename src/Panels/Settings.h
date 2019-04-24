@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "ofxAAUtils.h"
+#include "StringUtils.h"
 #include "Macros.h"
 
 struct OscSetting {

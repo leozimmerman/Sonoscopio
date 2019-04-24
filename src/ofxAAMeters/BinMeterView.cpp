@@ -17,7 +17,7 @@
  */
 
 #include "BinMeterView.h"
-#include "ofxAAUtils.h"
+#include "StringUtils.h"
 
 int BinMeterView::height = 60;
 
@@ -28,14 +28,15 @@ BinMeterView* BinMeterView::createBinMeterView(ofxAABinsValue valueType, int pan
 //TODO: FIX MeterView values
 BinMeterView::BinMeterView(ofxAABinsValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(NONE, panelId, aaPtr){
     
-    _name = ofxaa::binsValueTypeToString(valueType);
-    int binNums = _audioAnalyzer->getBinsNum(_valueType);
+    _binsValueType = valueType;
+    _name = utils::binsValueTypeToString(_binsValueType);
+    auto binNums = _audioAnalyzer->getValues(_binsValueType).size();
     setBinsNum(binNums);
     setMinMaxEstimatedValues();
 }
 
 void BinMeterView::updateValues(){
-    setValues(_audioAnalyzer->getValues(_valueType, _smoothAmnt, false));
+    setValues(_audioAnalyzer->getValues(_binsValueType, _smoothAmnt, false));
 }
 
 void BinMeterView::drawStaticElements(){
@@ -51,6 +52,11 @@ void BinMeterView::drawValueElements(){
     if (_enabled) {
         drawMeter();
     }
+}
+
+void BinMeterView::setMaxEstimatedValue(float value){
+    _maxEstimatedValue = value;
+    _audioAnalyzer->setMaxEstimatedValue(_binsValueType, value);
 }
 
 void BinMeterView::setMinMaxEstimatedValues() {
