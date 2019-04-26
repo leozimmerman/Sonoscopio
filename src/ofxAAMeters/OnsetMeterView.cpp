@@ -72,7 +72,7 @@ void OnsetMeterView::update(){
     armToggle->update();
     resetButton->update();
 
-    setValue(_audioAnalyzer->getValue(ONSETS));
+    setValue(_aaUnit->getValue(ONSETS));
 }
 
 void OnsetMeterView::updateComponentsColors(){

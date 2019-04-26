@@ -30,13 +30,13 @@ BinMeterView::BinMeterView(ofxAABinsValue valueType, int panelId,  ofxAudioAnaly
     
     _binsValueType = valueType;
     _name = utils::binsValueTypeToString(_binsValueType);
-    auto binNums = _audioAnalyzer->getValues(_binsValueType).size();
+    auto binNums = _aaUnit->getValues(_binsValueType).size();
     setBinsNum(binNums);
     setMinMaxEstimatedValues();
 }
 
 void BinMeterView::updateValues(){
-    setValues(_audioAnalyzer->getValues(_binsValueType, _smoothAmnt, false));
+    setValues(_aaUnit->getValues(_binsValueType, _smoothAmnt, true));
 }
 
 void BinMeterView::drawStaticElements(){
@@ -56,12 +56,12 @@ void BinMeterView::drawValueElements(){
 
 void BinMeterView::setMaxEstimatedValue(float value){
     _maxEstimatedValue = value;
-    _audioAnalyzer->setMaxEstimatedValue(_binsValueType, value);
+    _aaUnit->setMaxEstimatedValue(_binsValueType, value);
 }
 
 void BinMeterView::setMinMaxEstimatedValues() {
-    setMinEstimatedValue(0.0);
-    setMaxEstimatedValue(1.0);
+ ///   setMinEstimatedValue(0.0);
+   /// setMaxEstimatedValue(1.0);
     /*
     switch (valueType) {
         case SPECTRUM:
@@ -93,8 +93,9 @@ void BinMeterView::drawMeter(){
     ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA);
     float bin_w = (float) _w / _nBins;
     for (int i = 0;i < _values.size(); i++){
-        float scaledValue = ofMap(_values[i], _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
-        float bin_h = -1 * (scaledValue * _h);
+        ///float scaledValue = ofMap(_values[i], _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
+        ///float bin_h = -1 * (scaledValue * _h);
+        float bin_h = -1 * (_values[i] * _h);
         ofDrawRectangle(i*bin_w, _h, bin_w, bin_h);
     }
     ofPopStyle();

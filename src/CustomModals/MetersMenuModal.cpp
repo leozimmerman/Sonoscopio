@@ -28,9 +28,6 @@ MetersMenuModal::MetersMenuModal(MetersPanel* metersPanel_ptr){
         auto label = utils::valueTypeToString(availableValues[i]);
         ofxDatGuiToggle* toggle = GuiFactory::createToggle(label, TRUE, this, &MetersMenuModal::onToggleEvent);
         _valuesToggles.push_back(toggle);
-        if (availableValues[i] == MEL_BANDS_KURTOSIS){
-            cout<<"Hola"<<endl;
-        }
         addComponentInGrid(toggle);
     }
     
@@ -143,7 +140,6 @@ bool MetersMenuModal::getFocused(){
     return false;
 }
 void MetersMenuModal::onToggleEvent(ofxDatGuiButtonEvent e){
-//    cout<<"TOggle"<<endl;
     //TODO: Implement?
 }
 void MetersMenuModal::onApplyButtonEvent(ofxDatGuiButtonEvent e){

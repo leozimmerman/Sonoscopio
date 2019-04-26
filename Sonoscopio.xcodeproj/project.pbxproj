@@ -214,6 +214,7 @@
 		B3003FC7226F996900216367 /* ofxAAValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxAAValues.h; path = local_addons/Audio/ofxAudioAnalyzer/src/algorithms/ofxAAValues.h; sourceTree = "<group>"; };
 		B3003FC8226F996900216367 /* ofxAAVectorComplexOutputAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxAAVectorComplexOutputAlgorithm.h; path = local_addons/Audio/ofxAudioAnalyzer/src/algorithms/ofxAAVectorComplexOutputAlgorithm.h; sourceTree = "<group>"; };
 		B3003FD22270BCF300216367 /* AvailableAlgorithms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvailableAlgorithms.h; sourceTree = "<group>"; };
+		B3003FD422722CD600216367 /* ofxAADistributionShapeAlgorithm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofxAADistributionShapeAlgorithm.h; path = local_addons/Audio/ofxAudioAnalyzer/src/algorithms/ofxAADistributionShapeAlgorithm.h; sourceTree = "<group>"; };
 		B31C608870ECEB2490A93736 /* ofxOscParameterSync.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscParameterSync.h; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.h; sourceTree = SOURCE_ROOT; };
 		B32D93A221B1DB2F00E14271 /* TextModal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TextModal.h; path = CustomModals/TextModal.h; sourceTree = "<group>"; };
 		B32D93A321B1DC1000E14271 /* MetersMenuModal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetersMenuModal.cpp; path = CustomModals/MetersMenuModal.cpp; sourceTree = "<group>"; };
@@ -1086,6 +1087,7 @@
 			isa = PBXGroup;
 			children = (
 				B3003FBB226F996800216367 /* ofxAAAlgorithmTypes.h */,
+				B3003FD422722CD600216367 /* ofxAADistributionShapeAlgorithm.h */,
 				B3003FBF226F996900216367 /* ofxAABaseAlgorithm.cpp */,
 				B3003FC5226F996900216367 /* ofxAABaseAlgorithm.h */,
 				B3003FC4226F996900216367 /* ofxAANSGConstantQAlgorithm.h */,

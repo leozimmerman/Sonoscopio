@@ -66,14 +66,14 @@ public:
     string getName(){return _name;}
     ofColor getMainColor(){return _mainColor;}
 
-    float getValue(){return _value;}
-    float getNormalizedValue(){return _valueNorm;}
+    float getValue(){ return _value; }
+    float getNormalizedValue(){ return _valueNorm; }
     int getPositionX(){return _x;}
     int getPositionY(){return _y;}
     int getWidth(){return _w;}
     int getHeight(){return _h;}
-    float getMinEstimatedValue(){return _minEstimatedValue;}
-    float getMaxEstimatedValue(){return _maxEstimatedValue;}
+    float getMinEstimatedValue(){ return _minEstimatedValue; }
+    float getMaxEstimatedValue(){ return _maxEstimatedValue; }
     
     float getSmoothAmnt(){return _smoothAmnt;}
     bool getEnabled(){return _enabled;}
@@ -88,6 +88,10 @@ public:
     virtual void setMaxEstimatedValue(float value);
     void setSmoothAmnt(float val);
     void setEnabled(bool state);
+    
+    bool isValueNormalizedByDefault(){
+        return _aaUnit->getAlgorithmWithType(_valueType)->isNormalizedByDefault;
+    }
     
 protected:
     void initDefaultValues();
@@ -120,7 +124,7 @@ protected:
     TransparentMeterButton* peakButton;
     TransparentMeterButton* configButton;
     
-    ofxAudioAnalyzerUnit* _audioAnalyzer;
+    ofxAudioAnalyzerUnit* _aaUnit;
     
 
     float _minEstimatedValue, _maxEstimatedValue;

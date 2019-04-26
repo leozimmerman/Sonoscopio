@@ -34,12 +34,12 @@ MeterModal::MeterModal(MeterView* meter_ptr){
 }
 
 void MeterModal::display(int height){
-    float maxExtValue = meterView_ptr->getMaxEstimatedValue();
-    if (maxExtValue == 0.0){
+    if (meterView_ptr->isValueNormalizedByDefault()){
         gMaxValueTextInput->setVisible(false);
     } else {
         gMaxValueTextInput->setVisible(true);
-        gMaxValueTextInput->setText(std::to_string(int(maxExtValue)));
+        float maxExtValue = meterView_ptr->getMaxEstimatedValue();
+        gMaxValueTextInput->setText(ofToString(maxExtValue, 2));
     }
     gPlotValueToggle->setEnabled(meterView_ptr->getPlotterEnabled());
     setHeight(height);

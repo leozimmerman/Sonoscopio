@@ -86,6 +86,7 @@ namespace sonoscopio {
          
          INHARMONICITY,
          ODD_TO_EVEN,
+         STRONG_PEAK,
          
          HPCP_CREST,
          HPCP_ENTROPY,

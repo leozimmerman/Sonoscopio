@@ -39,7 +39,7 @@ MeterView* MeterView::createMeterView(ofxAAValue valueType, int panelId,  ofxAud
 MeterView::MeterView(ofxAAValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) {
     
     _h = MeterView::height;
-    _audioAnalyzer = aaPtr;
+    _aaUnit = aaPtr;
     _valueType = valueType;
     _name = utils::valueTypeToString(valueType);
     _panelId = panelId;
@@ -70,7 +70,7 @@ void MeterView::initDefaultValues(){
     _value = 0.0;
     _valueNorm = -1.0;
     _minEstimatedValue = 0.0;
-    _maxEstimatedValue = _valueType != NONE ? _audioAnalyzer->getMaxEstimatedValue(_valueType) : 1.0;
+    _maxEstimatedValue = _valueType != NONE ? _aaUnit->getMaxEstimatedValue(_valueType) : 1.0;
     _maxValueRegistered = 0.0;
     _smoothAmnt = 0.0;
     _enabled = TRUE;
@@ -138,8 +138,8 @@ void MeterView::updatePeak(){
 }
 
 void MeterView::updateValues(){
-    setValue(_audioAnalyzer->getValue(_valueType, _smoothAmnt, false));
-    setNormalizedValue(_audioAnalyzer->getValue(_valueType, _smoothAmnt, TRUE));
+    setValue(_aaUnit->getValue(_valueType, _smoothAmnt, false));
+    setNormalizedValue(_aaUnit->getValue(_valueType, _smoothAmnt, TRUE));
 }
 
 #pragma mark - Draw
@@ -272,7 +272,7 @@ void MeterView::setMinEstimatedValue(float value){
 
 void MeterView::setMaxEstimatedValue(float value){
     _maxEstimatedValue = value;
-    _audioAnalyzer->setMaxEstimatedValue(_valueType, value);
+    _aaUnit->setMaxEstimatedValue(_valueType, value);
 }
 
 void MeterView::setSmoothAmnt(float val){
