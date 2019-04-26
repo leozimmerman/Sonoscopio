@@ -73,6 +73,7 @@ void OnsetMeterView::update(){
     resetButton->update();
 
     setValue(_aaUnit->getValue(ONSETS));
+    
 }
 
 void OnsetMeterView::updateComponentsColors(){

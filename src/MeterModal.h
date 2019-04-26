@@ -39,13 +39,4 @@ private:
     
     MeterView* meterView_ptr;
     
-    /*
-     TODO: Mover a Meters Modal
-     ofxDatGuiTextInput* gMaxFreq;
-     ofxDatGuiTextInput* gMaxHfc;
-     ofxDatGuiTextInput* gMaxCentroid;
-     ofxDatGuiTextInput* gMaxSpecComp;
-     ofxDatGuiTextInput* gMaxRollOff;
-     ofxDatGuiTextInput* gMaxOddEven;
-     */
 };

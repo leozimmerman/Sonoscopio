@@ -281,7 +281,7 @@ void SettingsManager::addMetersPanelSettingsToXml(){
     }
     
     xml.addValue(ENABLED_BINVALUES_NUM_TAG, int(metersPanelSettings.enabledBinsValueTypes.size()));
-    for(int i=0; i<metersPanelSettings.enabledValueTypes.size(); i++){
+    for(int i=0; i<metersPanelSettings.enabledBinsValueTypes.size(); i++){
         const std::string typeTag = BIN_VALUE_TYPE_N_TAG + ofToString(i);
         string stringType = utils::binsValueTypeToString(metersPanelSettings.enabledBinsValueTypes[i]);
         xml.addValue(typeTag, stringType);

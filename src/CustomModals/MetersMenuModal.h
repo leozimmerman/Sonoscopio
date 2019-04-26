@@ -44,7 +44,7 @@ private:
     ofxDatGuiDropdown* gBufferSize;
     
     int selectedBufferSize;
-    const vector<int> buffer_sizes = {256, 512, 1024, 2048};
+    const vector<int> buffer_sizes = {1024, 2048, 4096};
     
     vector<ofxAAValue> _enabledValueTypes;
     vector<ofxAABinsValue> _enabledBinsValueTypes;

@@ -80,8 +80,8 @@ void MeterView::initDefaultValues(){
 
 void MeterView::initComponents(){
     font  = new ofTrueTypeFont();
-    font->load("gui_assets/fonts/verdana.ttf", 10, false, false);
-    font->setLineHeight(12.0f);
+    font->load("gui_assets/fonts/verdana.ttf", 9, false, false);
+    font->setLineHeight(11.0f);
     font->setLetterSpacing(1.0);
     _line_h = font->getLineHeight();
 
