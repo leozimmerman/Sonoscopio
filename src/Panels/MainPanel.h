@@ -57,6 +57,9 @@ public:
     
     void applySettings(int fps, string host, int port);
     
+    int getSettingsFrameRate(){
+        return currentSettings.frameRate;
+    }
     MainPanelSettings* getCurrentSettingsPtr(){
         return &currentSettings;
     }

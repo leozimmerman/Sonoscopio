@@ -37,9 +37,9 @@ class BinMeterView : public MeterView{
     void updateValues() override;
     void drawMeter() override;
     
-    void setBinsNum(unsigned long bins){_nBins = bins;}
+    void setBinsNum(unsigned long bins);
     void setValues(vector<float>& vals){_values = vals;}
-    void setMinMaxEstimatedValues();
+    
     void setMaxEstimatedValue(float value) override;
     
     void setComponentsPositions() override;

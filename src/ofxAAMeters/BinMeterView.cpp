@@ -25,14 +25,17 @@ BinMeterView* BinMeterView::createBinMeterView(ofxAABinsValue valueType, int pan
     return new BinMeterView(valueType, panelId, aaPtr);
 }
 
-//TODO: FIX MeterView values
 BinMeterView::BinMeterView(ofxAABinsValue valueType, int panelId,  ofxAudioAnalyzerUnit * aaPtr) :  MeterView(NONE, panelId, aaPtr){
     
     _binsValueType = valueType;
     _name = utils::binsValueTypeToString(_binsValueType);
     auto binNums = _aaUnit->getValues(_binsValueType).size();
     setBinsNum(binNums);
-    setMinMaxEstimatedValues();
+}
+
+void BinMeterView::setBinsNum(unsigned long bins){
+    _nBins = bins;
+    _values.resize(_nBins);
 }
 
 void BinMeterView::updateValues(){
@@ -59,31 +62,6 @@ void BinMeterView::setMaxEstimatedValue(float value){
     _aaUnit->setMaxEstimatedValue(_binsValueType, value);
 }
 
-void BinMeterView::setMinMaxEstimatedValues() {
- ///   setMinEstimatedValue(0.0);
-   /// setMaxEstimatedValue(1.0);
-    /*
-    switch (valueType) {
-        case SPECTRUM:
-            setMinEstimatedValue(DB_MIN);
-            setMaxEstimatedValue(DB_MAX);
-            break;
-        case MEL_BANDS:
-            setMinEstimatedValue(DB_MIN);
-            setMaxEstimatedValue(DB_MAX);
-            break;
-        case MFCC:
-            setMinEstimatedValue(0.0);
-            setMaxEstimatedValue(MFCC_MAX_ESTIMATED_VALUE);
-            break;
-        default:
-            setMinEstimatedValue(0.0);
-            setMaxEstimatedValue(1.0);
-            break;
-    }
-    */
-}
-
 void BinMeterView::drawMeter(){
     
     ofPushMatrix();
@@ -93,8 +71,6 @@ void BinMeterView::drawMeter(){
     ofSetColor(COLOR_RECT_METER, COLOR_RECT_METER_ALPHA);
     float bin_w = (float) _w / _nBins;
     for (int i = 0;i < _values.size(); i++){
-        ///float scaledValue = ofMap(_values[i], _minEstimatedValue, _maxEstimatedValue, 0.0, 1.0, true);//clamped value
-        ///float bin_h = -1 * (scaledValue * _h);
         float bin_h = -1 * (_values[i] * _h);
         ofDrawRectangle(i*bin_w, _h, bin_w, bin_h);
     }
@@ -103,7 +79,6 @@ void BinMeterView::drawMeter(){
 }
 
 void BinMeterView::setComponentsWidth(){
-    
     smoothSlider->setWidth(_w * 0.25 , 0.0);
     onOffToggle->setWidth (_w * 0.25, 0.0);
 }

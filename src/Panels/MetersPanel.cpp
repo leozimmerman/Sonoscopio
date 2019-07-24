@@ -73,7 +73,9 @@ void MetersPanel::draw(){
     guiView.draw();
     TS_STOP("gui-meters");
     
+    TS_START("loadViewInTexture");
     View::loadViewInTexture();
+    TS_STOP("loadViewInTexture");
 }
 
 void MetersPanel::exit(){

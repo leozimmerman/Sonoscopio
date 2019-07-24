@@ -2,6 +2,7 @@
 
 ## Now
 ### Bugs: 
+- Timeline Draw lags when audio files are very big
 
 ### Tasks:
 - Add GUI for toggling which OSC data to send: SendVectorValues, FrameNumber, ....

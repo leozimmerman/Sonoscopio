@@ -44,7 +44,10 @@ void ofApp::update(){
     if (FileManager::getInstance().isFileLoaded()){
         windowTitle += " - " + FileManager::getInstance().getBaseName();
     }
-    ofSetWindowTitle(windowTitle);//("Sonoscopio - " + ofToString(ofGetFrameRate(),2));
+    if (ofGetFrameRate() < (mainPanel.getSettingsFrameRate() - 10)) {
+        windowTitle += " | " + ofToString(ofGetFrameRate(),2);
+    }
+    ofSetWindowTitle(windowTitle);
     
     if (timelinePanel.isFileLoaded() && timelinePanel.isPlaying()){
         ofSoundUpdate();

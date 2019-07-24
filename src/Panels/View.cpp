@@ -40,7 +40,8 @@ void View::drawLoadedTexture() {
 }
 
 void View::loadViewInTexture(){
-     texView.loadScreenData(_x, _y, _w, _h);
+    //TODO: Remove this functionality after testing properly. It slows the FPS
+     ///texView.loadScreenData(_x, _y, _w, _h);
 }
 
 bool View::mustDrawNewFrame() {
