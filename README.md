@@ -22,22 +22,20 @@ Demo video: https://vimeo.com/191193752
 RMSPitch frequency, Pitch Confidence, Pitch Salience, HFC, Centroid, Inharmonicity, Spectral Complexity, Dissonance, Roll Off, Odd To Even Harmonic Energy Ratio, Onsets, Spectrum, Mel Bands, MFCC, Harmonic Pitch Class Profile, Tristimulus.
 More info [here](https://github.com/leozimmerman/ofxAudioAnalyzer)
 
-## Compatibility
-Only working in OSX for the moment
-
 ## Installation
 
-- Download OF
+- Download openFrameworks v0.11.2 osx release
 - Clone this repository into OF_ROOT_DIR/apps/myApps/
-- Run clone_addons.sh in the terminal
 - Build Xcode project
 
 ### Tested with:
-  - OF 0.10.1
-  - macOS Catalina: version 10.15.3
-  - Xcode 11.3.1 
+  - OF 0.11.2
+  - macOS Catalina: version 10.15.7
+  - Xcode 12.4
   
-
+  ## Compatibility
+  Only working in OSX for the moment
+  
 ## Projects & Settings
 
 * If none project is opened, it will save and load settings to/from:
