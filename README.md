@@ -23,20 +23,20 @@ RMSPitch frequency, Pitch Confidence, Pitch Salience, HFC, Centroid, Inharmonici
 More info [here](https://github.com/leozimmerman/ofxAudioAnalyzer)
 
 ## Compatibility
-Only working in OSX for the moment. Going to add Linux compatibility soon.
+Only working in OSX for the moment
 
 ## Installation
 
-- Download OF 0.9.3
+- Download OF
 - Clone this repository into OF_ROOT_DIR/apps/myApps/
 - Run clone_addons.sh in the terminal
 - Build Xcode project
 
-  Tested with:
-  - OF 0.9.3
-  - OS X El Capitan: version 10.11.6
-  - X code 8
-  - OSX SDK 10.11 (!)
+### Tested with:
+  - OF 0.10.1
+  - macOS Catalina: version 10.15.3
+  - Xcode 11.3.1 
+  
 
 ## Projects & Settings
 

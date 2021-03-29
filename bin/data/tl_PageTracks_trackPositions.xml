@@ -1,0 +1,20 @@
+<positions>
+    <element name="BANGY">
+        <x>204.000000000</x>
+        <y>182.000000000</y>
+        <width>820.000000000</width>
+        <height>175.880004883</height>
+    </element>
+    <element name="MEDIA">
+        <x>204.000000000</x>
+        <y>569.760009766</y>
+        <width>820.000000000</width>
+        <height>175.880004883</height>
+    </element>
+    <element name="NOTY">
+        <x>204.000000000</x>
+        <y>375.880004883</y>
+        <width>820.000000000</width>
+        <height>175.880004883</height>
+    </element>
+</positions>
